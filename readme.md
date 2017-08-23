@@ -22,7 +22,7 @@ Web accessibility means that people with disabilities can use the Web. For web a
 
 ## Sounds handy! How do I install ANDI?
 
-ANDI is a browser based "favelet" that, essentially, installs with a drag and drop, and is launched with the click of a button. Users can visit this [installation page](https://www.ssa.gov/accessibility/andi/install.html) for browser installation instructions. If an organization wishes to host its own copy of ANDI, it should be hosted on a web server that supports secure ssh transfer in order to be used in chrome and firefox to test https pages. Internet Explorer does not currently enforce such restrictions. See this page for instructions on how to [modify the favelet launch script](https://www.ssa.gov/accessibility/andi/install.html#launchscript) to point to a different source.
+ANDI is a browser based "favelet" that, essentially, installs with a drag and drop, and is launched with the click of a button. Users can visit this [installation page](https://www.ssa.gov/accessibility/andi/help/install.html) for browser installation instructions. If an organization wishes to host its own copy of ANDI, it should be hosted on a web server that supports secure ssh transfer in order to be used in chrome and firefox to test https pages. Internet Explorer does not currently enforce such restrictions. See this page for instructions on how to [modify the favelet launch script](https://www.ssa.gov/accessibility/andi/help/install.html#launchscript) to point to a different source.
      
 ## How can I sweeten ANDI's candy? 
  
