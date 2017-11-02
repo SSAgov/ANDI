@@ -1,0 +1,31 @@
+/*==tANDI==*/
+	/*=Test Page=*/
+	#ANDI508-testPage.tANDI508-testPage th.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.tANDI508-testPage table[role="presentation"].ANDI508-element.ANDI508-highlight
+		{border:1.5px dashed #b03188 !important; outline:none !important;}
+	#ANDI508-testPage.tANDI508-testPage td.ANDI508-element.ANDI508-highlight
+		{border:1px dashed #e35eb9 !important; outline:none !important;}
+	#ANDI508-testPage.tANDI508-testPage table.ANDI508-element.ANDI508-highlight
+		{outline:none !important;}
+	
+	#ANDI508-testPage.tANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
+		{border:2px dashed red !important; outline:none !important;}
+	#ANDI508-testPage.tANDI508-testPage table.ANDI508-element.ANDI508-highlight.ANDI508-element-danger
+		{border:4px dashed red !important; outline:none !important;}	
+	
+	#ANDI508-testPage.tANDI508-testPage td.ANDI508-highlight.tANDI508-highlight
+		{background:none !important; background-color:#ffe6f3 !important;}
+	#ANDI508-testPage.tANDI508-testPage th.ANDI508-highlight.tANDI508-highlight
+		{background:none !important; background-color:#fdabd6 !important;}
+	#ANDI508-testPage.tANDI508-testPage .ANDI508-highlight.tANDI508-highlight, 
+	#ANDI508-testPage.tANDI508-testPage .ANDI508-highlight.tANDI508-highlight *
+		{color:black !important;}
+
+	#ANDI508-testPage.tANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
+		{outline:4px solid deeppink !important; border-color:transparent !important}
+	#ANDI508-testPage.tANDI508-testPage table.ANDI508-element.ANDI508-highlight.ANDI508-element-active
+		{border:4px solid deeppink !important; outline:none !important;}
+		
+	#ANDI508-testPage.tANDI508-testPage table.ANDI508-temporaryHide
+		{display:none;}
+		

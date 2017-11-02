@@ -1,0 +1,51 @@
+/*ANDI ie7 css fixes*/
+#ANDI508
+	{background-color:black !important; display:inline-block !important;}
+#ANDI508-testPage
+	{position:absolute !important; left:0 !important; z-index:0 !important;}
+#ANDI508-testPage .ANDI508-element.ANDI508-highlight
+	{border:1px dashed orange !important; outline:none;/*no support for outline*/}
+
+/*lANDI*/
+#ANDI508-testPage.lANDI508-testPage .ANDI508-element.ANDI508-highlight
+	{border:1px dashed #6464E3 !important; outline:none;}
+/*gANDI*/
+#ANDI508-testPage.gANDI508-testPage .ANDI508-element.ANDI508-highlight
+	{border:1px dashed #4aac24 !important; outline:none;}
+#ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline img.ANDI508-element,
+#ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline input[type=image].ANDI508-element,
+#ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline .ANDI508-element img
+	{filter: alpha(opacity=30) !important; /*no support for opacity*/}
+/*tANDI*/
+#ANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger,
+#ANDI508-testPage.tANDI508-testPage table.ANDI508-highlight.ANDI508-element.ANDI508-element-danger,
+#ANDI508-testPage.tANDI508-testPage table th.ANDI508-highlight.ANDI508-element.ANDI508-element-danger,
+#ANDI508-testPage.tANDI508-testPage table td.ANDI508-highlight.ANDI508-element.ANDI508-element-danger
+	{border:2px dashed red !important; outline:none;/*no support for outline*/}
+#ANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active,
+#ANDI508-testPage.tANDI508-testPage table.ANDI508-highlight.ANDI508-element.ANDI508-element-active,
+#ANDI508-testPage.tANDI508-testPage table th.ANDI508-highlight.ANDI508-element.ANDI508-element-active,
+#ANDI508-testPage.tANDI508-testPage table td.ANDI508-highlight.ANDI508-element.ANDI508-element-active
+	{border:2px solid deeppink !important; outline:none;/*no support for outline*/}
+	
+#ANDI508 #ANDI508-alerts-list
+	{width:420px !important;}
+#ANDI508 ol li
+	{list-style-type:disc !important;/*no support for numeric ol*/}
+#ANDI508 ul li, #ANDI508 #ANDI508-accesskeysFound
+	{margin-left:1.3em !important;}
+#ANDI508 #ANDI508-accessibleComponentsTable
+	{margin-left:0 !important;}
+#ANDI508 #ANDI508-accessibleComponentsTable td
+	{width:auto}/*no support for text-overflow*/
+#ANDI508-laser-container
+	{height:0px !important; width:0px !important;/*no support for svg*/}
+#ANDI508 #ANDI508-outputText
+	{background-image: url(icons/output18x18.png) !important;/*no support for background-size*/}
+#ANDI508 #ANDI508-module-launchers button
+	{padding-top:3px; margin-right:5px;/*no support for border-radius*/}
+#ANDI508 #ANDI508-module-launchers button:hover
+	{border:1px solid lemonchiffon !important;/*no support for border-radius*/}
+#ANDI508 #ANDI508-additionalPageResults div.ANDI508-list-scrollable
+	{height:16em;}
+

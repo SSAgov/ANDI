@@ -1,0 +1,14 @@
+#ANDI508 #ANDI508-outputText
+	{background-image: url(icons/output18x18.png) !important;}
+#ANDI508-laser-container
+	{height:0px; width:0px;}
+
+#ANDI508-testPage.gANDI508-testPage.gANDI508-hideInline img.ANDI508-element,
+#ANDI508-testPage.gANDI508-testPage.gANDI508-hideInline input[type=image].ANDI508-element,
+#ANDI508-testPage.gANDI508-testPage.gANDI508-hideInline .ANDI508-element img
+	{filter: alpha(opacity=20) !important; /*no support for opacity*/}
+	/*{-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0.1)";}*/
+	
+#ANDI508-testPage.gANDI508-testPage.gANDI508-hideBackground .lANDI508-background
+	{filter: alpha(opacity=20) !important; /*no support for opacity*/}
+	
