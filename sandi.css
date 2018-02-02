@@ -1,0 +1,31 @@
+/*==sANDI==*/
+	/*=Test Page=*/
+	#ANDI508-testPage.sANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
+		{border:3px dashed red !important; outline:0 !important;}
+	#ANDI508-testPage.sANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
+		{outline:4px solid deeppink !important;}
+	#ANDI508-testPage.sANDI508-testPage .ANDI508-element.ANDI508-highlight
+		{border:1.5px dashed #9370DB !important; outline:0 !important;}
+	#ANDI508-testPage.sANDI508-testPage ul.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage ol.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage dl.ANDI508-element.ANDI508-highlight
+		{border:2.5px dashed purple !important; outline:0 !important;}
+	#ANDI508-testPage.sANDI508-testPage li.ANDI508-element.ANDI508-highlight
+		{border:1px dashed #9370DB !important; outline:0 !important;}
+	
+	#ANDI508 #sANDI508-outline-container #sANDI508-outline-heading
+		{display:inline-block; margin-bottom:2px;}
+	#ANDI508 #sANDI508-outline-container
+		{display:none;}
+	#ANDI508 #sANDI508-outline-container .sANDI508-outline-scrollable
+		{font-family:monospace; border:1px solid gray; padding:5px 0px 1px 1em;
+		min-height:3.3em; max-height:16em; overflow-y:auto; overflow-x:hidden;
+		scrollbar-arrow-color:white !important; scrollbar-shadow-color:white !important; 
+		scrollbar-face-color:black !important; scrollbar-highlight-color:black !important; 
+		scrollbar-track-color:black !important; 
+		border-top-left-radius:10px; border-bottom-left-radius:10px;}
+	#ANDI508 #sANDI508-outline-container .sANDI508-outline-scrollable br
+		{font-size:11pt;}
+	#ANDI508 #sANDI508-outline-container .sANDI508-outline-scrollable a:hover,
+	#ANDI508 #sANDI508-outline-container .sANDI508-outline-scrollable a:focus
+		{text-decoration:underline !important; color:#ff6abb !important;}

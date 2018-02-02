@@ -16,6 +16,7 @@
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline input[type=image].ANDI508-element,
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline .ANDI508-element img
 	{filter: alpha(opacity=30) !important; /*no support for opacity*/}
+	
 /*tANDI*/
 #ANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger,
 #ANDI508-testPage.tANDI508-testPage table.ANDI508-highlight.ANDI508-element.ANDI508-element-danger,
@@ -42,10 +43,13 @@
 	{height:0px !important; width:0px !important;/*no support for svg*/}
 #ANDI508 #ANDI508-outputText
 	{background-image: url(icons/output18x18.png) !important;/*no support for background-size*/}
-#ANDI508 #ANDI508-module-launchers button
+#ANDI508 #ANDI508-moduleMenu button
 	{padding-top:3px; margin-right:5px;/*no support for border-radius*/}
-#ANDI508 #ANDI508-module-launchers button:hover
+#ANDI508 #ANDI508-moduleMenu button:hover
 	{border:1px solid lemonchiffon !important;/*no support for border-radius*/}
 #ANDI508 #ANDI508-additionalPageResults div.ANDI508-list-scrollable
 	{height:16em;}
+#ANDI508 #ANDI508-moduleMenu button:hover,
+#ANDI508 #ANDI508-moduleMenu button:focus
+	{border:1px solid #dedab7 !important;}
 

@@ -33,7 +33,7 @@ If you would like to contribute to ANDI's development, some background knowledge
 
 ## What areas of accessibility does ANDI cover?
 
-The current version of ANDI offers the ability to inspect focusable elements and data tables. Future versions of ANDI will incorporate more in-depth link analysis, graphics/images, page structures, and more.
+The current version of ANDI offers the ability to inspect focusable elements, data tables, images, and in-depth link and button analysis, page structure, and hidden content detection. Future versions of ANDI will incorporate color contrast analysis and more.
 
 ## Who maintains ANDI?
 

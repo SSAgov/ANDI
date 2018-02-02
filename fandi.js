@@ -4,8 +4,8 @@
 //=============================================//
 function init_module(){
 
-var fandiVersionNumber = "3.7.1";
-						 
+var fandiVersionNumber = "4.2.3";
+
 //create fANDI instance
 var fANDI = new AndiModule(fandiVersionNumber,"f");
 
@@ -21,6 +21,12 @@ AndiModule.andiElementFocusability = function(){
 	fANDI.inspect(this);
 	andiResetter.resizeHeights();
 };
+
+//AndiModule.activeActionButtons
+if($.isEmptyObject(AndiModule.activeActionButtons)){
+	$.extend(AndiModule.activeActionButtons,{tabOrder:false});
+	$.extend(AndiModule.activeActionButtons,{titleAttributes:false});
+}
 
 //This function will analyze the test page for focusable element related markup relating to accessibility
 fANDI.analyze = function(){
@@ -38,10 +44,13 @@ fANDI.analyze = function(){
 			andiData.attachDataToElement($(this));
 		}
 		else{
+			andiCheck.isThisElementDisabled(this);
 			andiCheck.areThereAccesskeysThatMightNotGetVisualFocus(this);
 			andiCheck.areThereAnyMouseEventsWithoutKeyboardAccess(this);
 		}
 	});
+	
+	andiCheck.areThereDisabledElements("elements");
 };
 
 //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
@@ -68,22 +77,46 @@ fANDI.results = function(){
 		else
 			$("#ANDI508-accesskeysFound").remove();
 		
-		//Show Tab Order button
-		$("#ANDI508-module-modes").append("<button id='ANDI508-tabOrder-button' title='Indicators will appear after each focusable element'>show tab order"+overlayIcon+"</button>");
+		//Tab Order button
+		var moduleActionButtons = "<button id='ANDI508-tabOrder-button' aria-label='Tab Order Indicators' aria-pressed='false'>tab order"+overlayIcon+"</button>";
+		if(TestPageData.page_using_titleAttr)
+			//Title Attributes Button
+			moduleActionButtons += "<button id='ANDI508-titleAttributes-button' aria-label='Title Attributes' aria-pressed='false'>title attributes"+overlayIcon+"</button>";
+			
+		$("#ANDI508-module-actions").append(moduleActionButtons);
 		
 		//Define tabOrder button functionality
 		$("#ANDI508-tabOrder-button").click(function(){
-			if($(this).html().includes("show tab order")){
-				$(this).html("hide tab order"+overlayIcon).attr("title","Indicators will be removed");
+			if($(this).attr("aria-pressed") == "false"){
+				andiOverlay.overlayButton_on("overlay",$(this));
 				andiOverlay.overlayTabOrder();
+				AndiModule.activeActionButtons.tabOrder = true;
 			}
 			else{
-				$(this).html("show tab order"+overlayIcon).attr("title","Indicators will appear after each focusable element");
+				andiOverlay.overlayButton_off("overlay",$(this));
 				andiOverlay.removeOverlay("ANDI508-overlay-tabSequence");
+				AndiModule.activeActionButtons.tabOrder = false;
 			}
 			andiResetter.resizeHeights();
+			return false;
 		});
 		
+		//Define titleAttributes button functionality
+		$("#ANDI508-titleAttributes-button").click(function(){
+			if($(this).attr("aria-pressed") == "false"){
+				andiOverlay.overlayButton_on("overlay",$(this));
+				andiOverlay.overlayTitleAttributes();
+				AndiModule.activeActionButtons.titleAttributes = true;
+			}
+			else{
+				andiOverlay.overlayButton_off("overlay",$(this));
+				andiOverlay.removeOverlay("ANDI508-overlay-titleAttributes");
+				AndiModule.activeActionButtons.titleAttributes = false;
+			}
+			andiResetter.resizeHeights();
+			return false;
+		});
+						
 		if(!andiBar.focusIsOnInspectableElement()){
 			andiBar.showStartUpSummary("Discover accessibility markup for focusable elements by tabbing to or hovering over the highlighted elements.",true,"focusable element");
 		}
@@ -101,6 +134,15 @@ fANDI.results = function(){
 	}
 	
 	andiAlerter.updateAlertList();
+	
+	//Click previously active buttons
+	if(AndiModule.activeActionButtons.tabOrder){
+		$("#ANDI508-tabOrder-button").click();
+	}
+	if(AndiModule.activeActionButtons.titleAttributes){
+		$("#ANDI508-titleAttributes-button").click();
+	}
+		
 };
 
 //This function will overlay the tab order sequence.
@@ -108,9 +150,37 @@ fANDI.results = function(){
 AndiOverlay.prototype.overlayTabOrder = function(){
 	var tabindex;
 	var tabSequence = 0;
-	//first pass: natively focusable elements and tabindex less than 1
+	
+	//PASS 1: Get tabindexes greater than 0:
+	var greaterThanZeroArray = []; //Will store elements with tabindex greater than 0
+	$("#ANDI508-testPage [tabindex].ANDI508-element").each(function(){
+		tabindex = $(this).attr("tabindex");
+		if(tabindex > 0){
+			//tab index is greater than 0
+			greaterThanZeroArray.push(this); //Add to the array
+		}
+	});
+	//loop through the greater than zero array until all elements have been addressed
+	var i = 1;
+	var z = greaterThanZeroArray.length;
+	while(z > 0){
+		for(var x=0; x<greaterThanZeroArray.length; x++){
+			if($(greaterThanZeroArray[x]).attr("tabindex") == i){
+				tabSequence++;
+				greaterThanZeroArray[x].insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabindex="+i, i));
+				z--;
+			}
+		}
+		i++;
+	}
+	
+	//PASS 2: Get tabindex=0 and natively tabbable:
 	$("#ANDI508-testPage .ANDI508-element").each(function(){
 		tabindex = $(this).attr("tabindex");
+		if(tabindex < 0){
+			//tab index is negative
+			this.insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0));
+		}
 		if($(this).is(":tabbable") && (!tabindex || tabindex == 0) ){
 			tabSequence++;
 			
@@ -120,35 +190,7 @@ AndiOverlay.prototype.overlayTabOrder = function(){
 		
 			this.insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0));
 		}
-		else if(tabindex < 0){
-			//tab index is negative
-			this.insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0));
-		}
 	});
-	//additional passes:
-	var t = []; //elements with tabindex greater than 0
-	
-	//Build the array
-	$("#ANDI508-testPage [tabindex].ANDI508-element").each(function(){
-		if($(this).attr("tabindex") > 0)
-			t.push(this);
-	});
-	
-	//loop through the array until all elements have been addressed
-	//array will shrink as elements are removed.
-	var i = 0;
-	while(t.length){
-		i++;
-		for(x=0; x<t.length; x++){
-			if($(t[x]).attr("tabindex") == i){
-				tabSequence++;
-				t[x].insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabindex="+i, i));
-				
-				//remove the element from the array.
-				t[x] = t[t.length-1]; t.pop();
-			}
-		}
-	}
 };
 
 //This function will update the info in the Active Element Inspection.
@@ -231,12 +273,14 @@ fANDI.inspect = function(element){
 				andiBar.appendRow("aria-disabled",	elementData.addOnProperties.ariaDisabled, true);
 				andiBar.appendRow("aria-expanded",	elementData.addOnProperties.ariaExpanded, true);
 				andiBar.appendRow("aria-haspopup",	elementData.addOnProperties.ariaHaspopup, true);
+				andiBar.appendRow("aria-hidden",	elementData.addOnProperties.ariaHidden, true);
 				andiBar.appendRow("aria-invalid",	elementData.addOnProperties.ariaInvalid, true);
 				andiBar.appendRow("readonly",		elementData.addOnProperties.readonly, true);
 				andiBar.appendRow("aria-readonly",	elementData.addOnProperties.ariaReadonly, true);
 				andiBar.appendRow("required",		elementData.addOnProperties.required, true);
 				andiBar.appendRow("aria-required",	elementData.addOnProperties.ariaRequired, true);
 				andiBar.appendRow("aria-sort",		elementData.addOnProperties.ariaSort, true);
+				
 			}
 		}
 	}
