@@ -29,6 +29,9 @@
 #ANDI508-testPage.tANDI508-testPage table td.ANDI508-highlight.ANDI508-element.ANDI508-element-active
 	{border:2px solid deeppink !important; outline:none;/*no support for outline*/}
 	
+#ANDI508 #ANDI508-barControls button
+	{width:30px !important; height:30px !important;}
+	
 #ANDI508 #ANDI508-alerts-list
 	{width:420px !important;}
 #ANDI508 ol li
@@ -43,13 +46,14 @@
 	{height:0px !important; width:0px !important;/*no support for svg*/}
 #ANDI508 #ANDI508-outputText
 	{background-image: url(icons/output18x18.png) !important;/*no support for background-size*/}
+	
+#ANDI508 #ANDI508-moduleMenu-container
+	{left:8.2em; top:-35px}
+	
 #ANDI508 #ANDI508-moduleMenu button
 	{padding-top:3px; margin-right:5px;/*no support for border-radius*/}
-#ANDI508 #ANDI508-moduleMenu button:hover
-	{border:1px solid lemonchiffon !important;/*no support for border-radius*/}
 #ANDI508 #ANDI508-additionalPageResults div.ANDI508-list-scrollable
 	{height:16em;}
-#ANDI508 #ANDI508-moduleMenu button:hover,
-#ANDI508 #ANDI508-moduleMenu button:focus
-	{border:1px solid #dedab7 !important;}
-
+	
+#ANDI508 #ANDI508-elementControls
+	{float:left;}

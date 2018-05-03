@@ -4,10 +4,8 @@
 //==========================================//
 function init_module(){
 	
-var sANDIVersionNumber = "1.4.2";
+var sANDIVersionNumber = "1.10.4";
 
-//TODO: add a role overlay
-						 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
 
@@ -31,7 +29,11 @@ var listsCount = 0;
 var olCount = 0;
 var ulCount = 0;
 var dlCount = 0;
+var listRoleCount = 0;
 var fakeHeadingCount = 0;
+var langAttributesCount = 0;
+var roleAttributesCount = 0;
+var htmlLangAttribute = $.trim($("html").first().prop("lang")); //get the lang attribute from the HTML element
 
 var landmarksArray = [];
 
@@ -40,13 +42,15 @@ if($.isEmptyObject(AndiModule.activeActionButtons)){
 	$.extend(AndiModule.activeActionButtons,{headings:true}); //default
 	$.extend(AndiModule.activeActionButtons,{lists:false});
 	$.extend(AndiModule.activeActionButtons,{landmarks:false});
+	$.extend(AndiModule.activeActionButtons,{roleAttributes:false});
+	$.extend(AndiModule.activeActionButtons,{langAttributes:false});
 }
 
 //This function will analyze the test page for graphics/image related markup relating to accessibility
 sANDI.analyze = function(){
 	
 	//Loop through every visible element
-	$('#ANDI508-testPage *').filter(':visible').each(function(){
+	$(TestPageData.allVisibleElements).each(function(){
 		
 		if($(this).is("h1,h2,h3,h4,h5,h6,[role='heading']")){
 			//Add to the headings array	
@@ -62,18 +66,20 @@ sANDI.analyze = function(){
 				andiData.attachDataToElement($(this));
 			}
 		}
-		else if($(this).is("ol,ul,li,dl,dd,dt")){
+		else if($(this).is("ol,ul,li,dl,dd,dt,[role=listitem],[role=list]")){
 			//Add to the headings array
 			listsArray.push($(this));
 			structureExists = true;
 			
-			if($(this).is("ol,ul,dl")){
+			if($(this).is("ol,ul,dl,[role=list]")){
 				if($(this).is("ul"))
 					ulCount++;
 				else if($(this).is("ol"))
 					olCount++;
 				else if($(this).is("dl"))
 					dlCount++;
+				else
+					listRoleCount++;
 				listsCount++;
 			}
 			
@@ -82,15 +88,11 @@ sANDI.analyze = function(){
 				
 				if($(this).is("li")){
 					//Is the li contained by an appropriate list container?
-					if(!$(this).closest("ol,ul").length){
+					if(!$(this).closest("ol,ul").length)
 						andiAlerter.throwAlert(alert_0079);
-					}
 				}
-				else if($(this).is("dd,dt")){
-					//Is the dl,dt contained by a dl?
-					if(!$(this).closest("dl").length){
-						andiAlerter.throwAlert(alert_007A);
-					}
+				else if($(this).is("dd,dt") && !$(this).closest("dl").length){//Is the dl,dt contained by a dl?
+					andiAlerter.throwAlert(alert_007A);
 				}
 				
 				andiData.grabComponents($(this));
@@ -109,7 +111,7 @@ sANDI.analyze = function(){
 				andiData.attachDataToElement($(this));
 			}
 		}
-		else if(AndiModule.activeActionButtons.headings && headingsArray.length == 0 && $(this).is("p,div,span")){
+		else if(AndiModule.activeActionButtons.headings && headingsArray.length === 0 && $(this).is("p,div,span")){
 			//No headings exist, look for fake headings
 			
 			var fakeHeading_limit_textLength = 30;
@@ -124,7 +126,7 @@ sANDI.analyze = function(){
 				if(fakeHeading_fontSize > fakeHeading_limit_fontSize){
 					//fakeHeading_fontSize is greater than size limit
 					var nextElement = $(this).next().filter(":visible");
-					if($.trim($(nextElement).text())!="" && parseInt($(nextElement).css("font-size")) < fakeHeading_fontSize){
+					if($.trim($(nextElement).text()) !== "" && parseInt($(nextElement).css("font-size")) < fakeHeading_fontSize){
 						//next element has text and is smaller than fakeHeading font size
 						fakeHeadingFound = true;
 					}
@@ -147,7 +149,18 @@ sANDI.analyze = function(){
 				andiData.attachDataToElement($(this));
 			}
 		}
+		
+		if($(this).attr("role"))
+			roleAttributesCount++;
+		
+		if($(this).prop("lang") && $(this).prop("lang").trim() !== ""){
+			langAttributesCount++;
+		}
+
 	});
+	
+	if(htmlLangAttribute)
+		langAttributesCount++;
 };
 
 //Initialize outline
@@ -155,19 +168,19 @@ sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Structure Outli
 
 sANDI.getOutlineItem = function(element){
 	var displayCharLength = 60;
-	var tagName = $(element).prop('tagName').toLowerCase();
+	var tagName = $(element).prop("tagName").toLowerCase();
 	var role = $(element).attr("role");
 	var ariaLevel = $(element).attr("aria-level");
 	
 	//Indent the heading according to the level
+	//Results in h1 = 1% left margin, h2 = 2% left margin, etc.
 	var indentLevel;
 	if(ariaLevel)
 		indentLevel = parseInt(ariaLevel);
 	else
 		indentLevel = parseInt(tagName.slice(1));
-	indentLevel = (indentLevel - 1) * 3; //multiply the indentLevel to increase the margin
 	
-	var outlineItem = "<a style='margin-left:"+indentLevel+"em' href='#' data-ANDI508-relatedIndex='"+$(element).attr('data-ANDI508-index')+"'>&lt;"+tagName;
+	var outlineItem = "<a style='margin-left:"+indentLevel+"%' href='#' data-ANDI508-relatedIndex='"+$(element).attr('data-ANDI508-index')+"'>&lt;"+tagName;
 	
 	//attributes
 	if(role)
@@ -195,6 +208,14 @@ sANDI.results = function(){
 	moduleActionButtons += "<button id='ANDI508-lists-button' class='sANDI508-mode' aria-label='"+listsCount+" Lists'>"+listsCount+" lists</button>";
 	moduleActionButtons += "<button id='ANDI508-landmarks-button' class='sANDI508-mode' aria-label='"+landmarksArray.length+" Landmarks'>"+landmarksArray.length+" landmarks</button>";
 	
+	moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-role-button' aria-pressed='false' aria-label='"+roleAttributesCount+" Role Attributes'>"+roleAttributesCount+" role attributes"+overlayIcon+"</button>";
+	
+	//lang attributes button
+	var htmlLangText = "The HTML element does not have a lang attribute.";
+	if(htmlLangAttribute)
+		htmlLangText = "The HTML element has a lang attribute value of "+htmlLangAttribute+".";
+	moduleActionButtons += "<button id='ANDI508-lang-button' aria-pressed='false' aria-label='"+langAttributesCount+" Lang Attributes, "+htmlLangText+"'>"+langAttributesCount+" lang attributes"+overlayIcon+"</button>";
+	
 	$("#ANDI508-module-actions").html(moduleActionButtons);
 
 	//Define sANDI mode buttons (headings, lists, landmarks)
@@ -204,7 +225,6 @@ sANDI.results = function(){
 		AndiModule.activeActionButtons.lists = false;
 		AndiModule.activeActionButtons.landmarks = false;
 		AndiModule.launchModule("s");
-		andiResetter.resizeHeights();
 	});
 	$("#ANDI508-lists-button").click(function(){
 		andiResetter.softReset($("#ANDI508-testPage"));
@@ -212,7 +232,6 @@ sANDI.results = function(){
 		AndiModule.activeActionButtons.lists = true;
 		AndiModule.activeActionButtons.landmarks = false;
 		AndiModule.launchModule("s");
-		andiResetter.resizeHeights();
 	});
 	$("#ANDI508-landmarks-button").click(function(){
 		andiResetter.softReset($("#ANDI508-testPage"));
@@ -220,7 +239,62 @@ sANDI.results = function(){
 		AndiModule.activeActionButtons.lists = false;
 		AndiModule.activeActionButtons.landmarks = true;
 		AndiModule.launchModule("s");
+	});
+	
+	//Define the lang attributes button
+	$("#ANDI508-lang-button").click(function(){
+		if($(this).attr("aria-pressed") == "false"){
+			andiOverlay.overlayButton_on("overlay",$(this));
+			
+			var langOverlayText = "";
+			var overlayObject;
+			$("#ANDI508-testPage [lang]").filter(":visible").each(function(){
+				if($(this).prop("lang").trim() != ""){
+					langOverlayText = $(this).prop("tagName").toLowerCase()+" lang="+$(this).prop("lang");
+					overlayObject = andiOverlay.createOverlay("ANDI508-overlay-langAttributes", langOverlayText);
+					andiOverlay.insertOverlay(this, overlayObject);
+				}
+			});
+			
+			if($("html").first().prop("lang")){
+				langOverlayText = "html lang="+$("html").first().prop("lang");
+				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-langAttributes", langOverlayText);
+				$("#ANDI508-testPage").prepend(overlayObject);
+			}
+			
+			AndiModule.activeActionButtons.langAttributes = true;
+		}
+		else{
+			andiOverlay.overlayButton_off("overlay",$(this));
+			andiOverlay.removeOverlay("ANDI508-overlay-langAttributes");
+			AndiModule.activeActionButtons.langAttributes = false;
+		}
 		andiResetter.resizeHeights();
+		return false;
+	});
+	
+	//Define the lang attributes button
+	$("#ANDI508-role-button").click(function(){
+		if($(this).attr("aria-pressed") == "false"){
+			andiOverlay.overlayButton_on("overlay",$(this));
+			
+			var langOverlayText = "";
+			var overlayObject;
+			$("#ANDI508-testPage [role]").filter(":visible").each(function(){
+				langOverlayText = $(this).prop('tagName').toLowerCase()+" role="+$(this).attr("role");
+				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-roleAttributes", langOverlayText);
+				andiOverlay.insertOverlay(this, overlayObject);
+			});
+
+			AndiModule.activeActionButtons.roleAttributes = true;
+		}
+		else{
+			andiOverlay.overlayButton_off("overlay",$(this));
+			andiOverlay.removeOverlay("ANDI508-overlay-roleAttributes");
+			AndiModule.activeActionButtons.roleAttributes = false;
+		}
+		andiResetter.resizeHeights();
+		return false;
 	});
 	
 	//Deselect all mode buttons
@@ -242,20 +316,21 @@ sANDI.results = function(){
 
 				andiBar.updateResultsSummary("Headings: "+headingsArray.length);
 				
-				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-pressed='false'>view outline "+listIcon+"</button><div id='sANDI508-outline-container'></div>");
+				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"view outline</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 				
 				//Define outline button
 				$("#ANDI508-viewOutline-button").click(function(){
-					if($(this).attr("aria-pressed")=="true"){
+					if($(this).attr("aria-expanded")=="true"){
 						//hide Outline, show alert list
 						$("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
 						if(testPageData.numberOfAccessibilityAlertsFound > 0){
 							$("#ANDI508-alerts-list").show();
 						}
 						$(this)
-							.html("view outline "+listIcon)
-							.attr("aria-pressed","false")
-							.removeClass("ANDI508-module-action-active");
+							.addClass("ANDI508-viewOtherResults-button-expanded")
+							.html(listIcon+"view outline")
+							.attr("aria-expanded","false")
+							.removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
 					}
 					else{
 						//show Outline, hide alert list
@@ -263,27 +338,31 @@ sANDI.results = function(){
 						
 						andiSettings.minimode(false);
 						$(this)
-							.html("hide outline "+listIcon)
-							.attr("aria-pressed","true")
-							.addClass("ANDI508-module-action-active")
+							.html(listIcon+"hide outline")
+							.attr("aria-expanded","true")
+							.addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
 							.find("img").attr("src",icons_url+"list-on.png");
-						$("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed);
-							//.find("h3").first().focus();
+						$("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
 					}
 					andiResetter.resizeHeights();
 					return false;
 				});
 				
-				andiBar.showStartUpSummary("Heading structure found.<br />Determine if headings are appropriatly applied.",true);
-			}
-			else if(testPageData.numberOfAccessibilityAlertsFound==0){
-				//No Alerts
-				andiBar.showStartUpSummary("No Headings.",false);
+				andiBar.showElementControls();
+				andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriatly applied.",true);
 			}
 			else{
-				//Alerts were found
-				andiBar.updateResultsSummary("Headings: "+headingsArray.length);
-				andiBar.showStartUpSummary("No Heading structure was found, <br />however there are some accessibility alerts.",true);
+				//No Headings
+				andiBar.hideElementControls();
+				if(testPageData.numberOfAccessibilityAlertsFound === 0){
+					//No Alerts
+					andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span>.",false);
+				}
+				else{
+					//Alerts were found
+					andiBar.updateResultsSummary("Headings: "+headingsArray.length);
+					andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span> detected, <br />however there are some accessibility alerts.",true);
+				}
 			}
 		}
 		//LISTS
@@ -311,12 +390,18 @@ sANDI.results = function(){
 					listCounts += delimiter + dlCount + " description list (dl)";
 					listTypesUsed += delimiter + "dl";
 				}
+				if(listRoleCount>0){
+					listCounts += delimiter + listRoleCount + " role=list";
+					listTypesUsed += delimiter + "[role=list]";
+				}
 				$("#ANDI508-additionalPageResults").html(listCounts);
-				andiBar.showStartUpSummary("List structure found.<br />Determine if the list container types used ("+listTypesUsed+") are appropriatly applied.",true);
+				andiBar.showElementControls();
+				andiBar.showStartUpSummary("List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used ("+listTypesUsed+") are appropriatly applied.",true);
 			}
 			else{
-				andiBar.showStartUpSummary("No Lists.",false);
-				
+				//No Lists
+				andiBar.hideElementControls();
+				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>lists</span>.",false);
 			}
 		}
 		//LANDMARKS
@@ -327,11 +412,13 @@ sANDI.results = function(){
 			//No outline for landmarks mode
 			if(landmarksArray.length > 0){
 				andiBar.updateResultsSummary("Landmarks: "+landmarksArray.length);
-								
-				andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each landmark is applied appropriately to the corresponding section of the page.",true);
+				andiBar.showElementControls();
+				andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.",true);
 			}
 			else{
-				andiBar.showStartUpSummary("No Landmarks.",false);
+				//No Landmarks
+				andiBar.hideElementControls();
+				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>landmarks</span>.",false);
 			}
 		}
 		
@@ -370,9 +457,18 @@ sANDI.results = function(){
 				sANDI.inspect($(relatedElement));
 			});
 		});
+		
+		//Click previously active buttons
+		if(AndiModule.activeActionButtons.roleAttributes){
+			$("#ANDI508-role-button").click();
+		}
+		if(AndiModule.activeActionButtons.langAttributes){
+			$("#ANDI508-lang-button").click();
+		}
 	}
 	else{
-		andiBar.showStartUpSummary("No Headings, Lists, or Landmarks Found.",false);
+		andiBar.hideElementControls();
+		andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span>, <span class='ANDI508-module-name-s'>lists</span>, or <span class='ANDI508-module-name-s'>landmarks</span> were detected.",false);
 	}
 	
 	$("#ANDI508").focus();
@@ -386,62 +482,31 @@ sANDI.inspect = function(element){
 		
 		var elementData = $(element).data("ANDI508");
 		
-		displayTable(element);
+		var additionalComponents = [
+			$(element).attr("aria-level")
+		];
 		
-		//This function defines ANDI's output logic for any type of element.
-		AndiModule.outputLogic = function(){
-			var usingTitleAsNamer = false;
-		//Accessible Name
-			//aria-labelledby
-			if(andiBar.output.ariaLabelledby(elementData));
-			//aria-label
-			else if(andiBar.output.ariaLabel(elementData));
-		//HTML Namers
-			//alt
-			else if(!elementData.ignoreAlt && andiBar.output.alt(elementData));
-			//innerText/child
-			else if(andiBar.output.innerText(elementData));
-			//title
-			else if(andiBar.output.title(elementData)) usingTitleAsNamer=true;
-		//Accessible Description
-			//aria-describedby
-			if(andiBar.output.ariaDescribedby(elementData));
-		//HTML Describers
-			//title
-			else if(!usingTitleAsNamer && andiBar.output.title(elementData));
-		//Add-On Properties
-			if(andiBar.output.addOnProperties(elementData));
-		};
-		
+		andiBar.displayTable(elementData,
+			[
+				["aria-labelledby", elementData.ariaLabelledby],
+				["aria-label", elementData.ariaLabel],
+				["alt", elementData.alt],
+				["innerText", elementData.innerText],
+				["child", elementData.subtree],
+				["imageSrc", elementData.imageSrc],
+				["aria-describedby", elementData.ariaDescribedby],
+				["title", elementData.title]
+			],
+			[
+				["aria-level", additionalComponents[0]],
+				["aria-hidden", elementData.addOnProperties.ariaHidden],
+				["tabindex", elementData.addOnProperties.tabindex],
+				["accesskey", elementData.addOnProperties.accesskey]
+			],
+			additionalComponents
+		);
+
 		andiBar.displayOutput(elementData);	
-	}
-	
-	//This function displays the Accessible Components table.
-	//Only shows components containing data.
-	//Will display message if no accessible components were found.
-	function displayTable(element){
-		
-		var additionalComponents = [];
-		
-		if(andiCheck.wereComponentsFound(elementData, additionalComponents)){
-			//add table rows for components found
-			andiBar.appendRow("aria-labelledby",	elementData.ariaLabelledby,false,true);
-			andiBar.appendRow("aria-label",			elementData.ariaLabel);
-			andiBar.appendRow("alt",				elementData.alt);
-			andiBar.appendRow("innerText",			elementData.innerText);
-			andiBar.appendRow("child&nbsp;element",	elementData.subtree);
-			andiBar.appendRow("imageSrc",			elementData.imageSrc);
-			andiBar.appendRow("aria-describedby",	elementData.ariaDescribedby,false,true);
-			andiBar.appendRow("title",				elementData.title);
-			
-			//add table rows for add-on properties found
-			if(elementData.addOnPropertiesTotal != 0){
-				andiBar.appendRow("role",			elementData.addOnProperties.role, true);
-				andiBar.appendRow("accesskey",		elementData.addOnProperties.accesskey, true);
-				andiBar.appendRow("tabindex",		elementData.addOnProperties.tabindex, true);
-				andiBar.appendRow("aria-hidden",	elementData.addOnProperties.ariaHidden, true);
-			}
-		}
 	}
 };
 

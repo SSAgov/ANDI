@@ -1,11 +1,41 @@
-/*==ANDI==*/
-	/*
-	#ANDI508.ANDI508-module-l #ANDI508-activeElementInspection
-		{width:26%}
-	#ANDI508.ANDI508-module-l #ANDI508-pageAnalysis
-		{width:64%}
-	*/
 /*==lANDI==*/
+	/*==ANDI Bar==*/
+	#ANDI508 #lANDI508-viewList-tabs
+		{margin-left:10px;}
+	#ANDI508 #lANDI508-viewList-tabs button
+		{border:1px solid black; border-right:1px solid gray; padding:3px 1em 3px 1em; position:relative;}
+	#ANDI508 #lANDI508-viewList-tabs button:hover,
+	#ANDI508 #lANDI508-viewList-tabs button:focus
+		{border:1px solid lemonchiffon;}
+	#ANDI508 #lANDI508-viewList-tabs button.ANDI508-tab-active
+		{color:#c5c5ff !important; text-decoration:underline !important; top:1px}
+
+	#ANDI508 #ANDI508-viewList-table td i
+		{visibility:hidden}
+	#ANDI508 #ANDI508-viewList-table td.ANDI508-alert-column
+		{padding-left:1.3em}
+		
+	#ANDI508 #ANDI508-viewList-table td.ANDI508-code,
+	#ANDI508 #ANDI508-viewList-table td.ANDI508-code a
+		{font:9pt monospace;}
+	
+	/*slightly lighter than normal danger color to satisfy AAA color contrast*/
+	#ANDI508 #ANDI508-viewList-table tr.ANDI508-table-row-alert td a span.ANDI508-display-danger
+		{color:#ff6767 !important;}
+		
+	#ANDI508 #ANDI508-viewList-table button.lANDI508-nextTab
+		{font-size: 7pt; border:1px solid gray; border-radius:5px; padding:1px;}
+		
+	#ANDI508 #lANDI508-viewList-button-prev,
+	#ANDI508 #lANDI508-viewList-button-next
+		{border:1px solid black !important; margin:1px 1px 2px 0.6em !important; padding:0 !important; border-radius:3px !important;}
+	#ANDI508 #lANDI508-viewList-button-prev:hover,
+	#ANDI508 #lANDI508-viewList-button-next:hover
+		{border:1px solid lemonchiffon !important;}
+	#ANDI508 #lANDI508-viewList-button-prev img,
+	#ANDI508 #lANDI508-viewList-button-next img
+		{width:22px}
+
 	/*=Test Page=*/
 	#ANDI508-testPage.lANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
 		{outline:3px dashed red !important;}
@@ -14,12 +44,7 @@
 	#ANDI508-testPage.lANDI508-testPage .ANDI508-element.ANDI508-highlight
 		{outline:1px dashed #6464E3 !important;}
 		
-	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous a[data-lANDI508-ambiguousIndex],
-	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous button[data-lANDI508-ambiguousIndex],
-	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous input[type=submit][data-lANDI508-ambiguousIndex],
-	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous input[type=button][data-lANDI508-ambiguousIndex],
-	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous input[type=reset][data-lANDI508-ambiguousIndex],
-	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous input[type=image][data-lANDI508-ambiguousIndex]
+	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous .lANDI508-ambiguous
 		{border:2.5px solid #6464E3 !important; box-shadow:0 0 25px 1px #6464E3 !important}
 		
 	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightInternal a.ANDI508-element.lANDI508-internalLink
@@ -27,87 +52,3 @@
 		
 	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightExternal a.ANDI508-element.lANDI508-externalLink
 		{border:2.5px solid #6464E3 !important; box-shadow:0 0 25px 1px #6464E3 !important}
-	
-	#ANDI508 #lANDI508-viewList-tabs
-		{display:none; margin-left:10px;}
-	#ANDI508 #lANDI508-viewList-tabs button
-		{border:1px solid gray; border-bottom:none; border-top-left-radius:10px; border-top-right-radius:1px;
-		padding:3px 1em 3px 1em; margin-right:0.7em; position:relative;}
-	#ANDI508 #lANDI508-viewList-tabs button:hover,
-	#ANDI508 #lANDI508-viewList-tabs button:focus
-		{border:1px solid lemonchiffon; border-bottom:none;}
-	#ANDI508 #lANDI508-viewList-tabs button.ANDI508-tab-active
-		{color:#c5c5ff !important; text-decoration:underline !important; top:1px}
-	
-	#ANDI508 #lANDI508-viewList-scrollable
-		{min-height:3.3em; max-height:16em; overflow-y:auto; overflow-x:hidden;
-		scrollbar-arrow-color:white !important; scrollbar-shadow-color:white !important; 
-		scrollbar-face-color:black !important; scrollbar-highlight-color:black !important; 
-		scrollbar-track-color:black !important; border:1px solid gray; 
-		border-top-left-radius:10px; border-bottom-left-radius:10px;}
-		
-	#ANDI508 #ANDI508-additionalPageResults #lANDI508-viewList-table
-		{border-collapse:collapse; table-layout:auto; min-width:145px;
-		min-height:3.3em; max-height:16em; display:inline-block; display:table; width:100%;}
-	
-	#ANDI508 #lANDI508-viewList-table th,
-	#ANDI508 #lANDI508-viewList-table th a
-		{padding:2px; text-align:left; white-space:nowrap;}
-	#ANDI508 #lANDI508-viewList-table td
-		{border:1px solid #262626; padding:1px; word-break:break-all;}
-	#ANDI508 #lANDI508-viewList-table td,
-	#ANDI508 #lANDI508-viewList-table td a,
-	#ANDI508 #lANDI508-viewList-table td span
-		{font-size:8pt;}
-	#ANDI508 #lANDI508-viewList-table td img
-		{width:16px;}
-	#ANDI508 #lANDI508-viewList-table a:hover
-		{text-decoration:underline !important;}
-	#ANDI508 #lANDI508-viewList-table td i
-		{visibility:hidden}
-	#ANDI508 #lANDI508-viewList-table td.lANDI-alert-column
-		{padding-left:1.3em}
-		
-	#ANDI508 #lANDI508-viewList-table td.ANDI508-code,
-	#ANDI508 #lANDI508-viewList-table td.ANDI508-code a
-		{font:9pt monospace;}
-		
-	#ANDI508 #lANDI508-viewList-table caption
-		{white-space:nowrap}
-	
-	/*red highlight*/
-	#ANDI508 #lANDI508-viewList-table tr.ANDI508-table-row-alert td,
-	#ANDI508 #lANDI508-viewList-table tr.ANDI508-table-row-alert td a,
-	#ANDI508 #lANDI508-viewList-table tr.ANDI508-table-row-alert td span,
-	#ANDI508 #lANDI508-viewList-table tr.ANDI508-table-row-alert td img
-		{background-color: #300000 !important;}
-	
-	/*blue hover*/
-	#ANDI508 #lANDI508-viewList-table tr:hover td,
-	#ANDI508 #lANDI508-viewList-table tr:hover td a,
-	#ANDI508 #lANDI508-viewList-table tr:hover td span,
-	#ANDI508 #lANDI508-viewList-table tr:hover td img
-		{background-color: #01011f !important;}
-		
-	/*pink text*/
-	#ANDI508 #lANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting td,
-	#ANDI508 #lANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting th,
-	#ANDI508 #lANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting a
-		{color:#ff6abb !important;}
-	
-	/*slightly lighter than normal danger color to satisfy AAA color contrast*/
-	#ANDI508 #lANDI508-viewList-table tr.ANDI508-table-row-alert td a span.ANDI508-display-danger
-		{color:#ff6767 !important} 
-		
-	#ANDI508 #lANDI508-viewList-table button.lANDI508-nextTab
-		{font-size: 7pt; border:1px solid gray; border-radius:5px; padding:1px;}
-		
-	#ANDI508 #lANDI508-viewList-button-prev,
-	#ANDI508 #lANDI508-viewList-button-next
-		{box-shadow:1px 1px 2px 0px #808080; margin:1px 1px 2px 0.6em !important; padding:0 !important; border-radius:0 !important;}
-	#ANDI508 #lANDI508-viewList-button-prev:hover,
-	#ANDI508 #lANDI508-viewList-button-next:hover
-		{border:1px solid lemonchiffon !important;}
-	#ANDI508 #lANDI508-viewList-button-prev img,
-	#ANDI508 #lANDI508-viewList-button-next img
-		{width:22px}

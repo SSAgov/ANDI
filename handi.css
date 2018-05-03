@@ -1,4 +1,16 @@
 /*==hANDI==*/
+	/*==ANDI Bar==*/
+	#ANDI508 #ANDI508-accessibleComponentsTableContainer,
+	#ANDI508 #ANDI508-outputContainer
+		{display:none !important;}
+		
+	#ANDI508 #ANDI508-additionalElementDetails
+		{display:block;}
+		
+	#ANDI508 #ANDI508-additionalElementDetails span.ANDI508-code
+		{font:10pt monospace;}
+
+	/*=Test Page=*/
 	#ANDI508-testPage.hANDI508-testPage .ANDI508-forceReveal
 		{border:1px #f0ee87 !important; box-shadow:0 0 25px 1px #f0ee87 !important}
 	#ANDI508-testPage.hANDI508-testPage .ANDI508-forceReveal.ANDI508-forceReveal-display
@@ -22,24 +34,7 @@
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:before,
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:after
 		{outline:1px solid red !important; box-shadow:0 0 20px 1px red !important}
-		
-	#ANDI508 #ANDI508-accessibleComponentsTableContainer,
-	#ANDI508 #ANDI508-outputContainer
-		{display:none !important;}
-		
-	#ANDI508 #ANDI508-additionalElementDetails
-		{display:block;}
-		
-	#ANDI508 #ANDI508-additionalElementDetails span.ANDI508-code
-		{font:10pt monospace;}
-		
-	/*override the outlining for hidden CSS content*/
-	/*#ANDI508-testPage .ANDI508-highlight.ANDI508-element-danger.ANDI508-element.hANDI508-hasHiddenCssContent
-		{outline:none !important}
-	#ANDI508-testPage .ANDI508-highlight.ANDI508-element-danger.ANDI508-element.hANDI508-hasHiddenCssContent:before,
-	#ANDI508-testPage .ANDI508-highlight.ANDI508-element-danger.ANDI508-element.hANDI508-hasHiddenCssContent:after
-		{outline:3px dashed red !important;}*/
-		
+
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:before,
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:after
 		{box-shadow:0 0 20px 4px red !important;}

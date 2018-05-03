@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var handiVersionNumber = "3.0.10";
+var handiVersionNumber = "3.2.0";
 
 //TODO: report whether an element should be visible or invisible to a screen reader
 
@@ -67,7 +67,7 @@ if($.isEmptyObject(AndiModule.activeActionButtons)){
 }
 
 if(!prevNextBtnsVisible){
-	$("#ANDI508-resultsSummary").hide(); //hide next/prev buttons
+	andiBar.hideElementControls();
 }
 
 //This function returns true if the element contains elements that might need accessibility testing, false if not.
@@ -77,17 +77,15 @@ hANDI.containsTestableContent = function(element){
 	var elementsNeedingTesting = "img,input,select,textarea,button,a,[tabindex],iframe,table";
 	
 	//Does this element contain content that needs testing
-	if(isContainerElement 
-		&& ($.trim($(element).html()) == "" 
-			|| ($.trim($(element).text()) == "" 
-					&& $(element).find(elementsNeedingTesting).length === 0 )))
+	if(isContainerElement &&
+		($.trim($(element).html()) === "" ||
+			($.trim($(element).text()) === "" &&
+				$(element).find(elementsNeedingTesting).length === 0 )))
 	{
 		needsTesting = false; //this element doesn't need testing
 	}
 	//Is this element one that needs testing?
-	else if(!isContainerElement
-		&& $(element).is(elementsNeedingTesting))
-	{
+	else if(!isContainerElement && $(element).is(elementsNeedingTesting)){
 		needsTesting = false; //this element doesn't need testing
 	}
 	
@@ -140,8 +138,8 @@ hANDI.analyze = function(){
 			}
 			//if element has innerText
 			if($(this).isContainerElement() && $.trim($(this).text())){
-				if($(this).css("overflow")=="hidden"
-					&& (convertToInt($(this).css("height"))<=1 || convertToInt($(this).css("width"))<=1))
+				if($(this).css("overflow")=="hidden" &&
+					(parseInt($(this).css("height"))<=1 || parseInt($(this).css("width"))<=1))
 				{
 					//element has overflow hidden and a small height or width
 					hiddenElements++;
@@ -151,7 +149,7 @@ hANDI.analyze = function(){
 					$(this).addClass("ANDI508-forceReveal-overflow");
 					elementCss += "overflow:hidden; ";
 				}
-				if(convertToInt($(this).css("font-size")) === 0){
+				if(parseInt($(this).css("font-size")) === 0){
 					//element font-size is 0
 					hiddenElements++;
 					isHidingContent = true;
@@ -162,7 +160,7 @@ hANDI.analyze = function(){
 				}
 			}
 			if($(this).css("text-indent") != "0" || $(this).css("text-indent") != "0px"){
-				if(convertToInt($(this).css("text-indent")) < -998){
+				if(parseInt($(this).css("text-indent")) < -998){
 					//element has a text-indent that makes it off screen
 					hiddenElements++;
 					isHidingContent = true;
@@ -185,9 +183,9 @@ hANDI.analyze = function(){
 		
 		if(isHidingContent){
 			//create data-hANDI508-hidingTechniques
-			if(elementCss != ""){
+			if(elementCss !== ""){
 				elementCss = "<h3 class='ANDI508-heading'>Hiding Technique:</h3> <span class='ANDI508-code'>" + $.trim(elementCss) + "</span>";
-				$(this).attr("data-hANDI508-hidingTechniques",elementCss);
+				$(this).attr("data-hANDI508-hidingTechniques", elementCss);
 			}
 			
 			andiData = new AndiData($(this));
@@ -199,20 +197,14 @@ hANDI.analyze = function(){
 		hANDI.detectCssInjectedContent();
 	
 		if($("#ANDI508-testPage .hANDI508-hasHiddenCssContent").first().length)
-			andiAlerter.throwAlert(alert_0220,"Page has "+alert_0220.message, 0);
-		
-		//$("#ANDI508-testPage .hANDI508-hasHiddenCssContent").each(function(){
-		//	andiData = new AndiData($(this));
-		//	andiAlerter.throwAlert(alert_0220);
-		//	andiData.attachDataToElement($(this));
-		//});
+			andiAlerter.throwAlert(alert_0220,alert_0220.message, 0);
 	}
 };
 
 //This function will detect content hidden using css :before :after content.
 //Current scren readers will not read text injected using this method.
 hANDI.detectCssInjectedContent = function(){
-	var everyElement = document.querySelectorAll('#ANDI508-testPage *');
+	var everyElement = document.querySelectorAll("#ANDI508-testPage *");
 	var before, after, hasHiddenCSSContent, cssDisplay;
 	
 	//Loop through every element on the page
@@ -256,15 +248,11 @@ hANDI.detectCssInjectedContent = function(){
 	}
 };
 
-//This function will strip out the unit (px, em, pt) and convert to an Int
-function convertToInt(value){
-	return parseInt(value.replace(/[^-\d\.]/g, ''));
-}
-
 //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
+var showStartUpSummaryText = "";
 hANDI.results = function(){
 
-	andiBar.updateResultsSummary("Revealed Elements: ");
+	andiBar.updateResultsSummary("Hidden Elements: "+hiddenElements);
 
 	//Are There Hidden Elements?
 	if(hiddenElements > 0 || elementsWithCssInjectedContent > 0){
@@ -386,7 +374,6 @@ hANDI.results = function(){
 				andiOverlay.overlayButton_on("find",$(this));
 				$("#ANDI508-testPage .ANDI508-forceReveal-position").addClass("ANDI508-forceReveal");
 				AndiModule.activeActionButtons.forceReveal_position = true;
-
 			}
 			else{
 				andiOverlay.overlayButton_off("find",$(this));
@@ -532,14 +519,13 @@ hANDI.results = function(){
 		});
 		
 		//=============================================
-		var showStartUpSummaryText = "";
 		if(hiddenElements > 0){
-			showStartUpSummaryText += "Discover <span class='ANDI508-module-name-h'>hidden content</span> that should be tested for accessibility using other ANDI modules.<br />"
-				+"The revealed content will not remain revealed after changing modules.<br /><br />"
-				+"This page has content hidden using CSS - Use the style toggle buttons to force the hidden content to be revealed. ";
+			showStartUpSummaryText += "Discover <span class='ANDI508-module-name-h'>hidden content</span> that should be tested for accessibility using other ANDI modules.<br />"+
+				"The revealed content will not remain revealed after changing modules.<br /><br />"+
+				"Use the style toggle buttons to force the hidden content to be revealed. ";
 		}
 		if(elementsWithCssInjectedContent > 0){
-			showStartUpSummaryText += "This page has content injected using CSS pseudo-elements ::before or ::after which may not be accessible to users of assistive technologies.";
+			showStartUpSummaryText += "<br /><br />Warning: This page has content injected using CSS pseudo-elements ::before or ::after which may not be accessible to users of assistive technologies.";
 		}
 		andiBar.showStartUpSummary(showStartUpSummaryText,true);
 		
@@ -607,13 +593,16 @@ hANDI.toggleRevealAllButton = function(){
 	
 	//Toggle Next Prev Buttons
 	if(prevNextBtnsVisible){
-		//$("#ANDI508-activeElementResults").show();
-		$("#ANDI508-resultsSummary").show(); //show next/prev buttons
+		$("#ANDI508-elementNameContainer").show();
+		$("#ANDI508-additionalElementDetails").show();
+		andiBar.showElementControls();
 	}
 	else{
 		$("#ANDI508-testPage .ANDI508-element-active").removeClass("ANDI508-element-active");
-		$("#ANDI508-activeElementResults").hide();
-		$("#ANDI508-resultsSummary").hide(); //hide next/prev buttons
+		$("#ANDI508-elementNameContainer").hide();
+		$("#ANDI508-additionalElementDetails").hide();
+		andiBar.hideElementControls();
+		andiBar.showStartUpSummary(showStartUpSummaryText,true);
 	}
 };
 
@@ -688,10 +677,7 @@ $("#ANDI508-button-nextElement").off("click").click(function(){
 		var nextElement;
 		//Find the next element with data-ANDI508-index
 		//This will skip over elements that may have been removed from the DOM and are not force revealed
-		//var nextElement;
 		for(var x=index; x<testPageData.andiElementIndex; x++){
-			//nextElement = $("#ANDI508-testPage [data-ANDI508-index='"+(x + 1)+"']");
-			//if($(nextElement).length && $(nextElement).is(":visible")){
 			nextElement = $("#ANDI508-testPage [data-ANDI508-index='"+(x + 1)+"']");
 			if($(nextElement).length && $(nextElement).hasClass("ANDI508-forceReveal")){
 				andiFocuser.focusByIndex(x + 1);
