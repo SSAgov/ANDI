@@ -1,5 +1,5 @@
 /*=====ANDI CSS=====*/
-/*Version 4.7 */
+/*Version 4.11 */
 /*This is the main CSS file for ANDI*/
 /*It is important to keep the specificity high to override any test page's own CSS*/
 
@@ -24,7 +24,7 @@ body.ANDI508-testPage
 	
 /*overlay*/
 #ANDI508-testPage span.ANDI508-overlay
-	{display:inline; font:bold 8pt tahoma !important; border:1px solid dimgray !important; color:black !important; z-index:9997; 
+	{display:inline; font:bold 8pt tahoma !important; border:1px solid lightgray !important; color:black !important; z-index:9997; 
 	padding:1px 2px; position:relative; background:#ffee7e; border-radius:5px; text-transform:none; text-decoration:none; border-image:none;}
 #ANDI508-testPage span.ANDI508-overlay.ANDI508-overlay-alert
 	{background:#ff7575;}
@@ -74,7 +74,7 @@ body.ANDI508-testPage
 #ANDI508 th
 	{font:normal normal normal 10pt/normal Verdana; line-height:normal; letter-spacing:normal; text-align:left;
 	 background:transparent !important; color:white !important; appearance:normal; text-transform:none; opacity:1 !important;
-	 margin:0; padding:0; border:none; border-radius:0; left:0; top:0; vertical-align:baseline; float:none;
+	 margin:0; padding:0; border:none; border-radius:0; left:0; top:0; vertical-align:baseline; float:none; outline:none !important;
 	 width:auto; height:auto; min-width:0; max-width:none; min-height:0; max-height:none; overflow:visible; transform:none;
 	 box-shadow:none; text-decoration:none !important; content:none; clear:none; box-sizing:content-box; text-shadow:none;}
 #ANDI508 *::before,
@@ -189,14 +189,14 @@ body.ANDI508-testPage
 /*module action buttons*/
 #ANDI508 #ANDI508-module-actions
 	{display:inline-block; padding-top:0.5em; margin-right:13.8em; position:absolute; left:22.5em; vertical-align:top;
-	overflow-y:auto; height:2.6em; min-width:200px; background-color:black; z-index:3;
+	/*overflow-y:auto;*/ height:2.6em; min-width:200px; background-color:black; z-index:3;
 	scrollbar-arrow-color:black; scrollbar-shadow-color:black;
 	scrollbar-face-color:black; scrollbar-highlight-color:black; scrollbar-track-color:black;
 	}
 #ANDI508 #ANDI508-module-actions span.ANDI508-module-actions-spacer
 	{color:gray !important; font-size:8pt;}
 #ANDI508 #ANDI508-module-actions button
-	{border:1px solid black !important; display:inline !important; padding:2px 2.5px !important; font-size:9pt;
+	{border:1px solid black !important; display:inline !important; padding:2px 2.5px !important; font-size:9pt !important;
 	box-shadow:none !important; background:none !important; cursor:pointer !important; white-space:nowrap !important;
 	border-radius:7px; margin-right:7px; font-family:tahoma; color:#e6e6e6 !important; line-height:1 !important; background:black !important;}
 #ANDI508 #ANDI508-module-actions button:hover,
@@ -282,6 +282,12 @@ body.ANDI508-testPage
 #ANDI508.ANDI508-module-h #ANDI508-module-name,
 #ANDI508.ANDI508-module-h #ANDI508-module-actions button.ANDI508-module-action-active
 	{color:#eeecaf !important;}
+/*iANDI*/
+#ANDI508 .ANDI508-module-name-i,
+#ANDI508 #ANDI508-moduleMenu-button-i,
+#ANDI508.ANDI508-module-i #ANDI508-module-name,
+#ANDI508.ANDI508-module-i #ANDI508-module-actions button.ANDI508-module-action-active
+	{color:pink !important;}
 	
 #ANDI508 #ANDI508-module-name
 	{font:bold 20pt monospace !important; margin-right:1px; display:inline;}
@@ -292,7 +298,7 @@ body.ANDI508-testPage
 
 #ANDI508 #ANDI508-elementControls
 	{width:19%; display:inline-block; vertical-align:top; text-align:center;}
-	
+		
 #ANDI508 #ANDI508-elementDetails,
 #ANDI508 #ANDI508-startUpSummary,
 #ANDI508 #ANDI508-additionalElementDetails
@@ -320,7 +326,7 @@ body.ANDI508-testPage
 	text-overflow:ellipsis; max-width:418px; max-height:1.2em; width:99%; border:none !important; 
 	vertical-align:top; padding:0 0 0 5px; margin:0;}
 #ANDI508 #ANDI508-accessibleComponentsTable td span
-	{font:9pt Tahoma !important; white-space:nowrap; display:inline-block;}
+	{font:9pt Tahoma !important; white-space:nowrap; display:inline;}
 #ANDI508 #ANDI508-accessibleComponentsTable-noData
 	{text-align:left !important; font-size:9pt; padding-left:0;}
 #ANDI508 #ANDI508-accessibleComponentsTable td.ANDI508-display-child,
@@ -537,7 +543,7 @@ body.ANDI508-testPage
 	#ANDI508 #ANDI508-accesskeysFound a:active
 		{color:white !important; padding:0px 3px 0px 3px !important;}
 	#ANDI508 #ANDI508-accesskeysFound a:hover
-		{color:white !important; outline:1px solid lemonchiffon;}
+		{color:white !important; outline:1px solid lemonchiffon !important;}
 		
 	#ANDI508-testPage .ANDI508-overlay-tabSequence-greaterThanZero
 		{background:#ffb03a !important;}

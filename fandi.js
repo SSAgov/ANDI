@@ -4,7 +4,7 @@
 //=============================================//
 function init_module(){
 
-var fandiVersionNumber = "5.3.1";
+var fandiVersionNumber = "5.5.0";
 
 //create fANDI instance
 var fANDI = new AndiModule(fandiVersionNumber,"f");
@@ -26,6 +26,7 @@ AndiModule.andiElementFocusability = function(){
 if($.isEmptyObject(AndiModule.activeActionButtons)){
 	$.extend(AndiModule.activeActionButtons,{tabOrder:false});
 	$.extend(AndiModule.activeActionButtons,{titleAttributes:false});
+	$.extend(AndiModule.activeActionButtons,{labelTags:false});
 }
 
 //This function will analyze the test page for focusable element related markup relating to accessibility
@@ -53,7 +54,6 @@ fANDI.analyze = function(){
 	});
 	
 	andiCheck.areThereDisabledElements("elements");
-
 };
 
 function AndiAccesskeys(){
@@ -94,8 +94,10 @@ function AndiAccesskeys(){
 						addToList(accesskey, alert_0055);
 					}
 				}
-				else
+				else{
 					addToList(accesskey);
+					duplicateComparator += accesskey;
+				}
 			}
 		}
 		
@@ -113,7 +115,6 @@ function AndiAccesskeys(){
 				list += "<span tabindex='0' "+addClass+" title='"+ titleText +"'>"+accesskey+"</span> ";
 			else
 				list += "<a href='#' data-ANDI508-relatedIndex='"+index+"' title='"+ titleText +"'><span "+addClass+">"+accesskey+"</span></a> ";
-			duplicateComparator += accesskey;
 		};
 	};
 };
@@ -123,7 +124,7 @@ function AndiAccesskeys(){
 fANDI.results = function(){
 
 	andiBar.updateResultsSummary("Focusable Elements Found: "+testPageData.andiElementIndex);
-
+	
 	//Are There Focusable Elements?
 	if(testPageData.andiElementIndex>0){
 		//Yes, Focusable Elements were found
@@ -145,9 +146,10 @@ fANDI.results = function(){
 		//Tab Order button
 		var moduleActionButtons = "<button id='ANDI508-tabOrder-button' aria-label='Tab Order Indicators' aria-pressed='false'>tab order"+overlayIcon+"</button>";
 		if(TestPageData.page_using_titleAttr)
-			//Title Attributes Button
 			moduleActionButtons += "<button id='ANDI508-titleAttributes-button' aria-label='Title Attributes' aria-pressed='false'>title attributes"+overlayIcon+"</button>";
-			
+		if(testPageData.page_using_label)
+			moduleActionButtons += "<button id='ANDI508-labelTags-button' aria-label='Label Tags' aria-pressed='false'>label tags"+overlayIcon+"</button>";
+		
 		$("#ANDI508-module-actions").append(moduleActionButtons);
 		
 		//Define tabOrder button functionality
@@ -181,7 +183,23 @@ fANDI.results = function(){
 			andiResetter.resizeHeights();
 			return false;
 		});
-						
+		
+		//Define titleAttributes button functionality
+		$("#ANDI508-labelTags-button").click(function(){
+			if($(this).attr("aria-pressed") == "false"){
+				andiOverlay.overlayButton_on("overlay",$(this));
+				andiOverlay.overlayLabelTags();
+				AndiModule.activeActionButtons.labelTags = true;
+			}
+			else{
+				andiOverlay.overlayButton_off("overlay",$(this));
+				andiOverlay.removeOverlay("ANDI508-overlay-labelTags");
+				AndiModule.activeActionButtons.labelTags = false;
+			}
+			andiResetter.resizeHeights();
+			return false;
+		});
+
 		if(!andiBar.focusIsOnInspectableElement()){
 			andiBar.showElementControls();
 			andiBar.showStartUpSummary("Discover accessibility markup for focusable elements by tabbing to or hovering over the highlighted elements.",true,"focusable element");
@@ -207,6 +225,8 @@ fANDI.results = function(){
 		$("#ANDI508-tabOrder-button").click();
 	if(AndiModule.activeActionButtons.titleAttributes)
 		$("#ANDI508-titleAttributes-button").click();
+	if(AndiModule.activeActionButtons.labelTags)
+		$("#ANDI508-labelTags-button").click();
 	
 	$("#ANDI508").focus();
 };
@@ -258,6 +278,35 @@ AndiOverlay.prototype.overlayTabOrder = function(){
 	});
 };
 
+//This function will overlay the label elements.
+AndiOverlay.prototype.overlayLabelTags = function(){
+	var labelText, labelFor, overlayClasses, titleText;
+	$("#ANDI508-testPage label").filter(":visible").each(function(){
+		labelText = "&lt;label";
+		overlayClasses = "ANDI508-overlay-labelTags";
+		titleText = "";
+		labelFor = $(this).attr("for");
+
+		if(labelFor){
+			labelText += " for=" + labelFor;
+			if(!document.getElementById(labelFor)){ //id that matches for cannot be found
+				overlayClasses += " ANDI508-overlay-alert";
+				titleText += "no matching [id]";
+			}
+		}
+		else
+			titleText += "no [for] attribute";
+		labelText += "&gt;";
+
+		$(this).before(andiOverlay.createOverlay(overlayClasses, labelText, titleText, 0));
+		$(this).after(andiOverlay.createOverlay(overlayClasses, "&lt;/label&gt;", "", 0));
+	});
+	
+	//$("#ANDI508-testPage .ANDI508-overlay-labelTags.ANDI508-overlay-alert").on("focus",function(){
+	//	andiOverlay.overlay_duplicateIds();
+	//});
+};
+
 //This function will update the info in the Active Element Inspection.
 //Should be called after the mouse hover or focus in event.
 fANDI.inspect = function(element){
@@ -299,6 +348,7 @@ fANDI.inspect = function(element){
 			["aria-required", elementData.addOnProperties.ariaRequired],
 			["aria-sort", elementData.addOnProperties.ariaSort],
 			["checked", elementData.addOnProperties.checked],
+			["contenteditable", elementData.addOnProperties.contenteditable],
 			["readonly", elementData.addOnProperties.readonly],
 			["required", elementData.addOnProperties.required],
 			["tabindex", elementData.addOnProperties.tabindex],

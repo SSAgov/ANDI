@@ -3,13 +3,23 @@
 	#ANDI508 #ANDI508-accessibleComponentsTableContainer,
 	#ANDI508 #ANDI508-outputContainer
 		{display:none !important;}
-		
+
 	#ANDI508 #ANDI508-additionalElementDetails
 		{display:block;}
-		
+
 	#ANDI508 #ANDI508-additionalElementDetails span.ANDI508-code
 		{font:10pt monospace;}
 
+	#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup
+		{position:relative; display:inline-block;}
+	#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup .ANDI508-moduleActionGroup-options
+		{display:none; background-color:black !important; margin-top:2px;
+		border:1px solid gray; border-radius:5px;}
+	#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup .ANDI508-moduleActionGroup-options button
+		{margin:2px 1px 2px 1px; width:93%; border-radius:5px;}
+	#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup.ANDI508-moduleActionGroup-visible .ANDI508-moduleActionGroup-options
+		{display:block !important; position:absolute; z-index:3; top:1.2em;}
+		
 	/*=Test Page=*/
 	#ANDI508-testPage.hANDI508-testPage .ANDI508-forceReveal
 		{border:1px #f0ee87 !important; box-shadow:0 0 25px 1px #f0ee87 !important}

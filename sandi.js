@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 	
-var sANDIVersionNumber = "1.10.4";
+var sANDIVersionNumber = "1.13.3";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -25,6 +25,8 @@ AndiModule.andiElementFocusability = function(){
 var structureExists = false;
 var headingsArray = [];
 var listsArray = [];
+var landmarksArray = [];
+var liveRegionsArray = [];
 var listsCount = 0;
 var olCount = 0;
 var ulCount = 0;
@@ -35,13 +37,12 @@ var langAttributesCount = 0;
 var roleAttributesCount = 0;
 var htmlLangAttribute = $.trim($("html").first().prop("lang")); //get the lang attribute from the HTML element
 
-var landmarksArray = [];
-
 //AndiModule.activeActionButtons
 if($.isEmptyObject(AndiModule.activeActionButtons)){
 	$.extend(AndiModule.activeActionButtons,{headings:true}); //default
 	$.extend(AndiModule.activeActionButtons,{lists:false});
 	$.extend(AndiModule.activeActionButtons,{landmarks:false});
+	$.extend(AndiModule.activeActionButtons,{liveRegions:false});
 	$.extend(AndiModule.activeActionButtons,{roleAttributes:false});
 	$.extend(AndiModule.activeActionButtons,{langAttributes:false});
 }
@@ -150,13 +151,24 @@ sANDI.analyze = function(){
 			}
 		}
 		
+		if($(this).is("[role=alert],[role=status],[aria-live=polite],[aria-live=assertive]")){
+			liveRegionsArray.push($(this));
+			if(AndiModule.activeActionButtons.liveRegions){
+				andiData = new AndiData($(this));
+				//screen readers only use the innerText
+				//andiData.grabComponents($(this));
+				andiData.innerText = andiData.grab_innerText($(this));
+				if($(this).find("textarea,input:not(:hidden),select").length)
+					andiAlerter.throwAlert(alert_0182);
+				andiData.attachDataToElement($(this));
+			}
+		}
+		
 		if($(this).attr("role"))
 			roleAttributesCount++;
 		
-		if($(this).prop("lang") && $(this).prop("lang").trim() !== ""){
+		if($(this).prop("lang") && $.trim($(this).prop("lang")) !== "")
 			langAttributesCount++;
-		}
-
 	});
 	
 	if(htmlLangAttribute)
@@ -207,6 +219,7 @@ sANDI.results = function(){
 	moduleActionButtons += "<button id='ANDI508-headings-button' class='sANDI508-mode' aria-label='"+headingsArray.length+" Headings'>"+headingsArray.length+" headings</button>";
 	moduleActionButtons += "<button id='ANDI508-lists-button' class='sANDI508-mode' aria-label='"+listsCount+" Lists'>"+listsCount+" lists</button>";
 	moduleActionButtons += "<button id='ANDI508-landmarks-button' class='sANDI508-mode' aria-label='"+landmarksArray.length+" Landmarks'>"+landmarksArray.length+" landmarks</button>";
+	moduleActionButtons += "<button id='ANDI508-liveRegions-button' class='sANDI508-mode' aria-label='"+liveRegionsArray.length+" Live Regions'>"+liveRegionsArray.length+" live regions</button>";
 	
 	moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-role-button' aria-pressed='false' aria-label='"+roleAttributesCount+" Role Attributes'>"+roleAttributesCount+" role attributes"+overlayIcon+"</button>";
 	
@@ -216,6 +229,9 @@ sANDI.results = function(){
 		htmlLangText = "The HTML element has a lang attribute value of "+htmlLangAttribute+".";
 	moduleActionButtons += "<button id='ANDI508-lang-button' aria-pressed='false' aria-label='"+langAttributesCount+" Lang Attributes, "+htmlLangText+"'>"+langAttributesCount+" lang attributes"+overlayIcon+"</button>";
 	
+	//page title button
+	moduleActionButtons += "<button id='ANDI508-pageTitle-button'>page title</button>";
+	
 	$("#ANDI508-module-actions").html(moduleActionButtons);
 
 	//Define sANDI mode buttons (headings, lists, landmarks)
@@ -224,6 +240,7 @@ sANDI.results = function(){
 		AndiModule.activeActionButtons.headings = true;
 		AndiModule.activeActionButtons.lists = false;
 		AndiModule.activeActionButtons.landmarks = false;
+		AndiModule.activeActionButtons.liveRegions = false;
 		AndiModule.launchModule("s");
 	});
 	$("#ANDI508-lists-button").click(function(){
@@ -231,6 +248,7 @@ sANDI.results = function(){
 		AndiModule.activeActionButtons.headings = false;
 		AndiModule.activeActionButtons.lists = true;
 		AndiModule.activeActionButtons.landmarks = false;
+		AndiModule.activeActionButtons.liveRegions = false;
 		AndiModule.launchModule("s");
 	});
 	$("#ANDI508-landmarks-button").click(function(){
@@ -238,6 +256,15 @@ sANDI.results = function(){
 		AndiModule.activeActionButtons.headings = false;
 		AndiModule.activeActionButtons.lists = false;
 		AndiModule.activeActionButtons.landmarks = true;
+		AndiModule.activeActionButtons.liveRegions = false;
+		AndiModule.launchModule("s");
+	});
+	$("#ANDI508-liveRegions-button").click(function(){
+		andiResetter.softReset($("#ANDI508-testPage"));
+		AndiModule.activeActionButtons.headings = false;
+		AndiModule.activeActionButtons.lists = false;
+		AndiModule.activeActionButtons.landmarks = false;
+		AndiModule.activeActionButtons.liveRegions = true;
 		AndiModule.launchModule("s");
 	});
 	
@@ -279,9 +306,10 @@ sANDI.results = function(){
 			andiOverlay.overlayButton_on("overlay",$(this));
 			
 			var langOverlayText = "";
-			var overlayObject;
+			var overlayObject, role;
 			$("#ANDI508-testPage [role]").filter(":visible").each(function(){
-				langOverlayText = $(this).prop('tagName').toLowerCase()+" role="+$(this).attr("role");
+				role = $(this).attr("role").toLowerCase();
+				langOverlayText = $(this).prop("tagName").toLowerCase()+" role="+role;
 				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-roleAttributes", langOverlayText);
 				andiOverlay.insertOverlay(this, overlayObject);
 			});
@@ -297,11 +325,15 @@ sANDI.results = function(){
 		return false;
 	});
 	
+	//Define the lang attributes button
+	$("#ANDI508-pageTitle-button").click(function(){
+		alert("The page title is: "+document.title);
+	});
+	
 	//Deselect all mode buttons
 	$("#ANDI508-module-actions button.sANDI508-mode").attr("aria-selected","false");
 	
 	if(structureExists){
-		
 		//HEADINGS
 		if(AndiModule.activeActionButtons.headings){
 			$("#ANDI508-headings-button")
@@ -320,7 +352,7 @@ sANDI.results = function(){
 				
 				//Define outline button
 				$("#ANDI508-viewOutline-button").click(function(){
-					if($(this).attr("aria-expanded")=="true"){
+					if($(this).attr("aria-expanded") === "true"){
 						//hide Outline, show alert list
 						$("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
 						if(testPageData.numberOfAccessibilityAlertsFound > 0){
@@ -348,8 +380,10 @@ sANDI.results = function(){
 					return false;
 				});
 				
-				andiBar.showElementControls();
-				andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriatly applied.",true);
+				if(!andiBar.focusIsOnInspectableElement()){
+					andiBar.showElementControls();
+					andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.",true);
+				}
 			}
 			else{
 				//No Headings
@@ -395,8 +429,11 @@ sANDI.results = function(){
 					listTypesUsed += delimiter + "[role=list]";
 				}
 				$("#ANDI508-additionalPageResults").html(listCounts);
-				andiBar.showElementControls();
-				andiBar.showStartUpSummary("List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used ("+listTypesUsed+") are appropriatly applied.",true);
+				
+				if(!andiBar.focusIsOnInspectableElement()){
+					andiBar.showElementControls();
+					andiBar.showStartUpSummary("List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used ("+listTypesUsed+") are appropriately applied.",true);
+				}
 			}
 			else{
 				//No Lists
@@ -412,13 +449,33 @@ sANDI.results = function(){
 			//No outline for landmarks mode
 			if(landmarksArray.length > 0){
 				andiBar.updateResultsSummary("Landmarks: "+landmarksArray.length);
-				andiBar.showElementControls();
-				andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.",true);
+				if(!andiBar.focusIsOnInspectableElement()){
+					andiBar.showElementControls();
+					andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.",true);
+				}
 			}
 			else{
 				//No Landmarks
 				andiBar.hideElementControls();
 				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>landmarks</span>.",false);
+			}
+		}
+		//LIVE REGIONS
+		else if(AndiModule.activeActionButtons.liveRegions){
+			$("#ANDI508-liveRegions-button")
+				.attr("aria-selected","true")
+				.addClass("ANDI508-module-action-active");
+			//No outline for liveRegions mode
+			if(liveRegionsArray.length > 0){
+				andiBar.updateResultsSummary("Live Regions: "+liveRegionsArray.length);
+				if(!andiBar.focusIsOnInspectableElement()){
+					andiBar.showElementControls();
+					andiBar.showStartUpSummary("<span class='ANDI508-module-name-s'>Live Regions</span> found.<br />Discover the Output of the Live Regions by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.",true);
+				}
+			}
+			else{ //No Live Regions
+				andiBar.hideElementControls();
+				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>Live Regions</span>.",false);
 			}
 		}
 		
@@ -483,7 +540,12 @@ sANDI.inspect = function(element){
 		var elementData = $(element).data("ANDI508");
 		
 		var additionalComponents = [
-			$(element).attr("aria-level")
+			$(element).attr("role"),
+			$(element).attr("aria-level"),
+			$(element).attr("aria-live"),
+			$(element).attr("aria-atomic"),
+			$(element).attr("aria-busy"),
+			$(element).attr("aria-relevant")
 		];
 		
 		andiBar.displayTable(elementData,
@@ -498,7 +560,12 @@ sANDI.inspect = function(element){
 				["title", elementData.title]
 			],
 			[
-				["aria-level", additionalComponents[0]],
+				["role", additionalComponents[0]],
+				["aria-level", additionalComponents[1]],
+				["aria-live", additionalComponents[2]],
+				["aria-atomic", additionalComponents[3]],
+				["aria-busy", additionalComponents[4]],
+				["aria-relevant", additionalComponents[5]],
 				["aria-hidden", elementData.addOnProperties.ariaHidden],
 				["tabindex", elementData.addOnProperties.tabindex],
 				["accesskey", elementData.addOnProperties.accesskey]

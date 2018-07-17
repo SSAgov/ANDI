@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "3.2.0";
+var cANDIVersionNumber = "3.2.2";
 
 //TODO: select box, check for selected
 
@@ -259,8 +259,10 @@ cANDI.results = function(){
 		$("#ANDI508-levelAAA-button").attr("aria-pressed","true").addClass("ANDI508-module-action-active");
 	
 	if(elementsContainingTextCount > 0){
-		andiBar.showElementControls();
-		andiBar.showStartUpSummary("Discover the <span class='ANDI508-module-name-c'>color contrast</span> for elements containing text.",true);
+		if(!andiBar.focusIsOnInspectableElement()){
+			andiBar.showElementControls();
+			andiBar.showStartUpSummary("Discover the <span class='ANDI508-module-name-c'>color contrast</span> for elements containing text.",true);
+		}
 		if(testPageData.disabledElementsCount > 0)
 			andiAlerter.throwAlert(alert_0251,[testPageData.disabledElementsCount],0);
 	}
@@ -529,7 +531,7 @@ cANDI.getContrast = function(fgElement){
 		cANDI_data.minReq = ratio_small;
 		if(cANDI_data.size >= 24)
 			cANDI_data.minReq = ratio_large;
-		else if(cANDI_data.size >= 18.5 && cANDI_data.weight >= 700) //700 is where bold begins
+		else if(cANDI_data.size >= 18 && cANDI_data.weight >= 700) //700 is where bold begins
 			cANDI_data.minReq = ratio_large;
 				
 		if(cANDI_data.bgImage === "none" && !cANDI_data.opacity){

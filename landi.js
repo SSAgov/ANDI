@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "6.2.2";
+var landiVersionNumber = "6.2.3";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
@@ -132,7 +132,7 @@ lANDI.analyze = function(){
 								
 								ambiguousIndex = scanForAmbiguity(nameDescription, href);
 								
-								determineLinkPurpose(href);
+								determineLinkPurpose(href, this);
 
 								testForVagueLinkText(nameDescription);
 
@@ -350,11 +350,11 @@ lANDI.analyze = function(){
 	}
 	
 	//This function searches for anchor target if href is internal and greater than 1 character e.g. href="#x"
-	function determineLinkPurpose(href){
+	function determineLinkPurpose(href, element){
 		if(href.charAt(0) == "#" && href.length > 1){
 			var idRef = href.toLowerCase().slice(1);
 			if(searchForAnchorTarget(idRef)){
-				if(this.onclick === null && $._data(this, 'events').click === undefined){//no click events
+				if(element.onclick === null && $._data(element, 'events').click === undefined){//no click events
 					//Throw Alert, Anchor Target not found
 					alerts += alertIcons.danger_anchorTargetNotFound;
 					andiAlerter.throwAlert(alert_0069, [idRef]);
@@ -363,13 +363,13 @@ lANDI.analyze = function(){
 			else{//link is internal and anchor target found
 				lANDI.links.internalCount++;
 				linkPurpose = "i";
-				$(this).addClass("lANDI508-internalLink");
+				$(element).addClass("lANDI508-internalLink");
 			}
 		}
 		else if(href.charAt(0) != "#" && !href.toLowerCase().substring(0, 11) == "javascript:"){//this is an external link
 			lANDI.links.externalCount++;
 			linkPurpose = "e";
-			$(this).addClass("lANDI508-externalLink");
+			$(element).addClass("lANDI508-externalLink");
 		}
 		
 		//This function searches allIds list to check if anchor target exists

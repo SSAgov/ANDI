@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var gandiVersionNumber = "4.6.3";
+var gandiVersionNumber = "4.7.1";
 
 //TODO: add <video>
 
@@ -50,7 +50,7 @@ gANDI.analyze = function(){
 		
 		containedByLinkOrButton = false; //reset boolean
 		
-		if($(this).is("img,input:image,area,svg,[role=img]")){
+		if($(this).is("img,input:image,area,svg,[role=img],[role=image]")){
 			inlineImageCount++;
 			
 			if($(this).is("input:image")){
@@ -62,7 +62,14 @@ gANDI.analyze = function(){
 				
 				andiData.attachDataToElement($(this));
 			}
+			//Check for server side image map
+			else if($(this).is("img[ismap]")){
+				andiData = new AndiData($(this));
+				andiAlerter.throwAlert(alert_0173);
+				andiData.attachDataToElement($(this));
+			}
 			else if($(this).is("img,svg,[role=img]")){ //an image used by an image map is handled by the <area>
+				
 				//Determine if this image should have an accessible name or if it should be derived from a parent
 				//Is Image contained by <a>?
 				var closestLinkOrButtonParent = $(this).closest("a");
@@ -91,31 +98,26 @@ gANDI.analyze = function(){
 				else{//Image is NOT contained by <a> or <button>
 					andiData = new AndiData($(this));
 					andiData.grabComponents($(this));
-					
-					//Check for server side image map
-					if($(this).attr("ismap"))
-						andiAlerter.throwAlert(alert_0173);
-					else{//Not server side image map
-						if( andiData.alt == AndiCheck.emptyString ||
-							andiData.alt == " " ||
-							$(this).attr("role") === "presentation" ||
-							$(this).attr("role") === "none" ||
-							$(this).attr("aria-hidden") === "true" )
-						{
-							decorativeImg++;
-							$(this).addClass("gANDI508-decorative");
 
-							if($(this).prop("tabIndex") >= 0)
-								//Decorative image is in the tab order
-								andiAlerter.throwAlert(alert_0126);
-						}
-						else{//This image has not been declared decorative
-							andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
-							altTextAnalysis($.trim($(this).attr("alt")));
-						}
-						
-						andiData.attachDataToElement($(this));
+					if( andiData.alt == AndiCheck.emptyString ||
+						andiData.alt == " " ||
+						$(this).attr("role") === "presentation" ||
+						$(this).attr("role") === "none" ||
+						$(this).attr("aria-hidden") === "true" )
+					{
+						decorativeImg++;
+						$(this).addClass("gANDI508-decorative");
+
+						if($(this).prop("tabIndex") >= 0)
+							//Decorative image is in the tab order
+							andiAlerter.throwAlert(alert_0126);
 					}
+					else{//This image has not been declared decorative
+						andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
+						altTextAnalysis($.trim($(this).attr("alt")));
+					}
+					
+					andiData.attachDataToElement($(this));
 				}
 			}
 			else if($(this).is("area")){
@@ -138,6 +140,11 @@ gANDI.analyze = function(){
 				}
 				else //Area tag not contained in map
 					andiAlerter.throwAlert(alert_0178,alert_0178.message,0);
+			}
+			else if($(this).is("[role=image]")){
+				andiData = new AndiData($(this));
+				andiAlerter.throwAlert(alert_0183);
+				andiData.attachDataToElement($(this));
 			}
 		}
 		else if($(this).is("marquee")){

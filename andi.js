@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "19.1.1";
+var andiVersionNumber = "20.2.4";
 
 //==============//
 // ANDI CONFIG: //
@@ -99,29 +99,6 @@ function launchAndi(){(window.andi508 = function(){
 			location.reload();
 		}
 		return; //Stops ANDI
-	}
-	else{
-		//iFrames handling
-		var iFrames = $("iframe[src]").filter(":visible");
-		if($(iFrames).length > 0){
-
-			//Frames or iFrames Detected: Present the Show Frame Selection Interface
-			if(confirm("ANDI has detected iframes:\nPress OK to test the main page.\nPress Cancel to test an individual iframe.") !== true){
-				var iframesSelectionLinks = "<head><title>ANDI Iframe Selection</title></head><body id='ANDI508-frameSelectionUI'><h1 style='font:bold 20pt Verdana'>ANDI</h1>"+
-					"<p style='font:12pt Verdana'>This page, '"+document.title+"', contains iframes. Each iframe must be tested individually. <br />Select an iframe from the list below, then launch ANDI.</p>"+
-					"<h2 style='font:bold 13pt Verdana'>Iframes:</h2><ol>";
-				
-				$(iFrames).each(function(){
-					//Build Title Display
-					if($(this).attr("src") !== "")
-						iframesSelectionLinks += "<li><a href='"+$(this).attr("src")+"' style='font-family:monospace'>"+$(this).attr("src")+"</a></li>";
-				});
-				
-				iframesSelectionLinks += "</ol><button style='font:10pt Verdana;' onclick='window.history.back()'>Go Back</button></body>";
-				document.write(iframesSelectionLinks);
-				return;
-			}
-		}
 	}
 	//Prevent running ANDI on the frame selection UI
 	if(document.getElementById("ANDI508-frameSelectionUI")){
@@ -230,7 +207,6 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 			}
 		}
 	});
-	
 }
 //The module should implement these public methods
 AndiModule.prototype.andiElementHoverability = undefined;
@@ -286,6 +262,12 @@ AndiModule.activeActionButtons = {};
 //The functions show/hide the module selection menu
 AndiModule.showMenu = function(){
 	$("#ANDI508-moduleMenu").addClass("ANDI508-moduleMenu-expanded");
+	//Hide tANDI
+	if(!TestPageData.page_using_table)
+		AndiModule.disableModuleButton("t");
+	//Hide iANDI
+	if($(TestPageData.allVisibleElements).filter("iframe").length == 0)
+		AndiModule.disableModuleButton("i");
 };
 AndiModule.hideMenu = function(){
 	//setTimeout and :focus check are needed to fix a timing issue in firefox and chrome
@@ -393,7 +375,7 @@ var alert_0022 = new Alert("danger","2","Using &lt;legend&gt; alone on this elem
 var alert_0031 = new Alert("danger","3","[aria-labeledby] is mispelled, use [aria-labelledby].","#misspell");
 var alert_0032 = new Alert("danger","3","[aria-role] not a valid attribute, use [role] instead.","#aria_role");
 
-var alert_0041 = new Alert("warning","4","Presentation tables should not use data table markup: %%%.","#pres_table_not_have");
+var alert_0041 = new Alert("warning","4","Presentation table has data table markup; Is this a data table?","#pres_table_not_have");
 var alert_0043 = new Alert("caution","4","Table has more than %%% levels of [scope=%%%].","#too_many_scope_levels");
 var alert_0044 = new Alert("danger","4","Scope attribute value [scope=%%%] is invalid.","#scope_invalid");
 var alert_0045 = new Alert("danger","4","[headers] attribute only valid on &lt;th&gt; or &lt;td&gt;.","#headers_only_for_th_td");
@@ -405,6 +387,9 @@ var alert_004A = new Alert("danger","4","Table has no [headers/id] associations.
 var alert_004B = new Alert("danger","4","Table has no [scope] but does have [headers], switch to 'headers/id mode'.","#switch_table_analysis_mode");
 var alert_004C = new Alert("danger","4","Table has no [headers/id] but does have [scope], switch to 'scope mode'.","#switch_table_analysis_mode");
 var alert_004E = new Alert("danger","4","Table has no &lt;th&gt; or &lt;td&gt; cells.","#table_has_no_th_or_td");
+var alert_004F = new Alert("danger","4","ARIA %%% has no %%% cells.","#aria_table_grid_structure");
+var alert_004G = new Alert("danger","4","ARIA %%% has no [role=columnheader] or [role=rowheader] cells.","#aria_table_grid_structure");
+var alert_004H = new Alert("danger","4","ARIA %%% has no [role=row] rows.","#aria_table_grid_structure");
 
 var alert_0052 = new Alert("danger","5","[accessKey] value \"%%%\" has more than one character.","#accesskey_more_one");
 var alert_0054 = new Alert("danger","5","Duplicate [accessKey=%%%] found on button.","#accesskey_duplicate");
@@ -433,7 +418,7 @@ var alert_0078 = new Alert("warning","7","Using HTML5, found deprecated %%%.","#
 var alert_0079 = new Alert("danger","7","List item &lt;li&gt; is not contained by a list container &lt;ol&gt; or &lt;ul&gt;.","#li_no_container");
 var alert_007A = new Alert("danger","7","Description list item is not contained by a description list container &lt;dl&gt;.","#dd_dt_no_container");
 
-var alert_0081 = new Alert("warning","8","[alt] attribute is meant for &lt;img&gt;, use [aria-label] on this element.","#alt_only_for_images");
+var alert_0081 = new Alert("warning","8","[alt] attribute is meant for &lt;img&gt;.","#alt_only_for_images");
 
 var alert_0091 = new Alert("warning","9","Explicit &lt;label[for]&gt; only works with form elements.","#explicit_label_for_forms");
 var alert_0092 = new Alert("warning","9","Explicit &lt;label[for]&gt; shouldn't be used with buttons.","#explicit_label_not_for_buttons");
@@ -445,11 +430,11 @@ var alert_0112 = new Alert("caution","11","JavaScript event %%% may cause keyboa
 var alert_0121 = new Alert("caution","12","Focusable element not in keyboard tab order.","#not_in_tab_order");
 var alert_0122 = new Alert("caution","12","Focusable element not in keyboard tab order and has no accessible name.","#not_in_tab_order_no_name");
 var alert_0124 = new Alert("caution","12","Iframe is in the keyboard tab order.","#iframe_tab_order");
-var alert_0125 = new Alert("warning","16","Element with [role=%%%] not in the keyboard tab order.","#role_tab_order");
-var alert_0126 = new Alert("danger","17","Image defined as decorative is in the keyboard tab order.","#decorative_image_tab_order");
+var alert_0125 = new Alert("warning","12","Element with [role=%%%] not in the keyboard tab order.","#role_tab_order");
+var alert_0126 = new Alert("danger","12","Image defined as decorative is in the keyboard tab order.","#decorative_image_tab_order");
 
 var alert_0131 = new Alert("caution","13","Empty component:%%%.","#empty_component");
-var alert_0132 = new Alert("caution","13","Empty &lt;th&gt; cell.","#empty_header_cell");
+var alert_0132 = new Alert("caution","13","Empty header cell.","#empty_header_cell");
 
 var alert_0141 = new Alert("caution","14","Child element component%%%has unused text.","#child_unused_text");
 
@@ -465,7 +450,7 @@ var alert_0165 = new Alert("caution","16","&lt;a&gt; tag has no [href], [id], or
 
 var alert_0171 = new Alert("danger","17","&lt;marquee&gt; element found, do not use.","#marquee_found");
 var alert_0172 = new Alert("danger","17","&lt;blink&gt; element found, do not use.","#blink_found");
-var alert_0173 = new Alert("danger","17","Server side image map found, do not use.","#server_side_image_map");
+var alert_0173 = new Alert("danger","17","Server side image maps are not accessible.","#server_side_image_map");
 var alert_0174 = new Alert("caution","17","Redundant phrase in image [alt] text.","#image_alt_redundant_phrase");
 var alert_0175 = new Alert("warning","17","Image [alt] text contains file name.","#image_alt_contains_file_name");
 var alert_0176 = new Alert("danger","17","Image [alt] text is not descriptive.","#image_alt_not_descriptive");
@@ -474,6 +459,8 @@ var alert_0178 = new Alert("danger","17","&lt;area&gt; not contained in &lt;map&
 
 var alert_0180 = new Alert("danger","18","[role=heading] used without [aria-level].","#role_heading_no_arialevel");
 var alert_0181 = new Alert("danger","18","Tabbable element is hidden from screen reader using [aria-hidden=true].","#tabbable_ariahidden");
+var alert_0182 = new Alert("danger","18","Live Region contains a form element.","#live_region_form_element");
+var alert_0183 = new Alert("danger","18","[role=image] is invalid; Use [role=img].","#role_image_invalid");
 
 var alert_0190 = new Alert("warning","19","Element visually conveys heading meaning but not using semantic heading markup.","#not_semantic_heading");
 
@@ -489,7 +476,7 @@ var alert_0232 = new Alert("warning","23","Opacity less than 100%; Perform manua
 
 var alert_0240 = new Alert("danger","24","Text does not meet %%%minimum %%% contrast ratio (%%%:1).","#min_contrast");
 
-var alert_0250 = new Alert("warning","25","Page has %%% disabled %%%; Disabled elements are invisible to a screen reader.","#disabled_elements",
+var alert_0250 = new Alert("warning","25","Page has %%% disabled %%%; Disabled elements are not in the keyboard tab order.","#disabled_elements",
 	new AlertButton("show disabled", "ANDI508-alertButton-disabledElementsOverlay", function(){andiOverlay.overlay_disabledElements();}, overlayIcon));
 var alert_0251 = new Alert("caution","25","Page has %%% disabled elements; Disabled elements do not require sufficient contrast.","#disabled_contrast",
 	new AlertButton("show disabled", "ANDI508-alertButton-disabledElementsOverlay", function(){andiOverlay.overlay_disabledElements(true);}, overlayIcon));
@@ -511,7 +498,7 @@ function andiReady(){
 	//This function creates main html structure of the ANDI Bar.
 	function insertAndiBarHtml(){
 		var menuButtons = 
-			"<button id='ANDI508-button-relaunch' aria-label='Relaunch ANDI' title='Press To Relaunch ANDI' accesskey='"+andiHotkeyList.key_relaunch.key+"'><img src='"+icons_url+"reload.png' alt='' /></button>"+ //refresh
+			"<button id='ANDI508-button-relaunch' aria-label='Refresh ANDI' title='Press To Refresh ANDI' accesskey='"+andiHotkeyList.key_relaunch.key+"'><img src='"+icons_url+"reload.png' alt='' /></button>"+ //refresh
 			"<button id='ANDI508-button-highlights' aria-label='Element Highlights' title='Press to Hide Element Highlights' aria-pressed='true'><img src='"+icons_url+"highlights-on.png' alt='' /></button>"+ //lightbulb
 			"<button id='ANDI508-button-minimode' aria-label='Mini Mode' title='Press to Engage Mini Mode'><img src='"+icons_url+"more.png' alt='' /></button>"+
 			"<button id='ANDI508-button-keys' aria-label='ANDI Hotkeys List' title='Press to Show ANDI Hotkeys List'><img src='"+icons_url+"keys-off.png' alt='' /></button>"+
@@ -534,7 +521,10 @@ function andiReady(){
 			moduleButtons +="<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-c'>color contrast</button>";
 		}
 			//hANDI
-		moduleButtons +="<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-h'>hidden content</button>";
+		moduleButtons += "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-h'>hidden content</button>"+
+			//iframes
+			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-i'>iframes</button>";
+		
 		moduleButtons +="</div>";
 		
 		var andiBar = "\
@@ -600,6 +590,7 @@ function andiReady(){
 			.addClass("ANDI508-testPage")
 			.wrapInner("<div id='ANDI508-testPage' style='"+body_padding+body_margin+"' />") //Add an outer container to the test page
 			.prepend(andiBar); //insert ANDI display into body
+		
 	}
 	
 	//This function appends css shims to the head of the page which are needed for old IE versions
@@ -665,7 +656,7 @@ function andiReady(){
 				if(AndiModule.module != "f") //jump directly to the module on the help page
 					helpLocation = "modules.html#" + AndiModule.module + "ANDI";
 				
-				window.open(help_url+helpLocation, "_ANDIhelp",'width=1010,height=768,scrollbars=yes,resizable=yes').focus();
+				window.open(help_url+helpLocation, "_ANDIhelp",'width=810,height=620,scrollbars=yes,resizable=yes').focus();
 			})
 			.focus(andiHotkeyList.hideHotkeysList);
 		//ANDI Remove/Close Button
@@ -729,11 +720,17 @@ function andiReady(){
 				if(!element.href || !mapName || map.nodeName.toLowerCase() !== "map") return false;
 				var img = $("img[usemap=\\#" + mapName + "]")[0]; return !!img && visibleParents(img);
 			}
-			return ( /^(input|select|textarea|button|object|iframe)$/.test(nodeName) ?
+			return(
+				/^(input|select|textarea|button|object|iframe)$/.test(nodeName) ?
 				!element.disabled
 				: nodeName === "a" ?
 					(element.href && !element.disabled) || isTabIndexNotNaN
-					: isTabIndexNotNaN || (nodeName === "svg" && $.attr(element, "focusable") === "true")) && visibleParents(element); 
+					: isTabIndexNotNaN || 
+					//check for focusable svg
+					(nodeName === "svg" && $.attr(element, "focusable") === "true") || 
+					//check for contenteditable="true" or contenteditable=""
+					($.attr(element, "contenteditable") === "true" || $.attr(element, "contenteditable") === "")
+				) && visibleParents(element); 
 			function visibleParents(element){
 				return !$(element).parents().addBack().filter(function(){
 					return $.css(this, "visibility") === "hidden";
@@ -935,12 +932,14 @@ function AndiBar(){
 		var activeElement = $("#ANDI508-testPage .ANDI508-element-active").first();
 		if($(focusedElementAtLaunch).hasClass("ANDI508-element")){
 			//inspect the element that had focus if it is inspectable by this module
-			$(focusedElementAtLaunch).focus();
+			andiFocuser.focusOn($(activeElement));
+			//$(focusedElementAtLaunch).focus();
 			return true;
 		}
 		else if(activeElement.length && $(activeElement).hasClass("ANDI508-element")){
 			//Yes. "re-inspect" the active element
-			$(activeElement).focus();
+			andiFocuser.focusOn($(activeElement));
+			//$(activeElement).focus();
 			return true;
 		} 
 		else{
@@ -1046,7 +1045,7 @@ function AndiResetter(){
 					.removeAttr("data-hANDI508-hidingTechniques")
 					.removeClass("ANDI508-forceReveal ANDI508-forceReveal-display ANDI508-forceReveal-visibility ANDI508-forceReveal-position ANDI508-forceReveal-opacity ANDI508-forceReveal-overflow ANDI508-forceReveal-fontSize ANDI508-forceReveal-textIndent ANDI508-forceReveal-html5Hidden");
 			}
-			
+
 			//All Modules
 			$(this)
 				.removeClass("ANDI508-element ANDI508-element-danger ANDI508-highlight")
@@ -1311,28 +1310,7 @@ function AndiSettings(){
 function AndiFocuser(){
 	//Places focus on element at index.
 	this.focusByIndex = function(index){
-		var focusOnThis = $("#ANDI508-testPage [data-ANDI508-index="+index+"]");
-		if(!$(focusOnThis).attr("tabindex") && !$(focusOnThis).is(":focusable")){
-			//"Flash" the tabindex
-			
-			//img with usemap cannot be given focus (browser moves focus to the <area>)
-			//so temporarily remove the usemap attr, reapply after focus
-			var useMapVal;
-			if($(focusOnThis).is("img[usemap]")){
-				useMapVal = $(focusOnThis).attr("usemap")
-				$(focusOnThis).removeAttr("usemap");
-			}
-			
-			$(focusOnThis)
-				.attr("tabindex","-1")
-				.focus()
-				.removeAttr("tabindex");
-				
-			if(useMapVal) //Add usemap back on
-				$(focusOnThis).attr("usemap",useMapVal);
-		}
-		else
-			$(focusOnThis).focus();
+		andiFocuser.focusOn($("#ANDI508-testPage [data-ANDI508-index="+index+"]"));
 	};
 	//Creates click event handler on the element which will call focusByIndex
 	this.addFocusClick = function(element){
@@ -1344,6 +1322,31 @@ function AndiFocuser(){
 				window.open($(element).attr("href"), $(element).attr("target"), 'width=1010,height=768,scrollbars=yes,resizable=yes').focus();
 			return false;
 		});
+	};
+	//This function will shift the focus to an element
+	//even if the element is not tabbable
+	this.focusOn = function(element){
+		if(!$(element).attr("tabindex") && !$(element).is(":focusable")){
+			//"Flash" the tabindex
+			
+			//img with usemap cannot be given focus (browser moves focus to the <area>)
+			//so temporarily remove the usemap attr, reapply after focus
+			var useMapVal;
+			if($(element).is("img[usemap]")){
+				useMapVal = $(element).attr("usemap")
+				$(element).removeAttr("usemap");
+			}
+			
+			$(element)
+				.attr("tabindex","-1")
+				.focus()
+				.removeAttr("tabindex");
+				
+			if(useMapVal) //Add usemap back on
+				$(element).attr("usemap",useMapVal);
+		}
+		else
+			$(element).focus();
 	};
 }
 
@@ -1503,7 +1506,7 @@ function AndiOverlay(){
 			titleText = " title='"+title+"'";
 		if(!tabindex)
 			tabindex = 0;
-		return "<span class='ANDI508-overlay "+purposeClass+"'"+titleText+" tabindex='"+tabindex+"'>"+innerText+"</span>";
+		return "<span class='ANDI508-overlay "+purposeClass+"'"+titleText+" tabindex='"+tabindex+"' role='tooltip'>"+innerText+"</span>";
 	};
 	
 	//This function will remove overlays with the class provided
@@ -1581,7 +1584,10 @@ function AndiOverlay(){
 	//This function will insert an overlay onto the page
 	this.insertOverlay = function(element, overlayObject){
 		//Insert the overlay
-		if($(element).isContainerElement() && !$(element).is("select,textarea"))
+		if($(element).is("option")){
+			$(element).closest("select").after(overlayObject);
+		}
+		else if($(element).isContainerElement() && !$(element).is("select,textarea"))
 			$(element).append(overlayObject);
 		else
 			element.insertAdjacentHTML("afterEnd",overlayObject);
@@ -1685,7 +1691,7 @@ function AndiData(element){
 			
 			//Is this an element that should pay attention to nested labels?
 			if($(element).not(":submit,:button,:reset,:image").is("input") || 
-				$(element).is("select,textarea,[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]"))
+				$(element).is("select,textarea,[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio],[contenteditable=true]"))
 			{
 				labelText = grab_labelNested(element);
 			}
@@ -1754,7 +1760,7 @@ function AndiData(element){
 						andiAlerter.throwAlert(alert_0092);
 					}
 					else if(!($(element).not(":submit,:button,:reset,:image").is("input")) && 
-						!$(element).is("select,textarea,[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]"))
+						!$(element).is("select,textarea,[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio],[contenteditable=true]"))
 					{
 						//No, label not valid on anything that isn't a form element, excluding buttons
 						andiAlerter.throwAlert(alert_0091);
@@ -2136,12 +2142,12 @@ function AndiData(element){
 			else if(isNaN(tabindex)){
 				//tabindex is not a number
 				andiAlerter.throwAlert(alert_0077, [tabindex]);
-				if(!$(element).is("a[href],button,input,select,textarea,object,iframe,area"))
+				if(!$(element).is("a[href],button,input,select,textarea,object,iframe,area,[contenteditable=true]"))
 					this.tabbable = false;
 			}
 			//else element is tabbable
 		}
-		else if(!$(element).is("a[href],button,input,select,textarea,object,iframe,area")){
+		else if(!$(element).is("a[href],button,input,select,textarea,object,iframe,area,[contenteditable=true]")){
 			this.tabbable = false;
 		}
 	};
@@ -2288,6 +2294,9 @@ function AndiData(element){
 			}
 			if($(element).attr("aria-hidden")){
 				addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaHidden:$(element).attr("aria-hidden")});
+			}
+			if($(element).attr("contenteditable") === "true" || $(element).attr("contenteditable") === ""){
+				addOnPropertiesObject = $.extend(addOnPropertiesObject,{contenteditable:"true"});
 			}
 		}
 	};
@@ -3134,10 +3143,10 @@ function AndiAlerter(){
 	//	index: 	(optional) pass in 0 if this cannot be linked to an element.  If not passed will use andiElementIndex
 	this.throwAlert = function(alertObject, customMessage, index){
 		if(alertObject){
-			var message = messageWithIcon(alertObject, customMessage);
+			var message = alertMessage(alertObject, customMessage);
 			if(index === undefined){
 				index = testPageData.andiElementIndex; //use current andiElementIndex
-				this[alertObject.level+"s"].push(messageWithHelpLink(alertObject,message));
+				this[alertObject.level+"s"].push(messageWithHelpLink(alertObject, message));
 			}
 			this.addToAlertsList(alertObject, message, index);
 			
@@ -3157,7 +3166,7 @@ function AndiAlerter(){
 	//	alertObject:	the alert object
 	//	customMessage: 	(optional) message of the alert. If not passed will use default alertObject.message
 	this.throwAlertOnOtherElement = function(index, alertObject, customMessage){
-		var message = messageWithIcon(alertObject, customMessage);
+		var message = alertMessage(alertObject, customMessage);
 		$("#ANDI508-testPage [data-ANDI508-index="+index+"]").data("ANDI508")[alertObject.level+"s"].push(messageWithHelpLink(alertObject, message));
 		this.addToAlertsList(alertObject, message, index);
 	};
@@ -3166,8 +3175,9 @@ function AndiAlerter(){
 	//Parameters
 	//	alertObject:	the alert object
 	//	customMessage: 	(optional) message of the alert. if string, use the string. If array, get values from array
-	function messageWithIcon(alertObject, customMessage){
-		var message = "<img alt='"+alertObject.level+": ' src='"+icons_url+alertObject.level+".png' />";
+	function alertMessage(alertObject, customMessage){
+		//var message = "<img alt='"+alertObject.level+": ' src='"+icons_url+alertObject.level+".png' />";
+		var message = "";
 		if(typeof customMessage === "string")
 			message += customMessage;
 		else if(customMessage !== undefined)
@@ -3189,8 +3199,10 @@ function AndiAlerter(){
 	
 	//This private function will add a help link to the alert message
 	function messageWithHelpLink(alertObject, message){
-		return "<a href='"+ help_url + "alerts.html" + alertObject.info +"' target='_ANDIhelp'>"+
-			message+" <span class='ANDI508-screenReaderOnly'>, Open Alerts Help</span></a> ";
+		return "<a href='"+ help_url + "alerts.html" + alertObject.info +"' target='_ANDIhelp' "+
+			"aria-label='"+alertObject.level+": "+message+" Select to Open ANDI Help"+"'>"+
+			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
+			message+"</a> ";
 	}
 	
 	//This function is not meant to be used directly.
@@ -3202,14 +3214,19 @@ function AndiAlerter(){
 	//  elementIndex:	element to focus on when link is clicked. expects a number. pass zero 0 if alert is not relating to one particular element
  	this.addToAlertsList = function(alertObject, message, elementIndex){
 		//Should this alert be associated with a focusable element?
-		var listItemHtml = "<li class='ANDI508-display-"+alertObject.level+"'><a tabindex='-1' ";
+		//var listItemHtml = "<li class='ANDI508-display-"+alertObject.level+"'><a tabindex='-1' ";
+		var listItemHtml = " tabindex='-1' ";
 		if(elementIndex !== 0){
 			//Yes, this alert should point to a focusable element. Insert as link:
-			listItemHtml += "href='#' data-ANDI508-relatedIndex='"+elementIndex+"'>"+message+" <span class='ANDI508-screenReaderOnly'>Element #"+elementIndex+"</span></a></li>";
+			listItemHtml += "href='javascript:void(0)' data-ANDI508-relatedIndex='"+elementIndex+"' aria-label='"+alertObject.level+": "+message+" Element #"+elementIndex+"'>"+
+			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
+			message+"</a></li>";
 		}
 		else{
 			//No, This alert is not specific to an indexed element. Insert message with link to help page.
-			listItemHtml += "href='"+ help_url + "alerts.html" + alertObject.info +"' target='_ANDIhelp'>"+message+"</a></li>";
+			listItemHtml += "href='"+ help_url + "alerts.html" + alertObject.info +"' target='_ANDIhelp' aria-label='"+alertObject.level+": "+message+"'>"+
+			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
+			message+"</a></li>";
 		}
 		
 		var alertGroup = AndiAlerter.alertGroups[alertObject.group];
@@ -3287,18 +3304,18 @@ function AndiAlerter(){
 				
 				//This function build the html for a single alert group
 				function getAlertsForAlertGroup(group){
+					var totalAlerts = parseInt(group.dangers.length + group.warnings.length + group.cautions.length);
 					html += "<li class='ANDI508-alertGroup-container ANDI508-display-"+group.level+
-						"' id='ANDI508-alertGroup_"+$.inArray(group, AndiAlerter.alertGroups)+
-						"'><h4><a href='#' class='ANDI508-alertGroup-toggler' tabindex='0' aria-expanded='false'>"+
-						group.heading+" (<span class='ANDI508-total'>"+
-						parseInt(group.dangers.length + group.warnings.length + group.cautions.length)+
-						"</span>)</a></h4><ol class='ANDI508-alertGroup-list'>";
+						"' role='group' id='ANDI508-alertGroup_"+$.inArray(group, AndiAlerter.alertGroups)+
+						"'><a href='#' class='ANDI508-alertGroup-toggler' tabindex='0' role='treeitem' aria-expanded='false' "+
+						"aria-label='"+group.level+" "+totalAlerts+" "+group.heading+"'>"+
+						group.heading+": (<span class='ANDI508-total'>"+totalAlerts+"</span>)</a><ol class='ANDI508-alertGroup-list'>";
 					for(var d=0; d<group.dangers.length; d++)
-						html += group.dangers[d];
+						html += "<li class='ANDI508-display-danger'><a " + "aria-posinset='"+parseInt(d+1)+"' aria-setsize='"+totalAlerts+"' " + group.dangers[d];
 					for(var w=0; w<group.warnings.length; w++)
-						html += group.warnings[w];
+						html += "<li class='ANDI508-display-warning'><a " + "aria-posinset='"+parseInt(w+1)+"' aria-setsize='"+totalAlerts+"' " + group.warnings[w];
 					for(var c=0; c<group.cautions.length; c++)
-						html += group.cautions[c];
+						html += "<li class='ANDI508-display-caution'><a " + "aria-posinset='"+parseInt(c+1)+"' aria-setsize='"+totalAlerts+"' " + group.cautions[c];
 					html += "</ol></li>";
 				}
 			}
@@ -3328,7 +3345,7 @@ function AndiAlerter(){
 							$(alertLinksTabbableArray[alertLinksTabbableArray.indexOf(this)-1]).focus();//prev tabbable link
 							break;
 						case 39: //right
-							if($(this).hasClass("ANDI508-alertGroup-toggler") && $(this).parent().next().css("display")=="none")
+							if($(this).hasClass("ANDI508-alertGroup-toggler") && $(this).parent().find("ol").css("display") == "none")
 								toggleAlertGroupList(this); //show associating alertGroup-list
 							break;
 						case 37: //left
@@ -3380,7 +3397,7 @@ function AndiAlerter(){
 
 				//This function toggles the alertGroup display
 				function toggleAlertGroupList(trigger){
-					var groupListContainer = $(trigger).parent().next();
+					var groupListContainer = $(trigger).parent().find("ol");
 					var tabindex;
 					if($(groupListContainer).css("display")=="none"){
 						//show alertGroup-list
@@ -3408,7 +3425,7 @@ function AndiAlerter(){
 		//This function will show the alert buttons that were added to the alertButtons array
 		function showAlertButtons(){
 			for(var x=0; x<alertButtons.length; x++){
-				$("#ANDI508-alertGroup_"+alertButtons[x].group).children("h4").first().append(
+				$("#ANDI508-alertGroup_"+alertButtons[x].group).children("a").first().after(
 					"<button id='"+alertButtons[x].alertButton.id+
 					"' aria-pressed='false'>"+alertButtons[x].alertButton.label + 
 					alertButtons[x].alertButton.overlayIcon+"</button>"
@@ -3448,7 +3465,7 @@ function AndiAlerter(){
 		new AlertGroup("Inaccessible CSS Content"),
 		new AlertGroup("Manual Contrast Tests Needed"),
 		new AlertGroup("Contrast Alerts"),
-		new AlertGroup("Disabled Elements")							//25
+		new AlertGroup("Disabled Element Alerts")							//25
 		];
 	};
 	
@@ -3475,8 +3492,7 @@ function AndiAlerter(){
 
 //This defines the class AlertGroup
 function AlertGroup(heading){
-	this.heading = heading + ": ";	//heading text for the group
-	
+	this.heading = heading;	//heading text for the group
 	this.level = undefined;
 	this.dangers = [];
 	this.warnings = [];
@@ -3500,8 +3516,8 @@ function TestPageData(){
 	//Create a variable that refers to all the visible elements on the test page
 	TestPageData.allVisibleElements = $("#ANDI508-testPage *").filter(":shown");
 	
-	//all the ids of visible elements on the page for duplicate comparisons
-	this.allIds = $(TestPageData.allVisibleElements).filter("[id]");
+	//all the ids of elements on the page for duplicate comparisons
+	this.allIds = $("#ANDI508-testPage *").filter("[id]");
 	
 	//all the fors of visible elements on the page for duplicate comparisons
 	this.allFors = "";
@@ -3536,11 +3552,8 @@ function TestPageData(){
 		this.allFors = $(TestPageData.allVisibleElements).filter("label[for]");
 	}
 	
-	//Conditionally disable tANDI
 	if($(TestPageData.allVisibleElements).filter("table").first().length)
 		TestPageData.page_using_table = true;
-	else
-		AndiModule.disableModuleButton("t"); //tANDI
 	
 	//This function should be called by the first module that is launched
 	//It should be placed in a loop that looks at every visible element on the page.
@@ -3550,9 +3563,16 @@ function TestPageData(){
 		//Allows ANDI to be only fixed element at top of page.
 		andiResetter.storeTestPageFixedPositionDistances(element);
 		
+		var role = $(element).attr("role");
+		
 		//Determine if role=group is being used
-		if(!TestPageData.page_using_role_group && $(element).attr("role") === "group")
+		if(!TestPageData.page_using_role_group && role === "group")
 			TestPageData.page_using_role_group = true;
+		
+		//Determine if role=table is being used
+		if(!TestPageData.page_using_table && (role === "table" || role === "grid")){
+			TestPageData.page_using_table = true;
+		}
 	};
 }
 
@@ -3571,9 +3591,25 @@ var jqueryMinimumVersion = "1.9.1"; //The minimum version of jQuery we allow AND
 var jqueryDownloadSource = "https://ajax.googleapis.com/ajax/libs/jquery/"; //where we are downloading jquery from
 var oldIE = false; //used to determine if old version of IE is being used.
 (function(){
+	//Determine if old IE compatability mode
 	if(navigator.userAgent.toLowerCase().indexOf("msie") != -1){if(parseInt(navigator.userAgent.toLowerCase().split("msie")[1]) < 9){oldIE = true;}}
-	if (window.jQuery === undefined || window.jQuery.fn.jquery < jqueryMinimumVersion){//Need jQuery
-		var script=document.createElement("script"); var done=false;
+	//Determine if Jquery exists
+	var j = (window.jQuery !== undefined) ? window.jQuery.fn.jquery.split(".") : undefined;
+	var m = jqueryMinimumVersion.split(".");
+	var needJquery = true;
+	if(j !== undefined){
+		for(var i=0; i<3; i++){
+			if(parseInt(j[i]) > parseInt(m[i])){
+				needJquery = false;
+				break; //existing jquery version is greater than required minimum
+			}
+			else if(parseInt(j[i]) < parseInt(m[i])){
+				break; //existing jquery version is less than required minimum
+			}
+		}
+	}
+	if(needJquery){
+		var script = document.createElement("script"); var done=false;
 		//Which version is needed?
 		if(!oldIE){script.src = jqueryDownloadSource + jqueryPreferredVersion + "/jquery.min.js";}//IE 9 or later is being used, download preferred jquery version.
 		else{script.src = jqueryDownloadSource + jqueryMinimumVersion + "/jquery.min.js";}//Download minimum jquery version.
@@ -3581,7 +3617,7 @@ var oldIE = false; //used to determine if old version of IE is being used.
 		script.onload = script.onreadystatechange = function(){if(!done && (!this.readyState || this.readyState=="loaded" || this.readyState=="complete")){done=true; launchAndi();}};
 		document.getElementsByTagName("head")[0].appendChild(script);
 	}
-	else{ //jQuery already exists
+	else{ //sufficient version of jQuery already exists
 		launchAndi(); //initialize ANDI
 	}
 })();

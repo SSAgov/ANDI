@@ -1,0 +1,32 @@
+/*==iANDI==*/
+	/*==ANDI Bar==*/
+#ANDI508 #iANDI508-iframeList-container
+	{display:none;}
+
+#ANDI508 #iANDI508-iframeList-container ol
+	{margin-left:6%; margin-bottom:1em;}
+
+#ANDI508 #iANDI508-iframeList-container a
+	{font-family:monospace !important;}
+#ANDI508 #iANDI508-iframeList-container a:hover,
+#ANDI508 #iANDI508-iframeList-container a:focus
+	{text-decoration:underline !important; color:pink !important;}
+	
+#ANDI508 #ANDI508-elementNameContainer
+	{display:inline;}
+	
+#ANDI508 #ANDI508-additionalElementDetails
+	{display:inline;}
+	
+#ANDI508 #ANDI508-additionalElementDetails button
+	{border:1px solid gray !important; display:inline !important; padding:3px 7px 3px 3px !important; font-size:9pt;
+	box-shadow:none !important; background:none !important; cursor:pointer !important;
+	border-radius:7px; margin:2px 0px 1px 1em; font-family:tahoma; color:#e6e6e6 !important}
+	
+/*=Test Page=*/
+	#ANDI508-testPage.iANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
+		{outline:3px dashed red !important;}
+	#ANDI508-testPage.iANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
+		{outline:4px solid deeppink !important;}
+	#ANDI508-testPage.iANDI508-testPage .ANDI508-element.ANDI508-highlight
+		{outline:1px dashed pink !important;}

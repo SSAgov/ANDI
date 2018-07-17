@@ -17,7 +17,7 @@
 		{opacity:0.3 !important}
 		
 	#ANDI508-testPage.gANDI508-testPage.gANDI508-hideBackground .gANDI508-background
-		{background:none !important}
+		{background-image:none !important}
 		
 	#ANDI508-testPage.gANDI508-testPage.gANDI508-highlightBackground .gANDI508-background
 		{border:4px solid #abe573 !important; box-shadow:0 0 25px 2px #abe573 !important}

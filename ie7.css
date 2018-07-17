@@ -16,19 +16,18 @@
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline input[type=image].ANDI508-element,
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline .ANDI508-element img
 	{filter: alpha(opacity=30) !important; /*no support for opacity*/}
-	
 /*tANDI*/
 #ANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger,
 #ANDI508-testPage.tANDI508-testPage table.ANDI508-highlight.ANDI508-element.ANDI508-element-danger,
 #ANDI508-testPage.tANDI508-testPage table th.ANDI508-highlight.ANDI508-element.ANDI508-element-danger,
 #ANDI508-testPage.tANDI508-testPage table td.ANDI508-highlight.ANDI508-element.ANDI508-element-danger
 	{border:2px dashed red !important; outline:none;/*no support for outline*/}
-#ANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active,
-#ANDI508-testPage.tANDI508-testPage table.ANDI508-highlight.ANDI508-element.ANDI508-element-active,
-#ANDI508-testPage.tANDI508-testPage table th.ANDI508-highlight.ANDI508-element.ANDI508-element-active,
-#ANDI508-testPage.tANDI508-testPage table td.ANDI508-highlight.ANDI508-element.ANDI508-element-active
+
+/*Focus/Hover Highlight*/
+html.ANDI508-testPage body.ANDI508-testPage #ANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
 	{border:2px solid deeppink !important; outline:none;/*no support for outline*/}
-	
+
+/*ANDI*/
 #ANDI508 #ANDI508-barControls button
 	{width:30px !important; height:30px !important;}
 	
