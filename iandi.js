@@ -4,7 +4,7 @@
 //=============================================//
 function init_module(){
 
-var iandiVersionNumber = "1.0.3";
+var iandiVersionNumber = "1.1.0";
 
 //create iANDI instance
 var iANDI = new AndiModule(iandiVersionNumber,"i");
@@ -146,7 +146,7 @@ iANDI.inspect = function(element){
 		[]
 	);
 	
-	andiBar.displayOutput(elementData);
+	andiBar.displayOutput(elementData, element);
 	
 	$("#ANDI508-additionalElementDetails").html("<button>test in new window</button>");
 	$("#ANDI508-additionalElementDetails button").click(function(){

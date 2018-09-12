@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "6.2.3";
+var landiVersionNumber = "6.4.1";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
@@ -107,7 +107,7 @@ lANDI.analyze = function(){
 	//Loop through every visible element and run tests
 	$(TestPageData.allVisibleElements).each(function(){
 		//ANALYZE LINKS
-		if($(this).is("a,[role=link]")){
+		if($(this).isSemantically("[role=link]","a")){
 			if(!andiCheck.isThisElementDisabled(this)){
 				
 				lANDI.links.count++;
@@ -130,7 +130,7 @@ lANDI.analyze = function(){
 						if(isLinkKeyboardAccessible(href, this)){
 							if(nameDescription){
 								
-								ambiguousIndex = scanForAmbiguity(nameDescription, href);
+								ambiguousIndex = scanForAmbiguity(this, nameDescription, href);
 								
 								determineLinkPurpose(href, this);
 
@@ -170,7 +170,7 @@ lANDI.analyze = function(){
 			}
 		}
 		//ANALYZE BUTTONS
-		else if($(this).is("button,:button,:submit,:reset,:image,[role=button]")){
+		else if($(this).isSemantically("[role=button]","button,:button,:submit,:reset,:image")){
 			
 			if(!andiCheck.isThisElementDisabled(this)){
 				lANDI.buttons.count++;
@@ -191,7 +191,7 @@ lANDI.analyze = function(){
 					
 					if(nameDescription){
 						//Seach through Buttons Array for same name
-						nonUniqueIndex = scanForNonUniqueness(nameDescription);
+						nonUniqueIndex = scanForNonUniqueness(this, nameDescription);
 						
 						//role=button
 						if($(this).is("[role=button]")){
@@ -238,22 +238,51 @@ lANDI.analyze = function(){
 	
 	//This function returns true if the link is keyboard accessible
 	function isLinkKeyboardAccessible(href, element){
-		if(!href && !!$(element).prop("tabIndex")){
+		if(!href && !$(element).attr("tabindex")){
 			//There is no href and no tabindex
-			if(!element.id && !$(element).attr("name")){
-				if(element.onclick === null && $._data(element, "events").click === undefined)
-					//Link has no href, tabindex, or id, and no click event detected
-					andiAlerter.throwAlert(alert_0165);
-				else //Link is clickable but not keyboard accessible
-					andiAlerter.throwAlert(alert_0164);
+			var name = $(element).attr("name");
+			var id = element.id;
+			
+			if(element.onclick !== null || $._data(element, "events").click !== undefined){
+				//Link is clickable but not keyboard accessible
+				andiAlerter.throwAlert(alert_0164);
 				return false;
+			}
+			//No click event could be detected
+			else if(!id && !name){//Link doesn't have id or name
+				andiAlerter.throwAlert(alert_0165);
+				return false;
+			}
+			else{//Link has id or name
+				//Determine if the link is an anchor for another link
+				var isDefinitelyAnAnchor = false;
+				var referencingHref = "";
+				//Look through all hrefs to see if any is referencing this element's id or name
+				$("#ANDI508-testPage a[href]").each(function(){
+					referencingHref = $(this).attr("href");
+					if(referencingHref.charAt(0) === "#"){
+						if(referencingHref.slice(1) === id || referencingHref.slice(1) === name){
+							isDefinitelyAnAnchor = true;
+							return false; //break out of loop
+						}
+					}
+				});
+				if(!isDefinitelyAnAnchor){
+					if(element.onclick === null && $._data(element, "events").click === undefined)
+						andiAlerter.throwAlert(alert_0166);
+					else //Link is clickable but not keyboard accessible
+						andiAlerter.throwAlert(alert_0164);
+				}
+				else{
+					andiAlerter.throwAlert(alert_0167);
+				}
 			}
 		}
 		return true;
 	}
 	
 	//This function will seach through Links Array for same name different href
-	function scanForAmbiguity(nameDescription, href){
+	function scanForAmbiguity(element, nameDescription, href){
 		var regEx = /^https?:\/\//; //Strip out the http:// or https:// from the compare
 		
 		for(var x=0; x<lANDI.links.list.length; x++){
@@ -297,7 +326,7 @@ lANDI.analyze = function(){
 						$(relatedElement).addClass("lANDI508-ambiguous");
 					}
 
-					$(this).addClass("lANDI508-ambiguous");
+					$(element).addClass("lANDI508-ambiguous");
 					alerts += alertIcon;
 					andiAlerter.throwAlert(alertObject);
 					return i;//prevents alert from being thrown more than once on an element
@@ -308,7 +337,7 @@ lANDI.analyze = function(){
 	}
 	
 	//This function searches the button list for non-uniqueness.
-	function scanForNonUniqueness(nameDescription){
+	function scanForNonUniqueness(element, nameDescription){
 		for(var y=0; y<lANDI.buttons.list.length; y++){
 			if(nameDescription.toLowerCase() == lANDI.buttons.list[y].nameDescription.toLowerCase()){ //nameDescription matches
 				
@@ -340,7 +369,7 @@ lANDI.analyze = function(){
 					$(relatedElement).addClass("lANDI508-ambiguous");
 				}
 
-				$(this).addClass("lANDI508-ambiguous");
+				$(element).addClass("lANDI508-ambiguous");
 				alerts += alertIcon;
 				andiAlerter.throwAlert(alertObject);
 				return m;//prevents alert from being thrown more than once on an element
@@ -351,7 +380,7 @@ lANDI.analyze = function(){
 	
 	//This function searches for anchor target if href is internal and greater than 1 character e.g. href="#x"
 	function determineLinkPurpose(href, element){
-		if(href.charAt(0) == "#" && href.length > 1){
+		if(href.charAt(0) === "#" && href.length > 1){
 			var idRef = href.toLowerCase().slice(1);
 			if(searchForAnchorTarget(idRef)){
 				if(element.onclick === null && $._data(element, 'events').click === undefined){//no click events
@@ -654,7 +683,7 @@ lANDI.inspect = function(element){
 			additionalComponents
 		);
 		
-		andiBar.displayOutput(elementData);	
+		andiBar.displayOutput(elementData, element);	
 	}
 };
 

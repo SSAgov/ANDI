@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var gandiVersionNumber = "4.7.1";
+var gandiVersionNumber = "4.10.1";
 
 //TODO: add <video>
 
@@ -26,12 +26,10 @@ AndiModule.andiElementFocusability = function(){
 
 var inlineImageCount = 0; 		//total number of inline images
 var backgroundImageCount = 0;	//total number of elements with background images
-var decorativeImg = 0;			//total number of <img> declared as decorative
+var decorativeImg = 0;			//total number of images declared as decorative
 var fontIconCount = 0;			//total number of font icons
-
-var imageLinkCount = 0;			//total number of <img> contained in links
-var imageButtonCount = 0;		//total number of <img> contained in buttons
-var containedByLinkOrButton;	//boolean if <img> is contained by link or button
+var imageLinkCount = 0;			//total number of images contained in links
+var imageButtonCount = 0;		//total number of images contained in buttons
 
 //AndiModule.activeActionButtons
 if($.isEmptyObject(AndiModule.activeActionButtons)){
@@ -45,90 +43,91 @@ if($.isEmptyObject(AndiModule.activeActionButtons)){
 //This function will analyze the test page for graphics/image related markup relating to accessibility
 gANDI.analyze = function(){
 	
+	var isImageContainedByInteractiveWidget; //boolean if image is contained by link or button
+	
 	//Loop through every visible element
 	$(TestPageData.allVisibleElements).each(function(){
 		
-		containedByLinkOrButton = false; //reset boolean
+		//Determine if the image is contained by an interactive widget (link, button)
+		isImageContainedByInteractiveWidget = false; //reset boolean
+		if($(this).not("[tabindex]").is("img,[role=img]")){
+			//Is Image contained by a link or button?
+			var closestWidgetParent = $(this).closest("a,button,[role=button],[role=link]");
+			if($(closestWidgetParent).length){
+				if($(closestWidgetParent).isSemantically("[role=link]","a"))
+					imageLinkCount++;
+				else if($(closestWidgetParent).isSemantically("[role=button]","button"))
+					imageButtonCount++;
+				isImageContainedByInteractiveWidget = true;
+			}
+		}
 		
-		if($(this).is("img,input:image,area,svg,[role=img],[role=image]")){
-			inlineImageCount++;
+		if(isImageContainedByInteractiveWidget || $(this).is("[role=img],[role=image],img,input:image,area,svg,marquee,blink")){
 			
+			if(isImageContainedByInteractiveWidget){
+				//Check if parent already has been evaluated (when more than one image is in a link)
+				if(!$(closestWidgetParent).hasClass("ANDI508-element")){
+					//Image is contained by <a> or <button>
+					andiData = new AndiData($(closestWidgetParent));			
+					andiData.grabComponents($(closestWidgetParent));
+					andiCheck.commonFocusableElementChecks(andiData,$(closestWidgetParent));
+					andiData.attachDataToElement($(closestWidgetParent));
+				}
+			}
+			else{//not contained by interactive widget
+				andiData = new AndiData($(this));
+				andiData.grabComponents($(this));				
+			}
+			
+			//Check for conditions based on semantics
+			if($(this).is("marquee")){
+				andiAlerter.throwAlert(alert_0171);
+				andiData.attachDataToElement($(this));
+			}
+			else if($(this).is("blink")){
+				andiAlerter.throwAlert(alert_0172);
+				andiData.attachDataToElement($(this));
+			}
 			if($(this).is("input:image")){
-				andiData = new AndiData($(this));				
-				andiData.grabComponents($(this));
+				inlineImageCount++;
 				andiCheck.commonFocusableElementChecks(andiData,$(this));
-				
 				altTextAnalysis($.trim($(this).attr("alt")));
-				
 				andiData.attachDataToElement($(this));
 			}
 			//Check for server side image map
 			else if($(this).is("img[ismap]")){
-				andiData = new AndiData($(this));
+				inlineImageCount++;
 				andiAlerter.throwAlert(alert_0173);
 				andiData.attachDataToElement($(this));
 			}
-			else if($(this).is("img,svg,[role=img]")){ //an image used by an image map is handled by the <area>
-				
-				//Determine if this image should have an accessible name or if it should be derived from a parent
-				//Is Image contained by <a>?
-				var closestLinkOrButtonParent = $(this).closest("a");
-				if($(closestLinkOrButtonParent).length){
-					imageLinkCount++;
-					containedByLinkOrButton = true;
-				}
-				//Is Image contained by <button>?
-				else{
-					closestLinkOrButtonParent = $(this).closest("button");
-					if($(closestLinkOrButtonParent).length){
-						imageButtonCount++;
-						containedByLinkOrButton = true;
-					}
-				}
-				if(containedByLinkOrButton){
-					//Check if parent already has been evaluated (when more than one image is in a link)
-					if(!$(closestLinkOrButtonParent).hasClass("ANDI508-element")){
-						//Image is contained by <a> or <button>
-						andiData = new AndiData($(closestLinkOrButtonParent));			
-						andiData.grabComponents($(closestLinkOrButtonParent));
-						andiCheck.commonFocusableElementChecks(andiData,$(closestLinkOrButtonParent));
-						andiData.attachDataToElement($(closestLinkOrButtonParent));
-					}
-				}
-				else{//Image is NOT contained by <a> or <button>
-					andiData = new AndiData($(this));
-					andiData.grabComponents($(this));
+			else if(!isImageContainedByInteractiveWidget && $(this).is("img,svg,[role=img]")){ //an image used by an image map is handled by the <area>
+				if(isElementDecorative(this, andiData)){
+					decorativeImg++;
+					$(this).addClass("gANDI508-decorative");
 
-					if( andiData.alt == AndiCheck.emptyString ||
-						andiData.alt == " " ||
-						$(this).attr("role") === "presentation" ||
-						$(this).attr("role") === "none" ||
-						$(this).attr("aria-hidden") === "true" )
-					{
-						decorativeImg++;
-						$(this).addClass("gANDI508-decorative");
-
-						if($(this).prop("tabIndex") >= 0)
-							//Decorative image is in the tab order
-							andiAlerter.throwAlert(alert_0126);
-					}
-					else{//This image has not been declared decorative
+					if($(this).prop("tabIndex") >= 0)
+						//Decorative image is in the tab order
+						andiAlerter.throwAlert(alert_0126);
+				}
+				else{//This image has not been declared decorative
+					inlineImageCount++;
+					if(andiData.tabbable)
+						andiCheck.commonFocusableElementChecks(andiData,$(this));
+					else
 						andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
-						altTextAnalysis($.trim($(this).attr("alt")));
-					}
-					
-					andiData.attachDataToElement($(this));
+					altTextAnalysis($.trim($(this).attr("alt")));
 				}
+				
+				andiData.attachDataToElement($(this));
 			}
 			else if($(this).is("area")){
+				inlineImageCount++;
 				var map = $(this).closest("map");
 				if($(map).length){
 					//<area> is contained in <map>
 					var mapName = "#"+$(map).attr("name");
 					if($("#ANDI508-testPage img[usemap='"+mapName+"']").length){
 						//<map> references existing <img>
-						andiData = new AndiData($(this));
-						andiData.grabComponents($(this));
 						andiCheck.commonFocusableElementChecks(andiData, $(this));
 						altTextAnalysis($.trim($(this).attr("alt")));
 						andiData.attachDataToElement($(this));
@@ -142,20 +141,10 @@ gANDI.analyze = function(){
 					andiAlerter.throwAlert(alert_0178,alert_0178.message,0);
 			}
 			else if($(this).is("[role=image]")){
-				andiData = new AndiData($(this));
+				//inlineImageCount++;
 				andiAlerter.throwAlert(alert_0183);
 				andiData.attachDataToElement($(this));
 			}
-		}
-		else if($(this).is("marquee")){
-			andiData = new AndiData($(this));
-			andiAlerter.throwAlert(alert_0171);
-			andiData.attachDataToElement($(this));
-		}
-		else if($(this).is("blink")){
-			andiData = new AndiData($(this));
-			andiAlerter.throwAlert(alert_0172);
-			andiData.attachDataToElement($(this));
 		}
 		else if($(this).css("background-image").includes("url(")){
 			backgroundImageCount++;
@@ -163,11 +152,18 @@ gANDI.analyze = function(){
 		}
 		
 		//Check for common font icon classes
-		if($(this).hasClass("fa") || //font awesome
+		if( !$(this).is("[role=img],img") &&
+			(
+			$(this).hasClass("fa") || //font awesome
 			$(this).hasClass("glyphicon") || //glyphicon
 			$(this).hasClass("material-icons") || //google material icons
-			$(this).is("[data-icon]") ) //common usage of the data-* attribute for icons
+			$(this).is("[data-icon]") //common usage of the data-* attribute for icons
+			)
+		)
 		{
+			andiData = new AndiData($(this));
+			andiData.grabComponents($(this));
+			andiData.attachDataToElement($(this));
 			fontIconCount++;
 			$(this).addClass("gANDI508-fontIcon");
 		}
@@ -175,6 +171,33 @@ gANDI.analyze = function(){
 	
 	if(backgroundImageCount > 0) //Page has background images
 		andiAlerter.throwAlert(alert_0177,alert_0177.message,0);
+		
+	//This returns true if the image is decorative.
+	function isElementDecorative(element, elementData){
+		if($(element).attr("aria-hidden") === "true"){
+			return true;
+		}
+		//TODO: this logic may need to change if screen readers support spec that says aria-label
+		//		should override role=presentation, thus making it not decorative
+		//check for aria-label/aria-labelledby/aria-describedby which would make it not decorative
+		//else if(!elementData.ariaLabel && !elementData.ariaLabelledby && !elementData.ariaDescribedby)
+		else{
+			
+			//check for role presentation/none
+			if(elementData.isPresentation) //role is presentation or none
+			{
+				return true;
+			}
+			//check if <img> and empty alt
+			else if($(element).is("img") &&
+				!elementData.title &&
+				(elementData.alt === AndiCheck.emptyString || elementData.alt === " "))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 };
 
 //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
@@ -352,7 +375,7 @@ gANDI.inspect = function(element){
 		
 		var elementData = $(element).data("ANDI508");
 		
-		andiBar.displayOutput(elementData);
+		andiBar.displayOutput(elementData, element);
 		
 		//format background-image
 		var backgroundImage = $(element).css("background-image");

@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 	
-var sANDIVersionNumber = "1.13.3";
+var sANDIVersionNumber = "2.5.0";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -35,7 +35,6 @@ var listRoleCount = 0;
 var fakeHeadingCount = 0;
 var langAttributesCount = 0;
 var roleAttributesCount = 0;
-var htmlLangAttribute = $.trim($("html").first().prop("lang")); //get the lang attribute from the HTML element
 
 //AndiModule.activeActionButtons
 if($.isEmptyObject(AndiModule.activeActionButtons)){
@@ -52,8 +51,7 @@ sANDI.analyze = function(){
 	
 	//Loop through every visible element
 	$(TestPageData.allVisibleElements).each(function(){
-		
-		if($(this).is("h1,h2,h3,h4,h5,h6,[role='heading']")){
+		if($(this).isSemantically("[role=heading]","h1,h2,h3,h4,h5,h6")){
 			//Add to the headings array	
 			headingsArray.push($(this));
 			structureExists = true;
@@ -61,18 +59,35 @@ sANDI.analyze = function(){
 			if(AndiModule.activeActionButtons.headings){
 				andiData = new AndiData($(this));
 				andiData.grabComponents($(this));
-				if($(this).attr("role") && !$(this).attr("aria-level"))
-					andiAlerter.throwAlert(alert_0180);
+				if(andiData.role === "heading"){
+					var ariaLevel = $(this).attr("aria-level");
+					if(ariaLevel){
+						if($(this).is("h1,h2,h3,h4,h5,h6")){
+							if(andiData.tagName.charAt(1) !== ariaLevel){
+								//heading tag name level doesn't match aria-level
+								andiAlerter.throwAlert(alert_0191,[andiData.tagName,ariaLevel]);
+							}
+						}
+						if(parseInt(ariaLevel) < 0 || parseInt(ariaLevel) != ariaLevel)
+							//Not a positive integar
+							andiAlerter.throwAlert(alert_0180);
+					}
+					else{
+						//role=heading without aria-level
+						andiAlerter.throwAlert(alert_0192);
+					}
+				}
+
 				andiCheck.commonNonFocusableElementChecks(andiData, $(this));
 				andiData.attachDataToElement($(this));
 			}
 		}
-		else if($(this).is("ol,ul,li,dl,dd,dt,[role=listitem],[role=list]")){
+		else if($(this).isSemantically("[role=listitem],[role=list]","ol,ul,li,dl,dd,dt")){
 			//Add to the headings array
 			listsArray.push($(this));
 			structureExists = true;
 			
-			if($(this).is("ol,ul,dl,[role=list]")){
+			if($(this).isSemantically("[role=list]","ol,ul,dl")){
 				if($(this).is("ul"))
 					ulCount++;
 				else if($(this).is("ol"))
@@ -87,10 +102,14 @@ sANDI.analyze = function(){
 			if(AndiModule.activeActionButtons.lists){
 				andiData = new AndiData($(this));
 				
-				if($(this).is("li")){
-					//Is the li contained by an appropriate list container?
+				//Is the listitem contained by an appropriate list container?
+				if($(this).is("[role=listitem]")){
+					if(!$(this).closest("[role=list]").length)
+						andiAlerter.throwAlert(alert_0079, ["[role=listitem]","[role=list]"]);
+				}
+				else if($(this).is("li")){
 					if(!$(this).closest("ol,ul").length)
-						andiAlerter.throwAlert(alert_0079);
+						andiAlerter.throwAlert(alert_0079, ["&lt;li&gt;","&lt;ol&gt; or &lt;ul&gt;"]);
 				}
 				else if($(this).is("dd,dt") && !$(this).closest("dl").length){//Is the dl,dt contained by a dl?
 					andiAlerter.throwAlert(alert_007A);
@@ -101,7 +120,7 @@ sANDI.analyze = function(){
 				andiData.attachDataToElement($(this));
 			}
 		}
-		else if($(this).is("main,header,footer,nav,form,aside,[role='banner'],[role='complementary'],[role='contentinfo'],[role='form'],[role='main'],[role='navigation'],[role='search'],[role='application']")){
+		else if($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=application]","main,header,footer,nav,form,aside")){
 			landmarksArray.push($(this));
 			structureExists = true;
 			
@@ -112,7 +131,7 @@ sANDI.analyze = function(){
 				andiData.attachDataToElement($(this));
 			}
 		}
-		else if(AndiModule.activeActionButtons.headings && headingsArray.length === 0 && $(this).is("p,div,span")){
+		else if(AndiModule.activeActionButtons.headings && headingsArray.length === 0 && $(this).is("p,div,span,strong,em")){
 			//No headings exist, look for fake headings
 			
 			var fakeHeading_limit_textLength = 30;
@@ -164,22 +183,21 @@ sANDI.analyze = function(){
 			}
 		}
 		
+		//For all elements on the page
 		if($(this).attr("role"))
 			roleAttributesCount++;
-		
 		if($(this).prop("lang") && $.trim($(this).prop("lang")) !== "")
 			langAttributesCount++;
 	});
-	
-	if(htmlLangAttribute)
-		langAttributesCount++;
 };
 
 //Initialize outline
 sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Structure Outline:</h3><div class='sANDI508-outline-scrollable'>";
 
+//This function will display the heading list (headings outline)
+//It should only be called on heading elements
 sANDI.getOutlineItem = function(element){
-	var displayCharLength = 60;
+	var displayCharLength = 60; //for truncating innerText
 	var tagName = $(element).prop("tagName").toLowerCase();
 	var role = $(element).attr("role");
 	var ariaLevel = $(element).attr("aria-level");
@@ -187,14 +205,23 @@ sANDI.getOutlineItem = function(element){
 	//Indent the heading according to the level
 	//Results in h1 = 1% left margin, h2 = 2% left margin, etc.
 	var indentLevel;
-	if(ariaLevel)
-		indentLevel = parseInt(ariaLevel);
-	else
-		indentLevel = parseInt(tagName.slice(1));
+	if(ariaLevel){
+		//Check if positive integar
+		if(parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel)
+			indentLevel = parseInt(ariaLevel);
+		else //aria-level is not a positive integar, default to 2 (defined in ARIA spec, and screen readers are doing this)
+			indentLevel = 2;
+	}
+	else{
+		if(role === "heading")
+			indentLevel = 2; //no aria-level and role=heading, so default to 2 (defined in ARIA spec)
+		else
+			indentLevel = parseInt(tagName.slice(1)); //get second character from h tag
+	}
 	
 	var outlineItem = "<a style='margin-left:"+indentLevel+"%' href='#' data-ANDI508-relatedIndex='"+$(element).attr('data-ANDI508-index')+"'>&lt;"+tagName;
 	
-	//attributes
+	//display relevant attributes
 	if(role)
 		outlineItem += " role='" + role + "' ";
 	if(ariaLevel)
@@ -221,18 +248,18 @@ sANDI.results = function(){
 	moduleActionButtons += "<button id='ANDI508-landmarks-button' class='sANDI508-mode' aria-label='"+landmarksArray.length+" Landmarks'>"+landmarksArray.length+" landmarks</button>";
 	moduleActionButtons += "<button id='ANDI508-liveRegions-button' class='sANDI508-mode' aria-label='"+liveRegionsArray.length+" Live Regions'>"+liveRegionsArray.length+" live regions</button>";
 	
-	moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-role-button' aria-pressed='false' aria-label='"+roleAttributesCount+" Role Attributes'>"+roleAttributesCount+" role attributes"+overlayIcon+"</button>";
+	moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
 	
-	//lang attributes button
-	var htmlLangText = "The HTML element does not have a lang attribute.";
-	if(htmlLangAttribute)
-		htmlLangText = "The HTML element has a lang attribute value of "+htmlLangAttribute+".";
-	moduleActionButtons += "<button id='ANDI508-lang-button' aria-pressed='false' aria-label='"+langAttributesCount+" Lang Attributes, "+htmlLangText+"'>"+langAttributesCount+" lang attributes"+overlayIcon+"</button>";
-	
-	//page title button
-	moduleActionButtons += "<button id='ANDI508-pageTitle-button'>page title</button>";
+	var moreDetails = "<button id='ANDI508-pageTitle-button'>page title</button>"+
+		"<button id='ANDI508-pageLanguage-button'>page language</button>"+
+		"<button id='ANDI508-role-button' aria-pressed='false' aria-label='"+roleAttributesCount+" Role Attributes'>"+roleAttributesCount+" role attributes"+overlayIcon+"</button>"+
+		"<button id='ANDI508-lang-button' aria-pressed='false' aria-label='"+langAttributesCount+" Lang Attributes'>"+langAttributesCount+" lang attributes"+overlayIcon+"</button>";
+		
+	moduleActionButtons += "<div class='ANDI508-moduleActionGroup'><button class='ANDI508-moduleActionGroup-toggler'>more details</button><div class='ANDI508-moduleActionGroup-options'>" + moreDetails + "</div></div>";
 	
 	$("#ANDI508-module-actions").html(moduleActionButtons);
+	
+	andiBar.initializeModuleActionGroups();
 
 	//Define sANDI mode buttons (headings, lists, landmarks)
 	$("#ANDI508-headings-button").click(function(){
@@ -275,19 +302,15 @@ sANDI.results = function(){
 			
 			var langOverlayText = "";
 			var overlayObject;
+			var langOfPartsCount = 0;
 			$("#ANDI508-testPage [lang]").filter(":visible").each(function(){
 				if($(this).prop("lang").trim() != ""){
 					langOverlayText = $(this).prop("tagName").toLowerCase()+" lang="+$(this).prop("lang");
 					overlayObject = andiOverlay.createOverlay("ANDI508-overlay-langAttributes", langOverlayText);
-					andiOverlay.insertOverlay(this, overlayObject);
+					andiOverlay.insertAssociatedOverlay(this, overlayObject);
+					langOfPartsCount++;
 				}
 			});
-			
-			if($("html").first().prop("lang")){
-				langOverlayText = "html lang="+$("html").first().prop("lang");
-				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-langAttributes", langOverlayText);
-				$("#ANDI508-testPage").prepend(overlayObject);
-			}
 			
 			AndiModule.activeActionButtons.langAttributes = true;
 		}
@@ -297,6 +320,7 @@ sANDI.results = function(){
 			AndiModule.activeActionButtons.langAttributes = false;
 		}
 		andiResetter.resizeHeights();
+		
 		return false;
 	});
 	
@@ -308,10 +332,12 @@ sANDI.results = function(){
 			var langOverlayText = "";
 			var overlayObject, role;
 			$("#ANDI508-testPage [role]").filter(":visible").each(function(){
-				role = $(this).attr("role").toLowerCase();
-				langOverlayText = $(this).prop("tagName").toLowerCase()+" role="+role;
-				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-roleAttributes", langOverlayText);
-				andiOverlay.insertOverlay(this, overlayObject);
+				role = $.trim($(this).attr("role")).toLowerCase();
+				if(role){ //if role is not empty
+					langOverlayText = $(this).prop("tagName").toLowerCase()+" role="+role;
+					overlayObject = andiOverlay.createOverlay("ANDI508-overlay-roleAttributes", langOverlayText);
+					andiOverlay.insertAssociatedOverlay(this, overlayObject);
+				}
 			});
 
 			AndiModule.activeActionButtons.roleAttributes = true;
@@ -325,9 +351,27 @@ sANDI.results = function(){
 		return false;
 	});
 	
-	//Define the lang attributes button
+	//Define the page title button
 	$("#ANDI508-pageTitle-button").click(function(){
-		alert("The page title is: "+document.title);
+		andiOverlay.overlayButton_on("overlay",$(this));
+		if(document.title)
+			alert("The page title is: "+document.title);
+		else
+			alert("There is no page title.");
+		andiOverlay.overlayButton_off("overlay",$(this));
+	});
+	
+	//Define the page language button
+	$("#ANDI508-pageLanguage-button").click(function(){
+		andiOverlay.overlayButton_on("overlay",$(this));
+		//get the lang attribute from the HTML element
+		var htmlLangAttribute = $.trim($("html").first().prop("lang"));
+		//pop up the lang value of the HTML element
+		if(htmlLangAttribute)
+			alert("The <html> element has a lang attribute value of: "+htmlLangAttribute+".");
+		else
+			alert("The <html> element does not have a lang attribute.");
+		andiOverlay.overlayButton_off("overlay",$(this));
 	});
 	
 	//Deselect all mode buttons
@@ -516,12 +560,10 @@ sANDI.results = function(){
 		});
 		
 		//Click previously active buttons
-		if(AndiModule.activeActionButtons.roleAttributes){
+		if(AndiModule.activeActionButtons.roleAttributes)
 			$("#ANDI508-role-button").click();
-		}
-		if(AndiModule.activeActionButtons.langAttributes){
+		if(AndiModule.activeActionButtons.langAttributes)
 			$("#ANDI508-lang-button").click();
-		}
 	}
 	else{
 		andiBar.hideElementControls();
@@ -540,7 +582,6 @@ sANDI.inspect = function(element){
 		var elementData = $(element).data("ANDI508");
 		
 		var additionalComponents = [
-			$(element).attr("role"),
 			$(element).attr("aria-level"),
 			$(element).attr("aria-live"),
 			$(element).attr("aria-atomic"),
@@ -560,12 +601,11 @@ sANDI.inspect = function(element){
 				["title", elementData.title]
 			],
 			[
-				["role", additionalComponents[0]],
-				["aria-level", additionalComponents[1]],
-				["aria-live", additionalComponents[2]],
-				["aria-atomic", additionalComponents[3]],
-				["aria-busy", additionalComponents[4]],
-				["aria-relevant", additionalComponents[5]],
+				["aria-level", additionalComponents[0]],
+				["aria-live", additionalComponents[1]],
+				["aria-atomic", additionalComponents[2]],
+				["aria-busy", additionalComponents[3]],
+				["aria-relevant", additionalComponents[4]],
 				["aria-hidden", elementData.addOnProperties.ariaHidden],
 				["tabindex", elementData.addOnProperties.tabindex],
 				["accesskey", elementData.addOnProperties.accesskey]
@@ -573,7 +613,7 @@ sANDI.inspect = function(element){
 			additionalComponents
 		);
 
-		andiBar.displayOutput(elementData);	
+		andiBar.displayOutput(elementData, element);	
 	}
 };
 

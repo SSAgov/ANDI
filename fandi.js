@@ -4,7 +4,7 @@
 //=============================================//
 function init_module(){
 
-var fandiVersionNumber = "5.5.0";
+var fandiVersionNumber = "5.8.0";
 
 //create fANDI instance
 var fANDI = new AndiModule(fandiVersionNumber,"f");
@@ -126,7 +126,7 @@ fANDI.results = function(){
 	andiBar.updateResultsSummary("Focusable Elements Found: "+testPageData.andiElementIndex);
 	
 	//Are There Focusable Elements?
-	if(testPageData.andiElementIndex>0){
+	if(testPageData.andiElementIndex > 0){
 		//Yes, Focusable Elements were found
 		
 		//Accesskeys List:
@@ -200,10 +200,9 @@ fANDI.results = function(){
 			return false;
 		});
 
-		if(!andiBar.focusIsOnInspectableElement()){
-			andiBar.showElementControls();
-			andiBar.showStartUpSummary("Discover accessibility markup for focusable elements by tabbing to or hovering over the highlighted elements.",true,"focusable element");
-		}
+		andiBar.focusIsOnInspectableElement();
+		andiBar.showElementControls();
+		andiBar.showStartUpSummary("Discover accessibility markup for focusable elements by tabbing to or hovering over the highlighted elements.",true,"focusable element");
 	}
 	else{
 		//No Focusable Elements were found
@@ -236,7 +235,7 @@ fANDI.results = function(){
 AndiOverlay.prototype.overlayTabOrder = function(){
 	var tabindex;
 	var tabSequence = 0;
-	
+	var overlayObject;
 	//PASS 1: Get tabindexes greater than 0:
 	var greaterThanZeroArray = []; //Will store elements with tabindex greater than 0
 	$("#ANDI508-testPage [tabindex].ANDI508-element").each(function(){
@@ -252,7 +251,9 @@ AndiOverlay.prototype.overlayTabOrder = function(){
 			if($(greaterThanZeroArray[x]).attr("tabindex") == i){
 				tabSequence++;
 				//greaterThanZeroArray[x].insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabIndex="+i, i));
-				$(greaterThanZeroArray[x]).after(andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabIndex="+i, i));
+				//$(greaterThanZeroArray[x]).before(andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabIndex="+i, i));
+				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabIndex="+i, i);
+				andiOverlay.insertAssociatedOverlay($(greaterThanZeroArray[x]), overlayObject, true);
 				z--;
 			}
 		}
@@ -261,26 +262,38 @@ AndiOverlay.prototype.overlayTabOrder = function(){
 	
 	//PASS 2: Get tabindex=0 and natively tabbable:
 	var titleText;
+	var lastRadioGroupName;
 	$("#ANDI508-testPage .ANDI508-element").each(function(){
 		tabindex = $(this).attr("tabindex");
 		if(tabindex < 0){
 			//tab index is negative
 			//this.insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0));
-			$(this).after(andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0));
+			//$(this).before(andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0));
+			overlayObject = andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0);
+			andiOverlay.insertAssociatedOverlay(this, overlayObject, true);
 		}
 		else if(tabindex == 0 || ($(this).is(":tabbable") && !(tabindex > 0) )){
 			//tabindex is 0 or natively tabbable and tabindex is not greater than zero
+			
+			if($(this).is("input[type=radio][name]")){
+				if(lastRadioGroupName !== undefined && lastRadioGroupName === $(this).attr("name"))
+					return; //this is a subsequent radio button, don't add overlay
+				else
+					lastRadioGroupName = $(this).attr("name");
+			}
 			tabSequence++;
 			titleText = (tabindex == 0) ? "tabIndex=0" : "natively tabbable";
 			//this.insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0));
-			$(this).after(andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0));
+			//$(this).before(andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0));
+			overlayObject = andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0);
+			andiOverlay.insertAssociatedOverlay(this, overlayObject, true);
 		}
 	});
 };
 
 //This function will overlay the label elements.
 AndiOverlay.prototype.overlayLabelTags = function(){
-	var labelText, labelFor, overlayClasses, titleText;
+	var labelText, labelFor, overlayClasses, overlayObject, titleText;
 	$("#ANDI508-testPage label").filter(":visible").each(function(){
 		labelText = "&lt;label";
 		overlayClasses = "ANDI508-overlay-labelTags";
@@ -298,7 +311,8 @@ AndiOverlay.prototype.overlayLabelTags = function(){
 			titleText += "no [for] attribute";
 		labelText += "&gt;";
 
-		$(this).before(andiOverlay.createOverlay(overlayClasses, labelText, titleText, 0));
+		overlayObject = andiOverlay.createOverlay(overlayClasses, labelText, titleText, 0);
+		andiOverlay.insertAssociatedOverlay(this, overlayObject, true);
 		$(this).after(andiOverlay.createOverlay(overlayClasses, "&lt;/label&gt;", "", 0));
 	});
 	
@@ -314,7 +328,7 @@ fANDI.inspect = function(element){
 	
 	var elementData = $(element).data("ANDI508");
 	
-	andiBar.displayOutput(elementData);
+	andiBar.displayOutput(elementData, element);
 	
 	andiBar.displayTable(elementData,
 		[
@@ -344,6 +358,7 @@ fANDI.inspect = function(element){
 			["aria-hidden",	elementData.addOnProperties.ariaHidden],
 			["aria-invalid", elementData.addOnProperties.ariaInvalid],
 			["aria-multiline", elementData.addOnProperties.ariaMultiline],
+			["aria-pressed", elementData.addOnProperties.ariaPressed],
 			["aria-readonly", elementData.addOnProperties.ariaReadonly],
 			["aria-required", elementData.addOnProperties.ariaRequired],
 			["aria-sort", elementData.addOnProperties.ariaSort],

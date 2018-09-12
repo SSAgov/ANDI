@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "3.2.2";
+var cANDIVersionNumber = "3.3.0";
 
 //TODO: select box, check for selected
 
@@ -315,7 +315,7 @@ cANDI.inspect = function(element){
 		
 		cANDI.contrastDisplay(element);
 		
-		andiBar.displayOutput(elementData);
+		andiBar.displayOutput(elementData, element);
 		
 		//Grab the alert text from the outputText
 		var alertHtml = $("#ANDI508-outputText").html();

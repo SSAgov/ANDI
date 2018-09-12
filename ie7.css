@@ -54,5 +54,13 @@ html.ANDI508-testPage body.ANDI508-testPage #ANDI508-testPage .ANDI508-element.A
 #ANDI508 #ANDI508-additionalPageResults div.ANDI508-list-scrollable
 	{height:16em;}
 	
+#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup
+	{display:inline;/*fixes display issues*/}
+#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup .ANDI508-moduleActionGroup-options button
+	{display:block !important;/*fixes display issues*/}
+	
+#ANDI508 #ANDI508-barControls #ANDI508-settingsList #ANDI508-button-highlights
+	{display:none !important;/*button doesn't work in IE7 because of CSS stuff*/}
+	
 #ANDI508 #ANDI508-elementControls
 	{float:left;}

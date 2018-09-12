@@ -5,7 +5,7 @@
 
 function init_module(){
 
-var tandiVersionNumber = "9.1.0";
+var tandiVersionNumber = "9.3.1";
 
 //create tANDI instance
 var tANDI = new AndiModule(tandiVersionNumber,"t");
@@ -20,7 +20,7 @@ tANDI.associatedHeaderCellsDelimeter = " <span aria-hidden='true'>|</span> ";
 //Holding the shift key will prevent inspection from changing.
 AndiModule.andiElementHoverability = function(event){
 	//When hovering, inspect the cells of the data table, not the table itself. Unless it's a presentation table
-	if(!event.shiftKey && (!$(this).is("table,[role=table],[role=grid]") || $(this).is("table:not([role=presentation],[role=none])" )))
+	if(!event.shiftKey && (!$(this).is("table,[role=table],[role=grid],[role=treegrid]") || $(this).is("table:not([role=presentation],[role=none])" )))
 		tANDI.inspect(this);
 };
 //This function updates the Active Element Inspector when focus is given to a highlighted element.
@@ -82,7 +82,6 @@ var activeTableIndex = -1;			//The array index of the active table
 var cellCount = 0;					//The total number of <th> and <td>
 var rowCount = 0;					//The total number of <tr>
 var colCount = 0;					//The total number of columns (maximum number of <th> or <td> in a <tr>)
-var activeTableType;				//The table type (data or presentation) of the active table
 
 //AndiModule.activeActionButtons
 if($.isEmptyObject(AndiModule.activeActionButtons)){
@@ -97,18 +96,24 @@ tANDI.analyze = function(){
 	if(TestPageData.page_using_table){
 		//Loop through each visible table
 		var activeElementFound = false;
-		$(TestPageData.allVisibleElements).filter("table,[role=table],[role=grid]").each(function(){
+		$(TestPageData.allVisibleElements).filter("table,[role=table],[role=grid],[role=treegrid]").each(function(){
 			//Store this table in the array
 			tableArray.push($(this));
 			
-			//Is this not a presentation table?
-			if(!$(this).is("[role=presentation],[role=none]")){
+			//Is this a presentation table?
+			if($(this).is("[role=presentation],[role=none]")){
+				//It's a presentation table
+				presentationTablesCount++;
+			}
+			else if($(this).isSemantically("[role=table],[role=grid],[role=treegrid]","table")){
 				//It's a data table
 				dataTablesCount++;
 			}
-			else//It's a presentation table
+			else{
+				//It table with a non-typical role
 				presentationTablesCount++;
-				
+			}
+			
 			//Determine if this is a refresh of tANDI (there is an active element)
 			if(!activeElementFound &&
 				($(this).hasClass("ANDI508-element-active") || $(this).find("th.ANDI508-element-active,td.ANDI508-element-active").first().length ))
@@ -137,13 +142,12 @@ tANDI.analyze = function(){
 			
 			$("#ANDI508-module-actions").html(moduleActionButtons);
 			
-			if(activeElementFound)
-				analyzeTable(tableArray[activeTableIndex]);
-			else//Analyze first table
-				analyzeTable(tableArray[0]);
+			if(!activeElementFound)
+				activeTableIndex = 0;//Analyze first table
+			analyzeTable(tableArray[activeTableIndex]);
 			
-			//If there are more than one table
-			if(tableCountTotal > 1){
+			//If there are more than one table and prevTable/nextTable buttons haven't yet been added
+			if(tableCountTotal > 1 && $("#ANDI508-prevTable-button").length === 0){
 				//Add "prev table" and "next table" buttons
 				$("#ANDI508-elementControls").append(
 					"<button id='ANDI508-prevTable-button' aria-label='Previous Table' title='Analyze Previous Table'><img src='"+icons_url+"prev-table.png' alt='' /></button> "+
@@ -242,7 +246,7 @@ tANDI.analyze = function(){
 
 //This function updates the results in the ANDI Bar
 tANDI.results = function(){
-	
+
 	//Update Results Summary text depending on the active table type (data or presentation)
 	andiBar.updateResultsSummary("Tables: "+tableCountTotal+" (data tables: "+dataTablesCount+", presentation tables: "+presentationTablesCount+")");
 	
@@ -306,12 +310,12 @@ tANDI.inspect = function(element){
 	
 	var associatedHeaderCellsText = "";
 	
-	if(!$(element).is("table,[role=table],[role=grid]"))
+	if(!$(element).is("table,[role=table],[role=grid],[role=treegrid]"))
 		grabHeadersAndHighlightRelatedCells(element);
 	
 	var elementData = $(element).data("ANDI508");
 	
-	andiBar.displayOutput(elementData);
+	andiBar.displayOutput(elementData, element);
 	
 	//insert the associatedHeaderCellsText into the output if there are no danger alerts
 	if(elementData.dangers.length === 0){
@@ -372,12 +376,15 @@ tANDI.inspect = function(element){
 	
 	//This function will grab associated header cells and add highlights
 	function grabHeadersAndHighlightRelatedCells(element){
-		var table = $(element).closest("table,[role=table],[role=grid]");
+		var table = $(element).closest("table,[role=table],[role=grid],[role=treegrid]");
 		var rowIndex = $(element).attr("data-tANDI508-rowIndex");
 		var colIndex = $(element).attr("data-tANDI508-colIndex");
 		var colgroupIndex = $(element).attr("data-tANDI508-colgroupIndex");
 		var rowgroupIndex = $(element).attr("data-tANDI508-rowgroupIndex");
 
+		//Update activeTableIndex to this element's table.
+		//activeTableIndex = $(table).attr("data-ANDI508-index") - 1;
+		
 		//Find Related <th> cells
 		//==HEADERS/ID MODE==//
 		if(!AndiModule.activeActionButtons.scopeMode){
@@ -515,8 +522,8 @@ tANDI.inspect = function(element){
 				});
 			}
 			else if(
-				( $(element).is("[role=cell]") && $(table).attr("role") == "table" ) || 
-				( $(element).is("[role=gridcell]") && $(table).attr("role") == "grid" )
+				( $(element).is("[role=cell]") && $(table).attr("role") === "table" ) || 
+				( $(element).is("[role=gridcell]") && ($(table).attr("role") === "grid" || $(table).attr("role") === "treegrid") )
 			){
 				$(table).find("[role=columnheader].ANDI508-element,[role=rowheader].ANDI508-element").filter(":visible").each(function(){
 					ci = $(this).attr("data-tANDI508-colIndex");
@@ -634,7 +641,7 @@ function analyzeTable(table){
 	var role = $(table).attr("role");
 	
 	//if role=table or role=grid and has a descendent with role=gridcell
-	if(role === "table" || (role === "grid" && $(table).find("[role=gridcell]").first().length)){
+	if(role === "table" || ((role === "grid" || role === "treegrid") && $(table).find("[role=gridcell]").first().length)){
 		analyzeTable_ARIA(table, role);
 	}
 	else{
@@ -679,23 +686,67 @@ function analyzeTable(table){
 		var rowspanArray = [];
 		
 		//temporarily hide any nested tables so they don't interfere with analysis
-		$(table).find("table").addClass("ANDI508-temporaryHide");
+		$(table).find("table,[role=table],[role=grid],[role=treegrid]").addClass("ANDI508-temporaryHide");
 		
 		//Cache the visible elements (performance)
 		var all_rows = $(table).find("tr").filter(":visible");
 		var all_th = $(all_rows).find("th").filter(":visible");
 		var all_cells = $(all_rows).find("th,td").filter(":visible");
 		
-		//Is this not a presentation table
-		if($(table).attr("role") !== "presentation" && $(table).attr("role") !== "none"){
+		if(role === "presentation" || role === "none"){
+			//==PRESENTATION TABLE==//
+			andiData = new AndiData($(table));
+			andiData.grabComponents($(table));
+			andiCheck.commonNonFocusableElementChecks(andiData, $(table));
 			
+			var presentationTablesShouldNotHave = "";
+			
+			if($(table).find("caption").filter("visible").first().length)
+				presentationTablesShouldNotHave += "a &lt;caption&gt;, ";
+			
+			if($(all_th).first().length)
+				presentationTablesShouldNotHave += "&lt;th&gt;, ";
+		
+			cellCount = 0;
+			
+			var presTableWithScope = false;
+			var presTableWithHeaders = false;
+			$(all_cells).each(function(){
+				cellCount++;
+				if($(this).attr("scope"))
+					presTableWithScope = true;
+				if($(this).attr("headers"))
+					presTableWithHeaders = true;
+			});
+			
+			if(presTableWithScope)
+				presentationTablesShouldNotHave += "cells with [scope] attributes, ";
+			if(presTableWithHeaders)
+				presentationTablesShouldNotHave += "cells with [headers] attributes, ";
+			
+			if($(table).attr("summary"))
+				presentationTablesShouldNotHave += "a [summary] attribute, ";
+
+			if(presentationTablesShouldNotHave)
+				//andiAlerter.throwAlert(alert_0041, [presentationTablesShouldNotHave.slice(0,-2)]);
+				andiAlerter.throwAlert(alert_0041);
+			
+			andiData.attachDataToElement($(table));
+		}
+		else if($.trim(role) && role !== "table" && role !== "grid" && role !== "treegrid"){
+			//==TABLE WITH NONTYPICAL ROLE==//
+			andiData = new AndiData($(table));
+			andiData.grabComponents($(table));
+			andiAlerter.throwAlert(alert_004I,[role]);
+			andiData.attachDataToElement($(table));
+		}
+		else{
+			//==DATA TABLE==//
 			//This is a little hack to force the table tag to go first in the index
 			//so that it is inspected first with the previous and next buttons.
 			//Skip index 0, so that later the table can be placed at 0
 			testPageData.andiElementIndex = 1;
-			
-			activeTableType = "Data";
-			
+						
 			//Loop A (establish the rowIndex/colIndex)
 			rowIndex = 0;
 			var firstRow = true;
@@ -1073,57 +1124,15 @@ function analyzeTable(table){
 			
 			testPageData.andiElementIndex = lastIndex; //set the index back to the last element's index so things dependent on this number don't break
 		}
-		else{
-		//==PRESENTATION TABLE==//
-			activeTableType = "Presentation";
 		
-			andiData = new AndiData($(table));
-			andiData.grabComponents($(table));
-			andiCheck.commonNonFocusableElementChecks(andiData, $(table));
-			
-			var presentationTablesShouldNotHave = "";
-			
-			if($(table).find("caption").filter("visible").first().length)
-				presentationTablesShouldNotHave += "a &lt;caption&gt;, ";
-			
-			if($(all_th).first().length)
-				presentationTablesShouldNotHave += "&lt;th&gt;, ";
-		
-			cellCount = 0;
-			
-			var presTableWithScope = false;
-			var presTableWithHeaders = false;
-			$(all_cells).each(function(){
-				cellCount++;
-				if($(this).attr("scope"))
-					presTableWithScope = true;
-				if($(this).attr("headers"))
-					presTableWithHeaders = true;
-			});
-			
-			if(presTableWithScope)
-				presentationTablesShouldNotHave += "cells with [scope] attributes, ";
-			if(presTableWithHeaders)
-				presentationTablesShouldNotHave += "cells with [headers] attributes, ";
-			
-			if($(table).attr("summary"))
-				presentationTablesShouldNotHave += "a [summary] attribute, ";
-
-			if(presentationTablesShouldNotHave)
-				//andiAlerter.throwAlert(alert_0041, [presentationTablesShouldNotHave.slice(0,-2)]);
-				andiAlerter.throwAlert(alert_0041);
-			
-			andiData.attachDataToElement($(table));
-		}
-		
-		$(table).find("table").removeClass("ANDI508-temporaryHide");
+		$(table).find(".ANDI508-temporaryHide").removeClass("ANDI508-temporaryHide");
 	}
 }
 
 //This function will a table. Only one table at a time
 //Paramaters:
 //	table: the table element
-//	role: the ARIA role (role=table or role=grid)
+//	role: the ARIA role (role=table or role=grid or role=treegrid)
 function analyzeTable_ARIA(table, role){
 	//loop through the <table> and set data-* attributes
 	//Each cell in a row is given a rowIndex
@@ -1155,7 +1164,7 @@ function analyzeTable_ARIA(table, role){
 	var rowspanArray = [];
 	
 	//temporarily hide any nested tables so they don't interfere with analysis
-	$(table).find("[role=table],[role=grid]").addClass("ANDI508-temporaryHide");
+	$(table).find("table,[role=table],[role=grid],[role=treegrid]").addClass("ANDI508-temporaryHide");
 	
 	//Cache the visible elements (performance)
 	var all_rows = $(table).find("[role=row]").filter(":visible");
@@ -1166,8 +1175,6 @@ function analyzeTable_ARIA(table, role){
 	//so that it is inspected first with the previous and next buttons.
 	//Skip index 0, so that later the table can be placed at 0
 	testPageData.andiElementIndex = 1;
-	
-	activeTableType = "Data";
 	
 	//Loop A (establish the rowIndex/colIndex)
 	rowIndex = 0;
@@ -1376,9 +1383,13 @@ tANDI.viewList_buildTable = function(){
 	//Returns an array with the tableName and the namingMethodUsed
 	function preCalculateTableName(table){
 		var tableName, namingMethod;
-		var role = $(table).attr("role");
+		var role = $.trim($(table).attr("role"));
 		if(role === "presentation" || role === "none"){
 			tableName = "<span style='font-style:italic'>Presentation Table</span>";
+			namingMethod = "";
+		}
+		else if(role && role !== "table" && role !== "grid" && role !== "treegrid"){
+			tableName = "<span style='font-style:italic'>Not Recognized as a Data Table</span>";
 			namingMethod = "";
 		}
 		else{
@@ -1418,7 +1429,6 @@ tANDI.viewList_buildTable = function(){
 				"Data Table with No Name</span>";
 				namingMethod = "<span class='ANDI508-display-caution'>None</span>";
 			}
-
 		}
 		return [tableName,namingMethod];
 		
@@ -1522,7 +1532,7 @@ tANDI.viewList_toggle = function(btn){
 //This function will overlay the table markup.
 AndiOverlay.prototype.overlayTableMarkup = function(){
 	var type, scope, headers, id, role, markupOverlay, ariaLabelledby, ariaLabel, ariaDescribedby;
-	$("#ANDI508-testPage .ANDI508-element:not(table,[role=table],[role=grid])").each(function(){
+	$("#ANDI508-testPage .ANDI508-element:not(table,[role=table],[role=grid],[role=treegrid])").each(function(){
 
 		cellType = $(this).prop("tagName").toLowerCase();
 		scope = $(this).attr("scope");
