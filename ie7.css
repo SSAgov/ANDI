@@ -51,7 +51,7 @@ html.ANDI508-testPage body.ANDI508-testPage #ANDI508-testPage .ANDI508-element.A
 	
 #ANDI508 #ANDI508-moduleMenu button
 	{padding-top:3px; margin-right:5px;/*no support for border-radius*/}
-#ANDI508 #ANDI508-additionalPageResults div.ANDI508-list-scrollable
+#ANDI508 #ANDI508-additionalPageResults div.ANDI508-scrollable
 	{height:16em;}
 	
 #ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup

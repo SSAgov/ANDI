@@ -36,11 +36,16 @@
 		{font-size:11pt;}
 	
 	#ANDI508 #cANDI508-minReq,
-	#ANDI508 #cANDI508-minReqRatio
+	#ANDI508 #cANDI508-minReqRatio,
+	#ANDI508 #cANDI508-minReqRatio span
 		{font-size:8pt;}
 		
-	#ANDI508 #cANDI508-ratio
+	#ANDI508 #cANDI508-ratio,
+	#ANDI508 #cANDI508-ratio span
 		{font-size:12pt;}
+		
+	#ANDI508 .cANDI508-ratio-darker
+		{color:#a0a0a0 !important}
 		
 	#ANDI508 #cANDI508-fg,
 	#ANDI508 #cANDI508-bg,

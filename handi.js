@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var handiVersionNumber = "3.4.1";
+var handiVersionNumber = "4.0.0";
 
 //TODO: report whether an element should be visible or invisible to a screen reader
 
@@ -13,27 +13,28 @@ var hANDI = new AndiModule(handiVersionNumber,"h");
 
 //This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
 //Holding the shift key will prevent inspection from changing.
-AndiModule.andiElementHoverability = function(event){
+AndiModule.hoverability = function(event){
 	if(!event.shiftKey && $(this).hasClass("ANDI508-forceReveal")) //check for holding shift key
-		hANDI.inspect(this);
-};
-//This function updates the Active Element Inspector when focus is given to a highlighted element.
-AndiModule.andiElementFocusability = function(){
-	andiLaser.eraseLaser();
-	hANDI.inspect(this);
-	andiResetter.resizeHeights();
+		AndiModule.inspect(this);
 };
 
-hANDI.inspect = function(element){
+//This function removes markup in the test page that was added by this module
+AndiModule.cleanup = function(testPage, element){
+	if(element){
+		$(element).removeAttr("data-handi508-hidingtechniques").removeClass("ANDI508-forceReveal ANDI508-forceReveal-display ANDI508-forceReveal-visibility ANDI508-forceReveal-position ANDI508-forceReveal-opacity ANDI508-forceReveal-overflow ANDI508-forceReveal-fontSize ANDI508-forceReveal-textIndent");
+		if($(element).hasClass("ANDI508-forceReveal-html5Hidden"))
+			$(element).attr("hidden","hidden").removeClass("ANDI508-forceReveal-html5Hidden"); //add the hidden attribute back
+	}
+	else
+		$(testPage).find(".hANDI508-hasHiddenCssContent").removeClass("hANDI508-hasHiddenCssContent");
+};
+
+AndiModule.inspect = function(element){
 	andiBar.prepareActiveElementInspection(element);
-	var hidingTechniques = $(element).attr("data-hANDI508-hidingTechniques");
-	var cssContent = $(element).attr("data-hANDI508-cssContent");
+	var hidingTechniques = $(element).attr("data-handi508-hidingtechniques");
 	$("#ANDI508-additionalElementDetails").html("");
-	
 	if(hidingTechniques)
 		$("#ANDI508-additionalElementDetails").append(hidingTechniques);
-	if(cssContent)
-		$("#ANDI508-additionalElementDetails").append(cssContent);
 };
 
 var hiddenElements = 0;
@@ -52,19 +53,18 @@ var elementsWithCssInjectedContent = 0;
 
 var prevNextBtnsVisible = false;
 
-//AndiModule.activeActionButtons
-if($.isEmptyObject(AndiModule.activeActionButtons)){
-	$.extend(AndiModule.activeActionButtons,{forceReveal_display:false});
-	$.extend(AndiModule.activeActionButtons,{forceReveal_visibility:false});
-	$.extend(AndiModule.activeActionButtons,{forceReveal_position:false});
-	$.extend(AndiModule.activeActionButtons,{forceReveal_opacity:false});
-	$.extend(AndiModule.activeActionButtons,{forceReveal_overflow:false});
-	$.extend(AndiModule.activeActionButtons,{forceReveal_fontSize:false});
-	$.extend(AndiModule.activeActionButtons,{forceReveal_textIndent:false});
-	$.extend(AndiModule.activeActionButtons,{forceReveal_html5Hidden:false});
-	$.extend(AndiModule.activeActionButtons,{highlightCssContent:false});
-	$.extend(AndiModule.activeActionButtons,{titleAttributes:false});
-}
+AndiModule.initActiveActionButtons({
+	forceReveal_display:false,
+	forceReveal_visibility:false,
+	forceReveal_position:false,
+	forceReveal_opacity:false,
+	forceReveal_overflow:false,
+	forceReveal_fontSize:false,
+	forceReveal_textIndent:false,
+	forceReveal_html5Hidden:false,
+	highlightCssContent:false,
+	titleAttributes:false
+});
 
 if(!prevNextBtnsVisible){
 	andiBar.hideElementControls();
@@ -95,7 +95,7 @@ hANDI.containsTestableContent = function(element){
 //This function will analyze the test page for elements hidden using CSS
 hANDI.analyze = function(){
 	var isHidingContent, elementCss;
-	$("#ANDI508-testPage *").not("area,base,basefont,datalist,head,link,meta,noembed,noframes,param,rp,script,noscript,source,style,template,track,title").each(function(){
+	$(TestPageData.allElements).not("area,base,basefont,datalist,link,meta,noembed,noframes,param,rp,script,noscript,source,style,template,track,title").each(function(){
 		isHidingContent = false;
 		elementCss = "";
 		
@@ -182,14 +182,14 @@ hANDI.analyze = function(){
 		}
 		
 		if(isHidingContent){
-			//create data-hANDI508-hidingTechniques
+			//create data-handi508-hidingtechniques
 			if(elementCss !== ""){
 				elementCss = "<h3 class='ANDI508-heading'>Hiding Technique:</h3> <span class='ANDI508-code'>" + $.trim(elementCss) + "</span>";
-				$(this).attr("data-hANDI508-hidingTechniques", elementCss);
+				$(this).attr("data-handi508-hidingtechniques", elementCss);
 			}
 			
-			andiData = new AndiData($(this));
-			andiData.attachDataToElement($(this));
+			andiData = new AndiData(this, true);
+			AndiData.attachDataToElement(this);
 		}
 	});
 	
@@ -204,22 +204,23 @@ hANDI.analyze = function(){
 //This function will detect content hidden using css :before :after content.
 //Current scren readers will not read text injected using this method.
 hANDI.detectCssInjectedContent = function(){
-	var everyElement = document.querySelectorAll("#ANDI508-testPage *");
+	//var everyElement = document.querySelectorAll("#ANDI508-testPage *");
+	//var everyElement = TestPageData.allVisibleElements;
 	var before, after, hasHiddenCSSContent, cssDisplay;
 	
 	//Loop through every element on the page
-	for(var x=0; x<everyElement.length; x++){
+	for(var x=0; x<TestPageData.allVisibleElements.length; x++){
 		hasHiddenCSSContent = false; //reset to false
 		cssDisplay = "";
 		
-		before = window.getComputedStyle(everyElement[x], ':before').getPropertyValue('content');
+		before = window.getComputedStyle(TestPageData.allVisibleElements[x], ":before").getPropertyValue("content");
 		if(hasContent(before)){
 			//element has injected content using :before
 			hasHiddenCSSContent = true;
 			cssDisplay += before + " ";
 		}
 			
-		after = window.getComputedStyle(everyElement[x], ':after').getPropertyValue('content');
+		after = window.getComputedStyle(TestPageData.allVisibleElements[x], ":after").getPropertyValue("content");
 		if(hasContent(after)){
 			//element has injected content using :after
 			hasHiddenCSSContent = true;
@@ -228,8 +229,7 @@ hANDI.detectCssInjectedContent = function(){
 		
 		if(hasHiddenCSSContent){
 			elementsWithCssInjectedContent++;
-			$(everyElement[x]).addClass("hANDI508-hasHiddenCssContent");
-			//$(everyElement[x]).attr("data-hANDI508-cssContent","<h3 class='ANDI508-heading'>Inaccessible CSS Content:</h3> "+cssDisplay);
+			$(TestPageData.allVisibleElements[x]).addClass("hANDI508-hasHiddenCssContent");
 		}
 	}
 	
@@ -274,9 +274,9 @@ hANDI.results = function(){
 		function addForceRevealButton(technique, count, buttonText){
 			if(count > 0){
 				hidingTechniquesUsed++;
-				revealButtons += "<button id='ANDI508-forceReveal-"+technique+"-button' class='hANDI-revealButton' aria-label='"+count+" "+buttonText+"' aria-pressed='false'>"+count+" "+buttonText+findIcon+"</button>";
+				revealButtons += "<button id='ANDI508-forceReveal_"+technique+"-button' class='hANDI-revealButton' aria-label='"+count+" "+buttonText+"' aria-pressed='false'>"+count+" "+buttonText+findIcon+"</button>";
 			}
-		}		
+		}
 		
 		if(hidingTechniquesUsed > 0){
 			if(hidingTechniquesUsed > 1)
@@ -330,7 +330,7 @@ hANDI.results = function(){
 		addHiddenContentButtonClickLogic("html5Hidden");
 		
 		function addHiddenContentButtonClickLogic(technique){
-			$("#ANDI508-forceReveal-"+technique+"-button").click(function(){
+			$("#ANDI508-forceReveal_"+technique+"-button").click(function(){
 				if($(this).attr("aria-pressed") === "false"){
 					andiOverlay.overlayButton_on("find",$(this));
 					$("#ANDI508-testPage .ANDI508-forceReveal-"+technique).each(function(){
@@ -394,37 +394,29 @@ hANDI.results = function(){
 				"The revealed content will not remain revealed after changing modules. ";
 		}
 		else if(elementsWithCssInjectedContent > 0){
-			showStartUpSummaryText += "Content injected with CSS is <span class='ANDI508-module-name-h'>hidden</span> to a screen reader.";
+			showStartUpSummaryText += "Content injected with CSS is invisible to a screen reader.";
 		}
 
 		andiBar.showStartUpSummary(showStartUpSummaryText, true);
 		
-		andiAlerter.updateAlertList();
-		
-		//Click previously active buttons
-		if(AndiModule.activeActionButtons.forceReveal_display)
-			$("#ANDI508-forceReveal-display-button").click();
-		if(AndiModule.activeActionButtons.forceReveal_visibility)
-			$("#ANDI508-forceReveal-visibility-button").click();
-		if(AndiModule.activeActionButtons.forceReveal_position)
-			$("#ANDI508-forceReveal-position-button").click();
-		if(AndiModule.activeActionButtons.forceReveal_opacity)
-			$("#ANDI508-forceReveal-opacity-button").click();
-		if(AndiModule.activeActionButtons.forceReveal_overflow)
-			$("#ANDI508-forceReveal-overflow-button").click();
-		if(AndiModule.activeActionButtons.forceReveal_fontSize)
-			$("#ANDI508-forceReveal-fontSize-button").click();
-		if(AndiModule.activeActionButtons.forceReveal_textIndent)
-			$("#ANDI508-forceReveal-textIndent-button").click();
-		if(AndiModule.activeActionButtons.forceReveal_html5Hidden)
-			$("#ANDI508-forceReveal-html5Hidden-button").click();
-		
-		if(AndiModule.activeActionButtons.titleAttributes)
-			$("#ANDI508-titleAttributes-button").click();
+		AndiModule.engageActiveActionButtons([
+			"forceReveal_display",
+			"forceReveal_visibility",
+			"forceReveal_position",
+			"forceReveal_opacity",
+			"forceReveal_overflow",
+			"forceReveal_fontSize",
+			"forceReveal_textIndent",
+			"forceReveal_html5Hidden",
+			"highlightCssContent",
+			"titleAttributes-button"
+		]);
 	}
 	else{
 		andiBar.showStartUpSummary("No CSS <span class='ANDI508-module-name-h'>hidden content</span> detected.");
 	}
+	
+	andiAlerter.updateAlertList();
 	
 	$("#ANDI508").focus();
 };
@@ -459,7 +451,7 @@ hANDI.toggleRevealAllButton = function(){
 		$("#ANDI508-elementDetails").hide();
 		$("#ANDI508-additionalElementDetails").hide();
 		andiBar.hideElementControls();
-		andiBar.showStartUpSummary(showStartUpSummaryText,true);
+		andiBar.showStartUpSummary(showStartUpSummaryText, true);
 	}
 };
 
@@ -494,17 +486,17 @@ hANDI.unreveal = function(){
 
 //Previous Element Button override
 $("#ANDI508-button-prevElement").off("click").click(function(){
-	var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-ANDI508-index"));
+	var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
 	
 	if(isNaN(index))//there is no active element, so focus on last force-revealed element
-		andiFocuser.focusByIndex(parseInt($("#ANDI508-testPage .ANDI508-forceReveal").last().attr("data-ANDI508-index")));
+		andiFocuser.focusByIndex(parseInt($("#ANDI508-testPage .ANDI508-forceReveal").last().attr("data-andi508-index")));
 	else{
 		var prevElement;
 	
-		//Find the previous element with data-ANDI508-index
+		//Find the previous element with data-andi508-index
 		//This will skip over elements that may have been removed from the DOM and are not force revealed
 		for(var x=index; x>0; x--){
-			prevElement = $("#ANDI508-testPage [data-ANDI508-index='"+(x - 1)+"']");
+			prevElement = $("#ANDI508-testPage [data-andi508-index='"+(x - 1)+"']");
 			if($(prevElement).length && $(prevElement).hasClass("ANDI508-forceReveal")){
 				andiFocuser.focusByIndex(x - 1);
 				break;
@@ -516,16 +508,16 @@ $("#ANDI508-button-prevElement").off("click").click(function(){
 //Next Element Button override
 $("#ANDI508-button-nextElement").off("click").click(function(){
 	//get the active element
-	var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-ANDI508-index"));
+	var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
 	
 	if(isNaN(index))//there is no active element, so focus on first force-revealed element
-		andiFocuser.focusByIndex(parseInt($("#ANDI508-testPage .ANDI508-forceReveal").first().attr("data-ANDI508-index")));
+		andiFocuser.focusByIndex(parseInt($("#ANDI508-testPage .ANDI508-forceReveal").first().attr("data-andi508-index")));
 	else{
 		var nextElement;
-		//Find the next element with data-ANDI508-index
+		//Find the next element with data-andi508-index
 		//This will skip over elements that may have been removed from the DOM and are not force revealed
 		for(var x=index; x<testPageData.andiElementIndex; x++){
-			nextElement = $("#ANDI508-testPage [data-ANDI508-index='"+(x + 1)+"']");
+			nextElement = $("#ANDI508-testPage [data-andi508-index='"+(x + 1)+"']");
 			if($(nextElement).length && $(nextElement).hasClass("ANDI508-forceReveal")){
 				andiFocuser.focusByIndex(x + 1);
 				break;

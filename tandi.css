@@ -2,7 +2,11 @@
 	/*==ANDI Bar==*/
 	#ANDI508 #ANDI508-elementControls #ANDI508-nextTable-button,
 	#ANDI508 #ANDI508-elementControls #ANDI508-prevTable-button
-		{padding:3px 3px 0px 3px !important;}
+		{padding:2px 3px 0px 2px !important;}
+	#ANDI508 .ANDI508-display-headerText
+		{color:#e75dff !important;}
+	#ANDI508 .ANDI508-display-headers
+		{color:#ffbdeb !important;}
 		
 	/*=Test Page=*/
 	#ANDI508-testPage.tANDI508-testPage th.ANDI508-element.ANDI508-highlight,
@@ -44,9 +48,4 @@
 	#ANDI508-testPage.tANDI508-testPage [role=table].ANDI508-element.ANDI508-highlight.ANDI508-element-active,
 	#ANDI508-testPage.tANDI508-testPage [role=grid].ANDI508-element.ANDI508-highlight.ANDI508-element-active
 		{border:4px solid deeppink !important; outline:none !important;}
-	
-	#ANDI508-testPage.tANDI508-testPage table.ANDI508-temporaryHide,
-	#ANDI508-testPage.tANDI508-testPage [role=table].ANDI508-temporaryHide,
-	#ANDI508-testPage.tANDI508-testPage [role=grid].ANDI508-temporaryHide
-		{display:none !important;}
 		

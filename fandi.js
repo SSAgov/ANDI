@@ -4,30 +4,16 @@
 //=============================================//
 function init_module(){
 
-var fandiVersionNumber = "5.8.0";
+var fandiVersionNumber = "7.0.0";
 
 //create fANDI instance
 var fANDI = new AndiModule(fandiVersionNumber,"f");
 
-//This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
-//Holding the shift key will prevent inspection from changing.
-AndiModule.andiElementHoverability = function(event){
-	if(!event.shiftKey) //check for holding shift key
-		fANDI.inspect(this);
-};
-//This function updates the Active Element Inspector when focus is given to a highlighted element.
-AndiModule.andiElementFocusability = function(){
-	andiLaser.eraseLaser();
-	fANDI.inspect(this);
-	andiResetter.resizeHeights();
-};
-
-//AndiModule.activeActionButtons
-if($.isEmptyObject(AndiModule.activeActionButtons)){
-	$.extend(AndiModule.activeActionButtons,{tabOrder:false});
-	$.extend(AndiModule.activeActionButtons,{titleAttributes:false});
-	$.extend(AndiModule.activeActionButtons,{labelTags:false});
-}
+AndiModule.initActiveActionButtons({
+	tabOrder:false,
+	titleAttributes:false,
+	labelTags:false
+});
 
 //This function will analyze the test page for focusable element related markup relating to accessibility
 fANDI.analyze = function(){
@@ -36,23 +22,23 @@ fANDI.analyze = function(){
 	
 	//Loop through every visible element and run tests
 	$(TestPageData.allVisibleElements).each(function(){
-		
-		testPageData.firstLaunchedModulePrep(this); //Only the first launched module needs this.
-		
-		//If element is focusable, search for accessibility components.
-		if($(this).is(":focusable")){
-			andiData = new AndiData($(this));
-			andiData.grabComponents($(this));
-			andiCheck.commonFocusableElementChecks(andiData,$(this));
-			if(andiData.addOnProperties.accesskey)
-				fANDI.accesskeys.push($(this), andiData.addOnProperties.accesskey, andiData.andiElementIndex);
-			andiData.attachDataToElement($(this));
+		if($(this).is(":focusable,canvas")){//If element is focusable, search for accessibility components.
+			andiData = new AndiData(this);
+			
+			andiCheck.commonFocusableElementChecks(andiData, $(this));
+			andiCheck.lookForCanvasFallback(this);
+			if(andiData.accesskey)
+				fANDI.accesskeys.push(this, andiData.accesskey, andiData.andiElementIndex);
+			testPageData.firstLaunchedModulePrep(this, andiData);
+			AndiData.attachDataToElement(this);
 		}
 		else{
+			testPageData.firstLaunchedModulePrep(this);
 			andiCheck.isThisElementDisabled(this);
 		}
 	});
 	
+	andiCheck.areLabelForValid();
 	andiCheck.areThereDisabledElements("elements");
 };
 
@@ -65,11 +51,10 @@ function AndiAccesskeys(){
 	
 	this.getListHtml = function(){
 		return list;
-	}
-
+	};
+	
 	this.push = function(element, accesskey, index){
 		if(accesskey){
-			accesskey = accesskey.toUpperCase();
 			//Is accesskey value more than one character?
 			if(accesskey.length > 1){ //TODO: could be a non-issue if browsers are supporting space delimited accesskey lists
 				andiAlerter.throwAlert(alert_0052,[accesskey]);
@@ -114,10 +99,10 @@ function AndiAccesskeys(){
 			if(index === 0)
 				list += "<span tabindex='0' "+addClass+" title='"+ titleText +"'>"+accesskey+"</span> ";
 			else
-				list += "<a href='#' data-ANDI508-relatedIndex='"+index+"' title='"+ titleText +"'><span "+addClass+">"+accesskey+"</span></a> ";
-		};
+				list += "<a href='#' data-andi508-relatedindex='"+index+"' title='"+ titleText +"'><span "+addClass+">"+accesskey+"</span></a> ";
+		}
 	};
-};
+}
 
 //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
 //Inserts some counter totals, displays the accesskey list
@@ -140,8 +125,6 @@ fANDI.results = function(){
 			});
 			$("#ANDI508-accesskeysFound").show();
 		}
-		else
-			$("#ANDI508-accesskeysFound").remove();
 		
 		//Tab Order button
 		var moduleActionButtons = "<button id='ANDI508-tabOrder-button' aria-label='Tab Order Indicators' aria-pressed='false'>tab order"+overlayIcon+"</button>";
@@ -202,30 +185,21 @@ fANDI.results = function(){
 
 		andiBar.focusIsOnInspectableElement();
 		andiBar.showElementControls();
-		andiBar.showStartUpSummary("Discover accessibility markup for focusable elements by tabbing to or hovering over the highlighted elements.",true,"focusable element");
+		andiBar.showStartUpSummary("Discover accessibility markup for focusable elements by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every focusable element.",true);
 	}
 	else{
 		//No Focusable Elements were found
 		andiBar.hideElementControls();
-		if(testPageData.numberOfAccessibilityAlertsFound === 0){
-			//No Alerts
-			andiBar.showStartUpSummary("No Focusable Elements were found on this page.",false);
-		}
-		else{
-			//Alerts were found
-			andiBar.showStartUpSummary("No Focusable Elements were found, <br />however there are some accessibility alerts.",true);
-		}
-	}
+		andiBar.showStartUpSummary("No focusable elements were found on this page.");
+}
 	
 	andiAlerter.updateAlertList();
 	
-	//Click previously active buttons
-	if(AndiModule.activeActionButtons.tabOrder)
-		$("#ANDI508-tabOrder-button").click();
-	if(AndiModule.activeActionButtons.titleAttributes)
-		$("#ANDI508-titleAttributes-button").click();
-	if(AndiModule.activeActionButtons.labelTags)
-		$("#ANDI508-labelTags-button").click();
+	AndiModule.engageActiveActionButtons([
+		"tabOrder",
+		"titleAttributes",
+		"labelTags"
+	]);
 	
 	$("#ANDI508").focus();
 };
@@ -250,8 +224,6 @@ AndiOverlay.prototype.overlayTabOrder = function(){
 		for(var x=0; x<greaterThanZeroArray.length; x++){
 			if($(greaterThanZeroArray[x]).attr("tabindex") == i){
 				tabSequence++;
-				//greaterThanZeroArray[x].insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabIndex="+i, i));
-				//$(greaterThanZeroArray[x]).before(andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabIndex="+i, i));
 				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero",tabSequence,"tabIndex="+i, i);
 				andiOverlay.insertAssociatedOverlay($(greaterThanZeroArray[x]), overlayObject, true);
 				z--;
@@ -267,8 +239,6 @@ AndiOverlay.prototype.overlayTabOrder = function(){
 		tabindex = $(this).attr("tabindex");
 		if(tabindex < 0){
 			//tab index is negative
-			//this.insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0));
-			//$(this).before(andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0));
 			overlayObject = andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0);
 			andiOverlay.insertAssociatedOverlay(this, overlayObject, true);
 		}
@@ -283,8 +253,6 @@ AndiOverlay.prototype.overlayTabOrder = function(){
 			}
 			tabSequence++;
 			titleText = (tabindex == 0) ? "tabIndex=0" : "natively tabbable";
-			//this.insertAdjacentHTML("afterEnd", andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0));
-			//$(this).before(andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0));
 			overlayObject = andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0);
 			andiOverlay.insertAssociatedOverlay(this, overlayObject, true);
 		}
@@ -316,60 +284,18 @@ AndiOverlay.prototype.overlayLabelTags = function(){
 		$(this).after(andiOverlay.createOverlay(overlayClasses, "&lt;/label&gt;", "", 0));
 	});
 	
-	//$("#ANDI508-testPage .ANDI508-overlay-labelTags.ANDI508-overlay-alert").on("focus",function(){
-	//	andiOverlay.overlay_duplicateIds();
-	//});
 };
 
 //This function will update the info in the Active Element Inspection.
 //Should be called after the mouse hover or focus in event.
-fANDI.inspect = function(element){
+AndiModule.inspect = function(element){
 	andiBar.prepareActiveElementInspection(element);
 	
-	var elementData = $(element).data("ANDI508");
+	var elementData = $(element).data("andi508");
+	var addOnProps = AndiData.getAddOnProps(element, elementData);
 	
-	andiBar.displayOutput(elementData, element);
-	
-	andiBar.displayTable(elementData,
-		[
-			["legend", elementData.legend],
-			["figcaption", elementData.figcaption],
-			["caption", elementData.caption],
-			["parent", elementData.groupingText],
-			["aria-labelledby", elementData.ariaLabelledby],
-			["aria-label", elementData.ariaLabel],
-			["label", elementData.label],
-			["alt", elementData.alt],
-			["value", elementData.value],
-			["innerText", elementData.innerText],
-			["child", elementData.subtree],
-			["imageSrc", elementData.imageSrc],
-			["placeholder", elementData.placeholder],
-			["aria-describedby", elementData.ariaDescribedby],
-			["summary", elementData.summary],
-			["title", elementData.title]
-		],
-		[
-			["aria-checked", elementData.addOnProperties.ariaChecked],
-			["aria-controls", elementData.addOnProperties.ariaControls],
-			["aria-disabled", elementData.addOnProperties.ariaDisabled],
-			["aria-expanded", elementData.addOnProperties.ariaExpanded],
-			["aria-haspopup", elementData.addOnProperties.ariaHaspopup],
-			["aria-hidden",	elementData.addOnProperties.ariaHidden],
-			["aria-invalid", elementData.addOnProperties.ariaInvalid],
-			["aria-multiline", elementData.addOnProperties.ariaMultiline],
-			["aria-pressed", elementData.addOnProperties.ariaPressed],
-			["aria-readonly", elementData.addOnProperties.ariaReadonly],
-			["aria-required", elementData.addOnProperties.ariaRequired],
-			["aria-sort", elementData.addOnProperties.ariaSort],
-			["checked", elementData.addOnProperties.checked],
-			["contenteditable", elementData.addOnProperties.contenteditable],
-			["readonly", elementData.addOnProperties.readonly],
-			["required", elementData.addOnProperties.required],
-			["tabindex", elementData.addOnProperties.tabindex],
-			["accesskey", elementData.addOnProperties.accesskey]
-		]
-	);
+	andiBar.displayOutput(elementData, element, addOnProps);
+	andiBar.displayTable(elementData, element, addOnProps);
 };
 
 fANDI.analyze();

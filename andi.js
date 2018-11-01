@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "23.1.2";
+var andiVersionNumber = "26.0.16";
 
 //==============//
 // ANDI CONFIG: //
@@ -37,7 +37,6 @@ AndiSettings.andiAnimationSpeed = 50; //milliseconds
 
 //The element highlights setting (true = on, false = off)
 AndiSettings.elementHighlightsOn = true;
-//AndiSettings.linearizePageOn = false;
 
 //Default Module
 AndiModule.module = "f";
@@ -60,7 +59,8 @@ var andiData;									//Element Data Storage/Analysis, instatiated within module
 
 var browserSupports = {
 	//Does the browser support SVG?
-	svg: typeof SVGRect !== "undefined"
+	svg: typeof SVGRect !== "undefined",
+	isIE: /MSIE|Trident/.test(window.navigator.userAgent)
 };
 
 //Define the overlay and find icons (not using background-image because of ie7 issues with sizing)
@@ -150,8 +150,8 @@ function launchAndi(){(window.andi508 = function(){
 function AndiModule(moduleVersionNumber, moduleLetter){
 
 	//Display the module letter in the logo when the module is instantiated
-	var moduleName = $("#ANDI508-module-name");
-	$(moduleName).attr("data-ANDI508-module-version",moduleLetter+"ANDI: "+moduleVersionNumber);
+	var moduleName = document.getElementById("ANDI508-module-name");
+	$(moduleName).attr("data-andi508-moduleversion",moduleLetter+"ANDI: "+moduleVersionNumber);
 	if(moduleLetter == "f"){
 		$(moduleName).html("&nbsp;"); //do not display default module letter
 		document.getElementById("ANDI508-toolName-link").setAttribute("aria-label", "andi "+andiVersionNumber); //using setAttribute because jquery .attr("aria-label") is not recognized by ie7
@@ -159,7 +159,8 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	else{
 		$(moduleName).html(moduleLetter);
 		document.getElementById("ANDI508-toolName-link").setAttribute("aria-label", moduleLetter+"andi "+moduleVersionNumber); //using setAttribute because jquery .attr("aria-label") is not recognized by ie7
-		$("head").append("<link id='andiModuleCss' href='"+host_url+moduleLetter+"andi.css' type='text/css' rel='stylesheet' />");
+		//Append module's css file. The version number is added to the href string (?v=) so that when the module is updated, the css file is reloaded and not pulled from browser cache
+		$("head").append("<link id='andiModuleCss' href='"+host_url+moduleLetter+"andi.css?v="+moduleVersionNumber+"' type='text/css' rel='stylesheet' />");
 	}
 	
 	//Module Selection Menu Operation
@@ -187,21 +188,33 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	//The module should implement these priveleged methods
 	this.analyze = undefined;
 	this.results = undefined;
-	this.inspect = undefined;
+	
+	//Set Default Module function logic
+	AndiModule.hoverability = function(event){
+		if(!event.shiftKey) //check for holding shift key
+			AndiModule.inspect(this);
+	};
+	AndiModule.focusability = function(){
+		andiLaser.eraseLaser();
+		AndiModule.inspect(this);
+		andiResetter.resizeHeights();
+	};
+	AndiModule.cleanup = function(){}; //Cleanup does nothing by default
 		
 	//Previous Element Button - modules may overwrite this
 	//Instantiating a module will reset any overrides
 	$("#ANDI508-button-prevElement").off("click").click(function(){
-		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-ANDI508-index"));
+		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
 		if(isNaN(index)) //no active element yet
 			andiFocuser.focusByIndex(1); //first element
 		else if(index == 1)
 			andiFocuser.focusByIndex(testPageData.andiElementIndex); //loop back to last
 		else{
-			//Find the previous element with data-ANDI508-index
-			//This will skip over elements that may have been removed from the DOM
-			for(var x=index; x>0; x--){
-				if($("#ANDI508-testPage [data-ANDI508-index='"+(x - 1)+"']").length){
+			//Find the previous element with data-andi508-index
+			//This will skip over elements that may have been hidden or removed from the DOM
+			for(var x=index, prev; x>0; x--){
+				prev = $("#ANDI508-testPage [data-andi508-index='"+(x - 1)+"']");
+				if($(prev).length && $(prev).is(":visible")){
 					andiFocuser.focusByIndex(x - 1);
 					break;
 				}					
@@ -212,14 +225,15 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	//Next Element Button - modules may overwrite this
 	//Instantiating a module will reset any overrides
 	$("#ANDI508-button-nextElement").off("click").click(function(){
-		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-ANDI508-index"));
+		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
 		if(index == testPageData.andiElementIndex || isNaN(index))
 			andiFocuser.focusByIndex(1); //loop back to first
 		else{
-			//Find the next element with data-ANDI508-index
-			//This will skip over elements that may have been removed from the DOM
-			for(var x=index; x<testPageData.andiElementIndex; x++){
-				if($("#ANDI508-testPage [data-ANDI508-index='"+(x + 1)+"']").length){
+			//Find the next element with data-andi508-index
+			//This will skip over elements that may have been hidden or removed from the DOM
+			for(var x=index, next; x<testPageData.andiElementIndex; x++){
+				next = $("#ANDI508-testPage [data-andi508-index='"+(x + 1)+"']");
+				if($(next).length && $(next).is(":visible")){
 					andiFocuser.focusByIndex(x + 1);
 					break;
 				}					
@@ -227,58 +241,29 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 		}
 	});
 }
-//The module should implement these public methods
-AndiModule.prototype.andiElementHoverability = undefined;
-AndiModule.prototype.andiElementFocusability = undefined;
-
-//This defines the core output logic for ANDI
-AndiModule.outputLogic = function(elementData, element){
-	if(!elementData.isAriaHidden && !(elementData.isPresentation && !$(element).is(":focusable"))){
-		var usingTitleAsNamer = false;
-		var usingSummaryAsNamer = false;
-		//groupingText
-		if(andiBar.output.groupingText(elementData));
-		//legend
-		if(!elementData.ignoreLegend && andiBar.output.legend(elementData));
-	//Accessible Name
-		//aria-labelledby
-		if(andiBar.output.ariaLabelledby(elementData));
-		//aria-label
-		else if(andiBar.output.ariaLabel(elementData));
-	//HTML Namers
-		//label
-		else if(!elementData.ignoreLabel && andiBar.output.label(elementData));
-		//alt
-		else if(!elementData.ignoreAlt && andiBar.output.alt(elementData));
-		//figcaption
-		else if(!elementData.ignoreFigcaption && andiBar.output.figcaption(elementData));
-		//caption
-		else if(!elementData.ignoreCaption && andiBar.output.caption(elementData));
-		//value
-		else if(andiBar.output.value(elementData));
-		//summary
-		else if(andiBar.output.summary(elementData)) usingSummaryAsNamer=true;
-		//innerText/child
-		else if(andiBar.output.innerText(elementData));
-		//title
-		else if(andiBar.output.title(elementData)) usingTitleAsNamer=true;
-	//Accessible Description
-		//aria-describedby
-		if(andiBar.output.ariaDescribedby(elementData));
-	//HTML Describers
-		//summary
-		else if(!usingSummaryAsNamer && andiBar.output.summary(elementData));
-		//title
-		else if(!usingTitleAsNamer && andiBar.output.title(elementData));
-	//Add-On Properties
-		if(andiBar.output.addOnProperties(elementData));
-	}
-};
+//Each module may implement these public methods
+AndiModule.prototype.hoverability = undefined;
+AndiModule.prototype.focusability = undefined;
+AndiModule.prototype.inspect = undefined;
+AndiModule.prototype.cleanup = undefined;
 
 //The modules will keep track of the pressed action buttons using this variable.
 //When the module is refreshed, the buttons remain pressed.
 //If a different module is selected, the buttons will be unpressed.
 AndiModule.activeActionButtons = {};
+//This function will initialize the activeActionButtons
+AndiModule.initActiveActionButtons = function(buttonsObject){
+	if($.isEmptyObject(AndiModule.activeActionButtons)){
+		AndiModule.activeActionButtons = buttonsObject;
+	}
+};
+//This function will click any of the activeActionButtons in the buttonsArray that are set to true
+AndiModule.engageActiveActionButtons = function(buttonsArray){
+	for(var b=0; b<buttonsArray.length; b++){
+		if(AndiModule.activeActionButtons[buttonsArray[b]])
+			$("#ANDI508-"+buttonsArray[b]+"-button").click();
+	}
+};
 
 //These functions show/hide the module selection menu
 AndiModule.showMenu = function(){
@@ -299,7 +284,6 @@ AndiModule.hideMenu = function(){
 };
 
 //This function will launch a module.
-//Parameters:
 //	module:	the letter of the module
 AndiModule.launchModule = function(module){
 	
@@ -321,8 +305,7 @@ AndiModule.launchModule = function(module){
 
 	setTimeout(function(){//Slight delay so that the ANDI bar appears earlier
 		$("#ANDI508-testPage")
-			.addClass(module+"ANDI508-testPage")
-			.attr("data-ANDI508-moduleLaunched",module+"ANDI");
+			.addClass(module+"ANDI508-testPage");
 		
 		//if current module is not this module
 		if(AndiModule.module != module){
@@ -355,7 +338,6 @@ AndiModule.launchModule = function(module){
 		andiBar.hideModuleLoading();
 		
 		andiResetter.resizeHeights();
-		
 	},1);//end setTimeout
 };
 
@@ -377,7 +359,6 @@ function Alert(level, group, message, info, alertButton){
 	this.message = message;	//message text
 	this.info = info; 		//the id corresponding to the help page documentation
 	this.alertButton = alertButton; //(optional) an alert button object
-	this.list = ""; 	//variable for holding a list
 }
 //Define Alerts used by all modules
 var alert_0001 = new Alert("danger","0"," has no accessible name, associated &lt;label&gt;, or [title].","#no_name");
@@ -386,22 +367,22 @@ var alert_0003 = new Alert("danger","0"," has no accessible name, [alt], or [tit
 var alert_0004 = new Alert("danger","0","Table has no accessible name, &lt;caption&gt;, or [title].","#no_name");
 var alert_0005 = new Alert("danger","0","Figure has no accessible name, &lt;figcaption&gt;, or [title].","#no_name");
 var alert_0006 = new Alert("danger","0","[placeholder] provided, but element has no accessible name.","#placeholder_no_name");
-var alert_0007 = new Alert("warning","0","Iframe is in the keyboard tab order and has no accessible name or [title].","#iframe_tab_order");
+var alert_0007 = new Alert("danger","0","Iframe has no accessible name or [title].","#no_name");
 var alert_0008 = new Alert("danger","0"," has no accessible name.","#no_name");
+var alert_0009 = new Alert("warning","0","Iframe has no accessible name or [title].","#no_name");
 
 var alert_0011 = new Alert("danger","1","%%%; Element ids should be unique.","#dup_id", 
 							new AlertButton("show ids", "ANDI508-alertButton-duplicateIdOverlay", function(){andiOverlay.overlay_duplicateIds();}, overlayIcon));
 var alert_0012 = new Alert("danger","1","More than one &lt;label[for=%%%]&gt; associates with this element [id=%%%].","#dup_for");
 
-var alert_0021 = new Alert("danger","2","Using [aria-describedby] alone on this element causes screen reader inconsistencies.","#dby_alone");
-var alert_0022 = new Alert("danger","2","Using &lt;legend&gt; alone on this element causes screen reader inconsistencies.","#legend_alone");
+var alert_0021 = new Alert("danger","2","[aria-describedby] should be used in combination with a component that provides an accessible name.","#dby_alone");
+var alert_0022 = new Alert("danger","2","&lt;legend&gt; should be used in combination with a component that provides an accessible name.","#legend_alone");
 
 var alert_0031 = new Alert("danger","3","[aria-labeledby] is mispelled, use [aria-labelledby].","#misspell");
 var alert_0032 = new Alert("danger","3","[aria-role] not a valid attribute, use [role] instead.","#aria_role");
 
-var alert_0041 = new Alert("warning","4","Presentation table has data table markup; Is this a data table?","#pres_table_not_have");
+var alert_0041 = new Alert("warning","4","Presentation table has data table markup (%%%); Is this a data table?","#pres_table_not_have");
 var alert_0043 = new Alert("caution","4","Table has more than %%% levels of [scope=%%%].","#too_many_scope_levels");
-var alert_0044 = new Alert("danger","4","Scope attribute value [scope=%%%] is invalid.","#scope_invalid");
 var alert_0045 = new Alert("danger","4","[headers] attribute only valid on &lt;th&gt; or &lt;td&gt;.","#headers_only_for_th_td");
 var alert_0046 = new Alert("danger","4","Table has no &lt;th&gt; cells.","#table_has_no_th");
 var alert_0047 = new Alert("warning","4","Scope association needed at intersection of &lt;th&gt;.","#no_scope_at_intersection");
@@ -421,16 +402,18 @@ var alert_0054 = new Alert("danger","5","Duplicate [accessKey=%%%] found on butt
 var alert_0055 = new Alert("caution","5","Duplicate [accessKey=%%%] found.","#accesskey_duplicate");
 var alert_0056 = new Alert("danger","5","Duplicate [accessKey=%%%] found on link.","#accesskey_duplicate");
 
-var alert_0061 = new Alert("danger","6","Element\'s [aria-labelledby] references provide no name text.","#lby_refs_no_text");
-var alert_0062 = new Alert("warning","6","Element\'s [aria-describedby] references provide no description text.","#dby_refs_no_text");
+var alert_0062 = new Alert("warning","6","[headers] attribute is referencing an element in a different table with [id=%%%].","#headers_ref_diff_table");
 var alert_0063 = new Alert("warning","6","Element referenced by [%%%] with [id=%%%] not found.","#ref_id_not_found");
-var alert_0064 = new Alert("caution","6","[%%%] reference contains [aria-label].","#ref_has_aria_label");
 var alert_0065 = new Alert("danger","6","Improper use of [%%%] possible: Referenced ids \"%%%\" not found.","#improper_ref_id_usage");
 var alert_0066 = new Alert("danger","6","Element referenced by [headers] attribute with [id=%%%] is not a &lt;th&gt;.","#headers_ref_not_th");
-var alert_0067 = new Alert("warning","6","[headers] attribute with [id=%%%] is referencing a &lt;td&gt;.","#headers_ref_is_td");
+var alert_0067 = new Alert("warning","6","[headers] attribute is referencing a &lt;td&gt; with [id=%%%].","#headers_ref_is_td");
 var alert_0068 = new Alert("warning","6","Element\'s [headers] references provide no association text.","#headers_refs_no_text");
 var alert_0069 = new Alert("warning","6","In-page anchor target with [id=%%%] not found.","#anchor_target_not_found");
 var alert_006A = new Alert("danger","6","&lt;img&gt; referenced by image map %%% not found.","#image_map_ref_not_found");
+var alert_006B = new Alert("warning","6","[%%%] is referencing a legend which may cause speech verbosity.","#ref_legend");
+var alert_006C = new Alert("warning","6","[%%%] reference contains another [%%%] reference which won't be used for this Output.","#ref_has_ref");
+var alert_006D = new Alert("warning","6","[%%%] is directly referencing [id=%%%] multiple times which may cause speech verbosity.","#ref_is_duplicate");
+var alert_006E = new Alert("warning","6","[%%%] is directly and indirectly referencing [id=%%%] which may cause speech verbosity.","#ref_is_direct_and_indirect");
 
 var alert_0071 = new Alert("danger","7","Page &lt;title&gt; cannot be empty.","#page_title_empty");
 var alert_0072 = new Alert("danger","7","Page has no &lt;title&gt;.","#page_title_none");
@@ -443,29 +426,29 @@ var alert_0078 = new Alert("warning","7","Using HTML5, found deprecated %%%.","#
 var alert_0079 = new Alert("danger","7","List item %%% is not contained by a list container %%%.","#li_no_container");
 var alert_007A = new Alert("danger","7","Description list item is not contained by a description list container &lt;dl&gt;.","#dd_dt_no_container");
 
-var alert_0081 = new Alert("warning","8","[alt] attribute is meant for &lt;img&gt;.","#alt_only_for_images");
+var alert_0081 = new Alert("warning","8","[alt] attribute is meant for &lt;img&gt; elements.","#alt_only_for_images");
 
 var alert_0091 = new Alert("warning","9","Explicit &lt;label[for]&gt; only works with form elements.","#explicit_label_for_forms");
 var alert_0092 = new Alert("warning","9","Explicit &lt;label[for]&gt; shouldn't be used with buttons.","#explicit_label_not_for_buttons");
 
-var alert_0101 = new Alert("warning","10","Combining %%% produces inconsistent screen reader results.","#unreliable_component_combine");
+var alert_0101 = new Alert("warning","10","Combining %%% may produce inconsistent screen reader results.","#unreliable_component_combine");
 
 var alert_0112 = new Alert("caution","11","JavaScript event %%% may cause keyboard accessibility issues; investigate.","#javascript_event_caution");
 
 var alert_0121 = new Alert("caution","12","Focusable element not in keyboard tab order.","#not_in_tab_order");
 var alert_0122 = new Alert("caution","12","Focusable element not in keyboard tab order and has no accessible name.","#not_in_tab_order_no_name");
-var alert_0124 = new Alert("caution","12","Iframe is in the keyboard tab order.","#iframe_tab_order");
+var alert_0123 = new Alert("warning","12","Iframe contents are not in keyboard tab order because iframe has negative tabindex.","#iframe_contents_not_in_tab_order");
+var alert_0124 = new Alert("warning","12","If &lt;canvas&gt; element is interactive with mouse, it's not keyboard accessible because there is no focusable fallback content.","#canvas_not_keyboard_accessible");
 var alert_0125 = new Alert("warning","12","Element with [role=%%%] not in the keyboard tab order.","#role_tab_order");
 var alert_0126 = new Alert("danger","12","Image defined as decorative is in the keyboard tab order.","#decorative_image_tab_order");
+var alert_0127 = new Alert("caution","12","&lt;canvas&gt; element has focusable fallback content; Test for keyboard equivalency to mouse functionality.","#canvas_has_focusable_fallback");
 
-var alert_0131 = new Alert("caution","13","Empty component:%%%.","#empty_component");
 var alert_0132 = new Alert("caution","13","Empty header cell.","#empty_header_cell");
+var alert_0133 = new Alert("caution","13","Live region has no innerText content.","#live_region_empty");
 
-var alert_0141 = new Alert("caution","14","Child element component%%%has unused text.","#child_unused_text");
+var alert_0142 = new Alert("caution","14","Image is presentational; its [alt] will not be used in output.","#image_alt_not_used");
 
-var alert_0151 = new Alert("warning","15","[title] attribute length exceeds "+AndiCheck.characterLimiter+" characters.","#character_length");
-var alert_0152 = new Alert("warning","15","[alt] attribute length exceeds "+AndiCheck.characterLimiter+" characters.","#character_length");
-var alert_0153 = new Alert("warning","15","[aria-label] length exceeds "+AndiCheck.characterLimiter+" characters.","#character_length");
+var alert_0151 = new Alert("warning","15","[%%%] attribute length exceeds "+AndiCheck.characterLimiter+" characters; consider condensing.","#character_length");
 
 var alert_0161 = new Alert("warning","16","Ambiguous Link: same name/description as another link but different href.","#ambiguous_link");
 var alert_0162 = new Alert("caution","16","Ambiguous Link: same name/description as another link but different href.","#ambiguous_link");//caution level thrown for internal links
@@ -488,6 +471,7 @@ var alert_0180 = new Alert("warning","18","[aria-level] is not a greater-than-ze
 var alert_0181 = new Alert("danger","18","Element is hidden from screen reader using [aria-hidden=true].","#ariahidden");
 var alert_0182 = new Alert("danger","18","Live Region contains a form element.","#live_region_form_element");
 var alert_0183 = new Alert("danger","18","[role=image] is invalid; Use [role=img].","#role_image_invalid");
+var alert_0184 = new Alert("danger","18","A live region can only be a container element.","#live_region_not_container");
 
 var alert_0190 = new Alert("warning","19","Element visually conveys heading meaning but not using semantic heading markup.","#not_semantic_heading");
 var alert_0191 = new Alert("warning","19","Heading element level &lt;%%%&gt; conflicts with [aria-level=%%%].","#conflicting_heading_level");
@@ -495,7 +479,7 @@ var alert_0192 = new Alert("caution","18","[role=heading] used without [aria-lev
 
 var alert_0200 = new Alert("warning","20","Non-unique button: same name/description as another button.","#non_unique_button");
 
-var alert_0210 = new Alert("caution","21","An associated &lt;label&gt; would increase the clickable area of this %%%.","#label_clickable_area");
+var alert_0210 = new Alert("caution","21","An associated &lt;label&gt; containing text would increase the clickable area of this %%%.","#label_clickable_area");
 
 var alert_0220 = new Alert("danger","22","Text content has been injected using CSS pseudo-elements ::before or ::after.","#pseudo_before_after");
 
@@ -532,8 +516,9 @@ function andiReady(){
 			"<button id='ANDI508-button-keys' aria-label='ANDI Hotkeys List' title='ANDI Hotkeys List'><img src='"+icons_url+"keys-off.png' alt='' /></button>"+
 			"<button id='ANDI508-button-help' aria-label='ANDI Help' title='ANDI Help'><img src='"+icons_url+"help.png' alt='' /></button>"+
 			"<button id='ANDI508-button-close' aria-label='Remove ANDI' title='Remove ANDI'><img src='"+icons_url+"close.png' alt='' /></button>";
+		
 		var moduleButtons = "<div id='ANDI508-moduleMenu' role='menu'><div id='ANDI508-moduleMenu-prompt'>Select Module:</div>"+
-			//Default
+			//Default (fANDI)
 			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-f'>focusable elements</button>"+
 			//gANDI
 			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-g' aria-label='graphics slash images'>graphics/images</button>"+
@@ -542,66 +527,61 @@ function andiReady(){
 			//tANDI
 			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-t'>tables</button>"+
 			//sANDI
-			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-s'>structures</button>";
-		if(!oldIE){
+			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-s'>structures</button>"+
 			//cANDI
-			moduleButtons +="<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-c'>color contrast</button>";
-		}
+			((!oldIE) ? "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-c'>color contrast</button>" : "")+
 			//hANDI
-		moduleButtons += "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-h'>hidden content</button>"+
-			//iframes
-			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-i'>iframes</button>";
+			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-h'>hidden content</button>"+
+			//iANDI
+			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-i'>iframes</button>"+
+			"</div>";
 		
-		moduleButtons +="</div>";
-		
-		var andiBar = "\
-		<section id='ANDI508' tabindex='0' aria-label='ANDI Accessibility Test Tool' style='display:none'>\
-		<div id='ANDI508-header'>\
-			<h1 id='ANDI508-toolName-heading' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'><a id='ANDI508-toolName-link' href='#' aria-haspopup='true' aria-label='ANDI "+andiVersionNumber+"'><span id='ANDI508-module-name' data-ANDI508-module-version=''>&nbsp;</span>ANDI</a></h1>\
-			<div id='ANDI508-moduleMenu-container'>\
-				"+moduleButtons+"\
-			</div>\
-			<div id='ANDI508-module-actions'></div>\
-			<div id='ANDI508-loading'>Loading <div id='ANDI508-loading-animation' /></div>\
-			<div id='ANDI508-barControls' aria-label='ANDI Controls' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>\
-				"+menuButtons+"\
-			</div>\
-		</div>\
-		<div id='ANDI508-body' style='display:none'>\
-			<div id='ANDI508-activeElementInspection' aria-label='ANDI Active Element Inspection' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>\
-				<div id='ANDI508-activeElementResults'>\
-					<div id='ANDI508-elementControls'>\
-						<button aria-label='Previous Element' title='Focus on Previous Element' accesskey='"+andiHotkeyList.key_prev.key+"' id='ANDI508-button-prevElement'><img src='"+icons_url+"prev.png' alt='' /></button>\
-						<button aria-label='Next Element' title='Focus on Next Element' accesskey='"+andiHotkeyList.key_next.key+"' id='ANDI508-button-nextElement'><img src='"+icons_url+"next.png' alt='' /></button>\
-						<br />\
-					</div>\
-					<div id='ANDI508-startUpSummary' tabindex='0' />\
-					<div id='ANDI508-elementDetails'>\
-						<div id='ANDI508-elementNameContainer'><h3 class='ANDI508-heading'>Element:</h3>\
-							<a href='#' id='ANDI508-elementNameLink' aria-labelledby='ANDI508-elementNameContainer'>&lt;<span id='ANDI508-elementNameDisplay' />&gt;</a>\
-						</div>\
-						<div id='ANDI508-additionalElementDetails'></div>\
-						<div id='ANDI508-accessibleComponentsTableContainer'>\
-							<h3 id='ANDI508-accessibleComponentsTable-heading' class='ANDI508-heading' tabindex='0'>Accessibility Components: <span id='ANDI508-accessibleComponentsTotal'></span></h3>\
-							<table id='ANDI508-accessibleComponentsTable' aria-labelledby='ANDI508-accessibleComponentsTable-heading'><tbody tabindex='0' /></table>\
-						</div>\
-						<div id='ANDI508-outputContainer'>\
-							<h3 class='ANDI508-heading' id='ANDI508-output-heading'>ANDI Output:</h3>\
-							<div id='ANDI508-outputText' tabindex='0' accesskey='"+andiHotkeyList.key_output.key+"' aria-labelledby='ANDI508-output-heading ANDI508-outputText' />\
-						</div>\
-					</div>\
-				</div>\
-			</div>\
-			<div id='ANDI508-pageAnalysis' aria-label='ANDI Page Analysis' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>\
-				<div id='ANDI508-resultsSummary'>\
-					<h3 class='ANDI508-heading' tabindex='0' id='ANDI508-resultsSummary-heading'></h3>\
-				</div>\
-				<div id='ANDI508-additionalPageResults' />\
-				<div id='ANDI508-alerts-list' />\
-			</div>\
-		</div>\
-		</section>\
-		";
+		var andiBar = "<section id='ANDI508' tabindex='0' aria-label='ANDI Accessibility Test Tool' style='display:none'>"+
+		"<div id='ANDI508-header'>"+
+			"<h1 id='ANDI508-toolName-heading' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'><a id='ANDI508-toolName-link' href='#' aria-haspopup='true' aria-label='ANDI "+andiVersionNumber+"'><span id='ANDI508-module-name' data-andi508-moduleversion=''>&nbsp;</span>ANDI</a></h1>"+
+			"<div id='ANDI508-moduleMenu-container'>"+
+				moduleButtons+
+			"</div>"+
+			"<div id='ANDI508-module-actions'></div>"+
+			"<div id='ANDI508-loading'>Loading <div id='ANDI508-loading-animation' /></div>"+
+			"<div id='ANDI508-barControls' aria-label='ANDI Controls' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>"+
+				menuButtons+
+			"</div>"+
+		"</div>"+
+		"<div id='ANDI508-body' style='display:none'>"+
+			"<div id='ANDI508-activeElementInspection' aria-label='ANDI Active Element Inspection' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>"+
+				"<div id='ANDI508-activeElementResults'>"+
+					"<div id='ANDI508-elementControls'>"+
+						"<button aria-label='Previous Element' title='Inspect Previous Element' accesskey='"+andiHotkeyList.key_prev.key+"' id='ANDI508-button-prevElement'><img src='"+icons_url+"prev.png' alt='' /></button>"+
+						"<button aria-label='Next Element' title='Inspect Next Element' accesskey='"+andiHotkeyList.key_next.key+"' id='ANDI508-button-nextElement'><img src='"+icons_url+"next.png' alt='' /></button>"+
+						"<br />"+
+					"</div>"+
+					"<div id='ANDI508-startUpSummary' tabindex='0' />"+
+					"<div id='ANDI508-elementDetails'>"+
+						"<div id='ANDI508-elementNameContainer'><h3 class='ANDI508-heading'>Element:</h3> "+
+							"<a href='#' id='ANDI508-elementNameLink' aria-labelledby='ANDI508-elementNameContainer'>&lt;<span id='ANDI508-elementNameDisplay' />&gt;</a>"+
+						"</div>"+
+						"<div id='ANDI508-additionalElementDetails'></div>"+
+						"<div id='ANDI508-accessibleComponentsTableContainer' class='ANDI508-scrollable' tabindex='0'>"+
+							"<h3 id='ANDI508-accessibleComponentsTable-heading' class='ANDI508-heading'>Accessibility Components: <span id='ANDI508-accessibleComponentsTotal'></span></h3>"+
+							"<table id='ANDI508-accessibleComponentsTable' aria-labelledby='ANDI508-accessibleComponentsTable-heading'><tbody /></table>"+
+						"</div>"+
+						"<div id='ANDI508-outputContainer'>"+
+							"<h3 class='ANDI508-heading' id='ANDI508-output-heading'>ANDI Output:</h3>"+
+							"<div id='ANDI508-outputText' class='ANDI508-scrollable' tabindex='0' accesskey='"+andiHotkeyList.key_output.key+"' aria-labelledby='ANDI508-output-heading ANDI508-outputText' />"+
+						"</div>"+
+					"</div>"+
+				"</div>"+
+			"</div>"+
+			"<div id='ANDI508-pageAnalysis' aria-label='ANDI Page Analysis' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>"+
+				"<div id='ANDI508-resultsSummary'>"+
+					"<h3 class='ANDI508-heading' tabindex='0' id='ANDI508-resultsSummary-heading'></h3>"+
+				"</div>"+
+				"<div id='ANDI508-additionalPageResults' />"+
+				"<div id='ANDI508-alerts-list' />"+
+			"</div>"+
+		"</div>"+
+		"</section>";
 		
 		if(browserSupports.svg)
 			andiBar += "<svg id='ANDI508-laser-container'><title>ANDI Laser</title><line id='ANDI508-laser' /></svg>";
@@ -683,18 +663,19 @@ function andiReady(){
 		//Tag name link
 		$("#ANDI508-elementNameLink")
 			.click(function(){ //Place focus on active element when click tagname
-				andiFocuser.focusByIndex($("#ANDI508-testPage .ANDI508-element-active").attr("data-ANDI508-index"));
+				andiFocuser.focusByIndex($("#ANDI508-testPage .ANDI508-element-active").first().attr("data-andi508-index"));
 				andiLaser.eraseLaser();
 				return false;
 			})
 			.hover(function(){ //Draw line to active element
-				andiLaser.drawLaser($(this).offset(),$("#ANDI508-testPage .ANDI508-element-active").offset(),$("#ANDI508-testPage .ANDI508-element-active"));
+				var activeElement = $("#ANDI508-testPage .ANDI508-element-active").first();
+				andiLaser.drawLaser($(this).offset(),$(activeElement).offset(),$(activeElement));
 			})
 			.on("mouseleave", andiLaser.eraseLaser);
 		//Active Element Jump Hotkey
 		$(document).keydown(function(e){
 			if(e.which === andiHotkeyList.key_active.code && e.altKey )
-				$("#ANDI508-testPage .ANDI508-element-active").focus();
+				$("#ANDI508-testPage .ANDI508-element-active").first().focus();
 		});
 		//Module Launchers
 		$("#ANDI508-moduleMenu").children("button").each(function(){
@@ -705,7 +686,7 @@ function andiReady(){
 		});
 		//ANDI Version Popup
 		$("#ANDI508-toolName-link").click(function(){
-			alert("ANDI "+andiVersionNumber+"\n"+$("#ANDI508-module-name").attr("data-ANDI508-module-version"));
+			alert("ANDI "+andiVersionNumber+"\n"+$("#ANDI508-module-name").attr("data-andi508-moduleversion"));
 			return false;
 		});
 	}
@@ -722,7 +703,7 @@ function andiReady(){
 		//Define :shown
 		//Similar to :visible but doesn't include elements with visibility:hidden,
 		$.extend(jQuery.expr[':'], {
-			shown: function (elem, index, selector){return $(elem).css("visibility") !== "hidden" && !$(elem).is(":hidden");}
+			shown: function (elem){return $(elem).css("visibility") !== "hidden" && $(elem).is(":visible");}
 		});
 		
 		//Define isSemantically, Based on jquery .is method
@@ -733,7 +714,10 @@ function andiReady(){
 		$.fn.extend({
 			isSemantically:function(roles, tags){
 				//If this has one of the roles or (is one of the tags and doesn't have another role that isn't empty)
-				return $(this).is(roles) || ($(this).is(tags) && !$.trim($(this).attr("role")))
+				if($.trim($(this).attr("role")))
+					return $(this).is(roles);
+				else
+					return $(this).is(tags);
 			}
 		});
 		
@@ -749,7 +733,7 @@ function andiReady(){
 				var img = $("img[usemap=\\#" + mapName + "]")[0]; return !!img && visibleParents(img);
 			}
 			return(
-				/^(input|select|textarea|button|object|iframe)$/.test(nodeName) ?
+				/^(input|select|textarea|button|iframe|summary)$/.test(nodeName) ?
 				!element.disabled
 				: nodeName === "a" ?
 					(element.href && !element.disabled) || isTabIndexNotNaN
@@ -786,91 +770,12 @@ function andiReady(){
 		if (!Object.keys) {Object.keys=(function(){'use strict';var hasOwnProperty = Object.prototype.hasOwnProperty,hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),dontEnums = ['toString','toLocaleString','valueOf','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','constructor'],dontEnumsLength = dontEnums.length;return function(obj) {if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {throw new TypeError('Object.keys called on non-object');}var result = [], prop, i;for (prop in obj) {if (hasOwnProperty.call(obj, prop)) {result.push(prop);}}if (hasDontEnumBug) {for (i = 0; i < dontEnumsLength; i++) {if (hasOwnProperty.call(obj, dontEnums[i])) {result.push(dontEnums[i]);}}}return result;};}());}
 		
 		//Define Array.indexOf for old IE
-		if(!Array.prototype.indexOf){Array.prototype.indexOf = function(obj, start){ for (var i = (start || 0), j = this.length; i < j; i++){if (this[i] === obj) { return i; } } return -1;}}
+		if(!Array.prototype.indexOf){Array.prototype.indexOf = function(obj, start){ for (var i = (start || 0), j = this.length; i < j; i++){if (this[i] === obj) { return i; } } return -1;};}
 	}
 }
 
 //This object handles the updating of the ANDI Bar
 function AndiBar(){
-	
-	//This private variable will store the text/html that will appear in the output
-	var outputText = "";
-	
-	//This function will add the component to the outputText if it is not empty.
-	//Parameters:
-	//	accessibleComponentText: text that will appear on the screen as the output
-	//	componentType: component type that will be the class and title attribute
-	//	doMatchingTest: if true, it will run a matching test before attempting to insert the component text, (prevent double speak).
-	function andiFound(accessibleComponentText, componentType, doMatchingTest){
-		if(accessibleComponentText !== "" && accessibleComponentText !== undefined && accessibleComponentText != AndiCheck.emptyString){
-			if(componentType === "legend" || componentType === "parent")//prepend
-				outputText = "<span class='ANDI508-display-"+componentType+"'>"+accessibleComponentText+"</span> " + outputText;
-			else if(!doMatchingTest || (doMatchingTest && !matchingTestResult(accessibleComponentText, doMatchingTest)))
-				outputText += "<span class='ANDI508-display-"+componentType+"'>"+accessibleComponentText+"</span> ";
-			return true;
-		}
-		return false;
-		
-		//This function will return false if title or aria-describedby text matches a namer's text
-		//Parameters:
-		//	accessibleComponentText: text of the describer that will be compared for matches
-		//	matchingAgainstObject: the object from which to get the namers text
-		//TODO: it's possible to throw an alert here, but it would appear in the alert list dynamically on each inspect and you'd have to handle duplication prevention
-		function matchingTestResult(accessibleComponentText, matchingAgainstObject){
-			var matchFound = false;
-			accessibleComponentText = stripHTML(accessibleComponentText); //ignores andiLaser markup
-			var components = ["ariaLabelledby","ariaLabel","label","alt","innerText","value"];
-			var text, component;
-			for(var x=0; x<components.length; x++){
-				component = components[x];
-				if(matchingAgainstObject[component] && (component !== "label" || !matchingAgainstObject.ignoreLabel) ){
-					text = stripHTML(matchingAgainstObject[component]);
-					if(text !== AndiCheck.emptyString){
-						if(accessibleComponentText === text)
-							matchFound = true;
-						break;
-					}
-				}
-			}
-			return matchFound;
-			
-			//This function provides a slick way to remove html and get the inner text
-			//but also to escape syntax that would throw a javascript error.
-			//Without the <b> container, it will error out on special characters.
-			function stripHTML(html){
-				return $("<b>"+html+"</b>").text();
-			}
-		}
-	}
-	
-	//This object is used to display the output text if a component has data
-	this.output = {
-		//These variables are actually functions. They will be called by the output logic.
-		//Return false if the component is empty
-		//Return true if not empty and will add html to the output display.
-		ariaLabel: 		function(elementData){return andiFound(elementData.ariaLabel,		"aria-label");},
-		ariaLabelledby: function(elementData){return andiFound(elementData.ariaLabelledby,	"aria-labelledby");},
-		label: 			function(elementData){return andiFound(elementData.label,			"label");},
-		alt: 			function(elementData){return andiFound(elementData.alt,				"alt");},
-		value: 			function(elementData){return andiFound(elementData.value,			"value");},
-		ariaDescribedby:function(elementData){return andiFound(elementData.ariaDescribedby,	"aria-describedby", elementData);},
-		title: 			function(elementData){return andiFound(elementData.title,			"title", elementData);},
-		summary:		function(elementData){return andiFound(elementData.summary,			"summary");},
-		legend: 		function(elementData){return andiFound(elementData.legend,			"legend");},
-		figcaption: 	function(elementData){return andiFound(elementData.figcaption,		"figcaption");},
-		caption: 		function(elementData){return andiFound(elementData.caption,			"caption");},
-		groupingText:	function(elementData){return andiFound(elementData.groupingText,	"parent");},
-		//innerText also calls subtree
-		innerText: 		function(elementData){
-							var innerTextResult = andiFound(elementData.innerText, "innerText");
-							andiFound(elementData.subtree, "child"); //comes after innertext
-							return innerTextResult;},
-		addOnProperties:function(elementData){
-							if(elementData.addOnProperties)
-								return andiFound(elementData.addOnPropOutput, "addOnProperties");
-							else return false;}
-	};
-
 	//This function prepares the active element inspection for the next element to display its data
 	this.prepareActiveElementInspection = function(element){
 		if(!$(element).hasClass("ANDI508-element-active")){
@@ -897,63 +802,180 @@ function AndiBar(){
 	//which should be defined in each module.
 	//It will also add the alerts to the output.
 	//No output will be displayed if there are danger level alerts.
-	this.displayOutput = function(elementData, isFocusable){
-		outputText = ""; //reset - this will hold the output text to be displayed
-
-		if(elementData.dangers.length){
-			//dangers were found during load
-			for(var d=0; d<elementData.dangers.length; d++)
-				andiFound(elementData.dangers[d],"danger");
-		}
-		else{ //No dangers found during load
-			AndiModule.outputLogic(elementData, isFocusable); //Each module should define this within the inspect logic
-		}
+	this.displayOutput = function(elementData, element, addOnProps){
+		var outputText = ""; //reset - this will hold the output text to be displayed
 		
-		if(elementData.warnings.length){
-			//warnings were found during load
-			for(var w=0; w<elementData.warnings.length; w++)
-				andiFound(elementData.warnings[w],"warning");
+		if(!checkAlerts("dangers")){ //No dangers found during load
+			if(!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !$(element).is(":focusable"))){
+				
+				if(elementData.accGroup)
+					outputText += elementData.accGroup + " ";
+				if(elementData.accName){
+					outputText += elementData.accName;
+					
+					//Matching: if accessible name matches accessible description, don't output the description
+					if(elementData.accDesc && matchingTest(elementData.accName, elementData.accDesc))
+						outputText += " " + elementData.accDesc;
+				}
+				
+				if(addOnProps && addOnProps[0])
+					outputText += " " + wrapText("addOnProperties", addOnProps[0]);
+			}
 		}
-		
-		if(elementData.cautions.length){
-			//cautions were found during load
-			for(var c=0; c<elementData.cautions.length; c++)
-				andiFound(elementData.cautions[c],"caution");
-		}
+		checkAlerts("warnings");
+		checkAlerts("cautions");
 
 		//Place the output display into the container.
 		$("#ANDI508-outputText").html(outputText);
+		
+		function checkAlerts(alertType){
+			if(elementData[alertType].length){
+				for(var a=0; a<elementData[alertType].length; a++)
+					outputText += wrapText(alertType.slice(0, -1), elementData[alertType][a]);
+				return true;
+			}
+			return false;
+		}
+		
+		function wrapText(displayType, text){
+			return " <span class='ANDI508-display-"+displayType+"'>" + text + "</span>";
+		}
+		
+		function matchingTest(a, b){
+			a = andiUtility.normalizeOutput(a);
+			b = andiUtility.normalizeOutput(b);
+			return (a !== b);
+		}
 	};
 	
 	//This function displays the Accessible Components table.
 	//Only shows components containing data.
 	//Will display message if no accessible components were found.
-	this.displayTable = function(elementData, components, addOnPropComponents, additionalComponents){
-		if(andiCheck.wereComponentsFound(elementData, additionalComponents)){
-			appendRow(components);
-			if(elementData.addOnPropertiesTotal !== 0 || additionalComponents)
-				appendRow(addOnPropComponents, true);
-			andiLaser.createReferencedComponentLaserTriggers();
-		}
+	this.displayTable = function(elementData, element, addOnProps){
+		var accessibleComponentsTableBody = $("#ANDI508-accessibleComponentsTable").children("tbody").first();
 		
-		//This function will append a row to the accessibleComponentsTable if the componentText is not empty
-		//It will also attach andiLaser functionality if useLaser is true
-		//Parameters:
-		//	components: 		array of arrays components to add. each item is an array [0] is the type, [1] is the value
-		//	isAddOnProperty:	if true will use addOnProperties as the css class to color the component
-		function appendRow(components, isAddOnProperty){
-			var rows = "";
-			for(var x=0, displayType; x<components.length; x++){
-				//if this component has a value
-				if(components[x][1]){
-					//set display type
-					displayType = isAddOnProperty ? "addOnProperties" : components[x][0];
-					//add to row
-					rows += "<tr id='ANDI508-table-"+components[x][0]+"'><th class='ANDI508-display-"+displayType+"' scope='row'>"+components[x][0]+": </th><td class='ANDI508-display-"+displayType+"'>"+components[x][1]+"</td></tr>";
+		//Reset the table to empty
+		$(accessibleComponentsTableBody).html("");
+		
+		var rows = "";
+		buildTableBody();
+		if(rows)
+			$(accessibleComponentsTableBody).append(rows);
+		
+		andiCheck.wereComponentsFound(elementData.isTabbable, accessibleComponentsTableBody);
+		andiLaser.createReferencedComponentLaserTriggers();
+		
+		function buildTableBody(){
+			
+			displayGrouping(elementData.grouping);
+			displayEmptyComponents(elementData.empty);
+			displayConcatenatedInnerText();
+			displayComponents(elementData.components);
+			displayAddOnProps();
+			displaySubtreeComponents();
+
+			function buildRow(displayClass, headerText, cellText){
+				return "<tr><th class='ANDI508-display-"+displayClass+"' scope='row'>"+
+					headerText+": </th><td class='ANDI508-display-"+displayClass+"'>"+
+					cellText+"</td></tr>";
+			}
+			
+			function displayGrouping(grouping){
+				if(grouping)
+					rows += buildRow("grouping", grouping.role, grouping.text);
+			}
+			
+			function displayEmptyComponents(emptyComponents){
+				for(var componentName in emptyComponents){
+					if(emptyComponents.hasOwnProperty(componentName))
+						rows += buildRow(componentName, formatComponentName(componentName), AndiCheck.emptyString);
 				}
 			}
-			if(rows)
-				$("#ANDI508-accessibleComponentsTable").children("tbody").first().append(rows);
+			
+			function displayConcatenatedInnerText(){
+				if(!$(element).is("table") || $(element).is("[role=presentation],[role=none]") ){ //other exclusions are handled by the getVisibleInnerText
+					var innerText = andiUtility.formatForHtml($.trim(andiUtility.getVisibleInnerText(element)));
+					if(innerText)
+						rows += buildRow("innerText", "innerText", innerText);
+				}
+			}
+			
+			function displayComponents(components){
+				for(var component in components){
+					if(component === "ariaLabelledby" || component === "ariaDescribedby"){
+						//build rows with a rowspan
+						rows += "<tr><th class='ANDI508-display-"+component+"' scope='row'"+
+							" rowspan='"+components[component].length+"'>" +
+							formatComponentName(component) + ": </th><td>"+
+							components[component][0] + "</td></tr>";
+						//add additional rows for each stored reference
+						for(var i=1; i<components[component].length; i++){
+							rows += "<tr><td>" + components[component][i] + "</td></tr>";
+						}
+					}
+					else if(component !== "innerText" && component !== "subtree"){
+						rows += buildRow(component, formatComponentName(component), components[component]);
+					}
+				}
+			}
+			
+			function displayAddOnProps(){
+				for(x = 1; x<addOnProps.length; x++){
+					if(addOnProps[x].val)//if this addOnProperty exists, add to row
+						rows += buildRow("addOnProperties", addOnProps[x].name, addOnProps[x].val);
+				}
+				
+				if(elementData.src)
+					rows += buildRow("addOnProperties", "src", elementData.src);
+				if(elementData.placeholder)
+					rows += buildRow("addOnProperties", "placeholder", elementData.placeholder);
+			}
+			
+			function displaySubtreeComponents(){
+				if(elementData.components.subtree)
+					loopThroughSubtrees(elementData.components);
+				
+				//var rowspan;
+				function loopThroughSubtrees(components){
+					for(var x=0; x<components.subtree.length; x++){
+						var rowspan = 0;
+						var subtree = components.subtree[x];
+						var subtreeComponents = "";
+						for(var component in subtree){
+							if(component === "subtree"){
+								loopThroughSubtrees(subtree);
+							}
+							else if(component !== "innerText" && component !== "role" && component !== "tagNameText"){
+								rowspan++;
+
+								if(rowspan > 1) //start new row
+									subtreeComponents += "<tr>";
+								
+								subtreeComponents += "<td><span class='ANDI508-display-"+component+"'>" + 
+									formatComponentName(component) + ":</span> " + 
+									subtree[component] + "</td></tr>";
+							}
+						}
+						
+						//Add the <th>
+						if(subtreeComponents){
+							rows += "<tr><th rowspan="+rowspan+"><span class='ANDI508-display-id'>child</span>";
+							if(subtree.role)
+								rows += subtree.role;
+							else
+								rows += "&lt;"+subtree.tagNameText+"&gt;";
+							rows += "</th>" + subtreeComponents;
+						}
+					}
+					
+				}
+			}
+
+			function formatComponentName(componentName){
+				if(componentName.substring(0, 4) === "aria")
+					return "aria-" + componentName.charAt(4).toLowerCase() + componentName.substring(5, componentName.length);
+				return componentName;
+			}
 		}
 	};
 	
@@ -974,31 +996,23 @@ function AndiBar(){
 	
 	//This function will show the startUpSummary with the text provided and conditionally show the pageAnalysis.
 	//It will also hide the activeElementResults
-	//Parameters:
-	//	text:				text that will appear in the startUpSummary
-	//	showPageAnalysis:	if true will show the pageAnalysis
-	this.showStartUpSummary = function(text, showPageAnalysis, elementType){
-		var instruction = "";
-		if(elementType)
-			instruction = "<p>Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every "+elementType+".</p>";
-		text = "<p>"+text+"</p>";
-		if(showPageAnalysis)
+	this.showStartUpSummary = function(summary, showPageAnalysis){
+		if(showPageAnalysis || testPageData.numberOfAccessibilityAlertsFound > 0)
 			$("#ANDI508-pageAnalysis").show();
 		else
 			$("#ANDI508-pageAnalysis").hide();
 		$("#ANDI508-elementDetails").hide();
-		$("#ANDI508-startUpSummary").html(text+instruction).css("display","inline-block");
+		$("#ANDI508-startUpSummary").html("<p>"+summary+"</p>").css("display","inline-block");
 	};
 	
 	//This function updates the resultsSummary
-	//	summary:	the summary text
 	this.updateResultsSummary = function(summary){
 		$("#ANDI508-resultsSummary-heading").html(summary);
 	};
 	
 	//These functions show/hide the elementControls
 	this.showElementControls = function(){
-		$("#ANDI508-elementControls button").show();
+		$("#ANDI508-elementControls button").css("display","inline-block");
 	};
 	this.hideElementControls = function(){
 		$("#ANDI508-elementControls button").hide();
@@ -1006,13 +1020,13 @@ function AndiBar(){
 	
 	//These functions show/hide the anmiated loading image
 	this.showModuleLoading = function(){
-		$("#ANDI508-body").hide();
-		$("#ANDI508-loading").css("display","inline-block");
+		document.getElementById("ANDI508-body").style.display = "none";
+		document.getElementById("ANDI508-loading").style.display = "inline-block";
 	};
 	this.hideModuleLoading = function(){
 		setTimeout(function(){
-			$("#ANDI508-loading").hide();
-			$("#ANDI508-body").show();
+			document.getElementById("ANDI508-loading").style.display = "none";
+			document.getElementById("ANDI508-body").style.display = "block";
 		},1);
 	};
 	
@@ -1110,9 +1124,7 @@ function AndiResetter(){
 	//				css <link> tags (all classes will be removed so it won't affect anything)
 	this.hardReset = function(){
 		if(document.getElementById("ANDI508")){//check if ANDI was inserted
-			var testPage = $("#ANDI508-testPage");
-			//if($("#ANDI508-button-linearize").attr("aria-checked") === "true")
-			//	AndiSettings.linearizePageOn = true;
+			var testPage = document.getElementById("ANDI508-testPage");
 			$("#ANDI508").remove(); //removes ANDI
 			andiResetter.softReset(testPage);
 			andiResetter.restoreTestPageFixedPositionDistances(testPage);
@@ -1134,45 +1146,28 @@ function AndiResetter(){
 			$("#ANDI508-alerts-list").html("");
 			$("#ANDI508-module-actions").html("");
 			andiBar.showElementControls();
-
-			//get previously launched module name
-			var module = $(testPage).attr("data-ANDI508-moduleLaunched");
-
+			
 			//Loop through every ANDI508-element to clean up stuff
 			$(testPage).find(".ANDI508-element").each(function(){
-				
-				//Module specific cleanup
-				if(module === "tANDI")
-					$(this).removeClass("tANDI508-highlight").removeAttr("data-tANDI508-rowIndex data-tANDI508-colIndex data-tANDI508-rowgroupIndex data-tANDI508-colgroupIndex");
-				else if(module === "lANDI")
-					$(this).removeClass("lANDI508-internalLink lANDI508-externalLink lANDI508-ambiguous");
-				else if(module === "gANDI")
-					$(this).removeClass("gANDI508-background");
-				else if(module === "hANDI")
-					$(this).removeAttr("data-hANDI508-hidingTechniques").removeClass("ANDI508-forceReveal ANDI508-forceReveal-display ANDI508-forceReveal-visibility ANDI508-forceReveal-position ANDI508-forceReveal-opacity ANDI508-forceReveal-overflow ANDI508-forceReveal-fontSize ANDI508-forceReveal-textIndent ANDI508-forceReveal-html5Hidden");
 
-				//All Modules cleanup
+				//Module specific cleanup for this element
+				if(AndiModule.cleanup !== undefined)
+					AndiModule.cleanup(testPage, this);
+					
+				//Global cleanup
 				$(this)
 					.removeClass("ANDI508-element ANDI508-element-danger ANDI508-highlight")
 					.removeData("ANDI508")
-					.removeAttr("data-ANDI508-index")
-					.off("focus",AndiModule.andiElementFocusability)
-					.off("mouseenter",AndiModule.andiElementHoverability);
+					.removeAttr("data-andi508-index")
+					.off("focus",AndiModule.focusability)
+					.off("mouseenter",AndiModule.hoverability);
 			});
-			//Additional Elements that were manipulated
-			if(module === "hANDI"){
-				$(testPage).find(".hANDI508-hasHiddenCssContent").removeClass("hANDI508-hasHiddenCssContent");
-			}
-			else if(module === "gANDI"){
-				$(testPage).find(".gANDI508-decorative").removeClass("gANDI508-decorative");
-			}
-			else if(module === "tANDI"){
-				$(testPage).find("tr[data-tANDI508-colgroupSegment]").removeAttr("data-tANDI508-colgroupSegment");
-				$("#ANDI508-prevTable-button").remove();
-				$("#ANDI508-nextTable-button").remove();
-			}
-			//Cleanup laser targets
-			$(testPage).find(".ANDI508-relatedLaserTarget").removeClass("ANDI508-relatedLaserTarget").removeAttr("data-ANDI508-relatedLaserIndex");
+			
+			//Module specific cleanup for all elements
+			if(AndiModule.cleanup !== undefined)
+				AndiModule.cleanup(testPage);
+			
+			andiLaser.cleanupLaserTargets(testPage);
 			
 			//Remove any custom click logic from prev next buttons (will be reapplied later)
 			$("#ANDI508-button-prevElement").off("click");
@@ -1189,7 +1184,7 @@ function AndiResetter(){
 	//This function resizes ANDI's display and the ANDI508-testPage container so that ANDI doesn't overlap with the test page.
 	//Should be called any time the height of the ANDI Bar might change.
 	this.resizeHeights = function(hideSettingsList){
-		var testPage = $("#ANDI508-testPage");
+		var testPage = document.getElementById("ANDI508-testPage");
 		//Calculate remaining height for testPage
 		setTimeout(function(){
 			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; 
@@ -1203,9 +1198,9 @@ function AndiResetter(){
 				.css("height", testPageHeight)
 				.css("margin-top", andiHeight)
 				.css("width", testPageWidth)
-				.find("[data-ANDI508-origFixedTopBot]").each(function(){
+				.find("[data-andi508-origfixedtopbot]").each(function(){
 					//Adjust the top/bottom distance of any fixed elements in the test page
-					var origFixedTopBot = $(this).attr("data-ANDI508-origFixedTopBot").split(" ");
+					var origFixedTopBot = $(this).attr("data-andi508-origfixedtopbot").split(" ");
 					var top = origFixedTopBot[0];
 					var bottom = origFixedTopBot[1];
 					if(top!="auto") //if attached to top
@@ -1222,17 +1217,17 @@ function AndiResetter(){
 	//This function will adjust the top distance of all elements on the test page that have css fixed positions.
 	//This allows ANDI to not overlap with test page if using fixed positions.
 	this.storeTestPageFixedPositionDistances = function(element){
-		if(($(element).css("position") === "fixed") && !$(element).attr("data-ANDI508-origFixedTopBot"))
-			$(element).attr("data-ANDI508-origFixedTopBot", $(element).css("top")+" "+$(element).css("bottom")); //store the value of the original top distance and bottom distance
+		if(($(element).css("position") === "fixed") && !$(element).attr("data-andi508-origfixedtopbot"))
+			$(element).attr("data-andi508-origfixedtopbot", $(element).css("top")+" "+$(element).css("bottom")); //store the value of the original top distance and bottom distance
 	};
 	//This function will restore the test page fixed position distances to their original values.
 	//It is meant to be called when the close ANDI button is pressed.
 	this.restoreTestPageFixedPositionDistances = function(testPage){
-		$(testPage).find("[data-ANDI508-origFixedTopBot]").each(function(){
-			var origFixedTopBot = $(this).attr("data-ANDI508-origFixedTopBot").split(" ");
+		$(testPage).find("[data-andi508-origfixedtopbot]").each(function(){
+			var origFixedTopBot = $(this).attr("data-andi508-origfixedtopbot").split(" ");
 			var top = origFixedTopBot[0];
 			var bottom = origFixedTopBot[1];
-			$(this).removeAttr("data-ANDI508-origFixedTopBot").css("top",top).css("bottom",bottom);
+			$(this).removeAttr("data-andi508-origfixedtopbot").css("top",top).css("bottom",bottom);
 		});
 	};
 	
@@ -1244,7 +1239,6 @@ function AndiResetter(){
 
 //This class is used to handle ANDI's own hotkeys
 function AndiHotkeyList(){
-	
 	//This class is used to create a hotkey
 	function AndiHotkey(key, sp, code){
 		this.key = key;		//key character
@@ -1266,22 +1260,21 @@ function AndiHotkeyList(){
 		$("#ANDI508-button-keys").attr("aria-expanded","true").children("img").attr("src",icons_url+"keys-on.png");
 	};
 	this.hideHotkeysList = function(){
-		//$("#ANDI508-hotkeyList-items").children("li").attr("tabindex","-2");//reset the hotkey item that may have been arrowed to.
 		$("#ANDI508-hotkeyList").slideUp(AndiSettings.andiAnimationSpeed);
 		$("#ANDI508-button-keys").attr("aria-expanded","false").children("img").attr("src",icons_url+"keys-off.png");
 	};
 	
 	//This function builds ANDI's hotkey list html
 	this.buildHotkeyList = function(){
-		
-		var firefox, chrome = false;
-		
+		var firefox, chrome, safari = false;		
 		if(navigator.userAgent.toLowerCase().includes("firefox"))
 			firefox = true;
 		else if(navigator.userAgent.toLowerCase().includes("chrome"))
 			chrome = true;
+		else if(navigator.userAgent.toLowerCase().includes("safari"))
+			safari = true;
 		
-		var hotkeyTrigger = (firefox) ? "shift+alt+" : "alt+";
+		var hotkeyTrigger = (firefox) ? "shift+alt+" : (safari) ? "ctrl+alt+" : "alt+";
 		
 		var hotkeyList = "<div id='ANDI508-hotkeyList'>"+
 			"<h3><a rel='help' href='"+ help_url + "howtouse.html#Hotkeys' target='_blank'>Hotkeys:</a></h3>"+
@@ -1292,8 +1285,8 @@ function AndiHotkeyList(){
 			insertHotkeyListItem("Prev Element", andiHotkeyList.key_prev.key, andiHotkeyList.key_prev.sp)+
 			insertHotkeyListItem("Active Element", andiHotkeyList.key_active.key, andiHotkeyList.key_active.sp);
 	
-		if(!chrome){
-			//chrome cannot put accesskey focus on static element
+		if(!chrome && !safari){
+			//chrome/safari cannot put accesskey focus on static element
 			hotkeyList += insertHotkeyListItem("ANDI Output", andiHotkeyList.key_output.key, andiHotkeyList.key_output.sp);
 			hotkeyList += insertHotkeyListItem("Section Jump", andiHotkeyList.key_jump.key, andiHotkeyList.key_jump.sp);
 		}
@@ -1303,16 +1296,13 @@ function AndiHotkeyList(){
 		$("#ANDI508-button-keys").after(hotkeyList);
 		
 		$("#ANDI508-hotkeyList").keydown(function(e){
-			switch(e.keyCode){
-			case 27: //esc
+			if(e.keyCode === 27){//esc
 				andiHotkeyList.hideHotkeysList();
 				$("#ANDI508-button-keys").focus();
-				break;
 			}
 		});
 		
 		//This function will insert a hotkey list item.
-		//The screen reader will read the aria-label attribute contents when programmatic focus arrives.
 		function insertHotkeyListItem(purpose,key,key_sp){
 			return "<li><span class='ANDI508-screenReaderOnly'>"+hotkeyTrigger+key_sp+" </span><span class='ANDI508-code' aria-hidden='true'>"+key+"</span>&nbsp;"+purpose+"</li>";
 		}
@@ -1321,11 +1311,11 @@ function AndiHotkeyList(){
 
 //This class is used to keep track of ANDI settings
 function AndiSettings(){
-	
+
 	//This function will save ANDI settings
 	this.saveANDIsettings = function(){ 
 		//If this browser has HTML5 local storage capabilities
-		if (typeof(Storage) !== "undefined") {
+		if(typeof(Storage) !== "undefined"){
 			try{
 				if(window.localStorage){
 					//Save the current minimode selection
@@ -1358,7 +1348,6 @@ function AndiSettings(){
 						else
 							andiSettings.minimode(false);
 					}
-					
 					//Load the Linearize
 					if(!localStorage.getItem("ANDI508-linearize"))
 						//Default linearize to false
@@ -1370,42 +1359,35 @@ function AndiSettings(){
 							andiSettings.linearize(false);
 					}
 				}
-				else{//no local storage
+				else//no local storage
 					andiSettings.linearize(false);
-				}
 			}catch(err){console.error(err);}
 		}
 	};
 	
 	//This function will toggle the state of mini mode
-	//Parameters:
 	//	state: true or false
 	this.minimode = function(state){
 		if(state){//minimode on
 			$("#ANDI508-body").addClass("ANDI508-minimode");
-			$("#ANDI508-accessibleComponentsTableContainer").hide();
-			andiSettings.setting_on($("#ANDI508-button-minimode"));
+			document.getElementById("ANDI508-accessibleComponentsTableContainer").style.display = "none";
+			andiSettings.setting_on(document.getElementById("ANDI508-button-minimode"));
 		}
 		else{//minimode off
 			$("#ANDI508-body").removeClass("ANDI508-minimode");
-			$("#ANDI508-accessibleComponentsTableContainer").show();
-			andiSettings.setting_off($("#ANDI508-button-minimode"));
+			document.getElementById("ANDI508-accessibleComponentsTableContainer").style.display = "block";
+			andiSettings.setting_off(document.getElementById("ANDI508-button-minimode"));
 		}
 		andiResetter.resizeHeights(true);
 	};
 	
 	//This function will toggle the state of linearize
-	//Parameters:
 	//	state: true or false
 	this.linearize = function(state){
 		if(state){//linearize on
-			//if(AndiSettings.elementHighlightsOn)
-				//	$("#ANDI508-button-highlights").click(); //turn off element highlights while this button is on
-			
-			andiSettings.setting_on($("#ANDI508-button-linearize"));
+			andiSettings.setting_on(document.getElementById("ANDI508-button-linearize"));
 			var position, display;
-			//var isPageNonLinear = false;
-			$("#ANDI508-testPage *").filter(":visible").each(function(){
+			$("#ANDI508-testPage *").filter(":visible:not(.ANDI508-overlay)").each(function(){
 				//check position property
 				position = $(this).css("position");
 				if(position === "absolute" ||
@@ -1418,27 +1400,14 @@ function AndiSettings(){
 						$(this).css("bottom") !== "auto" ||
 						$(this).css("right") !== "auto")
 					{
-						//isPageNonLinear = true;
 						$(this).addClass("ANDI508-linearized ANDI508-linearized-position");
 					}
 				}
-				//check display property
-				display = $(this).css("display");
-				if(display === "flex"){
-					//isPageNonLinear = true;
-					$(this).addClass("ANDI508-linearized ANDI508-linearized-display");
-				}
 			});
-			//TODO: do i need this?
-			//if(!isPageNonLinear)
-			//	$("#ANDI508-testPage .ANDI508-linearized").removeClass("ANDI508-linearized ANDI508-linearized-position ANDI508-linearized-display");
-			
-			//AndiSettings.linearizePageOn = true;
 		}
 		else{//linearize off
-			andiSettings.setting_off($("#ANDI508-button-linearize"));
-			$("#ANDI508-testPage .ANDI508-linearized").removeClass("ANDI508-linearized ANDI508-linearized-position ANDI508-linearized-display");
-			//AndiSettings.linearizePageOn = false;
+			andiSettings.setting_off(document.getElementById("ANDI508-button-linearize"));
+			$("#ANDI508-testPage .ANDI508-linearized").removeClass("ANDI508-linearized ANDI508-linearized-position");
 		}
 		andiResetter.resizeHeights(true);
 	};
@@ -1469,11 +1438,9 @@ function AndiSettings(){
 	//This function adds the click logic to the settings buttons
 	function addSettingsButtonLogic(){
 		//Highlights Button
+		//The button removes .ANDI508-highlight from any element with .ANDI508-element
 		$("#ANDI508-button-highlights").click(function(){
-			if (!AndiSettings.elementHighlightsOn){
-				//if(AndiSettings.linearizePageOn)
-				//	$("#ANDI508-button-linearize").click(); //turn off linearize while this button is on
-				
+			if(!AndiSettings.elementHighlightsOn){
 				//Show Highlights
 				$("#ANDI508-testPage .ANDI508-element").addClass("ANDI508-highlight");
 				andiSettings.setting_on($(this));
@@ -1542,12 +1509,12 @@ function AndiSettings(){
 function AndiFocuser(){
 	//Places focus on element at index.
 	this.focusByIndex = function(index){
-		andiFocuser.focusOn($("#ANDI508-testPage [data-ANDI508-index="+index+"]"));
+		andiFocuser.focusOn($("#ANDI508-testPage [data-andi508-index="+index+"]"));
 	};
 	//Creates click event handler on the element which will call focusByIndex
 	this.addFocusClick = function(element){
 		$(element).click(function(){
-			var index = $(element).attr("data-ANDI508-relatedIndex");
+			var index = $(element).attr("data-andi508-relatedindex");
 			if(index) //Add focus on click
 				andiFocuser.focusByIndex(index);
 			else if(confirm("This alert does not refer to an inspectable element.\nPress OK to open ANDI Help for this alert in a new window.") === true)
@@ -1555,17 +1522,16 @@ function AndiFocuser(){
 			return false;
 		});
 	};
-	//This function will shift the focus to an element
-	//even if the element is not tabbable
+	//This function will shift the focus to an element even if the element is not tabbable
 	this.focusOn = function(element){
-		if(!$(element).attr("tabindex") && !$(element).is(":focusable")){
+		if(!$(element).attr("tabindex") && ((browserSupports.isIE && $(element).is("summary")) || !$(element).is(":focusable"))){
 			//"Flash" the tabindex
 			
 			//img with usemap cannot be given focus (browser moves focus to the <area>)
 			//so temporarily remove the usemap attr, reapply after focus
 			var useMapVal;
 			if($(element).is("img[usemap]")){
-				useMapVal = $(element).attr("usemap")
+				useMapVal = $(element).attr("usemap");
 				$(element).removeAttr("usemap");
 			}
 			
@@ -1591,8 +1557,8 @@ function AndiLaser(){
 	//Draws a laser. Pass in an object containing properties top and left, AKA the result of jQuery offset().
 	this.drawLaser = function(fromHereCoords, toHereCoords, targetObject){
 		if(browserSupports.svg){
-			$("#ANDI508-laser").attr('x1',fromHereCoords.left).attr('y1',fromHereCoords.top)
-							   .attr('x2',  toHereCoords.left).attr('y2',  toHereCoords.top);
+			$("#ANDI508-laser").attr("x1",fromHereCoords.left).attr("y1",fromHereCoords.top)
+							   .attr("x2",  toHereCoords.left).attr("y2",  toHereCoords.top);
 			$("#ANDI508-laser-container").css("cssText","display:inline !important");
 			$(targetObject).addClass("ANDI508-laserTarget");
 		}
@@ -1610,11 +1576,11 @@ function AndiLaser(){
 	this.drawAlertLaser = function(event){
 		if(browserSupports.svg){
 			if(event.shiftKey){ //check for holding shift key
-				var relatedIndex = $(this).attr("data-ANDI508-relatedIndex");
+				var relatedIndex = $(this).attr("data-andi508-relatedindex");
 				if(relatedIndex){
 					var alertCoords = $(this).offset();
-					var elementCoords = $("[data-ANDI508-index="+relatedIndex+"]").offset();
-					andiLaser.drawLaser(alertCoords,elementCoords,$("[data-ANDI508-index="+relatedIndex+"]"));
+					var elementCoords = $("[data-andi508-index="+relatedIndex+"]").offset();
+					andiLaser.drawLaser(alertCoords,elementCoords,$("[data-andi508-index="+relatedIndex+"]"));
 				}
 			}
 			else
@@ -1635,30 +1601,33 @@ function AndiLaser(){
 	};
 	//This function creates a laserAimer HTML object 
 	//which will store the relatedLaserIndex of the object to point the laser at
-	this.createLaserTarget = function(componentType, targetElement, referencedText){
+	this.createLaserTarget = function(targetElement, referencedText){
 		if(browserSupports.svg && referencedText !== ""){
 			var relatedLaserIndex;
 			if(!$(targetElement).hasClass("ANDI508-relatedLaserTarget")){
 				//increment relatedLaserIndex and store onto targetElement
 				relatedLaserIndex = testPageData.relatedLaserIndex++;
-				$(targetElement).addClass("ANDI508-relatedLaserTarget").attr("data-ANDI508-relatedLaserIndex", relatedLaserIndex);
+				$(targetElement).addClass("ANDI508-relatedLaserTarget").attr("data-andi508-relatedlaserindex", relatedLaserIndex);
 			}
-			else{
-				//get relatedLaserIndex from targetElement
-				relatedLaserIndex = $(targetElement).attr("data-ANDI508-relatedLaserIndex");
-			}
-			return "<span class='ANDI508-laserAimer' data-ANDI508-relatedLaserIndex='"+relatedLaserIndex+"'>"+andiUtility.formatForHtml(referencedText)+"</span>";
+			else //get relatedLaserIndex from targetElement
+				relatedLaserIndex = $(targetElement).attr("data-andi508-relatedlaserindex");
+			return "<span class='ANDI508-laserAimer' data-andi508-relatedlaserindex='"+relatedLaserIndex+"'>"+referencedText+"</span>";
 		}
 		else
 			return referencedText;
 	};
 	
-	//This function will createLaserTrigger for each data-ANDI508-relatedLaserIndex in the td cell of the accessibility components table
+	//This function will remove all laser targets
+	this.cleanupLaserTargets = function(testPage){
+		$(testPage).find(".ANDI508-relatedLaserTarget").removeClass("ANDI508-relatedLaserTarget").removeAttr("data-andi508-relatedlaserindex");
+	};
+	
+	//This function will createLaserTrigger for each data-andi508-relatedlaserindex in the td cell of the accessibility components table
 	//It is used for (aria-labelledby, label, aria-describedby)
 	this.createReferencedComponentLaserTriggers = function(){
 		if(browserSupports.svg){
 			$("#ANDI508-accessibleComponentsTable td span.ANDI508-laserAimer").each(function(){
-				andiLaser.createLaserTrigger($(this), $("#ANDI508-testPage .ANDI508-relatedLaserTarget[data-ANDI508-relatedLaserIndex="+$(this).attr("data-ANDI508-relatedLaserIndex")+"]").first());
+				andiLaser.createLaserTrigger($(this), $("#ANDI508-testPage .ANDI508-relatedLaserTarget[data-andi508-relatedlaserindex="+$(this).attr("data-andi508-relatedlaserindex")+"]").first());
 			});
 		}
 	};
@@ -1666,67 +1635,89 @@ function AndiLaser(){
 
 //This class is used to perform common utilities such as regular expressions and string alertations.
 function AndiUtility(){
-	//This ultility function takes a string and converts any < and > into &lt; and &gt; so that when the 
+	
+	//cache the regex for performance gains
+	this.greaterthan_regex = />/g;
+	this.lessthanthan_regex = /</g;
+	this.ampersand_regex = /&/g;
+	this.whitespace_regex = /\s+/g;
+	
+	//This ultility function takes a string and converts &, < and > into &amp;, &lt; and &gt; so that when the 
 	//string is displayed on screen, the browser doesn't try to parse the string into html tags.
 	this.formatForHtml = function(string){
 		if(string !== undefined)
-			return string.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+			return string.replace(this.ampersand_regex, "&amp;").replace(this.greaterthan_regex, "&gt;").replace(this.lessthanthan_regex, "&lt;");
 	};
 	
 	this.condenseWhitespace = function(string){
 		if(string !== undefined)
-			return string.replace(/\s\s/g, " ");
+			return string.replace(this.whitespace_regex, " ");
+	};
+	
+	this.stripHTML = function(string){
+		return $("<b>"+string+"</b>").text();
+	};
+	
+	this.getVisibleInnerText = function(element){
+		var innerText = "";
+		var exclusions = ".ANDI508-overlay,script,noscript,iframe,svg,textarea,select";
+		var node;
+		if(!$(element).is(exclusions) && element.childNodes){
+			//Loop through this element's child nodes
+			for(var z=0; z<element.childNodes.length; z++){
+				node = element.childNodes[z];
+				if(node.nodeType === 1){//element node
+					if($(node).is(":shown")){
+						innerText += this.getVisibleInnerText(node);
+						if(andiUtility.isBlockElement(node))
+							innerText += " ";
+					}
+				}
+				else if(node.nodeType === 3){//text node
+					innerText += andiUtility.condenseWhitespace(node.nodeValue);
+				}
+			}
+		}
+		return innerText;
 	};
 
-	//This ultility function will parse the html tree of the element 
-	//and return the innerText of the element and its children elements that are not hidden.
-	//TODO: This function might be able to be improved
-	this.getTextOfTree = function(element, dontIgnoreInvisible){
-		if($(element).is("svg")){
-			var svgInnerText = "";
-			svgInnerText = $(element).find("title").text() + " " + $(element).find("desc").text();
-			return $.trim(svgInnerText);
-		}
-		else{
-			var clone = $(element).clone();
+	this.isBlockElement = function(node){
+		var blockStyles = {
+			display: ["block", "grid", "table", "flex", "list-item"],
+			position: ["absolute", "fixed"],
+			float: ["left", "right", "inline"],
+			clear: ["left", "right", "both", "inline"]
+		};
 
-			if($(clone).html() !== undefined){
-				//Element has children
-				if(!dontIgnoreInvisible){
-					$(clone).children().each(function(){
-						if($(this).css("display") === "none" || $(this).attr("hidden") || $(this).attr("aria-hidden") === "true")
-							$(this).remove(); //Remove any hidden children
-					});
+		var blockElements = ["address","article","aside","blockquote","br","caption","dd","div","dl","dt","fieldset",
+			"figcaption","figure","footer","h1","h2","h3","h4","h5","h6","hr","header","legend",
+			"li","main","nav","ol","output","p","pre","section","table","td","tfoot","th","tr","ul"];
+			
+		for(var prop in blockStyles){
+			if(blockStyles.hasOwnProperty(prop)){
+				var values = blockStyles[prop];
+				var style = $(node).css(prop);
+				for(var i = 0; i < values.length; i++){
+					if(style &&
+						((values[i].indexOf("!") === 0 &&
+						[values[i].slice(1), "inherit", "initial", "unset"].indexOf(style) === -1) ||
+						style.indexOf(values[i]) !== -1)
+					){
+						return true;
+					}
 				}
-				
-				//Remove certain elements whose content should be ignored
-				$(clone).find(".ANDI508-overlay,script,noscript,iframe,select,caption,svg,table").remove();
-				
-				//Remove legend if the element is a fieldset
-				if($(element).is("fieldset"))
-					$(clone).find("legend").remove();
-				
-				//Get all elements that have an aria-label and replace them with the text of the aria-label
-				$(clone).find("[aria-label]:not(img):not(input[type=image])").each(function(){
-					$(this).replaceWith($(this).attr("aria-label"));
-				});
-				
-				//Get all input[type=text] and replace with the value
-				$(clone).find("input").each(function(){
-					if(this.type === "text" && $(this).attr("value"))
-						$(this).replaceWith($(this).val());
-				});
-					
-				var text = andiUtility.formatForHtml(andiUtility.condenseWhitespace($.trim($(clone).text())));
-				if(text.length > AndiCheck.characterLimiter){
-					text = text.substr(0,AndiCheck.characterLimiter-3) +
-						"<span title='..."+text.substr(AndiCheck.characterLimiter-3,text.length)+"'>...</span>";
-				}
-				//TODO: add space after text of each child
-				return text;
 			}
-			return "";
 		}
+		if(node.nodeName && blockElements.indexOf(node.nodeName.toLowerCase()) !== -1){
+			return true;
+		}
+		return false;
+	};
+	
+	//this function does a trim, strips html, and removes the refid
+	this.normalizeOutput = function(text){
+		var regex_idRef = /<span class='ANDI508-display-id'>#(.*?)<\/span>/;
+		return $.trim( andiUtility.stripHTML( text.replace(regex_idRef,"") ) );
 	};
 }
 
@@ -1753,14 +1744,11 @@ function AndiOverlay(){
 			.attr("role","tooltip")
 			.append(innerText);
 		return overlay;
-		//return "<span class='ANDI508-overlay "+purposeClass+"'"+titleText+" tabindex='"+tabindex+"' role='tooltip'>"+innerText+"</span>";
 	};
-	
 	//This function will remove overlays with the class provided
 	this.removeOverlay = function(purposeClass){
 		$("#ANDI508-testPage span."+purposeClass).remove();
 	};
-	
 	//This function will remove all overlays from the test page
 	this.removeAllOverlays = function(){
 		$("#ANDI508-testPage span.ANDI508-overlay").remove();
@@ -1831,34 +1819,39 @@ function AndiOverlay(){
 	//Set alwaysBefore to true to ensure the overlay won't be prepended, but will be placed before the element
 	this.insertAssociatedOverlay = function(element, overlayObject, alwaysBefore){
 		
-		//Insert the overlay
-		if($(element).is("option")){
-			var closestSelect = $(element).closest("select");
-			$(closestSelect).before(overlayObject);
-			associateOverlay(overlayObject, $(closestSelect));
-		}
-		else if(!alwaysBefore && $(element).isContainerElement() && !$(element).is("select,textarea")){
-			$(element).prepend(overlayObject);
-			associateOverlay(overlayObject, $(element));
+		if(element.nodeType === 3){//this is a text node, not an element
+			//using parentNode because parentElement doesn't work on text nodes in IE
+			element.parentNode.insertBefore(overlayObject,element);
+			element = element.parentNode;
 		}
 		else{
-			$(element).before(overlayObject);
-			associateOverlay(overlayObject, $(element));
+			if($(element).is("option")){
+				element = $(element).closest("select");
+				$(element).before(overlayObject);
+			}
+			else if($(element).is("summary")){
+				element = $(element).closest("details");
+				$(element).before(overlayObject);
+			}
+			else if(!alwaysBefore && $(element).isContainerElement() && !$(element).is("select,textarea")){
+				$(element).prepend(overlayObject);
+			}
+			else{
+				$(element).before(overlayObject);
+			}
 		}
 		
 		//Attach association highlighting events.
-		function associateOverlay(overlayObject, associatedElement){
-			$(overlayObject)
-				.on("mouseover",function(){
-					$(associatedElement).addClass("ANDI508-overlay-associated");
-				}).on("focus",function(){
-					$(associatedElement).addClass("ANDI508-overlay-associated");
-				}).on("mouseleave",function(){
-					$(associatedElement).removeClass("ANDI508-overlay-associated");
-				}).on("focusout",function(){
-					$(associatedElement).removeClass("ANDI508-overlay-associated");
-				});
-		}
+		$(overlayObject)
+			.on("mouseover",function(){
+				$(element).addClass("ANDI508-overlay-associated");
+			}).on("focus",function(){
+				$(element).addClass("ANDI508-overlay-associated");
+			}).on("mouseleave",function(){
+				$(element).removeClass("ANDI508-overlay-associated");
+			}).on("focusout",function(){
+				$(element).removeClass("ANDI508-overlay-associated");
+			});
 	};
 	
 	//This function will overlay the title attributes.
@@ -1894,1183 +1887,1152 @@ function AndiOverlay(){
 //This object grabs the accessible components and attaches the components and alerts to the element
 //Should be re-instantiated for each element to be inspected
 //If a child is passed in, it will grab the accessibility components from the child instead.
-function AndiData(element){
-			
-	//**aria-label**
-	//This function attempts to grab the aria-label if it exists
-	this.grab_ariaLabel = function(element){
-		//Does the element contain an aria-label attribute? 
-		var ariaLabelText = $(element).attr("aria-label");
-		if(ariaLabelText !== undefined){
-			this.accessibleComponentsTotal++;
-			if($.trim(ariaLabelText) === ""){
-				ariaLabelText = andiCheck.addToEmptyComponentList("aria-label");
-			}
-			else{//not empty
-				this.namerFound = true;
-				andiCheck.improperCombination("[aria-label]","ariaLabelledby",this);
-				//Check length
-				if(andiCheck.checkCharacterLimit(ariaLabelText,alert_0153))
-					ariaLabelText = andiCheck.insertCharacterLimitMark(ariaLabelText);
-				else
-					ariaLabelText = andiUtility.formatForHtml(ariaLabelText);
-			}
-		}
-		return ariaLabelText;
-	};
-		
-	//**aria-labelledby**
-	//This function attempts to grab the aria-labelledby if it exists
-	this.grab_ariaLabelledby = function(element){
-		//Does the element contain an aria-labelledby attribute? 
-		var ariaLabelledbyText = $(element).attr("aria-labelledby");
-		if(ariaLabelledbyText !== undefined){
-			this.accessibleComponentsTotal++;
-			if($.trim(ariaLabelledbyText) === ""){
-				ariaLabelledbyText = andiCheck.addToEmptyComponentList("aria-labelledby");
-			}
-			else{
-				//Yes, search for the tags whose ids are listed in the aria-labelledby
-				ariaLabelledbyText = grabAssociatedTagsUsingSpaceDelimitedListAttribute(element,"aria-labelledby");
 
-				if(ariaLabelledbyText === ""){
-					//ALL of the aria-labelledby references do not return any text
-					andiAlerter.throwAlert(alert_0061);
-					ariaLabelledbyText = AndiCheck.emptyString;
-				}
-				else
-					this.namerFound = true;
-			}
-		}
-		return ariaLabelledbyText;
-	};
+function AndiData(element, skipTAC){
 	
-	//**label**
-	//This function attempts to grab the label by calling grab_labelNested and grab_labelFor.
-	//For performance increase, check page_using_label before calling this method.
-	//NOTE: label nested will take precedence over label/for
-	this.grab_label = function(element){
-		var labelText = undefined;
-		var labelElement = undefined;
-		var andiElementIndex = this.andiElementIndex;
-		if(testPageData.page_using_label && !$(element).is("label")){
-			//Page is using labels and this element is not a label
-			
-			//Is this an element that should pay attention to nested labels?
-			if($(element).not(":submit,:button,:reset,:image").is("input") || 
-				$(element).is("select,textarea,[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio],[contenteditable=true]"))
-			{
-				labelText = grab_labelNested(element);
-			}
-			else{
-				this.ignoreLabel = true; //ignore the label for ANDI output
-			}
-			
-			if(labelText === undefined){
-				labelText = grab_labelFor(element);
-			}
-
-			if(labelText !== undefined){
-				if(labelText === ""){
-					labelText = andiCheck.addToEmptyComponentList("label");
-				}
-				else if(!this.ignoreLabel){
-					this.namerFound = true;
-					labelText = andiLaser.createLaserTarget("label", labelElement, labelText);
-				}
-				this.accessibleComponentsTotal++;
-			}
-		}
-		return labelText;
-		
-		//**label nested**
-		//This function attempts to grab the nested label if it exists
-		//Returns true or false if found
-		//Will only grab it for certain element types for performance reasons
-		function grab_labelNested(element){
-			//Is the element nested inside a label?
-			var closestLabel = $(element).closest("label");
-			if(closestLabel.length){
-				//Yes, the element is nested inside a label
-				labelElement = closestLabel;
-				var labelObject = $(closestLabel).clone(); //make a copy
-				var labelText = andiUtility.getTextOfTree($(labelObject));
-				return labelText;
-			}
-			return undefined;
-		}
-		
-		//**label for**
-		//This function attempts to grab the label with a 'for' whose value matches the value of the element's id
-		//returns true or false if found
-		function grab_labelFor(element){
-			var labelText = undefined;
-			//Does it contain an id, and therefore, possibly an associated label with 'for' attribute value that matches value of this elemtent's id?
-			if(element[0].id !== ""){
-
-				//Loop through the labels that have 'for' attributes and search for a match with this id
-				var labelFor = undefined;
-				for(var x=0; x<testPageData.allFors.length; x++){
-					if($(testPageData.allFors[x]).attr("for") == element[0].id){
-						labelFor = $(testPageData.allFors[x]);
-						break;
-					}
-				}
-
-				if(labelFor){
-					//Yes, a label with matching 'for' was found
-					labelElement = labelFor;
-					labelText = $.trim($(labelFor).text());
-					//Is it okay for this element to have a label?
-					if($(element).is(":submit,:button,:reset,[role=button]")){
-						//No, label not valid on a button
-						andiAlerter.throwAlert(alert_0092);
-					}
-					else if(!($(element).not(":submit,:button,:reset,:image").is("input")) && 
-						!$(element).is("select,textarea,[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio],[contenteditable=true]"))
-					{
-						//No, label not valid on anything that isn't a form element, excluding buttons
-						andiAlerter.throwAlert(alert_0091);
-					}
-					else{
-						//Check if this is referencing an element with a duplicate id
-						andiCheck.areThereAnyDuplicateIds("label[for]", element[0].id);
-					}
-				}
-			}
-			return labelText;
-		}
-	};
+	andiAlerter.reset();
 	
-	//**alt**
-	//This function attempts to grab the alt if it exists (for all elements, not just images so that it can throw alerts)
-	this.grab_alt = function(element){
-		var alt;
-		//Does it contain an alt?
-		if($(element).is("svg")){
-			alt = $(element).find("image").first().attr("alt");
-		}
-		else{
-			alt = $(element).attr("alt");
-		}
-		if(alt !== undefined){
-			this.accessibleComponentsTotal++;
-			
-			//if(alt === ""){//do not trim so that alt=" " doesn't throw alert
-			if($.trim(alt) === ""){
-				if(!$(this).is("img"))
-					alt = andiCheck.addToEmptyComponentList("alt");
-			}
-			
-			if(!$(element).is("img,input:image,area,svg,image")){
-				//alt should not be used on this element
-				this.ignoreAlt = true;
-				andiAlerter.throwAlert(alert_0081);
-			}
-			else{//element is an image
-				if(alt !== AndiCheck.emptyString){
-					this.namerFound = true;
-					andiCheck.improperCombination("[alt]","ariaLabelledby ariaLabel",this);
-					//Check length
-					if(andiCheck.checkCharacterLimit(alt,alert_0152))
-						alt = andiCheck.insertCharacterLimitMark(alt);
-					else
-						alt = andiUtility.formatForHtml(alt);
-				}
-			}
-		}
-		return alt;
-	};
+	testPageData.andiElementIndex++;
 	
-	//**value**
-	//This function attempts to grab the value of an input button/submit/reset if it is not empty
-	this.grab_value = function(element){
-		var valueText;
-		if($(element).is("input:submit,input:button,input:reset,input:image")){
-			valueText = $(element).val();
-			if(valueText === ""){
-				this.accessibleComponentsTotal++;
-				valueText = andiCheck.addToEmptyComponentList("value");
-			}
-			else if(valueText !== undefined){
-				this.namerFound = true;
-				this.accessibleComponentsTotal++;
-				valueText = andiUtility.formatForHtml(valueText);
-			}
-		}
-		return valueText;
-	};
-
-	//**innerText**
-	//This function attempts to grab the innerText of the element if it is not empty
-	//NOTE: &nbsp; is considered empty (browser is handling this automatically)
-	this.grab_innerText = function(element){
-		var innerTextVisible = "";
-		if(!$(element).is(":empty,select,textarea")){
-			innerTextVisible = andiUtility.getTextOfTree(element);
-			if(innerTextVisible !== ""){
-				this.namerFound = true;
-				this.accessibleComponentsTotal++;
-			}
-			//If button or link
-			if($(element).is("button,a,li")){//TODO: eventually remove this check
-				this.subtree = this.grab_subtreeComponents(element);
-			}
-		}
-		return innerTextVisible;
-	};
-		
-	//**aria-describedby**
-	//This function attempts to grab the aria-describedby if it exists
-	//Should be called after the namers in order to throw alert_0021
-	this.grab_ariaDescribedby = function(element){
-		//Does the element also contain an aria-describedby attribute?
-		var ariaDescribedbyText = $(element).attr("aria-describedby");
-		if(ariaDescribedbyText !== undefined){
-			this.accessibleComponentsTotal++;
-			if($.trim(ariaDescribedbyText) === ""){
-				ariaDescribedbyText = andiCheck.addToEmptyComponentList("aria-describedby");
-			}
-			else{
-				//Yes, search for the tags whose ids are listed in the aria-describedby
-				ariaDescribedbyText = grabAssociatedTagsUsingSpaceDelimitedListAttribute(element,"aria-describedby");
-				if(ariaDescribedbyText === ""){
-					//ALL of the aria-describedby references do not return any text
-					andiAlerter.throwAlert(alert_0062);
-					ariaDescribedbyText=AndiCheck.emptyString;
-				}
-				else
-					this.describerFound = true;
-			}
-			andiCheck.improperCombination("[aria-describedby]","title",this);
-			if(!this.namerFound && (!this.title || this.title==AndiCheck.emptyString)){
-				//don't use aria-describedby by itself
-				andiAlerter.throwAlert(alert_0021);
-			}
-		}
-		return ariaDescribedbyText;
-	};
-
-	//**title**
-	//This function attempts to grab the title if it exists
-	this.grab_title = function(element){
-		//Does it contain a title?
-		var titleText = $(element).attr("title");
-		if(titleText !== undefined){
-			TestPageData.page_using_titleAttr = true;
-			this.accessibleComponentsTotal++;
-			if($.trim(titleText) === ""){
-				titleText = andiCheck.addToEmptyComponentList("title");
-			}
-			else{//not empty
-				if(!this.namerFound)
-					this.namerFound = true;//title is a namer
-				else
-					this.describerFound = true;//title is a describer
-				//Check length
-				if(andiCheck.checkCharacterLimit(titleText,alert_0151))
-					titleText = andiCheck.insertCharacterLimitMark(titleText);
-				else
-					titleText = andiUtility.formatForHtml(titleText);
-			}
-		}
-		return titleText;
-	};
+	AndiData.data = {
+		andiElementIndex: testPageData.andiElementIndex,
+		components: {} //will store the accessible components as they are gathered
+		};
 	
-	//**legend/fieldset**
-	//This function attempts to grab the legend if it exists and element is or is within a fieldset.
-	//For performance increase, check page_using_legend before calling this method.
-	//Should be called toward the end of the grabs since it depends on other fields to throw alerts
-	this.grab_legend = function(element){
-		var legendText;
-		if(testPageData.page_using_fieldset && !$(element).is("legend")){
-			//Page is using fieldset and element is not a legend
-			var fieldset;
-			if($(element).is("fieldset"))
-				fieldset = $(element); //element is a fieldset.
-			else{ //Does the element have an ancestor fieldset?
-				fieldset = $(element).closest("fieldset"); //element is contained in a fieldset.
-			}
-			if(fieldset.length){
-				var legend = $(fieldset).find("legend").first();
-				if($(legend).length){
-					legendText = andiUtility.getTextOfTree($(legend));
-					this.accessibleComponentsTotal++;
-					legendText = andiLaser.createLaserTarget("legend", legend, legendText);
-					if(($(element).not(":submit,:button,:reset,:image").is("input")) || $(element).is("select,textarea,fieldset")){
-						//Check for improper legend combinations
-						andiCheck.improperCombination("&lt;legend&gt;","ariaLabel ariaLabelledby title ariaDescribedby",this);
-						//Check if legend is the only component - all namer grabs should have already happened
-						if(!this.namerFound && !$(element).is("fieldset"))
-							andiAlerter.throwAlert(alert_0022);
-						//Check if legend is empty
-						if(legendText === "")
-							legendText = andiCheck.addToEmptyComponentList("legend");
-						else if($(element).is("fieldset"))
-							this.namerFound = true;//legend is a namer for a fieldset
-					}
-					else
-						//This is not an element that legend can be placed on, ignore it.
-						this.ignoreLegend = true;
-					legendText = legendText;
-				}
-			}
-		}
-		return legendText;
-	};
+	AndiData.grab_semantics(element, AndiData.data);
 	
-	//**figcaption/figure**
-	//This function attempts to grab the figcaption if it exists and element is or is within a figure.
-	//For performance increase, check page_using_figure before calling this method.
-	//Should be called toward the end of the grabs since it depends on other fields to throw alerts
-	this.grab_figcaption = function(element){
-		var figcaptionText;
-		if(testPageData.page_using_figure && !$(element).is("figcaption")){
-			//Page is using figure and element is not figcaption
-			var figure;
-			if($(element).is("figure"))
-				figure = $(element); //element is a figure.
-			else{ //Does the element have an ancestor figure?
-				this.ignoreFigcaption = true;//only concerned with figcaption on figure, but still display in table
-				figure = $(element).closest("figure"); //element is contained in a figure.
-			}
-			if(figure.length){
-				var figcaption = $(figure).children("figcaption").first();
-				if($(figcaption).length){
-					figcaptionText = andiUtility.getTextOfTree($(figcaption));
-					this.accessibleComponentsTotal++;
-					legendText = andiLaser.createLaserTarget("figcaption", figcaption, figcaptionText);
-					if(!this.ignoreFigcaption){
-						//Check for improper figcaption combinations
-						andiCheck.improperCombination("&lt;ficaption&gt;","ariaLabel ariaLabelledby",this);
-						//Check if figcaption is empty
-						if(figcaptionText === ""){
-							figcaptionText = andiCheck.addToEmptyComponentList("figcaption");
-						}
-						else//not empty
-							this.namerFound = true;
-					}
-					figcaptionText = figcaptionText;
-				}
-			}
-		}
-		return figcaptionText;
-	};
-	
-	//**caption/table**
-	//This function attempts to grab the caption if it exists and element is or is within a table.
-	//For performance increase, check page_using_table before calling this method.
-	//Should be called toward the end of the grabs since it depends on other fields to throw alerts
-	this.grab_caption = function(element){
-		var captionText;
-		if(TestPageData.page_using_table && TestPageData.page_using_caption && !$(element).is("caption")){
-			//Page is using figure and element is not caption
-			var table;
-			if($(element).is("table"))
-				table = $(element); //element is a table.
-			else{ //Does the element have an ancestor table?
-				this.ignoreCaption = true;//only concerned with caption on table, but still display in components table
-				table = $(element).closest("table"); //element is contained in a table.
-			}
-			if(table.length){
-				//Get the first caption
-				var caption = $(table).children("caption").first();
-				if($(caption).length){
-					captionText = andiUtility.getTextOfTree($(caption));
-					this.accessibleComponentsTotal++;
-					legendText = andiLaser.createLaserTarget("caption", caption, captionText);
-					if(!this.ignoreCaption){
-						//Check for improper caption combinations
-						andiCheck.improperCombination("&lt;caption&gt;","ariaLabel ariaLabelledby",this);
-						//check if caption is empty
-						if(captionText === ""){
-							captionText = andiCheck.addToEmptyComponentList("caption");
-						}
-						else//not empty
-							this.namerFound = true;
-					}
-					captionText = captionText;
-				}
-			}
-		}
-		return captionText;
-	};
-	
-	//**summary**
-	//This function attempts to grab the summary attribute if the element is a table
-	this.grab_summary = function(element){
-		var summaryText;
-		if(TestPageData.page_using_table && $(element).is("table")){
-			//Page is using figure and element is not caption
-			summaryText = $(element).attr("summary");
-			if(summaryText !== undefined){
-				this.accessibleComponentsTotal++;
-				this.describerFound = true;//summary is a describer
-				summaryText = andiUtility.formatForHtml(summaryText);
-			}
-		}
-		return summaryText;
+	if(!skipTAC){
+		AndiData.textAlternativeComputation(element);
+		AndiData.grab_coreProperties(element);
 	}
 	
-	//**placeholder**
-	//This function attempts to grab the value of an input button/submit/reset if it is not empty
-	this.grab_placeholder = function(element){
-		var placeholderText;
-		if($(element).is("input,textarea")){
-			placeholderText = $(element).attr("placeholder");
-			if(placeholderText !== undefined){
-				this.accessibleComponentsTotal++;
-				placeholderText = andiUtility.formatForHtml(placeholderText);
-			}
-		}
-		return placeholderText;
-	};
-	
-	//**scope**
-	//This function attempts to grab the scope of a th
-	//It will add it to the addOnPropertiesObject object
-	this.grab_scope = function(element){
-		var scope = $.trim($(element).attr("scope"));
-		if(scope !== undefined){
-			if($(element).is("th")){
-				if(scope!="row" && scope!="col" && scope!="rowgroup" && scope!="colgroup" && scope!="auto")
-					andiAlerter.throwAlert(alert_0044, [scope]);
-			}
-			this.accessibleComponentsTotal++;
-		}
-		this.scope = scope;
-	};
-
-	//**headers**
-	//This function attempts to grab the text of the headers references in a table cell
-	this.grab_headers = function(element){
-		var headers = $.trim($(element).attr("headers"));
-		var headersText = "";
-		if(headers !== undefined){
-			if(!$(element).is("th") && !$(element).is("td"))
-				andiAlerter.throwAlert(alert_0045);
-			else{
-				headersText = grabAssociatedTagsUsingSpaceDelimitedListAttribute(element,"headers");
-				
-				if(headersText === ""){
-					//ALL of the headers references do not return any text
-					andiAlerter.throwAlert(alert_0068);
-					headersText = AndiCheck.emptyString;
-				}
-			}
-			this.accessibleComponentsTotal++;
-		}
-		//stores the actual vaule of the headers, not the parsed (grabbed) headersText
-		this.headers = headers;
-	};
-	
-	//**imageSrc**
-	//This function attempts to grab the image source from img, input:image, and area
-	this.grab_imageSrc = function(element){
-		var imageSrc;
-		if($(element).is("img,input:image,area")){
-			if($(element).is("area")){
-				var map = $(element).closest("map");
-				if(map)
-					imageSrc = $("#ANDI508-testPage img[usemap=\\#" + $(map).attr("name") + "]").first().attr("src");
-			}
-			else
-				//img or input:image
-				imageSrc = $(element).attr("src");
-		}
-		else if($(element).is("svg")){
-			imageSrc = ($(element).find("image").first().attr("src"));
-		}
+	$(element)
+		.addClass("ANDI508-element")
+		.attr("data-andi508-index",AndiData.data.andiElementIndex)
+		.on("focus",AndiModule.focusability)
+		.on("mouseenter",AndiModule.hoverability);
 		
-		if(imageSrc){
-			this.accessibleComponentsTotal++;
-			if(imageSrc === ""){
-				imageSrc = andiCheck.addToEmptyComponentList("imageSrc");
-			}
-			else{
-				imageSrc = imageSrc.split("/").pop(); //get the filename and extension only
-			}
-		}
-		
-		return imageSrc;
-	};
+	return AndiData.data;
+}
 	
-	//**tabindex**
-	//This function attempts to grab the tabindex if it exists
-	//It will add it to the addOnPropertiesObject object
-	this.grab_tabindex = function(element){
+AndiData.grab_coreProperties = function(element){
+	
+	grab_tabindex();
+	grab_accesskey();
+	grab_imageSrc();
+	if($(element).is("input,textarea"))
+		grab_placeholder();
+	
+	function grab_tabindex(){
+		AndiData.data.isTabbable = true; //assume true (prove to be false)
 		var tabindex = $.trim($(element).attr("tabindex"));
+		var nativelyTabbableElements = "a[href],button,input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']";
 		if(tabindex){
-			//Put tabindex in table
-			addOnPropertiesObject = $.extend(addOnPropertiesObject,{tabindex:tabindex});
-			
 			if(tabindex < 0){
-				this.isTabbable = false;
-				if(!$(element).is("iframe") && $(element).closest(":tabbable").html() === undefined){
-					//element and ancestors are not tabbable
-					if(this.namerFound)
+				AndiData.data.isTabbable = false;
+				if($(element).is("iframe")){
+					//check if iframe has focusable contents
+					if($(element).contents().find(":focusable").length)
+						andiAlerter.throwAlert(alert_0123);
+				}
+				else if(!$(element).parent().is(":tabbable")){
+					//element and parent are not tabbable
+					if(AndiData.data.accName)
 						andiAlerter.throwAlert(alert_0121);
 					else
 						andiAlerter.throwAlert(alert_0122);
 				}
 			}
-			else if(isNaN(tabindex)){
-				//tabindex is not a number
+			else if(isNaN(tabindex)){//tabindex is not a number
 				andiAlerter.throwAlert(alert_0077, [tabindex]);
-				if(!$(element).is("a[href],button,input,select,textarea,object,iframe,area,[contenteditable=true]"))
-					this.isTabbable = false;
+				if(!$(element).is(nativelyTabbableElements))
+					AndiData.data.isTabbable = false;
 			}
 			//else element is tabbable
+			AndiData.data.tabindex = tabindex;
 		}
-		else if(!$(element).is("a[href],button,input,select,textarea,object,iframe,area,[contenteditable=true]")){
-			this.isTabbable = false;
+		else if(!$(element).is(nativelyTabbableElements)){
+			AndiData.data.isTabbable = false;
 		}
-	};
+	}
 	
-	//**accesskey**
-	//This function will grab the accesskey and add it to the addOnPropertiesObject object
-	this.grab_accessKey = function(element){
-		var accesskey = $(element).prop("accessKey");
-		if(accesskey){
-			if(accesskey !== " ") //accesskey is not the space character
-				accesskey = $.trim(accesskey.toUpperCase());
-			addOnPropertiesObject = $.extend(addOnPropertiesObject,{accesskey:accesskey});
-			addOnPropOutputText += "{"+accesskey+"}, ";
+	function grab_accesskey(){
+		var accesskey = $(element).attr("accesskey");
+		if(accesskey && accesskey !== " "){ //accesskey is not the space character
+			accesskey = $.trim(accesskey.toUpperCase());
+			AndiData.data.accesskey = accesskey;
 		}
-	};
-
-	//**add-On Properties**
-	//This function will grab add-on properties of the element
-	//Returns Nothing. Concatenates the output text in case it needs to be called for multiple elements
-	this.grab_addOnProperties = function(element){
-		addOnPropOutputText = "";//reset
-		
-		addOnPropertiesObject = {};
-		
-		//These AddOnProperties add to the Output
-		grab_otherAddOnProperties(element);
-		this.grab_accessKey(element);
-		
-		//These AddOnProperties do not add to the Output
-		this.grab_tabindex(element);
-
-		//If add on props were found, prepare addOnPropOutputText
-		if(!$.isEmptyObject(addOnPropertiesObject)){
-			this.addOnPropertiesTotal = Object.keys(addOnPropertiesObject).length;
-			if(addOnPropOutputText !== ""){
-				//Slice off last two characters the comma and the space: ", "
-				this.addOnPropOutput += addOnPropOutputText.slice(0, -2); //Concatenates
-			}
-			this.accessibleComponentsTotal = this.accessibleComponentsTotal + this.addOnPropertiesTotal;
-			this.addOnProperties = addOnPropertiesObject;
-		}
-		
-		//**other add-On Properties**
-		//This function will grab other add-on properties of the element:
-		function grab_otherAddOnProperties(element){
-			if($(element).is("input,textarea,select,[role=radio],[role=checkbox],[role=textbox]") && !$(element).is(":submit,:button,:reset")){
-				var readonlyInOutput = false; //makes sure readonly isn't added to output twice
-				if($(element).attr('aria-readonly')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaReadonly:$(element).attr('aria-readonly')});
-					if($(element).attr('aria-readonly')==='true'){
-						addOnPropOutputText += 'readonly' + ", ";
-						readonlyInOutput = true;
-					}
-				}
-				if($(element).prop('readonly')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{readonly:'readonly'});
-					if(!readonlyInOutput && !$(element).is("[type=radio],[type=checkbox]")){
-						//readonly does not work with radio buttons and checkboxes, and does not get spoken by screen readers
-						addOnPropOutputText += 'readonly' + ", ";
-					}
-				}
-				if($(element).attr('required')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{required:'required'});
-					addOnPropOutputText += 'required' + ", ";
-				}
-				else if($(element).attr('aria-required')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaRequired:$(element).attr('aria-required')});
-					if($(element).attr('aria-required')==='true')
-						addOnPropOutputText += 'required' + ", ";
-				}
-				if($(element).attr('aria-invalid')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaInvalid:$(element).attr('aria-invalid')});
-					if($(element).attr('aria-invalid')==='true')
-						addOnPropOutputText += 'invalid entry' + ", ";
-				}
-				if($(element).attr('aria-multiline')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaMultiline:$(element).attr('aria-multiline')});
-				}
-			}
-			else if($(element).is("th") && $(element).attr('aria-sort')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaSort:$(element).attr('aria-sort')});
-					//if the th contains a link, the aria-sort will have already been added
-					if($(element).attr('aria-sort') != 'none' && !$(element).find('a').length)
-						addOnPropOutputText += $(element).attr('aria-sort') + ", ";
-			}
-			else if($(element).is("a") && TestPageData.page_using_table){
-				var th = $(element).parent();
-				if($(th).is("th") && $(th).attr('aria-sort')){
-					//this link's parent is a th and the th has aria-sort
-					//Note: using .parent() instead of .closest() to help with performance
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaSort:$(th).attr('aria-sort')});
-					if($(th).attr('aria-sort') != 'none')
-						addOnPropOutputText += $(th).attr('aria-sort') + ", ";
-				}
-			}
-			
-			if($(element).is("input,textarea,select,button,[role=radio],[role=checkbox],[role=button],[role=textbox]")){
-				if($(element).attr('aria-checked')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaChecked:$(element).attr('aria-checked')});
-					if($(element).is("[role=radio],[role=checkbox]")){
-						if($(element).attr('aria-checked')==='true')
-							addOnPropOutputText += 'checked' + ", ";
-						else if($(element).attr('aria-checked')==='mixed')
-							addOnPropOutputText += 'mixed' + ", ";
-					}
-				}
-				if($(element).attr('aria-pressed')){
-					addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaPressed:$(element).attr('aria-pressed')});
-					if($(element).attr('aria-pressed')==='true')
-						addOnPropOutputText += 'pressed' + ", ";
-				}
-				
-				if($(element).is("input[type=checkbox],input[type=radio]")){
-					if($(element).prop("checked")){
-						addOnPropertiesObject = $.extend(addOnPropertiesObject,{checked:"checked"});
-						addOnPropOutputText += "checked" + ", ";
-					}
-				}
-			}
-
-			if($(element).isSemantically("[role=heading]","h1,h2,h3,h4,h5,h6")){
-				var headingLevel = "2"; //default to 2 (defined in spec)
-				if($(element).is("[role=heading]")){
-					var ariaLevel = $(element).attr("aria-level");
-					if(parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel)
-						headingLevel = ariaLevel;
-				}
-				else{//native heading tag
-					headingLevel = $(element).prop("tagName").charAt(1);
-				}
-				addOnPropOutputText += "heading level " + headingLevel + ", ";
-				addOnPropertiesObject = $.extend(addOnPropertiesObject,{headingLevel:headingLevel});
-			}
-			
-			//Global ARIA
-			if($(element).attr('aria-disabled')){
-				addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaDisabled:$(element).attr('aria-disabled')});
-				if($(element).attr('aria-disabled')==='true')
-					addOnPropOutputText += 'unavailable' + ", ";
-			}
-			if($(element).attr('aria-haspopup')){
-				addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaHaspopup:$(element).attr('aria-haspopup')});
-				if($(element).attr('aria-haspopup')==='true')
-					addOnPropOutputText += 'hasPopUp' + ", ";
-			}
-			if($(element).attr('aria-expanded')){
-				var value = $(element).attr('aria-expanded');
-				addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaExpanded:value});
-				if(value=="true")
-					addOnPropOutputText += "expanded" + ", ";
-				else if(value=="false")
-					addOnPropOutputText += "collapsed" + ", ";
-			}
-			if($(element).attr('aria-controls')){
-				addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaControls:"["+$(element).attr("aria-controls")+"]"});
-				addOnPropOutputText += "controls[" + $(element).attr('aria-controls') + "], ";
-			}
-			if($(element).attr("aria-hidden")){
-				addOnPropertiesObject = $.extend(addOnPropertiesObject,{ariaHidden:$(element).attr("aria-hidden")});
-			}
-			if($(element).attr("contenteditable") === "true" || $(element).attr("contenteditable") === ""){
-				addOnPropertiesObject = $.extend(addOnPropertiesObject,{contenteditable:"true"});
-			}
-		}
-	};
+	}
 	
-	//This function will grab the tagName of the element
-	//If the element is an input, it will add the type in brackets
-	this.grab_tagName = function(element){
+	function grab_imageSrc(){
+		var imageSrc;
+		if($(element).is("area")){
+			var map = $(element).closest("map");
+			if(map)
+				imageSrc = $("#ANDI508-testPage img[usemap=\\#" + $(map).attr("name") + "]").first().attr("src");
+		}
+		else if($(element).is("img,input[type=image]"))
+			imageSrc = $(element).attr("src");
+		else if($(element).is("svg"))
+			imageSrc = ($(element).find("image").first().attr("src"));
+		
+		if(imageSrc){
+			imageSrc = imageSrc.split("/").pop(); //get the filename and extension only
+			AndiData.data.src = imageSrc;
+		}
+	}
+	
+	function grab_placeholder(){
+		var placeholder = $(element).attr("placeholder");
+		if(placeholder)
+			AndiData.data.placeholder = placeholder;
+	}
+};
+
+//================//
+// Grab Semantics://
+//================//
+AndiData.grab_semantics = function(element, data){
+	
+	grab_tagName();
+	grab_role();
+
+	function grab_tagName(){
 		var tagNameText = $(element).prop("tagName").toLowerCase();
-		if(tagNameText=="input")
-			tagNameText += "["+$(element).prop("type").toLowerCase()+"]"; //add the type within brackets
-		return tagNameText;
-	};
+		if(tagNameText === "input")
+			tagNameText += "[type="+$(element).prop("type").toLowerCase()+"]"; //add the type within brackets
+		data.tagNameText = tagNameText;
+	}
 	
-	//This function will grab the role of the element
-	//TODO: check for valid roles here
-	this.grab_role = function(element){
-		return $.trim($(element).attr("role")).toLowerCase();
-	};
-	
-	//this function will grab accessibility components from ancestors
-	this.grab_supertreeComponents = function(element){
-		var anscestor;
-		var supertreeHtml = ""; //This is used to display in the AC table and the ANDI Output
-		var anscestorRole; //This will be displayed in the AC table
-		
-		if($(element).is("[role=radio],input[type=radio]")){
-			anscestor = $(element).closest("[role=radiogroup],[role=group]");
-			if(anscestor)
-				anscestorRole = "role=" + $(anscestor).attr("role");
-		}
-		else if(TestPageData.page_using_role_group){
-			if($(element).is("input,select,textarea,button,[role=button],[role=checkbox],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[role=radio],[role=slider],[role=textbox]")){ //is an interactive element
-				//Check parent for role=group
-				if($(element).parent().is("[role=group]")){
-					anscestor = $(element).parent();
-					anscestorRole = "role=group";
-				}
-			}
-		}
-		
-		if(anscestor){
-			var tempText = "";
-			var excludeFromOutput = false;
-			var supertreeHasNamer = false;
+	function grab_role(){
+		var role = $.trim($(element).attr("role")).toLowerCase();
+		if(role)
+			data.role = role;
+	}
+};
 
-			//try to get namers from supertree
-			tempText = this.grab_ariaLabelledby(anscestor);
-			if(tempText && tempText!=AndiCheck.emptyString){
-				supertreeHtml += addSupertreeComponent(tempText,"aria-labelledby",anscestorRole);
-				supertreeHasNamer = true;
-			}
-			
-			tempText = this.grab_ariaLabel(anscestor);
-			if(tempText && tempText!=AndiCheck.emptyString){
-				if(supertreeHasNamer){
-					excludeFromOutput = true;
-					//TODO: ancestor has unused text
-					//childHasUnusedText += "aria-label ";
-				}
-				supertreeHtml += addSupertreeComponent(tempText,"aria-label",anscestorRole,excludeFromOutput);
-				supertreeHasNamer = true;
-			}
-			
-			tempText = this.grab_title(anscestor);
-			if(tempText && tempText!=AndiCheck.emptyString){
-				if(supertreeHasNamer){
-					excludeFromOutput = true;
-					//childHasUnusedText += "title ";
-				}
-				supertreeHtml += addSupertreeComponent(tempText,"title",anscestorRole,excludeFromOutput);
-				supertreeHasNamer = true;
-			}
-			
-			tempText = this.grab_ariaDescribedby(anscestor);
-			if(tempText && tempText!=AndiCheck.emptyString){
-				supertreeHtml += addSupertreeComponent(tempText,"aria-describedby",anscestorRole,false);
-			}
-		}
-		
-		//This function creates a subtree component element
-		function addSupertreeComponent(supertreeComponentText,type,role,excludeFromOutput){
-			var excludeFromOutputClass = "";
-			if(excludeFromOutput)
-				excludeFromOutputClass = " ANDI508-treeComponent-excludeFromOutput";
-			return "<span class='ANDI508-display-"+type+excludeFromOutputClass+"'><span class='ANDI508-treeComponent'>" + "<span class='ANDI508-treeComponent-nodeName'>[" + role + "]</span> " + type + ":</span> " + supertreeComponentText + "</span> <br class='ANDI508-treeComponent-excludeFromOutput' />";
-		}
-		
-		return supertreeHtml;
-	};
-	
-	//**child/subtree components**
-	//This function will grab the accessible components of a subtree
-	//It will concatenate html namers on the subtree to html namers of the parent element
-	//This function will return, in one string, namers from the subtree if it has any.
-	//TODO: For now, this is only being called on img inside <a>, <button>, and <li>. Eventually it could become a fully recursive function
-	this.grab_subtreeComponents = function(element){
-		//Is there a decendant image?
-		var subtreeText = ""; //This is only needed for accessible name pre-calculation (lANDI)
-		var subtreeHtml = ""; //This is used to display in the AC table and the ANDI Output
-		var subtreeTextArray = []; //This is used to check for matching text
-		var img = $(element).clone().find("img:not([role=presentation],[role=none]),svg image").first();
-		if($(img).attr("src")){
-			//Yes.
-			this.imageSrc = this.grab_imageSrc(img);
-			
-			var imageTagName = $(img).prop("tagName").toLowerCase();
-			
-			var tempText = "";
-			var excludeFromOutput = false;
-			var subtreeHasNamer = false;
-			var childHasUnusedText = "";
-			
-			//try to get namers from subtree
-			tempText = this.grab_ariaLabelledby(img);
-			if(tempText && tempText != AndiCheck.emptyString){
-				subtreeTextArray.push(tempText);
-				subtreeHtml += addSubtreeComponent(tempText,"aria-labelledby",imageTagName,excludeFromOutput);
-				subtreeHasNamer = true;
-			}
-			
-			tempText = this.grab_ariaLabel(img);
-			if(tempText && tempText != AndiCheck.emptyString){
-				subtreeTextArray.push(tempText);
-				if(subtreeHasNamer){
-					excludeFromOutput = true;
-					childHasUnusedText += "aria-label ";
-				}
-				subtreeHtml += addSubtreeComponent(tempText,"aria-label",imageTagName,excludeFromOutput);
-				subtreeHasNamer = true;
-			}
-			
-			tempText = this.grab_alt(img);
-			if(tempText && tempText != AndiCheck.emptyString){
-				subtreeTextArray.push(tempText);
-				if(subtreeHasNamer){
-					excludeFromOutput = true;
-					childHasUnusedText += "alt ";
-				}
-				subtreeHtml += addSubtreeComponent(tempText,"alt",imageTagName,excludeFromOutput);
-				subtreeHasNamer = true;
-			}
-			
-			tempText = this.grab_title(img);
-			if(tempText && tempText != AndiCheck.emptyString){
-				subtreeTextArray.push(tempText);
-				if(subtreeHasNamer){
-					excludeFromOutput = true;
-					if(tempText != $(element).attr("title") && subtreeTextDoesNotMatch(tempText))
-						childHasUnusedText += "title ";
-				}
-				subtreeHtml += addSubtreeComponent(tempText,"title",imageTagName,excludeFromOutput);
-				subtreeHasNamer = true;
-			}
+//==============================//
+// Text Alternative Computation://
+//==============================//
+AndiData.textAlternativeComputation = function(root){
 
-			if(subtreeHtml !== ""){
-				//Loop through the subtreeTextArray, gather the text into subtreeText:
-				for(var x=0; x<subtreeTextArray.length; x++){
-					subtreeText += subtreeTextArray[x];
-					if(x != subtreeTextArray.length-1)
-						subtreeText += " ";
-				}
-				this.subtreeText = subtreeText;
-				
-				this.namerFound = true;
-			}
-			
-			//Is there already an aria-label or aria-labelledby on the parent element?
-			if(subtreeHtml !== "" && (this.ariaLabel || this.ariaLabelledby)){
-				//The aria-label or aria-labelledby would override the child's text, therefore, information would be lost.
-				andiAlerter.throwAlert(alert_0141,[" "]);
-			}
-			else if(childHasUnusedText){
-				andiAlerter.throwAlert(alert_0141,[" ["+$.trim(childHasUnusedText)+"] "]);
-			}
-		}
-		//This function creates a subtree component element
-		function addSubtreeComponent(subtreeComponentText,type,tagName,excludeFromOutput){
-			var excludeFromOutputClass = "";
-			if(excludeFromOutput)
-				excludeFromOutputClass = " ANDI508-treeComponent-excludeFromOutput";
-			return "<span class='ANDI508-display-"+type+excludeFromOutputClass+"'><span class='ANDI508-treeComponent'>" + "<span class='ANDI508-treeComponent-nodeName'>&lt;" + tagName + "&gt;</span> " + type + ":</span> " + subtreeComponentText + "</span> <br class='ANDI508-treeComponent-excludeFromOutput' />";
+	//TODO: what if an ancestor is aria-hidden?
+	var isAriaHidden = ($(root).attr("aria-hidden") === "true") ? true : false;
+	var isNamed = false;
+	var isDescribed = false;
+	var component;
+	var stepF_exclusions = "figure,iframe,select,table,textarea";
+	var usedInName = {};
+	var isNameFromContent;
+	//check against this list to prevent infinite loops
+	var nodesTraversed;
+	var isCalcAccDesc = false;
+
+	function calcAccName(result){
+		if(!isNamed && result){
+			isNamed = true;
+			AndiData.data.accName = $.trim(result);
+			//determine if components that could also be describers where used in the name
+			checkIfUsedInName(["value","caption","title"]);
 		}
 		
-		//This function returns true if the text of a subtree component is different from the text of another subtree component.
-		function subtreeTextDoesNotMatch(tempText){
-			for(var x=0; x<subtreeTextArray.length; x++){
-				if(tempText != subtreeTextArray[x])
-					return true;
+		function checkIfUsedInName(list){
+			for(var u=0; u<list.length; u++){
+				if(AndiData.data.components[list[u]]){
+					usedInName[list[u]] = true;
+					break;
+				}
+			}
+		}
+	}
+	function calcAccDesc(result){
+		if(!isDescribed && result){
+			isDescribed = true;
+			AndiData.data.accDesc = $.trim(result);
+		}
+	}
+	function checkIfGroupFound(result){
+		if(result){
+			AndiData.data.accGroup = $.trim(result);
+		}
+	}
+	
+	if(!isAriaHidden){
+	
+		//Calculate Accessible Name
+		nodesTraversed = [];
+		calcAccName(stepB(root, AndiData.data.components));
+		calcAccName(stepC(root, AndiData.data.components));
+		calcAccName(stepD(root, AndiData.data.components));
+		if(!$(root).is(stepF_exclusions))
+			calcAccName(stepF(root, AndiData.data.components));
+		calcAccName(stepI(root, AndiData.data.components));
+		
+		//Calculate Accessible Description
+		isCalcAccDesc = true;
+		nodesTraversed = [];
+		calcAccDesc(stepB(root, AndiData.data.components));
+		calcAccDesc(stepD(root, AndiData.data.components));
+		calcAccDesc(stepI(root, AndiData.data.components));
+		
+		//Calculate Element Grouping
+		nodesTraversed = [];
+		checkIfGroupFound(stepZ(root, AndiData.data));
+
+	}
+	else{
+		AndiData.data.isAriaHidden = true;
+	}
+	
+	//stepB: aria-labelledby or aria-describedby
+	//Params:	isProcessRefTraversal - keeps track of whether the calculation is already doing a reference traversal to prevent infinite looping
+	function stepB(element, data, isProcessRefTraversal){
+		var accumulatedText = "";
+		//if(!hasNodeBeenTraversed(element)){
+		if(!isProcessRefTraversal){
+			var componentType = (isCalcAccDesc) ? "ariaDescribedby" : "ariaLabelledby";
+			var attribute = (isCalcAccDesc) ? "aria-describedby" : "aria-labelledby";
+			var component = $(element).attr(attribute);
+			
+			if(component !== undefined){
+				if(!isEmptyComponent(component, componentType, element)){
+					var idsArray = component.split(" ");
+					var refElement;
+					var missingReferences = [];
+					var firstRefInstances = []; //stores refIds that have been found for the first time
+					var duplicateRefInstances = []; //will store any duplicate refIds (prevents alert being thown multiple times for same id)
+					
+					for(var x=0; x<idsArray.length; x++){ //for each id in the array the array
+						if(idsArray[x] !== ""){
+							if(firstRefInstances.indexOf(idsArray[x]) === -1){
+								//id has not been referenced yet
+								firstRefInstances.push(idsArray[x]);
+								refElement = document.getElementById(idsArray[x]);
+							
+								if(refElement){
+									if($(refElement).is("legend")) //is directly referencing a legend
+										andiAlerter.throwAlert(alert_006B, [attribute]);
+									
+									if(!hasNodeBeenTraversed(refElement)){
+										andiCheck.areThereAnyDuplicateIds(attribute, idsArray[x]);
+											
+										//Don't call stepB again to avoid infinite loops (spec explicitely defines this)
+										if(element != refElement && $(refElement).attr(attribute)){//reference contains another reference
+											andiAlerter.throwAlert(alert_006C, [attribute, attribute]);
+											AndiData.addComp(data, componentType, [(AndiCheck.emptyString+" "), refElement, idsArray[x]]);
+										}
+										
+										var refData = {}; //will be discarded
+										if(calcRefName(stepC(refElement, refData))); //aria-label
+										else if(calcRefName(stepD(refElement, refData))); //native markup
+										else if(calcRefName(stepE(refElement, refData))); //embedded control
+										else if(calcRefName(stepF(refElement, refData, true, true))); //name from content
+										else if(calcRefName(stepI(refElement, refData))); //title attribute
+									}
+									else{//Referenced Element has already been traversed. 
+										andiAlerter.throwAlert(alert_006E, [attribute, idsArray[x]]);
+										var refData = {}; //will be discarded
+										var alreadyTraversedText = ( stepC(refElement, refData) || stepD(refElement, refData) || stepE(refElement, refData) || stepF(refElement, refData, true, true) || stepI(refElement, refData) );
+										AndiData.addComp(data, componentType, [alreadyTraversedText, refElement, idsArray[x]]);
+									}
+								}
+								else{//No, this id was not found, add to list.
+									missingReferences.push(idsArray[x]);
+									AndiData.addComp(data, componentType, [" ", undefined, idsArray[x]]);
+								}
+							}
+							else{ //id has already been directly referenced, this is a duplicate
+								if(duplicateRefInstances.indexOf(idsArray[x]) === -1){
+									duplicateRefInstances.push(idsArray[x]);
+									andiAlerter.throwAlert(alert_006D, [attribute, idsArray[x]]);
+								}
+							}
+						}
+					}//end for loop
+					andiCheck.areThereMissingReferences(attribute, missingReferences);
+				}
+			}
+		}
+		return accumulatedText;
+		
+		function calcRefName(result){
+			if(result){
+				accumulatedText += AndiData.addComp(data, componentType, [(result + " "), refElement, refElement.id]);
+				return true;
 			}
 			return false;
 		}
-		
-		return subtreeHtml;
-	};
+	}
 	
-	//This private function is used to grab the list of the associated html tags containing ids that match a 
-	//space delimited accessibility attribute's id reference list such as aria-labelledby, aria-describedby, headers.
-	//It will grab the associated element's innerText even if it is hidden (how the screen readers work)
-	//Parameters:
-	//	element: an html object/tag
-	//	attribute: the name of the attribute. e.g. "aria-labelledby" "aria-describedby"
-	//Returns:
-	//	A space delimited string containing the accumulated text of the referenced elements
-	function grabAssociatedTagsUsingSpaceDelimitedListAttribute(element, attribute){
-		var ids = $.trim($(element).attr(attribute));//get the ids to search for
-		var idsArray = ids.split(" "); //split the list on the spaces, store into array. So it can be parsed through one at a time.
-		var accumulatedText = "";//this variable is going to store what is found. And will be returned
-		var message, splitMessage = "";
-		var referencedElement, referencedElementText;
-		//Traverse through the array
-		for (var x=0;x<idsArray.length;x++){
-			//Can the aria list id be found somewhere on the page?
-			if(idsArray[x] !== ""){
-				//Check if this is referencing an element with a duplicate id
-				andiCheck.areThereAnyDuplicateIds(attribute, idsArray[x]);
-				
-				referencedElement = document.getElementById(idsArray[x]);
-				referencedElementText = "";
-				
-				if($(referencedElement).attr("aria-label")){
-					//Yes, this id was found and it has an aria-label
-					referencedElementText += andiUtility.formatForHtml($(referencedElement).attr("aria-label"));
-					//Aria-label found on reference element
-					andiAlerter.throwAlert(alert_0064,[attribute]);
+	//stepC: aria-label
+	function stepC(element, data){
+		var accumulatedText = "";
+		component = $(element).attr("aria-label");
+		if(component !== undefined){
+			if(!isEmptyComponent(component, "ariaLabel", element)){
+				accumulatedText += AndiData.addComp(data, "ariaLabel", component) + " ";
+			}
+		}
+		return accumulatedText;
+	}
+	
+	//stepD: native markup
+	//isRecursion is used to prevent an input from grabbing its label twice
+	function stepD(element, data, isRecursion){
+	
+		var accumulatedText = "";
+		var component;
+		
+		if(!isCalcAccDesc){
+			component = $(element).attr("alt");
+			if(component !== undefined){
+				//TODO: what about svg <image>
+				if($(element).isSemantically("","img,input[type=image]")){
+					if(!isEmptyComponent(component, "alt", element)){
+						accumulatedText += AndiData.addComp(data, "alt", component, hasNodeBeenTraversed(element));
+					}
 				}
-				else if($(referencedElement).html() !== undefined){
-					//Yes, this id was found
-					
-					if($(referencedElement).is("input") && $(referencedElement).prop("type") === "text" && $(referencedElement).attr("value") !== ""){
-						//referencing an input
-						referencedElementText += andiUtility.formatForHtml($(referencedElement).val());
+				else if($.trim(component) !== ""){//because alt="" is allowed for images only
+					if($(element).is("img[role=presentation],img[role=none]"))
+						andiAlerter.throwAlert(alert_0142);
+					else
+						andiAlerter.throwAlert(alert_0081);
+					AndiData.addComp(data, "alt", component);
+				}
+			}
+		}
+
+		if($(element).is("input[type=image],input[type=button],input[type=submit],input[type=reset]")){
+			//value (can be namer or describer)
+			if(!data.value){
+				component = $(element).attr("value");
+				if(component && !accumulatedText){
+					accumulatedText += AndiData.addComp(data, "value", component, hasNodeBeenTraversed(element));
+				}
+			}
+			else if(isCalcAccDesc && !usedInName.value){
+				accumulatedText += data.value;
+			}
+		}
+
+		if(TestPageData.page_using_table && $(element).is("table")){
+			//caption
+			var role = $(element).attr("role");
+			if(TestPageData.page_using_caption){
+				//caption (can be namer or describer)
+				if(!data.caption){
+					component = grab_caption(element);
+					if(component && !accumulatedText){
+						var caption = AndiData.addComp(data, "caption", component, hasNodeBeenTraversed(element));
+						if(role !== "presentation" && role !== "none")
+							accumulatedText += caption;
 					}
-					else if($(referencedElement).is("img") && $(referencedElement).attr("alt") !== ""){
-						//referencing an img
-						referencedElementText += andiUtility.formatForHtml($(referencedElement).attr("alt"));
+				}
+				else if(isCalcAccDesc && !usedInName.caption){
+					accumulatedText += data.caption;
+				}
+			}
+			
+			//summary
+			if(!isCalcAccDesc){
+				component = $(element).attr("summary");
+				if(component !== undefined){
+					if(!isEmptyComponent(component, "summary", element)){
+						var summary = AndiData.addComp(data, "summary", component, hasNodeBeenTraversed(element));
+						if(!accumulatedText && role !== "presentation" && role !== "none")
+							accumulatedText += summary;
 					}
-					else{
-						referencedElementText += andiUtility.formatForHtml(andiUtility.getTextOfTree(referencedElement, true));
+				}
+			}
+		}
+		else if(!isCalcAccDesc){
+			if($(element).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]","input,select,textarea,[contenteditable=true],[contenteditable='']")){
+				component = grab_label(element);
+				if(component !== undefined){
+					if(!isEmptyComponent(component[0], "label", element)){
+						accumulatedText += AndiData.addComp(data, "label", component, (isRecursion || hasNodeBeenTraversed(element)) );
+					}
+				}
+			}
+			else if(testPageData.page_using_fieldset && $(element).is("fieldset")){
+				component = grab_legend(element);
+				if(component !== undefined){
+					accumulatedText += AndiData.addComp(data, "legend", component, hasNodeBeenTraversed(element));
+				}
+			}
+			else if(testPageData.page_using_figure && $(element).is("figure")){
+				component = grab_figcaption(element);
+				if(component !== undefined){
+					accumulatedText += AndiData.addComp(data, "figcaption", component, hasNodeBeenTraversed(element));
+				}
+			}
+			else if($(element).is("svg")){
+				if(!hasNodeBeenTraversed(element)){
+					component = $(element).find("title").first().text();
+					if(component !== undefined){
+						accumulatedText += AndiData.addComp(data, "svgTitle", component);
+					}
 					
-						//headers
-						if(attribute == "headers" && !$(referencedElement).is("th")){
-							//referenced element is not a th
-							if($(referencedElement).is("td"))
-								andiAlerter.throwAlert(alert_0067, [idsArray[x]]);
-							else
-								andiAlerter.throwAlert(alert_0066, [idsArray[x]]);
+					component = $(element).find("desc").first().text();
+					if(component !== undefined){
+						if(data.svgTitle)
+							accumulatedText += " ";
+						accumulatedText += AndiData.addComp(data, "svgDesc", component);
+					}
+				}
+			}
+		}
+		return accumulatedText;
+	}
+	
+	//stepE: embedded control
+	function stepE(element, data){
+		var accumulatedText = "";
+		if(!hasNodeBeenTraversed(element)){
+			if($(element).is("input[type=text]")){
+				accumulatedText += $(element).val();
+			}
+			//else if($(element).is("[role=textbox]"))
+			//else if($(element).is("[role=combobox],[role=listbox]"))
+			else if($(element).is("[role=progressbar],[role=scrollbar],[role=slider],[role=spinbutton]")){
+				var component = $(element).attr("aria-valuetext");
+				if(component && $.trim(component) !== ""){
+					accumulatedText += component;
+				}
+				else{
+					component = $(element).attr("aria-valuenow");
+					if(component && $.trim(component) !== ""){
+						accumulatedText += component;
+					}
+				}
+			}
+		}
+		return accumulatedText;
+	}
+	
+	//stepF: name from content
+	function stepF(element, data, isNameFromContent, isProcessRefTraversal){
+		var accumulatedText = "";
+
+		var exclusions = ".ANDI508-overlay,script,noscript,iframe,svg";
+		
+		var node, beforePseudo, afterPseudo;
+		var nameFromContent_roles = "[role=button],[role=cell],[role=checkbox],[role=columnheader],[role=gridcell],[role=heading],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[role=radio],[role=row],[role=rowgroup],[role=rowheader],[role=switch],[role=tab],[role=tooltip],[role=tree],[role=treeitem]";
+		var nameFromContent_tags = "label,button,a,th,td,h1,h2,h3,h4,h5,h6";
+		
+		if(!data) //create data object if not passed
+			data = {};
+
+		if(!isNameFromContent) //determine name from content unless passed
+			isNameFromContent = $(element).isSemantically(nameFromContent_roles, nameFromContent_tags);
+
+		//get CSS ::before content
+		lookForPseudoContent("before", element, data);
+		
+		//Loop through this element's child nodes
+		for(var z=0; z<element.childNodes.length; z++){
+			node = element.childNodes[z];
+			//if(!hasNodeBeenTraversed(node) && $(node).attr("aria-hidden") !== "true"){//this node is not hidden
+			if($(node).attr("aria-hidden") !== "true"){//this node is not hidden
+				if(node.nodeType === 1){//element node
+					if(!$(node).is(exclusions) && $(node).is(":shown")){
+						var subtreeData;
+						if(isNameFromContent || $(node).isSemantically(nameFromContent_roles, nameFromContent_tags)){
+
+							//Recurse through subtree
+							subtreeData = {};
+							//var subtreeNamed = false;
+							if(!isProcessRefTraversal && calcSubtreeName( stepB(node, subtreeData)) ); //aria-labelledby
+							else if(calcSubtreeName( stepC(node, subtreeData)) ); //aria-label
+							else if(calcSubtreeName( stepD(node, subtreeData, true)) ); //native markup
+							else if(root != node && calcSubtreeName( stepE(node, subtreeData)) ); //embedded control
+							else if(calcSubtreeName( stepF(node, subtreeData, true, isProcessRefTraversal), true)); //name from content
+							else if(calcSubtreeName( stepI(node, subtreeData)) ); //title attribute
+							
+							pushSubtreeData(data, subtreeData, node);
+						}
+						else{//not a name from content element
+							subtreeData = {};
+							accumulatedText += stepF(node, subtreeData, false, isProcessRefTraversal);
+							if(accumulatedText !== "" && andiUtility.isBlockElement(node))
+								accumulatedText += " "; //add extra space after block elements
+							pushSubtreeData(data, subtreeData, node);
 						}
 					}
 				}
-				else{
-					//No, this id was not found, add to list.
-					alert_0065.list += idsArray[x] + " "; //will be used if more than one idrefs missing
-					alert_0063.list = idsArray[x]; //will be used if only one idref missing
+				else if(node.nodeType === 3){//text node
+					accumulatedText += AndiData.addComp(data, "innerText", stepG(node, data));
 				}
-				
-				if(referencedElementText !== "") //Add referenceId
-					referencedElementText = andiLaser.createLaserTarget(attribute, referencedElement, referencedElementText);
-				
-				//Add to accumulatedText
-				accumulatedText += referencedElementText + " ";
 			}
 		}
-		//Check if any ids were not found
-		if(alert_0065.list !== ""){
-			var missingIdsList = $.trim(alert_0065.list).split(" ");
-			if(missingIdsList.length > 1){//more than one id missing; Possible misuse
-				andiAlerter.throwAlert(alert_0065, [attribute,  $.trim(alert_0065.list)]);
-				alert_0063.list = ""; //reset the other list
-			}
-			else{//only one id missing
-				andiAlerter.throwAlert(alert_0063, [attribute, alert_0063.list]);
-				alert_0065.list = ""; //reset the other list
+		
+		//get CSS ::after content
+		lookForPseudoContent("after", element, data);
+		
+		return accumulatedText;
+		
+		function calcSubtreeName(result, checkForBlockLevelElement){
+			if(result)
+				accumulatedText += result;
+			if(checkForBlockLevelElement && accumulatedText !== "" && andiUtility.isBlockElement(node))
+				accumulatedText += " "; //add extra space after block elements
+			return !!result;
+		}
+		
+		function pushSubtreeData(data, subtreeData, node){
+			if(!$.isEmptyObject(subtreeData)){
+				AndiData.grab_semantics(node, subtreeData);
+				if(!data.subtree)//create subtree
+					data.subtree = [];
+				data.subtree.push(subtreeData);
 			}
 		}
-		return $.trim(accumulatedText);
+		
+		//This function will return true if CSS pseudo element content exists and has readable characters
+		function lookForPseudoContent(pseudo, element, data){
+			var content = (oldIE) ? "" : window.getComputedStyle(element, ":"+pseudo).content;
+			return (hasReadableCharacters()) ? content : "";
+			
+			function hasReadableCharacters(){
+				if(content !== "none" && content !== "normal" && content !== "counter" && content !== "\"\""){//content is not none or empty string
+			
+					var unicode, c, contentString = "";
+					
+					//replaces \a with a space
+					content = content.replace(/\\a /," ");
+					
+					for(var i=1; i<content.length-1; i++){//starts at 1 and end at length-1 to ignore the starting and ending double quotes
+						unicode = content.charCodeAt(i);
+						
+						c = content.charAt(i);
+						if( //if unicode is not in a private use range
+							//(unicode >= 32 && unicode <= 126) ||
+							(unicode < 57344) ||
+							!(	
+								(unicode >= 57344 && unicode <= 63743) ||
+								(unicode >= 983040 && unicode <= 1048573) ||
+								(unicode >= 1048576 && unicode <= 1114109)
+							)
+						)
+							contentString += c;
+					}
+					
+					if(contentString){
+						if(pseudo === "before")
+							accumulatedText += contentString;
+						else //after
+							accumulatedText = contentString + accumulatedText;
+					}
+					AndiData.addComp(data, "::"+pseudo, content);
+				}
+			}
+		}
 	}
 	
-	//This function will calculate the output and store it to this.nameDescription
-	//This function does not have to be called to get the output.
-	//It is used when the output needs to be calculated and displayed before inspection.
-	//TODO: incorporate matching test
-	this.preCalculateNameDescription = function(){
-		if(!this.isAriaHidden){
-			var usingTitleAsNamer = false;
-			//Legend
-			if(!this.ignoreLegend && has(this.legend))
-				this.nameDescription += this.legend + " ";
-			//Accessible Name
-			if(has(this.ariaLabelledby))
-				this.nameDescription += this.ariaLabelledby + " ";
-			else if(has(this.ariaLabel))
-				this.nameDescription += this.ariaLabel + " ";
-			else if(!this.ignoreLabel && has(this.label))
-				this.nameDescription += this.label + " ";
-			else if(!this.ignoreAlt && has(this.alt))
-				this.nameDescription += this.alt + " ";
-			else if(!this.ignoreFigcaption && has(this.figcaption))
-				this.nameDescription += this.figcaption + " ";
-			else if(!this.ignoreCaption && has(this.caption))
-				this.nameDescription += this.caption + " ";
-			else if(has(this.value))
-				this.nameDescription += this.value + " ";
-			else if(has(this.innerText) || has(this.subtreeText))
-				this.nameDescription += this.innerText + " " + this.subtreeText + " ";
-			else if(has(this.title)){
-				usingTitleAsNamer = true;
-				this.nameDescription += this.title + " ";
+	//stepG: text node
+	function stepG(textNode, data){
+		var accumulatedText = "";
+		var text = textNode.nodeValue;
+		if($.trim(text) !== ""){
+			if(!data.ariaLabelledby && !data.ariaLabel && !data.title){
+				accumulatedText += andiUtility.condenseWhitespace(text);
 			}
-			//Accessible Description
-			if(has(this.ariaDescribedby))
-				this.nameDescription += this.ariaDescribedby + " ";
-			else if(!usingTitleAsNamer && has(this.title))
-				this.nameDescription += this.title + " ";
+		}
+		return accumulatedText;
+	}
+	
+	//stepI: title attribute
+	function stepI(element, data){
+		var accumulatedText = "";
+		if(!data.title){
+			component = $(element).attr("title");
+			if(component !== undefined){
+				if(!isEmptyComponent(component, "title", element)){
+					TestPageData.page_using_titleAttr = true;
+					accumulatedText += AndiData.addComp(data, "title", component);
+				}
+			}
+		}
+		else if(isCalcAccDesc && !usedInName.title){
+			accumulatedText += data.title;
+		}
+		return accumulatedText;
+	}
+	
+	//stepZ: //grouping
+	function stepZ(element, data){
+		var groupingText = "";
+		
+		//role=radiogroup
+		if(TestPageData.page_using_role_radiogroup && $(element).isSemantically("[role=radio]","input[type=radio]")){
+			getGroupingText($(element).closest("[role=radiogroup],[role=group]"));
+		}
+		//role=group
+		if(!groupingText && TestPageData.page_using_role_group){
+			if($(element).isSemantically("[role=button],[role=checkbox],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[role=radio],[role=slider],[role=textbox],[role=treeitem]","input,select,textarea,button")){ //is an interactive element
+				getGroupingText($(element).closest("[role=group]"));
+			}
+		}
+		//role=combobox
+		if(!groupingText && TestPageData.page_using_role_combobox && (data.role === "textbox" || data.role === "listbox" || data.role === "tree" || data.role === "grid" || data.role === "dialog") ){
+			getGroupingText($(element).closest("[role=combobox]"));
+		}
+		//role=listbox
+		if(!groupingText && TestPageData.page_using_role_listbox && data.role === "option"){
+			getGroupingText($(element).closest("[role=listbox]"));
+		}
+		//role=menu || role=menubar
+		if(!groupingText && TestPageData.page_using_role_menu && (data.role === "menuitem" || data.role === "menuitemcheckbox")){
+			getGroupingText($(element).closest("[role=menu],[role=menubar]"));
+		}
+		//legend
+		if(!groupingText && testPageData.page_using_fieldset && $(element).isSemantically("[role=checkbox],[role=radio],[role=textbox],[role=option]","input,select,textarea,fieldset")){
+			component = grab_legend(element);
+			if(component !== undefined){
+				groupingText += AndiData.addComp(data.components, "legend", component);
+			}
+		}
+		
+		return groupingText;
+		
+		function getGroupingText(groupingElement){
+			if(groupingElement){
+				component = getNameforGroupingElement(groupingElement);
+				groupingText += addComp_grouping(data, component, groupingElement);
+			}
 			
-			this.nameDescription = $.trim(this.nameDescription);
+			function getNameforGroupingElement(groupingElement){
+				var accumulatedText = "";
+				var discard = {};
+				
+				isCalcAccDesc = false;
+				if(calcGroupingName(stepB(groupingElement, discard)));
+				else if(calcGroupingName(stepC(groupingElement, discard)));
+				
+				return accumulatedText;
+				
+				function calcGroupingName(result){
+					if(result)
+						//accumulatedText += andiUtility.formatForHtml(andiUtility.stripHTML(result));
+						accumulatedText += result;
+					return !!result;
+				}
+			}
+			
+			function addComp_grouping(data, component, groupingElement){
+				var displayText = "";
+		
+				if($.trim(component) !== "")
+					displayText = "<span class='ANDI508-display-grouping'>" + component + "</span>";
+				
+				if(displayText){
+					if(!data.grouping) //create grouping object
+						data.grouping = {};
+						
+					if(!data.grouping.role) //store grouping role
+						data.grouping.role = $(groupingElement).attr("role");
+					
+					data.grouping.text = displayText;
+				}
+				return displayText;
+			}
 		}
-		return this.nameDescription;
-		
-		//This function checks if text is not empty
-		function has(componentText){
-			if(componentText === undefined || componentText === "" || componentText == AndiCheck.emptyString)
-				return false;
-			else
-				return true;
+	}
+	
+	//Support Functions
+	
+	function isEmptyComponent(component, componentType, element){
+		if($.trim(component) == ""){
+			if(element == root){//only record empty components for the root
+				if(!AndiData.data.empty)
+					AndiData.data.empty = {};
+				AndiData.data.empty[componentType] = AndiCheck.emptyString;
+			}
+			return true;
 		}
-	};
+		return false;
+	}
 	
-	//This function will call each component grab.
-	//Parameters:
-	//	elementIsChild:	when true, the child's innerText will not overwrite the parent's innerText
-	this.grabComponents = function(element,elementIsChild){
-		this.role = this.grab_role(element);
+	function hasNodeBeenTraversed(node){
+		if(nodesTraversed.indexOf(node) === -1){
+			nodesTraversed.push(node);
+			return false; //not traversed
+		}
+		return true; //has been traversed
+	}
+	
+	function grab_label(element){
+		var labelElement;
 		
-		//Grab accessible components - set 1:
-		this.imageSrc = 		this.grab_imageSrc(element);
-		this.placeholder = 		this.grab_placeholder(element);
-		this.ariaLabelledby = 	this.grab_ariaLabelledby(element);
-		this.ariaLabel = 		this.grab_ariaLabel(element);
-		this.label = 			this.grab_label(element);
-		//Grab accessible components - set 2: (dependent on set 1)
-		this.alt = 				this.grab_alt(element);
-		this.value = 			this.grab_value(element);
-		if(!elementIsChild) //prevents overwrite
-			this.innerText = 	this.grab_innerText(element);
-		this.caption = 			this.grab_caption(element);
-		this.figcaption = 		this.grab_figcaption(element);
-		//Grab accessible components - set 3: (dependent on set 1,2)
-		this.title = 			this.grab_title(element);
-		this.ariaDescribedby = 	this.grab_ariaDescribedby(element);
-		this.summary = 			this.grab_summary(element);
-		this.legend = 			this.grab_legend(element);
-		this.groupingText = 	this.grab_supertreeComponents(element);
+		//check if label is being used on page
+		var accumulatedText = grab_labelNested(element);
+		if(accumulatedText === undefined)
+			accumulatedText = grab_labelFor(element);
 		
-		this.grab_addOnProperties(element);
+		return (accumulatedText !== undefined) ? [accumulatedText, labelElement] : undefined;
 		
-		this.isAriaHidden = (this.addOnProperties.ariaHidden === "true") ? true: false;
-		this.isPresentation = (this.role === "presentation" || this.role === "none") ? true: false;
-	};
+		//This function attempts to grab the nested label if it exists
+		function grab_labelNested(element){
+			var labelText;
+			//Is the element nested inside a label?
+			var closestLabel = $(element).closest("label","body");
+			if(closestLabel.length){//element is nested inside a label
+				labelElement = closestLabel;
+				//labelText = stepF(closestLabel[0]);
+				//labelText = stepF(closestLabel[0], {}, true);
+				//labelText = andiUtility.getVisibleInnerText(closestLabel[0]);
+				labelText = $(closestLabel).text();
+			}
+			return labelText;
+		}
+		
+		//This function attempts to grab the label with a [for] value that matches the element's id
+		function grab_labelFor(element){
+			var labelText;
+			//Does it contain an id, and therefore, possibly an associated label with 'for' attribute value that matches value of this elemtent's id?
+			if(element.id !== ""){
+				//Loop through the labels that have [for] attributes and search for a match with this id
+				var labelFor;
+				for(var x=0; x<testPageData.allFors.length; x++){
+					if($(testPageData.allFors[x]).attr("for") == element.id){
+						labelFor = $(testPageData.allFors[x]);
+						break;
+					}
+				}
 
-	//AndiData Constructor:
+				if(labelFor){//label with matching [for] was found
+					labelElement = labelFor;
+					//labelText = stepF(labelFor[0], {}, true);
+					//labelText = andiUtility.getVisibleInnerText(labelFor[0]);
+					labelText = $(labelFor).text();
+					
+					//Check if this is referencing an element with a duplicate id
+					andiCheck.areThereAnyDuplicateIds("label[for]", element.id);
+				}
+			}
+			return labelText;
+		}
+	}
 	
-	this.nameDescription = "";
+	function grab_legend(element){
+		var legendText;
+		var fieldset = ($(element).is("fieldset")) ? $(element) : $(element).closest("fieldset");
+		var legend;
+		if(fieldset.length){
+			legend = $(fieldset).find("legend").first();
+			if($(legend).length){
+				//legendText = stepF(legend[0]);
+				legendText = $(legend).text();
+			}
+		}
+		return (legendText !== undefined) ? [legendText, legend] : undefined;
+	}
 	
-	andiAlerter.reset();
+	function grab_figcaption(element){
+		var figcaptionText;
+		var figcaption = $(element).children("figcaption").first();
+		if($(figcaption).length){
+			//figcaptionText = stepF(figcaption[0]);
+			figcaptionText = $(figcaption).text();
+		}
+		return (figcaptionText !== undefined) ? [figcaptionText, figcaption] : undefined;
+	}
 	
-	testPageData.andiElementIndex++;
-	this.andiElementIndex = testPageData.andiElementIndex;
-	
-	$(element)
-		.addClass("ANDI508-element")
-		.attr("data-ANDI508-index",this.andiElementIndex)
-		.on("focus",AndiModule.andiElementFocusability)
-		.on("mouseenter",AndiModule.andiElementHoverability);
-		
-	//Variables used to keep track of status of the element's accessibility
-	this.accessibleComponentsTotal = 0;
-	this.addOnPropertiesTotal = 0;
-	this.namerFound = false;
-	this.describerFound =  false;
-	this.isTabbable = true;
-	this.isAriaHidden = false;
-	this.isPresentation = false;
-	
-	//Variables used to ignore certain components in the output calculation
-	this.ignoreLabel = false;
-	this.ignoreLegend = false;
-	this.ignoreCaption = false;
-	this.ignoreFigcaption = false;
-	this.ignoreAlt = false;
+	function grab_caption(element){
+		var captionText;
+		var caption = $(element).children("caption").first();
+		if($(caption).length){
+			//captionText = stepF(caption[0]);
+			captionText = $(caption).text();
+		}
+		return (captionText !== undefined) ? [captionText, caption] : undefined;
+	}
+};//end textAlternativeComputation
 
-	this.tagName = this.grab_tagName(element);
-	this.role = "";
-	
-	this.subtree = "";
-	this.subtreeText = "";
-	this.imageSrc = "";
-	this.placeholder = "";
-	this.ariaLabelledby = "";
-	this.ariaLabel = "";
-	this.label = "";
-	this.alt = "";
-	this.value = "";
-	this.innerText = "";
-	this.caption = "";
-	this.figcaption = "";
-	this.title = "";
-	this.ariaDescribedby = "";
-	this.summary = "";
-	this.legend = "";
-	this.groupingText = "";
-	
-	//Object used for collecting addOnProperties. Will be inserted into andi_data
-	this.addOnProperties = {};
-	this.addOnPropOutput = "";
-}
 //Public Methods for AndiData
-AndiData.prototype.attachDataToElement = function(element){
-	//Store andi_data onto the html element
-	$(element).data("ANDI508",{
-		ariaLabelledby: this.ariaLabelledby,
-		ariaLabel: 		this.ariaLabel,
-		label: 			this.label,
-		alt: 			this.alt,
-		value: 			this.value,
-		innerText: 		this.innerText,
-		title: 			this.title,
-		ariaDescribedby:this.ariaDescribedby,
-		summary:		this.summary,
-		caption: 		this.caption,
-		figcaption: 	this.figcaption,
-		legend: 		this.legend,
-		subtree:		this.subtree,
-		groupingText:	this.groupingText,
-		
-		placeholder:	this.placeholder,
-		imageSrc:		this.imageSrc,
-		tagName:		this.tagName,
-		scope:			this.scope,
-		headers:		this.headers,
-		
-		namerFound:		this.namerFound,
-		describerFound:	this.describerFound,
-		isTabbable:		this.isTabbable,
-		isAriaHidden:	this.isAriaHidden,
-		isPresentation:	this.isPresentation,
-		
-		ignoreLabel: 		this.ignoreLabel,
-		ignoreLegend: 		this.ignoreLegend,
-		ignoreCaption: 		this.ignoreCaption,
-		ignoreFigcaption: 	this.ignoreFigcaption,
-		ignoreAlt: 			this.ignoreAlt,
-		
-		addOnPropOutput:			this.addOnPropOutput,
-		addOnProperties:			this.addOnProperties,
-		addOnPropertiesTotal: 		this.addOnPropertiesTotal,
-		
-		accessibleComponentsTotal: 	this.accessibleComponentsTotal,
+AndiData.getAddOnProps = function(element, elementData, extraProps){
+	//addOnProps[0] will be output generated by the add on properties. The rest are the properties.
+	var addOnProps = [""];
+	var prop;
 
-		dangers:	andiAlerter.dangers,
-		warnings:	andiAlerter.warnings,
-		cautions:	andiAlerter.cautions
-	});
+	//===Get properties filtered by attribute name
+	if(hasProp("aria-owns")){
+		displayAsId(prop);
+		pushProp();
+	}
+	if(hasProp("aria-activedescendant")){
+		if(hasRole("group,textbox,combobox,grid,listbox,menu,menubar,radiogroup,row,rowgroup,select,tablist,toolbar,tree,treegrid")){
+			if(prop.val){
+				var activedescendant = document.getElementById(prop.val);
+				if(activedescendant && $(activedescendant).is(":shown")){//active descendant is visible
+					//TODO: check if it's a true descendant
+					var text = andiUtility.getVisibleInnerText(activedescendant);
+					if(text)
+						prop.out = text += " selected";
+				}
+				displayAsId(prop); 
+			}
+		}
+		pushProp();
+	}
+	if(hasProp("aria-checked")){
+		if(hasRole("option,radio,switch,menuitemcheckbox,menuitemradio,treeitem"))
+			prop.out = (prop.val === "true") ? "checked" : "not checked";
+		else if(hasRole("checkbox"))
+			prop.out = (prop.val === "true") ? "checked" : (prop.val === "mixed") ? "partially checked" : "unchecked";
+		pushProp();
+	}
+	if(hasProp("aria-controls")){
+		displayAsId(prop);
+		prop.out = "controls element";
+		pushProp();
+	}
+	if(hasProp("aria-details")){
+		pushProp();
+	}
+	if(hasProp("aria-disabled") && prop.val === "true"){
+		prop.out = "unavailable";
+		pushProp();
+	}
+	if(hasProp("aria-errormessage")){
+		pushProp();
+	}
+	if(hasProp("aria-haspopup")){
+		prop.out = (prop.val === "true" || prop.val === "menu") ? "menu" : (prop.val === "listbox") ? "listbox" : (prop.val === "tree") ? "tree" : (prop.val === "grid") ? "grid" : (prop.val === "dialog") ? "dialog" : "";
+		pushProp();
+	}
+	if(hasProp("aria-hidden")){
+		prop.out = "";
+		pushProp();
+	}
+	if(hasProp("aria-invalid") && prop.val === "true"){
+		prop.out = "invalid entry";
+		pushProp();
+	}
+	if(hasProp("aria-keyshortcuts")){
+		pushProp();
+	}
+	if(hasProp("aria-multiline")){
+		if(prop.val === "true" && hasRole("textbox,searchbox"))
+			prop.out = "multi-line";
+		pushProp();
+	}
+	if(hasProp("aria-multiselectable")){
+		if(prop.val === "true" && hasRole("grid,listbox,tablist,tree,treegrid"))
+			prop.out = "multi-selectable";
+		pushProp();
+	}
+	if(hasProp("aria-placeholder")){
+		pushProp();
+	}
+	if(hasProp("aria-pressed")){
+		if(hasRole("button","button,input[type=button],input[type=submit],input[type=image],input[type=reset]"))
+			prop.out = (prop.val === "true") ? "pressed" : "not pressed";
+		pushProp();
+	}
+	if(hasProp("aria-roledescription")){
+		pushProp();
+	}
+	if(hasProp("aria-selected")){
+		if(hasRole("gridcell,option,row,tab,columnheader,rowheader,treeitem"))
+			prop.out = (prop.val === "true") ? "selected" : "";
+		pushProp();
+	}
+	if(hasProp("contenteditable")){
+		if(prop.val === "")//set to true
+			prop.val = "true";
+		pushProp();
+	}
+
+	//===Get properties filtered by role/tag name
+	
+	if($(element).is("input")){
+		//checked
+		if(hasRole("","input[type=checkbox],input[type=radio]")){
+			prop = {name:"", val:""};
+			if(element.checked)
+				prop.out = "checked";
+			else
+				prop.out = "not checked";
+			pushProp();
+		}
+	}
+	
+	//expanded/collapsed
+	var expandedInOutput = false;
+	if(!browserSupports.isIE && $(element).is("summary")){
+		if($(element).closest("details").attr("open"))
+			prop = {name:"open", val:"open", out:"expanded"};
+		else
+			prop = {name:"", val:"", out:"collapsed"};
+		pushProp();
+	}
+	if(hasProp("aria-expanded")){
+		if(!expandedInOutput && hasRole("button,combobox,document,link,section,sectionhead,window","button,a,section"))
+			prop.out = (prop.val === "true") ? "expanded" : "collapsed";
+		pushProp();
+	}
+	
+	//heading level
+	if(hasRole("heading","h1,h2,h3,h4,h5,h6")){
+		var headingLevel = "2"; //default to 2 (defined in spec)
+		if($(element).is("[role=heading]")){
+			var ariaLevel = $(element).attr("aria-level");
+			
+			if(parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel)
+				headingLevel = ariaLevel;
+		}
+		else{//native heading tag
+			headingLevel = $(element).prop("tagName").charAt(1);
+		}
+		prop = {name:"", val:"", out:"heading level " + headingLevel};
+		pushProp();
+	}
+	
+	//multiple
+	if($(element).is("select,input[type=file]")){
+		if(hasProp("multiple")){
+			prop.out = "multi-selectable";
+			pushProp();
+		}
+	}
+	
+	//readonly
+	var readonlyInOutput = false;
+	if($(element).is("input:not([type=radio],[type=checkbox]),textarea")){
+		if(hasProp("readonly")){
+			readonlyInOutput = true;
+			prop.out = "readonly";
+			pushProp();
+		}
+	}
+	if(hasProp("aria-readonly")){
+		if(!readonlyInOutput && prop.val === "true" && hasRole("checkbox,combobox,grid,gridcell,listbox,radio,radiogroup,slider,spinbutton,textbox,columnheader,menuitemcheckbox,menuitemradio,rowheader,searchbox,switch,treegrid","input:not([type=submit],[type=button],[type=image],[type=reset]),select,textarea")){
+			readonlyInOutput = true;
+			prop.out = "readonly";
+		}	
+		pushProp();
+	}
+	
+	//required
+	var requiredInOutput = false;
+	if($(element).is("input:not([type=submit],[type=button],[type=image],[type=reset]),textarea,select")){
+		if(hasProp("required")){
+			if(!readonlyInOutput){//don't put required in output, if readonly is already there
+				requiredInOutput = true;
+				prop.out = "required";
+			}
+			pushProp();
+		}
+	}
+	if(hasProp("aria-required")){
+		if(!readonlyInOutput && hasRole("checkbox,combobox,gridcell,listbox,radio,radiogroup,slider,spinbutton,textbox","input:not([type=submit],[type=button],[type=image],[type=reset]),select,textarea"))
+			prop.out = (!requiredInOutput && prop.val === "true") ? "required" : "";
+		pushProp();
+	}
+	
+	//radio button index
+	if(hasRole("radio,menuitemradio","input[type=radio]")){
+		prop = {name:"", val:""};
+		var group, radioIndex, radioCount = 0;
+		if(elementData.role === "radio"){
+			group = $(element).closest("[role=radiogroup]").find("[role=radio]");
+		}
+		else if(elementData.role === "menuitemradio"){
+			group = $(element).closest("[role=group],[role=menu],[role=menubar]").find("[role=menuitemradio]");
+		}
+		else{//input[type=radio]
+			var name = $(element).attr("name");
+			if(name){ //get all radio buttons with this name
+				group = $("#ANDI508-testPage input[type=radio][name]").filter(function(){ return $(this).attr("name") === name; });
+			}
+			else //no name attribute. group of 1
+				group = $(element);
+		}
+		if(group){
+			$(group).filter(":shown").each(function(){
+				radioCount++;
+				if($(this).is(element)) //check if the radio button is this one
+					radioIndex = radioCount; //set the index
+			});				
+			prop.out = radioIndex + " of " + radioCount;
+		}
+		pushProp();
+	}
+	
+	//sort
+	if(hasRole("columnheader,rowheader","th")){
+		if(hasProp("aria-sort")){
+			prop.out = (prop.val === "ascending") ? "ascending" : (prop.val === "descending") ? "descending" : (prop.val === "other") ? "other" : "";
+			pushProp();
+		}
+	}
+	else if(hasRole("link","a") && TestPageData.page_using_table){
+		var header = $(element).parent();//using .parent() instead of .closest() to help with performance
+		if($(header).is("th,[role=columnheader],[role=rowheader]")){
+			var ariaSort = $(header).attr("aria-sort");
+			if(ariaSort){
+				prop = {
+					name:	"aria-sort",
+					val:	ariaSort,
+					out:	(ariaSort === "ascending") ? "ascending" : (ariaSort === "descending") ? "descending" : (ariaSort === "other") ? "other" : ""
+				};
+				pushProp();
+			}
+		}
+	}
+	
+	if(hasRole("range,scrollbar,separator,slider,spinbutton")){
+		if(hasProp("aria-valuemax"))
+			pushProp();
+		if(hasProp("aria-valuemin"))
+			pushProp();
+		
+		var valuetextInOutput = false;
+		if(hasRole("range,separator")){
+			if(hasProp("aria-valuetext")){
+				valuetextInOutput = true;
+				prop.out = prop.val;
+				pushProp();
+			}
+		}
+		if(hasProp("aria-valuenow")){
+			if(!valuetextInOutput) //valuetext overrides valuenow
+				prop.out = prop.val;
+			pushProp();
+		}
+	}
+	
+	//===Get properties already in AndiData
+	if(elementData.accesskey){
+		prop = {
+			name:"accesskey",
+			val: (elementData.accesskey !== " ") ? $.trim(elementData.accesskey.toUpperCase()) : " ",
+			out: "accesskey \"" + elementData.accesskey + "\""
+		};
+		pushProp();
+	}
+	if(elementData.tabindex){
+		prop = {name:"tabindex", val:elementData.tabindex};
+		pushProp();
+	}
+	
+	//===Get properties added by the module
+	if(extraProps){
+		for(var p=0; p<extraProps.length; p++){
+			if(extraProps[p]){
+				if(typeof extraProps[p] == "string")
+					prop = {name: extraProps[p], val: $(element).attr(extraProps[p])};
+				else //typeof array (val needed extra logic that was done in module)
+					prop = {name: extraProps[p][0], val: extraProps[p][1]};
+
+				if(prop.val)
+					pushProp();
+			}
+		}
+	}
+		
+	//This function determines if the element has a role or tagname
+	function hasRole(roles, tagNames){
+		if(roles.length > 0)
+			roles = "[role=" + roles.replace(/,+/g, "],[role=") + "]";
+		return $(element).isSemantically(roles, tagNames);
+	}
+	//This function determines if the element has an attribute
+	function hasProp(attribute){
+		prop = {
+			name:	attribute,
+			val:	$(element).attr(attribute)
+		};
+		if(prop.val !== undefined)
+			return true;
+		return false;
+	}
+	//This function concatenates the output to addOnProps[0] and adds the property to the array
+	function pushProp(){
+		if(prop.out)
+			addOnProps[0] += prop.out + ", ";
+		addOnProps.push(prop);
+	}
+	
+	function displayAsId(prop){
+		prop.val = "<span class='ANDI508-display-id'>#"+prop.val.replace(andiUtility.whitespace_regex," #")+"</span>";
+	}
+	
+	if(addOnProps[0] !== "")//Slice off last two characters: the comma and space: ", "
+		addOnProps[0] = addOnProps[0].slice(0, -2);
+	
+	return addOnProps; //returns an array
+};
+AndiData.attachDataToElement = function(element){
+	//Store elementData onto the html element's data-andi508 attribute
+	
+	//TODO: add alerts directly to data object instead of copying here.
+	AndiData.data.dangers = andiAlerter.dangers;
+	AndiData.data.warnings = andiAlerter.warnings;
+	AndiData.data.cautions = andiAlerter.cautions;
+	
+	$(element).data("andi508", AndiData.data);
 	
 	//Attach danger class
-	if(andiAlerter.dangers.length > 0){
+	if(AndiData.data.dangers.length > 0)
 		$(element).addClass("ANDI508-element-danger");
-	}
 	//Highlight this element
-	if(AndiSettings.elementHighlightsOn){
+	if(AndiSettings.elementHighlightsOn)
 		$(element).addClass("ANDI508-highlight");
+};
+
+AndiData.addComp = function(data, componentType, component, hasNodebeenTraversed){
+	var displayText = "";
+
+	if(typeof component === "string"){
+		if($.trim(component) !== ""){
+			displayText = "<span class='ANDI508-display-"+componentType+"'>" +
+				andiCheck.checkCharacterLimit(component, componentType) + "</span>";
+		}
 	}
+	else{//component is an array [text, refElement, id]
+		if($.trim(component[0]) !== "" || component[2]){ //add the text
+			displayText = "<span class='ANDI508-display-"+componentType+"'>";
+			
+			if(component[2]) //add the referenced id
+				displayText += "<span class='ANDI508-display-id'>#" + component[2] + "</span>";
+			
+			if(component[1]) //ref element laser
+				displayText += andiLaser.createLaserTarget(component[1], andiUtility.formatForHtml(andiUtility.stripHTML(component[0]))) + "</span>";
+		}
+	}
+	
+	if(displayText){
+		if(componentType === "ariaLabelledby" || componentType === "ariaDescribedby"){
+			if(data[componentType])
+				data[componentType].push(displayText);//push to array
+			else
+				data[componentType] = [displayText];//create array
+		}
+		else{//do not create an array
+			if(data[componentType])
+				data[componentType] += displayText;//append
+			else
+				data[componentType] = displayText;//create
+		}
+	}
+	
+	//if node is traversed return empty string, otherwise return displayText
+	return (!hasNodebeenTraversed) ? displayText : "";
 };
 
 //This object sets up the check logic to determine if an alert should be thrown.
 function AndiCheck(){
-	//=====================//
 	//==Mult-Point Checks==//
-	//=====================//
 
 	//This function is used to check for alerts related to focusable elements
 	this.commonFocusableElementChecks = function(andiData, element){
 		this.wasAccessibleNameFound(andiData);
-		this.areThereComponentsThatShouldntBeCombined();
-		this.areAnyComponentsEmpty();
+		this.areThereComponentsThatShouldntBeCombined(andiData);
+		//this.areAnyComponentsEmpty();
 		this.areThereAnyMisspelledAria(element);
-		this.areThereAnyDuplicateFors(element);
+		this.areThereAnyDuplicateFors(element, andiData);
 		this.areThereAnyTroublesomeJavascriptEvents(element);
 		this.clickableAreaCheck(element,andiData);
 		this.hasThisElementBeenHiddenFromScreenReader(element,andiData.isTabbable);
@@ -3080,15 +3042,13 @@ function AndiCheck(){
 	this.commonNonFocusableElementChecks = function(andiData, element, elementMustHaveName){
 		if(elementMustHaveName)
 			this.wasAccessibleNameFound(andiData);
-		this.areThereComponentsThatShouldntBeCombined();
-		this.areAnyComponentsEmpty();
+		this.areThereComponentsThatShouldntBeCombined(andiData);
+		//this.areAnyComponentsEmpty();
 		this.areThereAnyMisspelledAria(element);
 		this.hasThisElementBeenHiddenFromScreenReader(element);
 	};
 	
-	//====================//
 	//==Test Page Checks==//
-	//====================//
 	
 	//This function will count the number of visible fieldset/figure/table tags and compare to the number of legend/figcaption/caption tags
 	//If there are more parents than children, it will generate an alert with the message and the counts.
@@ -3135,80 +3095,52 @@ function AndiCheck(){
 			andiAlerter.throwAlert(alert_0073,alert_0073.message,0);
 	};
 	
-	//==================//
 	//==Element Checks==//
-	//==================//
 	
 	//This function resets the accessibleComponentsTable
 	//returns true if components were found that should appear in the accessibleComponentsTable
-	//Parameters:
-	//	elementData:			elementData object from data-ANDI508 property
-	//	additionalComponents:	array of additional components that are unique to a module
-	this.wereComponentsFound = function(elementData,additionalComponents){
-		var accessibleComponentsTable = $("#ANDI508-accessibleComponentsTable");
-		var total = elementData.accessibleComponentsTotal;
-
-		//If a additionalComponents were provided by the module for this component
-		if(additionalComponents){
-			//Add them to the accessibleComponentsTotal for display purposes
-			var additionalComponentsFound = 0;
-			for(var x=0; x<additionalComponents.length; x++){
-				if((additionalComponents[x] !== undefined) && ($.trim(additionalComponents[x]) !== ""))
-					additionalComponentsFound++;
-			}
-			total += additionalComponentsFound;
-		}
+	this.wereComponentsFound = function(isTabbable, accessibleComponentsTableBody){
+		//calculate total
+		var total = $(accessibleComponentsTableBody).find("tr").length;
 		//Display total
 		$("#ANDI508-accessibleComponentsTotal").html(total);
 		
-		if(total === 0){//Not components. Display message in table
+		if(total === 0){//No components. Display message in table
 			var alertLevel = "danger"; //tabbable elements with no components, default to red
-			if(!elementData.isTabbable)
+			if(!isTabbable)
 				alertLevel = "caution"; //non-tabbable elements with no components, default to yellow
-			$(accessibleComponentsTable).children("tbody").first().html(
+			$(accessibleComponentsTableBody).html(
 				"<tr><th id='ANDI508-accessibleComponentsTable-noData' class='ANDI508-display-"+
 				alertLevel+"'>No accessibility markup found for this Element.</th></tr>");
-			return false;
-		}
-		else{//There are components, prepare/empty the table
-			$(accessibleComponentsTable).children("tbody").children("tr").remove(); //Remove previous table contents
-			return true;
 		}
 	};
 
 	//This function will throw alert_0001 depending on the tagName passed
 	this.wasAccessibleNameFound = function(elementData){
-		var tagNameText = elementData.tagName;
-		if(tagNameText === "iframe"){
-			if(elementData.isTabbable){
-				//Element is iframe in the tab order
-				if(!elementData.namerFound && !elementData.describerFound){
-					//Iframe in tab order has no name warning
-					andiAlerter.throwAlert(alert_0007);
-				}
-				else{
-					//iframe in tab order has name caution
-					andiAlerter.throwAlert(alert_0124);
-				}
-			}
-		}
-		else if(!elementData.namerFound && !elementData.describerFound){
+		var tagNameText = elementData.tagNameText;
+		if(!elementData.accName){
 			var placeholderCheck = false;
-			if(elementData.isTabbable && !elementData.subtree){
-				var message;
+			var message;
+			if(tagNameText === "iframe"){
+				if(elementData.tabindex)
+					andiAlerter.throwAlert(alert_0007);
+				else//no tabindex
+					andiAlerter.throwAlert(alert_0009);
+			}
+			else if(elementData.isTabbable){
 				//Does this element have a role?
 				if(elementData.role){
 					var roleCapitalized = elementData.role.charAt(0).toUpperCase()+elementData.role.slice(1);
 					message = roleCapitalized+" Element"+alert_0008.message;
 				}
 				//Is this an input element, excluding input[image]?
-				else if(tagNameText.includes("input") && tagNameText != "input[image]"){
+				else if(tagNameText.includes("input") && tagNameText != "input[type=image]"){
 					switch(tagNameText){
-					case "input[text]":
-						message = "Text box"+alert_0001.message; placeholderCheck = true; break;
-					case "input[radio]":
+					case "input[type=text]":
+						message = "Textbox"+alert_0001.message; placeholderCheck = true; break;
+					case "input[type=radio]":
 						message = "Radio Button"+alert_0001.message; break;
-					case "input[checkbox]":
+					case "input[type=checkbox]":
 						message = "Checkbox"+alert_0001.message; break;
 					default:
 						message = "Input Element"+alert_0001.message;
@@ -3217,15 +3149,11 @@ function AndiCheck(){
 				//All other elements:
 				else switch(tagNameText){
 					case "a":
-						if(elementData.imageSrc)
-							message = "Image Link"+alert_0003.message; //It's a link containing an image.
-						else
-							message = "Link"+alert_0002.message;
+						message = "Link"+alert_0002.message;
 						break;
 					case "img":
-					case "input[image]":
-						message = "Image"+alert_0003.message;
-						break;
+					case "input[type=image]":
+						message = "Image"+alert_0003.message; break;
 					case "button":
 						message = "Button"+alert_0002.message; break;
 					case "select":
@@ -3239,12 +3167,14 @@ function AndiCheck(){
 					case "th":
 					case "td":
 						message = "Table Cell"+alert_0002.message; break;
-					case "input[search]":
-					case "input[url]":
-					case "input[tel]":
-					case "input[email]":
-					case "input[password]":
-						placeholderCheck = true;
+					case "input[type=search]":
+					case "input[type=url]":
+					case "input[type=tel]":
+					case "input[type=email]":
+					case "input[type=password]":
+						placeholderCheck = true; break;
+					case "canvas":
+						message = "Canvas"+alert_0008.message; break;
 					default:
 						message = "Element"+alert_0002.message;
 				}
@@ -3252,9 +3182,10 @@ function AndiCheck(){
 			else{//not tabbable
 				switch(tagNameText){
 				case "img":
-				case "input[image]":
-					message = "Image"+alert_0003.message;
-					break;
+				case "input[type=image]":
+					message = "Image"+alert_0003.message; break;
+				case "canvas":
+					message = "Canvas"+alert_0008.message; break;
 				}
 			}
 			
@@ -3265,6 +3196,14 @@ function AndiCheck(){
 				else //Element has no accessible name and no placeholder
 					andiAlerter.throwAlert(alert_0001,message);
 			}
+			
+			if(elementData.components.ariaDescribedby)
+				//element has no name but has ariaDescribedby
+				andiAlerter.throwAlert(alert_0021);
+				
+			if(elementData.components.legend)
+				//element has no name but has legend
+				andiAlerter.throwAlert(alert_0022);
 		}
 	};
 
@@ -3295,12 +3234,12 @@ function AndiCheck(){
 
 	//This function will search the html body for labels with duplicate 'for' attributes
 	//If found, it will throw alert_0012 with a link pointing to the ANDI highlighted element with the matching id.
-	this.areThereAnyDuplicateFors = function(element){
-		if(testPageData.page_using_label){
+	this.areThereAnyDuplicateFors = function(element, data){
+		if(testPageData.page_using_label && data.components.label){
 			var id = $.trim($(element).prop("id"));
 			if(id && testPageData.allFors.length > 1){
 				var forMatchesFound = 0;
-				for (x=0; x<testPageData.allFors.length; x++){
+				for(var x=0; x<testPageData.allFors.length; x++){
 					if(id === $.trim($(testPageData.allFors[x]).attr("for"))){
 						forMatchesFound++;
 						if(forMatchesFound == 2) break; //duplicate found so stop searching, for performance
@@ -3311,13 +3250,31 @@ function AndiCheck(){
 			}
 		}
 	};
+	
+	//This function goes through the LabelFor array and checks if is pointing to valid form element
+	this.areLabelForValid = function(){
+		if(testPageData.page_using_label){
+			var referencedElement;
+			for(var f=0; f<testPageData.allFors.length; f++){
+				referencedElement = document.getElementById(testPageData.allFors[f].htmlFor);
+				if(referencedElement && $(referencedElement).hasClass("ANDI508-element")){
+					if($(referencedElement).isSemantically("[role=button]","input[type=submit],input[type=button],input[type=reset],input[type=image],button"))
+						//is a button
+						andiAlerter.throwAlertOnOtherElement($(referencedElement).attr("data-andi508-index"), alert_0092);
+					else if(!$(referencedElement).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]","input,select,textarea,[contenteditable=true],[contenteditable='']"))
+						//is not a form element
+						andiAlerter.throwAlertOnOtherElement($(referencedElement).attr("data-andi508-index"), alert_0091);
+				}
+			}
+		}
+	};
 
 	//This function will throw alert_0112 if commonly troublesome Javascript events are found on the element.
 	this.areThereAnyTroublesomeJavascriptEvents = function(element){
 		var events = "";
 		if($(element).is("[onblur]"))
 			events += "[onBlur] ";
-		if($(element).is("[onchange]"))
+		if($(element).is("input,select,textarea") && $(element).is("[onchange]"))
 			events += "[onChange] ";
 		if($(element).is("[ondblclick]"))
 			events += "[ondblclick] ";
@@ -3326,19 +3283,17 @@ function AndiCheck(){
 	};
 	
 	//This function will check the clickable area of the element.
-	this.clickableAreaCheck = function(element,andiData){
-		var label = andiData.label;
-		if($(element).is("input[type=checkbox],input[type=radio]") && !label){
+	this.clickableAreaCheck = function(element, andiData){
+		if(!andiData.components.label && $(element).is("input[type=checkbox],input[type=radio]")){
 			//the element is a radio button or checkbox and does not have an associated label
 			var height = $(element).height();
 			var width = $(element).width();
 			var clickableAreaLimit = 21; //px
-			
 			if(height < clickableAreaLimit && width < clickableAreaLimit){
 				//The height and with of the element is smaller than the clickableAreaLimit
-				if(andiData.tagName == "input[radio]")
+				if(andiData.tagNameText == "input[type=radio]")
 					andiAlerter.throwAlert(alert_0210,["radio button"]);
-				else if(andiData.tagName == "input[checkbox]")
+				else if(andiData.tagNameText == "input[type=checkbox]")
 					andiAlerter.throwAlert(alert_0210,["checkbox"]);
 			}
 		}
@@ -3361,17 +3316,16 @@ function AndiCheck(){
 		if(TestPageData.page_using_ariahidden){
 			if(isAriaHidden(element))
 				andiAlerter.throwAlert(alert_0181);
-			
-			//This function recursively travels up the anscestor tree looking for aria-hidden=true.
-			//Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
-			function isAriaHidden(element){
-				if($(element).is("#ANDI508-testPage"))
-					return false;
-				else if($(element).attr("aria-hidden") === "true")
-					return true;
-				else
-					return isAriaHidden($(element).parent());
-			}
+		}
+		//This function recursively travels up the anscestor tree looking for aria-hidden=true.
+		//Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
+		function isAriaHidden(element){
+			if($(element).is("#ANDI508-testPage"))
+				return false;
+			else if($(element).attr("aria-hidden") === "true")
+				return true;
+			else
+				return isAriaHidden($(element).parent());
 		}
 	};
 	
@@ -3379,10 +3333,13 @@ function AndiCheck(){
 	//Returns true if the element is disabled
 	this.isThisElementDisabled = function(element){
 		if(element.disabled){
-			testPageData.disabledElementsCount++;
-			return true;
+			//if the element has aria-hidden=true, assume intentiality behind making this element disabled. Therefore don't complain about this element's disabled state.
+			if($(element).attr("aria-hidden") !== "true"){
+				testPageData.disabledElementsCount++;
+				return true;
+			}
 		}
-		else return false;
+		return false;
 	};
 	
 	//This function will throw alert_0250 if there are disabled elements
@@ -3390,24 +3347,30 @@ function AndiCheck(){
 		if(testPageData.disabledElementsCount > 0)
 			andiAlerter.throwAlert(alert_0250,[testPageData.disabledElementsCount, type],0);
 	};
+	
+	//This function will throw an alert if the canvas has no focusable children
+	this.lookForCanvasFallback = function(element){
+		if($(element).is("canvas")){
+			if(!$(element).children().filter(":focusable").length)
+				andiAlerter.throwAlert(alert_0124);
+			else //has focusable fallback content
+				andiAlerter.throwAlert(alert_0127);
+		}
+	};
 
 	//This function will scan for deprecated HTML relating to accessibility associated with the element 
 	this.detectDeprecatedHTML = function(element){
 		if(document.doctype !== null && document.doctype.name == "html" && !document.doctype.publicId && !document.doctype.systemId){
 			var message;
-
 			if($(element).is("table") && $(element).attr("summary")){
 				var role = $(element).attr("role");
-				if(role !== "presentation" && role !== "none"){
+				if(role !== "presentation" && role !== "none")
 					message = ["attribute [summary] in &lt;table&gt;, use &lt;caption&gt; or [aria-label] instead"];
-				}
 			}
-			else if($(element).is("a") && $(element).attr("name")){
+			else if($(element).is("a") && $(element).attr("name"))
 				message = ["attribute [name] in &lt;a&gt;, use [id] instead"];
-			}
-			else if($(element).is("td") && $(element).attr("scope")){
+			else if($(element).is("td") && $(element).attr("scope"))
 				message = ["attribute [scope] on &lt;td&gt;, in HTML5 [scope] only valid on &lt;th&gt;"];
-			}
 			
 			if(message){
 				if($(element).hasClass("ANDI508-element"))
@@ -3418,62 +3381,47 @@ function AndiCheck(){
 		}
 	};
 	
-	//============================//
 	//==Component Quality Checks==//
-	//============================//
 	
-	//This function will throw alert_0101 if the alert_0101.list is not empty
-	this.areThereComponentsThatShouldntBeCombined = function(){
-		if(alert_0101.list !== "")
-			andiAlerter.throwAlert(alert_0101,[alert_0101.list]);
-	};
-	//This function will compare components that shouldn't be combined.
-	//Parameters:
-	//	componentToTestAgainst: Component to test against
-	//	spaceDelimitedListOfComponents: List of components (space delimited) that shouldn't be combined with componentToTestAgainst.
-	//									Will test against aria-label aria-labelledby aria-describedby title
-	//	andiData:	AndiData object
-	this.improperCombination = function(componentToTestAgainst, spaceDelimitedListOfComponents, andiData){
-		var improperCombinationFoundList = "";
-		var components = spaceDelimitedListOfComponents.split(" ");
-		for(var x=0; x<components.length; x++){
-			if(andiData[components[x]] && andiData[components[x]] != AndiCheck.emptyString)
-				improperCombinationFoundList += "["+components[x]+"] ";
+	//this function will throw an alert if there are missingReferences
+	this.areThereMissingReferences = function(attribute, missingReferences){
+		//Check if any ids were not found
+		if(missingReferences.length === 1){//one reference is missing
+			andiAlerter.throwAlert(alert_0063, [attribute, missingReferences]);
 		}
-		if(improperCombinationFoundList !== "")
-			alert_0101.list += componentToTestAgainst + " with " + $.trim(improperCombinationFoundList);
+		else if(missingReferences.length > 1){//more than one reference missing
+			andiAlerter.throwAlert(alert_0065, [attribute, missingReferences]);
+		}
 	};
 	
-	//This function will add the component to the empty component list 
-	this.addToEmptyComponentList = function(component){
-		//if the component is not already in the list
-		if(!alert_0131.list.includes(component))
-			alert_0131.list += " [" + component + "=\"\"]";
-		return AndiCheck.emptyString;
+	//This function will throw alert_0101
+	this.areThereComponentsThatShouldntBeCombined = function(data){
+		if(data.components.ariaLabel && data.components.ariaLabelledby)
+			andiAlerter.throwAlert(alert_0101,["[aria-label] with [aria-labelledby]"]);
 	};
-	//This function generates an alert_0131 if the alert_0131.list is not empty
-	this.areAnyComponentsEmpty = function(){
-		if(alert_0131.list !== "")
-			andiAlerter.throwAlert(alert_0131,[alert_0131.list]);
-	};
-		
+	
 	//This function checks the character length of the componentText.
 	//If it exceeds the number defined in the variable characterLimiter, it will throw an alert.
-	//Returns true if the limit was exceeded.
-	this.checkCharacterLimit = function(componentText, alertObject){
-		if(componentText.length > AndiCheck.characterLimiter){
-			andiAlerter.throwAlert(alertObject);
-			return true;
+	//If the limit was exceeded, it will insert a scissors unicode
+	this.checkCharacterLimit = function(componentText, componentName){
+		if( componentText &&
+			(componentName === "ariaLabel" || componentName === "title" || componentName === "alt") &&
+			componentText.length > AndiCheck.characterLimiter
+		){
+			if(componentName === "ariaLabel")
+				componentName = "aria-label";
+			andiAlerter.throwAlert(alert_0151,[componentName]);
+			return insertCharacterLimitMark(componentText);
 		}
-		return false;
-	};
-	//This function inserts a pipe character into the componentText at the characterLimiter position
-	//The color of the pipe is the color of a warning
-	this.insertCharacterLimitMark = function(componentText){
-		var returnThis = andiUtility.formatForHtml(componentText.substring(0, AndiCheck.characterLimiter))+
-			"<span class='ANDI508-display-warning'>|</span>"+
-			andiUtility.formatForHtml(componentText.substring(AndiCheck.characterLimiter,componentText.length));
-		return returnThis;
+		return componentText;
+		
+		//This function inserts a pipe character into the componentText at the characterLimiter position
+		//The color of the pipe is the color of a warning
+		function insertCharacterLimitMark(componentText){//inject scissors unicode
+			return andiUtility.formatForHtml(componentText.substring(0, AndiCheck.characterLimiter)) +
+				"<span class='ANDI508-display-warning'>&hellip;&#9986;&hellip;</span>" +
+				andiUtility.formatForHtml(componentText.substring(AndiCheck.characterLimiter,componentText.length));
+		}
 	};
 }
 
@@ -3481,7 +3429,6 @@ function AndiCheck(){
 function AndiAlerter(){
 	//These functions will throw Danger/Warning/Caution Alerts
 	//They will add the alert to the alert list and attach it to the element
-	//Parameters
 	//	alertObject:	the alert object
 	//	customMessage: 	(optional) message of the alert. If not passed will use default alertObject.message
 	//	index: 	(optional) pass in 0 if this cannot be linked to an element.  If not passed will use andiElementIndex
@@ -3505,18 +3452,16 @@ function AndiAlerter(){
 	//It is used to add an alert to a related (different) element than the element being currently analyzed.
 	//For example: non-unique link text: since the second instance triggers the alert, use this method to add the alert to the first instance
 	//NOTE: this function will not check if the alert has already been placed on the element, therefore such logic should be added by the caller before this function is called.
-	//Parameters
 	//	index:			andiElementIndex of the element
 	//	alertObject:	the alert object
 	//	customMessage: 	(optional) message of the alert. If not passed will use default alertObject.message
 	this.throwAlertOnOtherElement = function(index, alertObject, customMessage){
 		var message = alertMessage(alertObject, customMessage);
-		$("#ANDI508-testPage [data-ANDI508-index="+index+"]").data("ANDI508")[alertObject.level+"s"].push(messageWithHelpLink(alertObject, message));
+		$("#ANDI508-testPage [data-andi508-index="+index+"]").data("andi508")[alertObject.level+"s"].push(messageWithHelpLink(alertObject, message));
 		this.addToAlertsList(alertObject, message, index);
 	};
 	
 	//This private function will add an icon to the message
-	//Parameters
 	//	alertObject:	the alert object
 	//	customMessage: 	(optional) message of the alert. if string, use the string. If array, get values from array
 	function alertMessage(alertObject, customMessage){
@@ -3552,7 +3497,6 @@ function AndiAlerter(){
 	//This function is not meant to be used directly.
 	//It will add a list item into the Alerts list.
 	//It can place a link which when followed, will move focus to the field relating to the alert.
-	//Parameters: 
 	//	alertObject:	the alert object	
 	//  message:		text of the alert message
 	//  elementIndex:	element to focus on when link is clicked. expects a number. pass zero 0 if alert is not relating to one particular element
@@ -3561,7 +3505,7 @@ function AndiAlerter(){
 		var listItemHtml = " tabindex='-1' ";
 		if(elementIndex !== 0){
 			//Yes, this alert should point to a focusable element. Insert as link:
-			listItemHtml += "href='javascript:void(0)' data-ANDI508-relatedIndex='"+elementIndex+"' aria-label='"+alertObject.level+": "+message+" Element #"+elementIndex+"'>"+
+			listItemHtml += "href='javascript:void(0)' data-andi508-relatedindex='"+elementIndex+"' aria-label='"+alertObject.level+": "+message+" Element #"+elementIndex+"'>"+
 			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
 			message+"</a></li>";
 		}
@@ -3626,7 +3570,7 @@ function AndiAlerter(){
 			$("#ANDI508-alerts-list").append(
 				"<h3 id='ANDI508-numberOfAccessibilityAlerts' class='ANDI508-heading' tabindex='0'>Accessibility Alerts: "+
 				"<span class='ANDI508-total'>"+testPageData.numberOfAccessibilityAlertsFound+"</span></h3>"+
-				"<div id='ANDI508-alerts-container-scrollable' role='application'>"+
+				"<div id='ANDI508-alerts-container' class='ANDI508-scrollable' role='application'>"+
 				buildAlertLevelList("dangers")+
 				buildAlertLevelList("warnings")+
 				buildAlertLevelList("cautions")+
@@ -3671,7 +3615,7 @@ function AndiAlerter(){
 				var alertLinksTabbableArray;
 				updateAlertLinksTabbableArray();
 				
-				$("#ANDI508-alerts-container-scrollable a").each(function(){
+				$("#ANDI508-alerts-container a").each(function(){
 					//add keyboard functionality
 					$(this)
 					.keydown(function(e){
@@ -3698,7 +3642,7 @@ function AndiAlerter(){
 								toggleAlertGroupList(this); //hide associating alertGroup-list
 							break;
 						case 106: //asterisk
-							$("#ANDI508-alerts-container-scrollable a.ANDI508-alertGroup-toggler").each(function(){
+							$("#ANDI508-alerts-container a.ANDI508-alertGroup-toggler").each(function(){
 								if($(this).css("display")!="none")
 									toggleAlertGroupList(this); //show every alertGroup-list
 							});
@@ -3733,7 +3677,7 @@ function AndiAlerter(){
 				//Should be called anytime the list display changes
 				function updateAlertLinksTabbableArray(){
 					alertLinksTabbableArray = [];
-					$("#ANDI508-alerts-container-scrollable a[tabindex=0]").each(function(){
+					$("#ANDI508-alerts-container a[tabindex=0]").each(function(){
 						alertLinksTabbableArray.push(this);
 					});
 				}
@@ -3762,7 +3706,7 @@ function AndiAlerter(){
 					updateAlertLinksTabbableArray();
 					andiResetter.resizeHeights();
 				}
-			};
+			}
 		}
 		
 		//This function will show the alert buttons that were added to the alertButtons array
@@ -3797,7 +3741,7 @@ function AndiAlerter(){
 		new AlertGroup("JavaScript Event Cautions"),
 		new AlertGroup("Tab Order Alerts"),
 		new AlertGroup("Empty Components Found"),
-		new AlertGroup("Unused Child Components"),
+		new AlertGroup("Unused Components"),
 		new AlertGroup("Excessive Text"),							//15
 		new AlertGroup("Link Alerts"),
 		new AlertGroup("Graphics Alerts"),
@@ -3821,12 +3765,6 @@ function AndiAlerter(){
 	
 	//This function resets the alert data associated with a single element
 	this.reset = function(){
-		//reset the alert lists
-		alert_0063.list = "";
-		alert_0065.list = "";
-		alert_0101.list = "";
-		alert_0131.list = "";
-		
 		this.dangers = [];
 		this.warnings = [];
 		this.cautions = [];
@@ -3851,16 +3789,19 @@ function AlertButton(label, id, clickLogic, overlayIcon){
 }
 
 TestPageData.allVisibleElements = undefined;
+TestPageData.allElements = undefined;
 //This class is used to store temporary variables for the test page
 function TestPageData(){
 	//Creates the alert groups
 	AndiAlerter.alertGroups = andiAlerter.createAlertGroups();
 	
-	//Create a variable that refers to all the visible elements on the test page
-	TestPageData.allVisibleElements = $("#ANDI508-testPage *").filter(":shown");
+	TestPageData.allElements = $("#ANDI508-testPage *");
+	
+	//all the visible elements or elements within a canvas on the test page
+	TestPageData.allVisibleElements = $(TestPageData.allElements).filter(":shown,canvas *");
 	
 	//all the ids of elements on the page for duplicate comparisons
-	this.allIds = $("#ANDI508-testPage *").filter("[id]");
+	this.allIds = $(TestPageData.allElements).filter("[id]");
 	
 	//all the fors of visible elements on the page for duplicate comparisons
 	this.allFors = "";
@@ -3885,6 +3826,10 @@ function TestPageData(){
 	this.page_using_fieldset = false;
 	this.page_using_titleAttr = false;
 	this.page_using_role_group = false;
+	this.page_using_role_radiogroup = false;
+	this.page_using_role_combobox = false;
+	this.page_using_role_listbox = false;
+	this.page_using_role_menu  = false;
 	
 	//Get all fors on the page and store for later comparison
 	//Determine if labels are being used on the page
@@ -3900,30 +3845,36 @@ function TestPageData(){
 	
 	//This function should be called by the first module that is launched
 	//It should be placed in a loop that looks at every visible element on the page.
-	this.firstLaunchedModulePrep = function(element){
+	this.firstLaunchedModulePrep = function(element, elementData){
 		
 		//Force Test Page to convert any css fixed positions to absolute.
 		//Allows ANDI to be only fixed element at top of page.
 		andiResetter.storeTestPageFixedPositionDistances(element);
 		
-		var role = $(element).attr("role");
+		//get role from elementData if possible
+		var role = (elementData) ? elementData.role : $(element).attr("role");
 		
 		//Determine if role=group is being used
 		if(!TestPageData.page_using_role_group && role === "group")
 			TestPageData.page_using_role_group = true;
+		if(!TestPageData.page_using_role_radiogroup && role === "radiogroup")
+			TestPageData.page_using_role_radiogroup = true;
+		if(!TestPageData.page_using_role_combobox && role === "combobox")
+			TestPageData.page_using_role_combobox = true;
+		if(!TestPageData.page_using_role_listbox && role === "listbox")
+			TestPageData.page_using_role_listbox = true;
+		if(!TestPageData.page_using_role_menu && role === "menu" || role === "menubar")
+			TestPageData.page_using_role_menu = true;
 		
-		//Determine if role=table is being used
-		if(!TestPageData.page_using_table && (role === "table" || role === "grid")){
+		//Determine if role=table/grid is being used
+		if(!TestPageData.page_using_table && (role === "table" || role === "grid"))
 			TestPageData.page_using_table = true;
-		}
 		
 		//Determine if aria-hidden=true is being used
-		if(!TestPageData.page_using_ariahidden && $(element).attr("aria-hidden") === "true"){
+		if(!TestPageData.page_using_ariahidden && ((elementData && elementData.isAriaHidden) || $(element).attr("aria-hidden") === "true"))
 			TestPageData.page_using_ariahidden = true;
-		}
 	};
 }
-
 //These variables store whether the testPage is using certain elements.
 TestPageData.page_using_table = false;
 TestPageData.page_using_caption = false;

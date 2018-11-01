@@ -4,32 +4,18 @@
 //=============================================//
 function init_module(){
 
-var iandiVersionNumber = "1.1.0";
+var iandiVersionNumber = "3.0.1";
 
 //create iANDI instance
 var iANDI = new AndiModule(iandiVersionNumber,"i");
-
-//This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
-//Holding the shift key will prevent inspection from changing.
-AndiModule.andiElementHoverability = function(event){
-	if(!event.shiftKey) //check for holding shift key
-		iANDI.inspect(this);
-};
-//This function updates the Active Element Inspector when focus is given to a highlighted element.
-AndiModule.andiElementFocusability = function(){
-	andiLaser.eraseLaser();
-	iANDI.inspect(this);
-	andiResetter.resizeHeights();
-};
 
 //This function will analyze the test page for focusable element related markup relating to accessibility
 iANDI.analyze = function(){
 	$(TestPageData.allVisibleElements).each(function(){
 		if($(this).is("iframe")){
-			andiData = new AndiData($(this));
-			andiData.grabComponents($(this));
+			andiData = new AndiData(this);
 			andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
-			andiData.attachDataToElement($(this));
+			AndiData.attachDataToElement(this);
 		}
 	});
 };
@@ -45,7 +31,7 @@ iANDI.results = function(){
 		
 		$("#ANDI508-testPage .ANDI508-element").each(function(){
 			//Build iFrame List
-			iframesSelectionLinks += "<li><a href='javascript:void(0)' data-ANDI508-relatedIndex='"+$(this).attr('data-ANDI508-index')+"'>";
+			iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='"+$(this).attr('data-andi508-index')+"'>";
 			if($(this).attr("src"))
 				iframesSelectionLinks += $(this).attr("src");
 			else
@@ -54,15 +40,15 @@ iANDI.results = function(){
 		});
 		//iframes contain body content
 		if(iframesSelectionLinks){
-			iframesSelectionMenu += "<p>Select iframe to open in new window, then launch ANDI.</p>"+
+			iframesSelectionMenu += "<p>Select iframe to open in a new tab, then launch ANDI.</p>"+
 			"<ol>" + iframesSelectionLinks + "</ol>";
 		}
 		
-		$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewIframeList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"view iframe list</button><div id='iANDI508-iframeList-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'><div class='sANDI508-outline-scrollable'>"+iframesSelectionMenu+"</div></div>");
+		$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewIframeList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"view iframe list</button><div id='iANDI508-iframeList-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'><div class='ANDI508-scrollable'>"+iframesSelectionMenu+"</div></div>");
 		
 		$("#iANDI508-iframeList-container").find("a").click(function(){
-			var relatedIndex = $(this).attr("data-ANDI508-relatedIndex");
-			var relatedIframe = $("#ANDI508-testPage .ANDI508-element[data-ANDI508-index="+relatedIndex+"]");
+			var relatedIndex = $(this).attr("data-andi508-relatedindex");
+			var relatedIframe = $("#ANDI508-testPage .ANDI508-element[data-andi508-index="+relatedIndex+"]");
 			iANDI.openIframeInNewWindow(relatedIframe);
 		});
 		
@@ -97,58 +83,47 @@ iANDI.results = function(){
 		});
 		
 		//For iframe list links, add hoverability, focusability, clickability 
-		$("#iANDI508-iframeList-container").find("a[data-ANDI508-relatedIndex]").each(function(){
+		$("#iANDI508-iframeList-container").find("a[data-andi508-relatedindex]").each(function(){
 			andiFocuser.addFocusClick($(this));
-			var relatedIndex = $(this).attr("data-ANDI508-relatedIndex");
-			var relatedElement = $("#ANDI508-testPage [data-ANDI508-index="+relatedIndex+"]").first();
+			var relatedIndex = $(this).attr("data-andi508-relatedindex");
+			var relatedElement = $("#ANDI508-testPage [data-andi508-index="+relatedIndex+"]").first();
 			andiLaser.createLaserTrigger($(this),$(relatedElement));
 			$(this)
 			.hover(function(){
 				if(!event.shiftKey)
-					iANDI.inspect($(relatedElement));
+					AndiModule.inspect(relatedElement[0]);
 			})
 			.focus(function(){
-				iANDI.inspect($(relatedElement));
+				AndiModule.inspect(relatedElement[0]);
 			});
 		});
 		
-		andiBar.showStartUpSummary("To test the contents of <span class='ANDI508-module-name-i'>iframes</span>, each must be viewed independently.<br />Inspect an iframe, press the \"test in new window\" button, then launch ANDI.",true);
+		andiBar.showStartUpSummary("To test the contents of <span class='ANDI508-module-name-i'>iframes</span>, each must be viewed independently.<br />Inspect an iframe, press the \"test in new tab\" button, then launch ANDI.", true);
 		
-		andiAlerter.updateAlertList();
 	}
 	else{
-		andiBar.showStartUpSummary("No visible <span class='ANDI508-module-name-i'>iframes</span>.",false);
+		andiBar.showStartUpSummary("No visible <span class='ANDI508-module-name-i'>iframes</span>.");
 	}
+	
+	andiAlerter.updateAlertList();
 	
 	$("#ANDI508").focus();
 };
 
 //This function will update the info in the Active Element Inspection.
 //Should be called after the mouse hover or focus in event.
-iANDI.inspect = function(element){
+AndiModule.inspect = function(element){
 	andiBar.prepareActiveElementInspection(element);
 
-	var elementData = $(element).data("ANDI508");
-
-	var additionalComponents = [
-			$(element).attr("src")
-		];
-	
-	andiBar.displayTable(elementData,
-		[
-			["aria-labelledby", elementData.ariaLabelledby],
-			["aria-label", elementData.ariaLabel],
-			["alt", elementData.alt],
-			["aria-describedby", elementData.ariaDescribedby],
-			["title", elementData.title],
-			["src", additionalComponents[0]]
-		],
-		[]
+	var elementData = $(element).data("andi508");
+	var addOnProps = AndiData.getAddOnProps(element, elementData,
+		["src"]
 	);
+		
+	andiBar.displayOutput(elementData, element, addOnProps);
+	andiBar.displayTable(elementData, element, addOnProps);
 	
-	andiBar.displayOutput(elementData, element);
-	
-	$("#ANDI508-additionalElementDetails").html("<button>test in new window</button>");
+	$("#ANDI508-additionalElementDetails").html("<button>test in new tab</button>");
 	$("#ANDI508-additionalElementDetails button").click(function(){
 		iANDI.openIframeInNewWindow(element);
 		return false;
@@ -159,15 +134,13 @@ iANDI.inspect = function(element){
 iANDI.openIframeInNewWindow = function(iframe, src){
 	var iframeWindow;
 	var url = $(iframe).attr("src");
-	var specs = "toolbar=yes,location=yes,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes";
-	var name = "_blank";
-	
+
 	if(url){
-		iframeWindow = window.open(url, name, specs);
+		iframeWindow = window.open(url, "_blank"); //opens user preference, usually new tab
 		iframeWindow.focus();
 	}
 	else{
-		alert("This iframe has no [src] and cannot be opened independently in a new window. ANDI cannot be used to test the contents of this iframe.");
+		alert("This iframe has no [src] and cannot be opened independently. ANDI cannot be used to test the contents of this iframe.");
 	}
 };
 

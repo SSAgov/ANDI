@@ -4,41 +4,38 @@
 //==========================================//
 function init_module(){
 
-var gandiVersionNumber = "4.10.1";
+var gandiVersionNumber = "6.0.1";
 
 //TODO: add <video>
 
 //create gANDI instance
 var gANDI = new AndiModule(gandiVersionNumber,"g");
 
-//This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
-//Holding the shift key will prevent inspection from changing.
-AndiModule.andiElementHoverability = function(event){
-	if(!event.shiftKey) //check for holding shift key
-		gANDI.inspect(this);
-};
-//This function updates the Active Element Inspector when focus is given to a highlighted element.
-AndiModule.andiElementFocusability = function(){
-	andiLaser.eraseLaser();
-	gANDI.inspect(this);
-	andiResetter.resizeHeights();
+//This function removes markup in the test page that was added by this module
+AndiModule.cleanup = function(testPage, element){
+	if(element)
+		$(element).removeClass("gANDI508-background gANDI508-fontIcon");
+	else
+		$(testPage).find(".gANDI508-decorative").removeClass("gANDI508-decorative");
 };
 
-var inlineImageCount = 0; 		//total number of inline images
-var backgroundImageCount = 0;	//total number of elements with background images
-var decorativeImg = 0;			//total number of images declared as decorative
-var fontIconCount = 0;			//total number of font icons
-var imageLinkCount = 0;			//total number of images contained in links
-var imageButtonCount = 0;		//total number of images contained in buttons
+//Stores the total number of image types found
+var totals = {
+	inline: 0, 		//inline images
+	background: 0,	//elements with background images
+	decorative: 0,	//images explicetly declared as decorative
+	fontIcon: 0,	//font icons
+	imageLink: 0,	//images contained in links
+	imageButton: 0	//images contained in buttons
+};
 
-//AndiModule.activeActionButtons
-if($.isEmptyObject(AndiModule.activeActionButtons)){
-	$.extend(AndiModule.activeActionButtons,{fadeInlineImages:false});
-	$.extend(AndiModule.activeActionButtons,{highlightDecorativeImages:false});
-	$.extend(AndiModule.activeActionButtons,{removeBackgroundImages:false});
-	$.extend(AndiModule.activeActionButtons,{highlightBackgroundImages:false});
-	$.extend(AndiModule.activeActionButtons,{highlightFontIcons:false});
-}
+AndiModule.initActiveActionButtons({
+	fadeInlineImages:false,
+	highlightDecorativeImages:false,
+	removeBackgroundImages:false,
+	highlightBackgroundImages:false,
+	highlightFontIcons:false
+});
 
 //This function will analyze the test page for graphics/image related markup relating to accessibility
 gANDI.analyze = function(){
@@ -48,61 +45,69 @@ gANDI.analyze = function(){
 	//Loop through every visible element
 	$(TestPageData.allVisibleElements).each(function(){
 		
+		var closestWidgetParent;
 		//Determine if the image is contained by an interactive widget (link, button)
 		isImageContainedByInteractiveWidget = false; //reset boolean
 		if($(this).not("[tabindex]").is("img,[role=img]")){
 			//Is Image contained by a link or button?
-			var closestWidgetParent = $(this).closest("a,button,[role=button],[role=link]");
+			closestWidgetParent = $(this).closest("a,button,[role=button],[role=link]");
 			if($(closestWidgetParent).length){
 				if($(closestWidgetParent).isSemantically("[role=link]","a"))
-					imageLinkCount++;
+					totals.imageLink++;
 				else if($(closestWidgetParent).isSemantically("[role=button]","button"))
-					imageButtonCount++;
+					totals.imageButton++;
+				totals.inline++;
 				isImageContainedByInteractiveWidget = true;
 			}
 		}
 		
-		if(isImageContainedByInteractiveWidget || $(this).is("[role=img],[role=image],img,input:image,area,svg,marquee,blink")){
+		if(isImageContainedByInteractiveWidget || $(this).is("[role=img],[role=image],img,input[type=image],svg,canvas,area,marquee,blink")){
 			
 			if(isImageContainedByInteractiveWidget){
 				//Check if parent already has been evaluated (when more than one image is in a link)
 				if(!$(closestWidgetParent).hasClass("ANDI508-element")){
 					//Image is contained by <a> or <button>
-					andiData = new AndiData($(closestWidgetParent));			
-					andiData.grabComponents($(closestWidgetParent));
-					andiCheck.commonFocusableElementChecks(andiData,$(closestWidgetParent));
-					andiData.attachDataToElement($(closestWidgetParent));
+					andiData = new AndiData(closestWidgetParent[0]);
+					andiCheck.commonFocusableElementChecks(andiData, $(closestWidgetParent));
+					AndiData.attachDataToElement(closestWidgetParent);
 				}
 			}
 			else{//not contained by interactive widget
-				andiData = new AndiData($(this));
-				andiData.grabComponents($(this));				
+				andiData = new AndiData(this);
 			}
 			
 			//Check for conditions based on semantics
 			if($(this).is("marquee")){
+				totals.inline++;
 				andiAlerter.throwAlert(alert_0171);
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 			else if($(this).is("blink")){
+				totals.inline++;
 				andiAlerter.throwAlert(alert_0172);
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
-			if($(this).is("input:image")){
-				inlineImageCount++;
-				andiCheck.commonFocusableElementChecks(andiData,$(this));
+			else if($(this).is("canvas")){
+				totals.inline++;
+				andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
+				AndiData.attachDataToElement(this);
+			}
+			else if($(this).is("input:image")){
+				totals.inline++;
+				andiCheck.commonFocusableElementChecks(andiData, $(this));
 				altTextAnalysis($.trim($(this).attr("alt")));
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 			//Check for server side image map
-			else if($(this).is("img[ismap]")){
-				inlineImageCount++;
+			else if($(this).is("img") && $(this).attr("ismap")){//Code is written this way to prevent bug in IE8
+				totals.inline++;
 				andiAlerter.throwAlert(alert_0173);
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 			else if(!isImageContainedByInteractiveWidget && $(this).is("img,svg,[role=img]")){ //an image used by an image map is handled by the <area>
+				totals.inline++;
 				if(isElementDecorative(this, andiData)){
-					decorativeImg++;
+					totals.decorative++;
 					$(this).addClass("gANDI508-decorative");
 
 					if($(this).prop("tabIndex") >= 0)
@@ -110,7 +115,6 @@ gANDI.analyze = function(){
 						andiAlerter.throwAlert(alert_0126);
 				}
 				else{//This image has not been declared decorative
-					inlineImageCount++;
 					if(andiData.tabbable)
 						andiCheck.commonFocusableElementChecks(andiData,$(this));
 					else
@@ -118,10 +122,10 @@ gANDI.analyze = function(){
 					altTextAnalysis($.trim($(this).attr("alt")));
 				}
 				
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 			else if($(this).is("area")){
-				inlineImageCount++;
+				totals.inline++;
 				var map = $(this).closest("map");
 				if($(map).length){
 					//<area> is contained in <map>
@@ -130,7 +134,7 @@ gANDI.analyze = function(){
 						//<map> references existing <img>
 						andiCheck.commonFocusableElementChecks(andiData, $(this));
 						altTextAnalysis($.trim($(this).attr("alt")));
-						andiData.attachDataToElement($(this));
+						AndiData.attachDataToElement(this);
 					}
 					else{//Image referenced by image map not found
 						//TODO: throw this message only once for all area tags that it relates to
@@ -141,13 +145,13 @@ gANDI.analyze = function(){
 					andiAlerter.throwAlert(alert_0178,alert_0178.message,0);
 			}
 			else if($(this).is("[role=image]")){
-				//inlineImageCount++;
+				//totals.inline++;
 				andiAlerter.throwAlert(alert_0183);
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 		}
 		else if($(this).css("background-image").includes("url(")){
-			backgroundImageCount++;
+			totals.background++;
 			$(this).addClass("gANDI508-background");
 		}
 		
@@ -157,19 +161,19 @@ gANDI.analyze = function(){
 			$(this).hasClass("fa") || //font awesome
 			$(this).hasClass("glyphicon") || //glyphicon
 			$(this).hasClass("material-icons") || //google material icons
-			$(this).is("[data-icon]") //common usage of the data-* attribute for icons
+			$(this).is("[data-icon]") ||//common usage of the data-* attribute for icons
+			lookForPrivateUseUnicode(this)
 			)
 		)
 		{
-			andiData = new AndiData($(this));
-			andiData.grabComponents($(this));
-			andiData.attachDataToElement($(this));
-			fontIconCount++;
+			andiData = new AndiData(this);
+			AndiData.attachDataToElement(this);
+			totals.fontIcon++;
 			$(this).addClass("gANDI508-fontIcon");
 		}
 	});
 	
-	if(backgroundImageCount > 0) //Page has background images
+	if(totals.background > 0) //Page has background images
 		andiAlerter.throwAlert(alert_0177,alert_0177.message,0);
 		
 	//This returns true if the image is decorative.
@@ -179,64 +183,84 @@ gANDI.analyze = function(){
 		}
 		//TODO: this logic may need to change if screen readers support spec that says aria-label
 		//		should override role=presentation, thus making it not decorative
-		//check for aria-label/aria-labelledby/aria-describedby which would make it not decorative
-		//else if(!elementData.ariaLabel && !elementData.ariaLabelledby && !elementData.ariaDescribedby)
 		else{
-			
-			//check for role presentation/none
-			if(elementData.isPresentation) //role is presentation or none
-			{
+			if(elementData.role === "presentation" || elementData.role === "none"){ //role is presentation or none
 				return true;
 			}
-			//check if <img> and empty alt
-			else if($(element).is("img") &&
-				!elementData.title &&
-				(elementData.alt === AndiCheck.emptyString || elementData.alt === " "))
-			{
+			else if($(element).is("img") && elementData.empty && elementData.empty.alt){ //<img> and empty alt
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	//This function looks at the CSS content psuedo elements looking for unicode in the private use range which usually means font icon
+	function lookForPrivateUseUnicode(element){
+		return ( hasPrivateUseUnicode("before") || hasPrivateUseUnicode("after") );
+		
+		function hasPrivateUseUnicode(psuedo){
+			var content = (oldIE) ? "" : window.getComputedStyle(element, ":"+psuedo).content;
+			if(content !== "none" && content !== "normal" && content !== "counter" && content !== "\"\""){//content is not none or empty string
+				var unicode;
+				//starts at 1 and end at length-1 to ignore the starting and ending double quotes
+				for(var i=1; i<content.length-1; i++){
+					unicode = content.charCodeAt(i);
+					if(unicode >= 57344 && unicode <= 63743){
+						//unicode is in the private use range
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
 };
 
 //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
 gANDI.results = function(){
-
-	andiBar.updateResultsSummary("Inline Images Found: "+inlineImageCount);
+	
+	var imagesCount = totals.inline + totals.background + totals.fontIcon;
+	
+	andiBar.updateResultsSummary("Images Found: "+imagesCount);
 
 	//Are There Images?
-	if((inlineImageCount + backgroundImageCount + fontIconCount) > 0){
+	if(imagesCount > 0){
 		//Yes, images were found
 		
 		//Create Image contained by html (number of image links and image buttons)
-		var imageContainedBySummary = "";
-		if(imageLinkCount > 0)
-			imageContainedBySummary += ", " + imageLinkCount + " image links";
-		if(imageButtonCount > 0)
-			imageContainedBySummary += ", " + imageButtonCount + " image buttons";
-		if(fontIconCount > 0)
-			imageContainedBySummary += ", " + fontIconCount + " font icons";
-
-		$("#ANDI508-additionalPageResults").append("<p tabindex='0'>"+backgroundImageCount+" background-images"+imageContainedBySummary+"</p>");
+		var resultsDetails = "";
+		if(totals.inline > 0)
+			resultsDetails += totals.inline + " inline images, ";
+		if(totals.imageLink > 0)
+			resultsDetails += totals.imageLink + " image links, ";
+		if(totals.imageButton > 0)
+			resultsDetails += totals.imageButton + " image buttons, ";
+		if(totals.fontIcon > 0)
+			resultsDetails += totals.fontIcon + " font icons, ";
+		if(totals.background > 0)
+			resultsDetails += totals.background+ " background-images, ";
+		if(resultsDetails)
+			resultsDetails = resultsDetails.slice(0, -2);//Slice off last two characters: the comma and space: ", "
+		
+		$("#ANDI508-additionalPageResults").append("<p tabindex='0'>"+resultsDetails+"</p>");
 		
 		//Add Module Mode Buttons
 		var moduleActionButtons = "";
-		if(inlineImageCount > 0){
-			moduleActionButtons += "<button id='ANDI508-fadeInlineImages-button' aria-label='Hide "+inlineImageCount+" Inline Images' aria-pressed='false'>hide "+inlineImageCount+" inline</button>";
-			if(decorativeImg > 0)
-				moduleActionButtons += "<button id='ANDI508-highlightDecorativeImages-button' aria-label='Highlight "+decorativeImg+" Decorative Inline Images' aria-pressed='false'>"+decorativeImg+" decorative inline"+findIcon+"</button>";
+		if(totals.inline > 0){
+			moduleActionButtons += "<button id='ANDI508-fadeInlineImages-button' aria-label='Hide "+totals.inline+" Inline Images' aria-pressed='false'>hide "+totals.inline+" inline</button>";
+			if(totals.decorative > 0)
+				moduleActionButtons += "<button id='ANDI508-highlightDecorativeImages-button' aria-label='Highlight "+totals.decorative+" Decorative Inline Images' aria-pressed='false'>"+totals.decorative+" decorative inline"+findIcon+"</button>";
 		}
-		if(backgroundImageCount > 0){
-			if(inlineImageCount > 0)
+		if(totals.background > 0){
+			if(totals.inline > 0)
 				moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
-			moduleActionButtons += "<button id='ANDI508-removeBackgroundImages-button' aria-label='Hide "+backgroundImageCount+" Background Images' aria-pressed='false'>hide "+backgroundImageCount+" background</button>";
-			moduleActionButtons += "<button id='ANDI508-highlightBackgroundImages-button' aria-label='Highlight "+backgroundImageCount+" Background Images' aria-pressed='false'>find "+backgroundImageCount+" background"+findIcon+"</button>";
+			moduleActionButtons += "<button id='ANDI508-removeBackgroundImages-button' aria-label='Hide "+totals.background+" Background Images' aria-pressed='false'>hide "+totals.background+" background</button>";
+			moduleActionButtons += "<button id='ANDI508-highlightBackgroundImages-button' aria-label='Highlight "+totals.background+" Background Images' aria-pressed='false'>find "+totals.background+" background"+findIcon+"</button>";
 		}
-		if(fontIconCount > 0){
-			if(inlineImageCount > 0 || backgroundImageCount > 0)
+		if(totals.fontIcon > 0){
+			if(totals.inline > 0 || totals.background > 0)
 				moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
-			moduleActionButtons += "<button id='ANDI508-highlightFontIcons-button' aria-label='Find "+fontIconCount+" Font Icons' aria-pressed='false'>"+fontIconCount+" font icons</button>";
+			moduleActionButtons += "<button id='ANDI508-highlightFontIcons-button' aria-label='Find "+totals.fontIcon+" Font Icons' aria-pressed='false'>"+totals.fontIcon+" font icons</button>";
 		}
 		
 		$("#ANDI508-module-actions").html(moduleActionButtons);
@@ -294,13 +318,11 @@ gANDI.results = function(){
 		$("#ANDI508-highlightDecorativeImages-button").click(function(){
 			if($(this).attr("aria-pressed")=="false"){
 				andiOverlay.overlayButton_on("find",$(this));
-				$("#ANDI508-testPage .ANDI508-element[data-gANDI508-decorative]").addClass("gANDI508-highlightDecorative");
 				$("#ANDI508-testPage").addClass("gANDI508-highlightDecorative");
 				AndiModule.activeActionButtons.highlightDecorativeImages = true;
 			}
 			else{
 				andiOverlay.overlayButton_off("find",$(this));
-				$("#ANDI508-testPage .gANDI508-highlightDecorative").removeClass("gANDI508-highlightDecorative");
 				$("#ANDI508-testPage").removeClass("gANDI508-highlightDecorative");
 				AndiModule.activeActionButtons.highlightDecorativeImages = false;
 			}
@@ -325,99 +347,60 @@ gANDI.results = function(){
 		});
 		
 		var startupSummaryText = "";
-		if(inlineImageCount > 0){
+		if((totals.inline + totals.fontIcon) > 0){
 			andiBar.showElementControls();
 			if(!andiBar.focusIsOnInspectableElement())
-				startupSummaryText += "Discover accessibility markup for inline <span class='ANDI508-module-name-g'>graphics/images</span> by tabbing to or hovering over the highlighted elements.<br /><br />";
+				startupSummaryText += "Discover accessibility markup for inline <span class='ANDI508-module-name-g'>graphics/images</span> by hovering over the highlighted elements or pressing the next/previous element buttons. ";
 		}
 		else{
 			andiBar.hideElementControls();
 		}
-		startupSummaryText += "Ensure that every meaningful/non-decorative <span class='ANDI508-module-name-g'>image</span> has a text equivalent.";
-		andiBar.showStartUpSummary(startupSummaryText,true);
+		startupSummaryText += "Ensure that every meaningful/non-decorative image has a text equivalent.";
+		andiBar.showStartUpSummary(startupSummaryText, true);
 		
-		andiAlerter.updateAlertList();
-		
-		//Click previously active buttons
-		if(AndiModule.activeActionButtons.fadeInlineImages)
-			$("#ANDI508-fadeInlineImages-button").click();
-		if(AndiModule.activeActionButtons.removeBackgroundImages)
-			$("#ANDI508-removeBackgroundImages-button").click();
-		if(AndiModule.activeActionButtons.highlightBackgroundImages)
-			$("#ANDI508-highlightBackgroundImages-button").click();
-		if(AndiModule.activeActionButtons.highlightDecorativeImages)
-			$("#ANDI508-highlightDecorativeImages-button").click();
-		if(AndiModule.activeActionButtons.highlightFontIcons)
-			$("#ANDI508-highlightFontIcons-button").click();
+		AndiModule.engageActiveActionButtons([
+			"fadeInlineImages",
+			"removeBackgroundImages",
+			"highlightBackgroundImages",
+			"highlightDecorativeImages",
+			"highlightFontIcons"
+		]);
 	}
 	else{
 		//No Graphics were found
 		andiBar.hideElementControls();
-		if(testPageData.numberOfAccessibilityAlertsFound === 0){
-			//No Alerts
-			andiBar.showStartUpSummary("No <span class='ANDI508-module-name-g'>graphics/images</span> were found on this page.",false);
-		}
-		else{
-			//Alerts were found
-			andiBar.showStartUpSummary("No <span class='ANDI508-module-name-g'>graphics/images</span> were found, <br />however there are some accessibility alerts.",true);
-			andiAlerter.updateAlertList();
-		}
+		andiBar.showStartUpSummary("No <span class='ANDI508-module-name-g'>graphics/images</span> were found on this page.");
 	}
+	
+	andiAlerter.updateAlertList();
 	
 	$("#ANDI508").focus();
 };
 
 //This function will update the info in the Active Element Inspection.
 //Should be called after the mouse hover or focus in event.
-gANDI.inspect = function(element){
+AndiModule.inspect = function(element){
 	if($(element).hasClass("ANDI508-element")){
 		andiBar.prepareActiveElementInspection(element);
 		
-		var elementData = $(element).data("ANDI508");
-		
-		andiBar.displayOutput(elementData, element);
-		
 		//format background-image
-		var backgroundImage = $(element).css("background-image");
-		if(backgroundImage == "none")
-			backgroundImage = "";
+		var bgImgUrl = $(element).css("background-image");
+		if(bgImgUrl.slice(0, 4) === "url(")
+			bgImgUrl = bgImgUrl.slice(5, -2); //remove 'url("' and '")'
 		else
-			backgroundImage = backgroundImage.slice(5, -2); //remove 'url("' and '")'
+			bgImgUrl = "";
 		
-		var additionalComponents = [
-			$(element).attr("longdesc"),
-			$(element).attr("ismap"),
-			$(element).attr("usemap"),
-			backgroundImage
-		];
-		
-		andiBar.displayTable(elementData,
+		var elementData = $(element).data("andi508");
+		var addOnProps = AndiData.getAddOnProps(element, elementData,
 			[
-				["aria-labelledby",	elementData.ariaLabelledby],
-				["aria-label", elementData.ariaLabel],
-				["alt", elementData.alt],
-				["figcaption", elementData.figcaption],
-				["value", elementData.value],
-				["innerText", elementData.innerText],
-				["child", elementData.subtree],
-				["imageSrc", elementData.imageSrc],
-				["aria-describedby", elementData.ariaDescribedby],
-				["title", elementData.title],
-				["longdesc", additionalComponents[0]],
-				["ismap", additionalComponents[1]],
-				["usemap", additionalComponents[2]],
-				["background-image", additionalComponents[3]]
-			],
-			[
-				["aria-controls", elementData.addOnProperties.ariaControls],
-				["aria-expanded", elementData.addOnProperties.ariaExpanded],
-				["aria-haspopup", elementData.addOnProperties.ariaHaspopup],
-				["aria-hidden", elementData.addOnProperties.ariaHidden],
-				["tabindex", elementData.addOnProperties.tabindex],
-				["accesskey", elementData.addOnProperties.accesskey]
-			],
-			additionalComponents
-		);
+				"longdesc",
+				"ismap",
+				"usemap",
+				["background-image", bgImgUrl]
+			]);
+
+		andiBar.displayOutput(elementData, element, addOnProps);
+		andiBar.displayTable(elementData, element, addOnProps);
 	}
 };
 

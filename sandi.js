@@ -4,23 +4,10 @@
 //==========================================//
 function init_module(){
 	
-var sANDIVersionNumber = "2.5.0";
+var sANDIVersionNumber = "4.0.1";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
-
-//This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
-//Holding the shift key will prevent inspection from changing.
-AndiModule.andiElementHoverability = function(event){
-	if(!event.shiftKey) //check for holding shift key
-		sANDI.inspect(this);
-};
-//This function updates the Active Element Inspector when focus is given to a highlighted element.
-AndiModule.andiElementFocusability = function(){
-	andiLaser.eraseLaser();
-	sANDI.inspect(this);
-	andiResetter.resizeHeights();
-};
 
 var structureExists = false;
 var headingsArray = [];
@@ -36,15 +23,15 @@ var fakeHeadingCount = 0;
 var langAttributesCount = 0;
 var roleAttributesCount = 0;
 
-//AndiModule.activeActionButtons
-if($.isEmptyObject(AndiModule.activeActionButtons)){
-	$.extend(AndiModule.activeActionButtons,{headings:true}); //default
-	$.extend(AndiModule.activeActionButtons,{lists:false});
-	$.extend(AndiModule.activeActionButtons,{landmarks:false});
-	$.extend(AndiModule.activeActionButtons,{liveRegions:false});
-	$.extend(AndiModule.activeActionButtons,{roleAttributes:false});
-	$.extend(AndiModule.activeActionButtons,{langAttributes:false});
-}
+AndiModule.initActiveActionButtons({
+	headings:true, //default
+	lists:false,
+	landmarks:false,
+	liveRegions:false,
+	readingOrder:false,
+	roleAttributes:false,
+	langAttributes:false
+});
 
 //This function will analyze the test page for graphics/image related markup relating to accessibility
 sANDI.analyze = function(){
@@ -57,15 +44,15 @@ sANDI.analyze = function(){
 			structureExists = true;
 			
 			if(AndiModule.activeActionButtons.headings){
-				andiData = new AndiData($(this));
-				andiData.grabComponents($(this));
+				andiData = new AndiData(this);
+				
 				if(andiData.role === "heading"){
 					var ariaLevel = $(this).attr("aria-level");
 					if(ariaLevel){
 						if($(this).is("h1,h2,h3,h4,h5,h6")){
-							if(andiData.tagName.charAt(1) !== ariaLevel){
+							if(andiData.tagNameText.charAt(1) !== ariaLevel){
 								//heading tag name level doesn't match aria-level
-								andiAlerter.throwAlert(alert_0191,[andiData.tagName,ariaLevel]);
+								andiAlerter.throwAlert(alert_0191,[andiData.tagNameText,ariaLevel]);
 							}
 						}
 						if(parseInt(ariaLevel) < 0 || parseInt(ariaLevel) != ariaLevel)
@@ -79,7 +66,7 @@ sANDI.analyze = function(){
 				}
 
 				andiCheck.commonNonFocusableElementChecks(andiData, $(this));
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 		}
 		else if($(this).isSemantically("[role=listitem],[role=list]","ol,ul,li,dl,dd,dt")){
@@ -100,7 +87,7 @@ sANDI.analyze = function(){
 			}
 			
 			if(AndiModule.activeActionButtons.lists){
-				andiData = new AndiData($(this));
+				andiData = new AndiData(this);
 				
 				//Is the listitem contained by an appropriate list container?
 				if($(this).is("[role=listitem]")){
@@ -115,9 +102,9 @@ sANDI.analyze = function(){
 					andiAlerter.throwAlert(alert_007A);
 				}
 				
-				andiData.grabComponents($(this));
+				
 				andiCheck.commonNonFocusableElementChecks(andiData, $(this));
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 		}
 		else if($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=application]","main,header,footer,nav,form,aside")){
@@ -125,10 +112,10 @@ sANDI.analyze = function(){
 			structureExists = true;
 			
 			if(AndiModule.activeActionButtons.landmarks){
-				andiData = new AndiData($(this));
-				andiData.grabComponents($(this));
+				andiData = new AndiData(this);
+				
 				andiCheck.commonNonFocusableElementChecks(andiData, $(this));
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 		}
 		else if(AndiModule.activeActionButtons.headings && headingsArray.length === 0 && $(this).is("p,div,span,strong,em")){
@@ -163,36 +150,50 @@ sANDI.analyze = function(){
 				fakeHeadingCount++;
 				structureExists = true;
 				
-				andiData = new AndiData($(this));
-				andiData.grabComponents($(this));
+				andiData = new AndiData(this);
+				
 				andiAlerter.throwAlert(alert_0190);
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 		}
 		
-		if($(this).is("[role=alert],[role=status],[aria-live=polite],[aria-live=assertive]")){
+		if($(this).is("[role=alert],[role=status],[role=log],[role=marquee],[role=timer],[aria-live=polite],[aria-live=assertive]")){
 			liveRegionsArray.push($(this));
 			if(AndiModule.activeActionButtons.liveRegions){
-				andiData = new AndiData($(this));
-				//screen readers only use the innerText
-				//andiData.grabComponents($(this));
-				andiData.innerText = andiData.grab_innerText($(this));
+				andiData = new AndiData(this);
+				
+				if($(this).isContainerElement()){
+					var innerText = andiUtility.getVisibleInnerText(this);
+					if(innerText){
+						//For live regions, screen readers only use the innerText 
+						//override the accName to just the innerText
+						andiData.accName = "<span class='ANDI508-display-innerText'>"+innerText+"</span>";
+					}
+					else{//no visible innerText
+						andiAlerter.throwAlert(alert_0133);
+						andiData.accName = "";
+					}
+					//accDesc should not appear in output
+					delete andiData.accDesc;
+				}
+				else//not a container element
+					andiAlerter.throwAlert(alert_0184);
 				if($(this).find("textarea,input:not(:hidden),select").length)
 					andiAlerter.throwAlert(alert_0182);
-				andiData.attachDataToElement($(this));
+				AndiData.attachDataToElement(this);
 			}
 		}
 		
 		//For all elements on the page
-		if($(this).attr("role"))
+		if($.trim($(this).attr("role")))
 			roleAttributesCount++;
-		if($(this).prop("lang") && $.trim($(this).prop("lang")) !== "")
+		if($.trim($(this).prop("lang")))
 			langAttributesCount++;
 	});
 };
 
 //Initialize outline
-sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Structure Outline:</h3><div class='sANDI508-outline-scrollable'>";
+sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Structure Outline:</h3><div class='ANDI508-scrollable'>";
 
 //This function will display the heading list (headings outline)
 //It should only be called on heading elements
@@ -219,7 +220,7 @@ sANDI.getOutlineItem = function(element){
 			indentLevel = parseInt(tagName.slice(1)); //get second character from h tag
 	}
 	
-	var outlineItem = "<a style='margin-left:"+indentLevel+"%' href='#' data-ANDI508-relatedIndex='"+$(element).attr('data-ANDI508-index')+"'>&lt;"+tagName;
+	var outlineItem = "<a style='margin-left:"+indentLevel+"%' href='#' data-andi508-relatedindex='"+$(element).attr('data-andi508-index')+"'>&lt;"+tagName;
 	
 	//display relevant attributes
 	if(role)
@@ -250,10 +251,12 @@ sANDI.results = function(){
 	
 	moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
 	
+	moduleActionButtons += "<button id='ANDI508-readingOrder-button' aria-pressed='false'>reading order"+overlayIcon+"</button>";
+	
 	var moreDetails = "<button id='ANDI508-pageTitle-button'>page title</button>"+
 		"<button id='ANDI508-pageLanguage-button'>page language</button>"+
-		"<button id='ANDI508-role-button' aria-pressed='false' aria-label='"+roleAttributesCount+" Role Attributes'>"+roleAttributesCount+" role attributes"+overlayIcon+"</button>"+
-		"<button id='ANDI508-lang-button' aria-pressed='false' aria-label='"+langAttributesCount+" Lang Attributes'>"+langAttributesCount+" lang attributes"+overlayIcon+"</button>";
+		"<button id='ANDI508-roleAttributes-button' aria-pressed='false' aria-label='"+roleAttributesCount+" Role Attributes'>"+roleAttributesCount+" role attributes"+overlayIcon+"</button>"+
+		"<button id='ANDI508-langAttributes-button' aria-pressed='false' aria-label='"+langAttributesCount+" Lang Attributes'>"+langAttributesCount+" lang attributes"+overlayIcon+"</button>";
 		
 	moduleActionButtons += "<div class='ANDI508-moduleActionGroup'><button class='ANDI508-moduleActionGroup-toggler'>more details</button><div class='ANDI508-moduleActionGroup-options'>" + moreDetails + "</div></div>";
 	
@@ -295,8 +298,24 @@ sANDI.results = function(){
 		AndiModule.launchModule("s");
 	});
 	
+	//Define readingOrder button functionality
+	$("#ANDI508-readingOrder-button").click(function(){
+		if($(this).attr("aria-pressed") == "false"){
+			andiOverlay.overlayButton_on("overlay",$(this));
+			andiOverlay.overlayReadingOrder();
+			AndiModule.activeActionButtons.readingOrder = true;
+		}
+		else{
+			andiOverlay.overlayButton_off("overlay",$(this));
+			andiOverlay.removeOverlay("ANDI508-overlay-readingOrder");
+			AndiModule.activeActionButtons.readingOrder = false;
+		}
+		andiResetter.resizeHeights();
+		return false;
+	});
+	
 	//Define the lang attributes button
-	$("#ANDI508-lang-button").click(function(){
+	$("#ANDI508-langAttributes-button").click(function(){
 		if($(this).attr("aria-pressed") == "false"){
 			andiOverlay.overlayButton_on("overlay",$(this));
 			
@@ -325,13 +344,13 @@ sANDI.results = function(){
 	});
 	
 	//Define the lang attributes button
-	$("#ANDI508-role-button").click(function(){
+	$("#ANDI508-roleAttributes-button").click(function(){
 		if($(this).attr("aria-pressed") == "false"){
 			andiOverlay.overlayButton_on("overlay",$(this));
 			
 			var langOverlayText = "";
 			var overlayObject, role;
-			$("#ANDI508-testPage [role]").filter(":visible").each(function(){
+			$("#ANDI508-testPage [role]:not('.ANDI508-overlay')").filter(":visible").each(function(){
 				role = $.trim($(this).attr("role")).toLowerCase();
 				if(role){ //if role is not empty
 					langOverlayText = $(this).prop("tagName").toLowerCase()+" role="+role;
@@ -383,14 +402,15 @@ sANDI.results = function(){
 			$("#ANDI508-headings-button")
 				.attr("aria-selected","true")
 				.addClass("ANDI508-module-action-active");
+				
+			andiBar.updateResultsSummary("Headings: "+headingsArray.length);
+			
 			if(headingsArray.length > 0){
 				//Build Outline
 				for(var x=0; x<headingsArray.length; x++){
 					sANDI.outline  += sANDI.getOutlineItem(headingsArray[x]);
 				}
 				sANDI.outline += "</div>";
-
-				andiBar.updateResultsSummary("Headings: "+headingsArray.length);
 				
 				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"view outline</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 				
@@ -432,15 +452,7 @@ sANDI.results = function(){
 			else{
 				//No Headings
 				andiBar.hideElementControls();
-				if(testPageData.numberOfAccessibilityAlertsFound === 0){
-					//No Alerts
-					andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span>.",false);
-				}
-				else{
-					//Alerts were found
-					andiBar.updateResultsSummary("Headings: "+headingsArray.length);
-					andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span> detected, <br />however there are some accessibility alerts.",true);
-				}
+				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span>.");
 			}
 		}
 		//LISTS
@@ -482,7 +494,7 @@ sANDI.results = function(){
 			else{
 				//No Lists
 				andiBar.hideElementControls();
-				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>lists</span>.",false);
+				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>lists</span>.");
 			}
 		}
 		//LANDMARKS
@@ -501,7 +513,7 @@ sANDI.results = function(){
 			else{
 				//No Landmarks
 				andiBar.hideElementControls();
-				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>landmarks</span>.",false);
+				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>landmarks</span>.");
 			}
 		}
 		//LIVE REGIONS
@@ -514,106 +526,173 @@ sANDI.results = function(){
 				andiBar.updateResultsSummary("Live Regions: "+liveRegionsArray.length);
 				if(!andiBar.focusIsOnInspectableElement()){
 					andiBar.showElementControls();
-					andiBar.showStartUpSummary("<span class='ANDI508-module-name-s'>Live Regions</span> found.<br />Discover the Output of the Live Regions by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.",true);
+					andiBar.showStartUpSummary("<span class='ANDI508-module-name-s'>Live regions</span> found.<br />Discover the Output of the <span class='ANDI508-module-name-s'>live regions</span> by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.",true);
 				}
 			}
 			else{ //No Live Regions
 				andiBar.hideElementControls();
-				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>Live Regions</span>.",false);
+				andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>live regions</span>.");
 			}
 		}
 		
-		andiAlerter.updateAlertList();
-		
 		$("#sANDI508-outline-container")
 		.html(sANDI.outline)
-		.find("a[data-ANDI508-relatedIndex]").each(function(){
+		.find("a[data-andi508-relatedindex]").each(function(){
 			andiFocuser.addFocusClick($(this));
-			var relatedIndex = $(this).attr("data-ANDI508-relatedIndex");
-			var relatedElement = $("#ANDI508-testPage [data-ANDI508-index="+relatedIndex+"]").first();
+			var relatedIndex = $(this).attr("data-andi508-relatedindex");
+			var relatedElement = $("#ANDI508-testPage [data-andi508-index="+relatedIndex+"]").first();
 			andiLaser.createLaserTrigger($(this),$(relatedElement));
 			$(this)
 			.hover(function(){
 				if(!event.shiftKey)
-					sANDI.inspect($(relatedElement));
+					AndiModule.inspect(relatedElement[0]);
 			})
 			.focus(function(){
-				sANDI.inspect($(relatedElement));
+				AndiModule.inspect(relatedElement[0]);
 			});
 		});
 		
 		$("#sANDI508-outline-container")
 		.html(sANDI.outline)
-		.find("a[data-ANDI508-relatedIndex]").each(function(){
+		.find("a[data-andi508-relatedindex]").each(function(){
 			andiFocuser.addFocusClick($(this));
-			var relatedIndex = $(this).attr("data-ANDI508-relatedIndex");
-			var relatedElement = $("#ANDI508-testPage [data-ANDI508-index="+relatedIndex+"]").first();
+			var relatedIndex = $(this).attr("data-andi508-relatedindex");
+			var relatedElement = $("#ANDI508-testPage [data-andi508-index="+relatedIndex+"]").first();
 			andiLaser.createLaserTrigger($(this),$(relatedElement));
 			$(this)
 			.hover(function(){
 				if(!event.shiftKey)
-					sANDI.inspect($(relatedElement));
+					AndiModule.inspect(relatedElement[0]);
 			})
 			.focus(function(){
-				sANDI.inspect($(relatedElement));
+				AndiModule.inspect(relatedElement[0]);
 			});
 		});
-		
-		//Click previously active buttons
-		if(AndiModule.activeActionButtons.roleAttributes)
-			$("#ANDI508-role-button").click();
-		if(AndiModule.activeActionButtons.langAttributes)
-			$("#ANDI508-lang-button").click();
 	}
 	else{
 		andiBar.hideElementControls();
-		andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span>, <span class='ANDI508-module-name-s'>lists</span>, or <span class='ANDI508-module-name-s'>landmarks</span> were detected.",false);
+		andiBar.updateResultsSummary("");
+		andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span>, <span class='ANDI508-module-name-s'>lists</span>, <span class='ANDI508-module-name-s'>landmarks</span>, or <span class='ANDI508-module-name-s'>live regions</span> were detected.");
 	}
 	
+	andiAlerter.updateAlertList();
+		
+	AndiModule.engageActiveActionButtons([
+		"readingOrder",
+		"roleAttributes",
+		"langAttributes"
+	]);
+	
 	$("#ANDI508").focus();
+	
 };
 
 //This function will update the info in the Active Element Inspection.
 //Should be called after the mouse hover or focus in event.
-sANDI.inspect = function(element){
+AndiModule.inspect = function(element){
 	if($(element).hasClass("ANDI508-element")){
 		andiBar.prepareActiveElementInspection(element);
 		
-		var elementData = $(element).data("ANDI508");
+		var elementData = $(element).data("andi508");
 		
-		var additionalComponents = [
-			$(element).attr("aria-level"),
-			$(element).attr("aria-live"),
-			$(element).attr("aria-atomic"),
-			$(element).attr("aria-busy"),
-			$(element).attr("aria-relevant")
-		];
+		var addOnProps = AndiData.getAddOnProps(element, elementData,
+			[
+				"aria-level",
+				getDefault_ariaLive(element, elementData),
+				getDefault_ariaAtomic(element, elementData),
+				"aria-busy",
+				"aria-relevant"
+			]);
 		
-		andiBar.displayTable(elementData,
-			[
-				["aria-labelledby", elementData.ariaLabelledby],
-				["aria-label", elementData.ariaLabel],
-				["alt", elementData.alt],
-				["innerText", elementData.innerText],
-				["child", elementData.subtree],
-				["imageSrc", elementData.imageSrc],
-				["aria-describedby", elementData.ariaDescribedby],
-				["title", elementData.title]
-			],
-			[
-				["aria-level", additionalComponents[0]],
-				["aria-live", additionalComponents[1]],
-				["aria-atomic", additionalComponents[2]],
-				["aria-busy", additionalComponents[3]],
-				["aria-relevant", additionalComponents[4]],
-				["aria-hidden", elementData.addOnProperties.ariaHidden],
-				["tabindex", elementData.addOnProperties.tabindex],
-				["accesskey", elementData.addOnProperties.accesskey]
-			],
-			additionalComponents
-		);
+		andiBar.displayOutput(elementData, element, addOnProps);
+		andiBar.displayTable(elementData, element, addOnProps);
+	}
+	
+	//This function assumes the default values of aria-live based on the element's role as defined by spec
+	function getDefault_ariaLive(element, elementData){
+		var val = $.trim($(element).attr("aria-live"));
+		if(!val){
+			if(elementData.role === "alert")
+				val = "assertive";
+			else if(elementData.role === "log" || elementData.role === "status")
+				val = "polite";
+			else if(elementData.role === "marquee" || elementData.role === "timer")
+				val = "off";
+			else return; //no default
+		}
+		return ["aria-live", val];
+	}
+	
+	//This function assumes the default values of aria-atomic based on the element's role as defined by spec
+	function getDefault_ariaAtomic(element, elementData){
+		var val = $.trim($(element).attr("aria-atomic"));
+		if(!val){
+			if(elementData.role === "alert" || elementData.role === "status")
+				val = "true";
+			else if(elementData.role === "log" || elementData.role === "marquee" || elementData.role === "timer")
+				val = "false";
+			else return; //no default
+		}
+		return ["aria-atomic", val];
+	}
+};
 
-		andiBar.displayOutput(elementData, element);	
+//This function will overlay the reading order sequence.
+AndiOverlay.prototype.overlayReadingOrder = function(){
+	//Elements that should be excluded from the scan, hidden elements will automatically be filtered out
+	var exclusions = "option,script,style,noscript";
+	//Elements that should be included in the scan even if they don't have innerText
+	var inclusions = "select,input,textarea";
+	
+	var readingSequence = 0;
+	var overlayObject;
+	
+	traverseReadingOrder(document.getElementById("ANDI508-testPage"));
+	
+	//This recursive function traverses the dom tree and inserts the reading order overlay
+	//It distinguishes between element nodes and text nodes
+	//It will check for aria-hidden=true (with inheritance)
+	function traverseReadingOrder(element, ariaHidden){
+		
+		//Check for aria-hidden=true
+		ariaHidden = (ariaHidden || $(element).attr("aria-hidden") === "true") ? true : false;
+		
+		for(var z=0; z<element.childNodes.length; z++){
+
+			//if child is an element object that is visible
+			if(element.childNodes[z].nodeType === 1){
+				if(!$(element.childNodes[z]).is(exclusions) && $(element.childNodes[z]).is(":shown")){
+					if($(element.childNodes[z]).is(inclusions)){//no need to look at this element's childNodes
+						insertReadingOrder(ariaHidden, element.childNodes[z]);
+						z++;//because a new node was inserted, the indexes changed
+					}
+					else{//recursion here:
+						traverseReadingOrder(element.childNodes[z], ariaHidden);
+					}
+				}
+			}
+			//else if child is a text node
+			else if(element.childNodes[z].nodeType === 3){
+				if($.trim(element.childNodes[z].nodeValue) !== ""){
+					//Found some text
+					insertReadingOrder(ariaHidden, element.childNodes[z]);
+					z++;//because a new node was inserted, the indexes changed
+				}
+			}
+		}
+		
+		//this function inserts the reading order overlay
+		//if it's hidden using aria-hidden it will insert an alert overlay
+		function insertReadingOrder(ariaHidden, node){
+			if(ariaHidden){
+				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-readingOrder", "X", "hidden from screen reader using aria-hidden=true");
+			}
+			else{
+				readingSequence++;
+				overlayObject = andiOverlay.createOverlay("ANDI508-overlay-readingOrder", readingSequence);
+			}
+			andiOverlay.insertAssociatedOverlay(node, overlayObject);
+		}
 	}
 };
 

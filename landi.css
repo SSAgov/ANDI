@@ -3,7 +3,8 @@
 	#ANDI508 #lANDI508-viewList-tabs
 		{margin-left:10px;}
 	#ANDI508 #lANDI508-viewList-tabs button
-		{border:1px solid black; border-right:1px solid gray; padding:3px 1em 3px 1em; position:relative;}
+		{border:1px solid black; border-right:1px solid gray; 
+		padding:3px 1em 3px 1em; position:relative; display:inline-block;}
 	#ANDI508 #lANDI508-viewList-tabs button:hover,
 	#ANDI508 #lANDI508-viewList-tabs button:focus
 		{border:1px solid lemonchiffon;}

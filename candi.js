@@ -4,25 +4,12 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "3.3.0";
+var cANDIVersionNumber = "4.0.2";
 
 //TODO: select box, check for selected
 
 //create cANDI instance
 var cANDI = new AndiModule(cANDIVersionNumber,"c");
-
-//This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
-//Holding the shift key will prevent inspection from changing.
-AndiModule.andiElementHoverability = function(event){
-	if(!event.shiftKey) //check for holding shift key
-		cANDI.inspect(this);
-};
-//This function updates the Active Element Inspector when focus is given to a highlighted element.
-AndiModule.andiElementFocusability = function(){
-	andiLaser.eraseLaser();
-	cANDI.inspect(this);
-	andiResetter.resizeHeights();
-};
 
 var imgCount = 0;
 var elementsContainingTextCount = 0;
@@ -31,33 +18,21 @@ var elementsContainingTextCount = 0;
 var wcagLevel = {
 	level: "AA",
 	smallTextReqRatio: 4.5,
-	largeTextReqRatio: 3,
-	moreStrict: function(){
-		this.level = "AAA";
-		this.smallTextReqRatio = 7;
-		this.largeTextReqRatio = 4.5;
-	}
-}
+	largeTextReqRatio: 3
+};
 
-//AndiModule.activeActionButtons
-if($.isEmptyObject(AndiModule.activeActionButtons)){
-	$.extend(AndiModule.activeActionButtons,{contrastPlayground:false});
-	$.extend(AndiModule.activeActionButtons,{grayscale:false});
-	$.extend(AndiModule.activeActionButtons,{levelAA:true});
-	$.extend(AndiModule.activeActionButtons,{levelAAA:false});
-}
+AndiModule.initActiveActionButtons({
+	contrastPlayground:false,
+	grayscale:false
+});
 
 //This function will run tests on text containing elements
 cANDI.analyze = function(){
-	
-	//Set the WCAG level (default is AA)
-	if(AndiModule.activeActionButtons.levelAAA)
-		wcagLevel.moreStrict();
 
 	//Elements that are disabled or have aria-disabled="true" do not need to be tested
 	$(TestPageData.allVisibleElements).filter("*:not(option)").each(function(){
 		
-		if($(this).is("img[src],input:image[src],svg")){
+		if($(this).is("img[src],input:image[src],svg,canvas")){
 			imgCount++;
 		}
 		else{
@@ -71,14 +46,14 @@ cANDI.analyze = function(){
 					var cANDI_data = cANDI.getContrast($(this));
 					
 					if(!cANDI_data.disabled){
-						andiData = new AndiData($(this));
+						andiData = new AndiData(this, true);
 					
-						$(this).data("cANDI508",cANDI_data);
+						$(this).data("candi508",cANDI_data);
 						
 						//Throw alerts if necessary
 						cANDI.processResult($(this));
 						
-						andiData.attachDataToElement($(this));
+						AndiData.attachDataToElement(this);
 					}
 					else
 						testPageData.disabledElementsCount++;
@@ -115,7 +90,7 @@ cANDI.analyze = function(){
 				}
 			}
 		}
-		else if($(element).is("input")){//element has no child nodes but still can contain text
+		else if($(element).is("input:not([type=radio],[type=checkbox])")){//element has no child nodes but still can contain text
 			return true;
 		}
 		return false;
@@ -208,8 +183,6 @@ cANDI.results = function(){
 	//Add Module Mode Buttons
 	var moduleActionButtons = "";
 	
-	//moduleActionButtons += "<button id='ANDI508-levelAA-button' aria-pressed='false'>WCAG AA (default)</button><button id='ANDI508-levelAAA-button' aria-pressed='false'>WCAG AAA (more strict)</button><span class='ANDI508-module-actions-spacer'>|</span>";
-
 	//Does the browser support CSS filter:grayscale?
 	if((function(){var el = document.createElement("a"); el.style.cssText = (document.body.style.webkitFilter !== undefined ? '-webkit-' : '') + 'filter:grayscale(100%)'; return !!el.style.length && !oldIE; }()))
 		moduleActionButtons += "<button id='ANDI508-grayscale-button' aria-pressed='false'>grayscale</button>";
@@ -232,32 +205,6 @@ cANDI.results = function(){
 		return false;
 	});
 	
-	//levelAA Button
-	$("#ANDI508-levelAA-button").click(function(){
-		if($(this).attr("aria-pressed") === "false"){
-			andiResetter.softReset($("#ANDI508-testPage"));
-			AndiModule.activeActionButtons.levelAA = true;
-			AndiModule.activeActionButtons.levelAAA = false;
-			AndiModule.launchModule("c");
-			andiResetter.resizeHeights();
-		}
-	});
-	//levelAAA Button
-	$("#ANDI508-levelAAA-button").click(function(){
-		if($(this).attr("aria-pressed") === "false"){
-			andiResetter.softReset($("#ANDI508-testPage"));
-			AndiModule.activeActionButtons.levelAAA = true;
-			AndiModule.activeActionButtons.levelAA = false;
-			AndiModule.launchModule("c");
-			andiResetter.resizeHeights();
-		}
-	});
-	
-	if(AndiModule.activeActionButtons.levelAA)
-		$("#ANDI508-levelAA-button").attr("aria-pressed","true").addClass("ANDI508-module-action-active");
-	else
-		$("#ANDI508-levelAAA-button").attr("aria-pressed","true").addClass("ANDI508-module-action-active");
-	
 	if(elementsContainingTextCount > 0){
 		if(!andiBar.focusIsOnInspectableElement()){
 			andiBar.showElementControls();
@@ -269,53 +216,44 @@ cANDI.results = function(){
 	else{
 		//No text containing elements were found
 		andiBar.hideElementControls();
-		if(testPageData.numberOfAccessibilityAlertsFound === 0)//No Alerts
-			andiBar.showStartUpSummary("No elements containing text were found on this page.",false);
-		else //Alerts were found
-			andiBar.showStartUpSummary("No elements containing text were found, <br />however there are some accessibility alerts.",true);
+		andiBar.showStartUpSummary("No elements containing text were found on this page.");
 	}
 
 	andiAlerter.updateAlertList();
 	
-	//Click previously active buttons
-	if(AndiModule.activeActionButtons.contrastPlayground)
-		$("#ANDI508-contrastPlayground-button").click();
-	if(AndiModule.activeActionButtons.grayscale)
-		$("#ANDI508-grayscale-button").click();
-	
-	if(AndiModule.activeActionButtons.levelAA)
-		$("#ANDI508-levelAA-button").click();
-	else
-		$("#ANDI508-levelAAA-button").click();
+	AndiModule.engageActiveActionButtons([
+		"contrastPlayground",
+		"grayscale"
+	]);
 	
 	$("#ANDI508").focus();
 };
 
 //This function will update the info in the Active Element Inspection.
 //Should be called after the mouse hover or focus in event.
-cANDI.inspect = function(element){
+AndiModule.inspect = function(element){
 	
 	andiBar.prepareActiveElementInspection(element);
-	var elementData = $(element).data("ANDI508");
+	var elementData = $(element).data("andi508");
 	
 	if($(element).hasClass("ANDI508-element")){
 		
 		$("#ANDI508-additionalElementDetails").html(
-			 "<div tabindex='0' style='margin-bottom:1px' accesskey='"+andiHotkeyList.key_output.key+"'>\
-			  <h3 class='ANDI508-heading'>Contrast Ratio<span aria-hidden='true'>:</span></h3> <span id='cANDI508-ratio' /> <span id='cANDI508-result' />\
-			  <span id='cANDI508-minReq'><span class='ANDI508-screenReaderOnly'>, </span>Min<span class='ANDI508-screenReaderOnly'>imum</span> Req<span class='ANDI508-screenReaderOnly'>uirement</span><span aria-hidden='true'>:</span></span> <span id='cANDI508-minReqRatio' />\
-			  </div>\
-			  <h3 class='ANDI508-heading' id='cANDI508-heading-style'>Style:</h3>\
-				<table id='cANDI508-table-style' aria-labelledby='cANDI508-heading-style'><tbody tabindex='0'>\
-					<tr><th scope='row' class='cANDI508-label'>Text&nbsp;Color:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-foreground' /><span id='cANDI508-fg' /></td></tr>\
-					<tr><th scope='row' class='cANDI508-label'>Background:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-background' /><span id='cANDI508-bg' /></td></tr>\
-					<tr><th scope='row' class='cANDI508-label'>Font:</th><td><span id='cANDI508-fontweight' /> <span id='cANDI508-fontsize' /> <span id='cANDI508-fontfamily' /></td></tr>\
-				</tbody></table>\
-		").show();
+			"<div tabindex='0' style='margin-bottom:1px' accesskey='"+andiHotkeyList.key_output.key+"'>"+
+				"<h3 class='ANDI508-heading'>Contrast Ratio<span aria-hidden='true'>:</span></h3> <span id='cANDI508-ratio' /> <span id='cANDI508-result' /> "+
+				"<span id='cANDI508-minReq'><span class='ANDI508-screenReaderOnly'>, </span>Min<span class='ANDI508-screenReaderOnly'>imum</span> Req<span class='ANDI508-screenReaderOnly'>uirement</span><span aria-hidden='true'>:</span></span> <span id='cANDI508-minReqRatio' />"+
+			"</div>"+
+			"<h3 class='ANDI508-heading' id='cANDI508-heading-style'>Style:</h3>"+
+			"<table id='cANDI508-table-style' aria-labelledby='cANDI508-heading-style'><tbody tabindex='0'>"+
+				"<tr><th scope='row' class='cANDI508-label'>Text&nbsp;Color:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-foreground' /><span id='cANDI508-fg' /></td></tr>"+
+				"<tr><th scope='row' class='cANDI508-label'>Background:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-background' /><span id='cANDI508-bg' /></td></tr>"+
+				"<tr><th scope='row' class='cANDI508-label'>Font:</th><td><span id='cANDI508-fontweight' /> <span id='cANDI508-fontsize' /> <span id='cANDI508-fontfamily' /></td></tr>"+
+			"</tbody></table>"
+		).show();
 		
 		cANDI.contrastDisplay(element);
 		
-		andiBar.displayOutput(elementData, element);
+		andiBar.displayOutput(elementData, element); //just to display any alerts
 		
 		//Grab the alert text from the outputText
 		var alertHtml = $("#ANDI508-outputText").html();
@@ -591,12 +529,12 @@ cANDI.getContrast = function(fgElement){
 
 //This function will throw alerts depending on the results of the contrast test.
 cANDI.processResult = function(element){
-	var cANDI_data = $(element).data("cANDI508");
+	var cANDI_data = $(element).data("candi508");
 
 	//Throw Alerts if Necessary:
 	if(cANDI_data.result === "FAIL"){
 		//Text does not meet minimum contrast ratio
-		var minReq = $(element).data("cANDI508").minReq;
+		var minReq = $(element).data("candi508").minReq;
 		if(minReq === wcagLevel.largeTextReqRatio)
 			andiAlerter.throwAlert(alert_0240,["large text ", wcagLevel.level, minReq]);
 		else
@@ -604,11 +542,11 @@ cANDI.processResult = function(element){
 	}
 	else if(!cANDI_data.result){
 		//Opacity Less Than 1
-		if($(element).data("cANDI508").opacity)
+		if($(element).data("candi508").opacity)
 			andiAlerter.throwAlert(alert_0232);
 			
 		//Has Background Image
-		if($(element).data("cANDI508").bgImage !== "none")
+		if($(element).data("candi508").bgImage !== "none")
 			andiAlerter.throwAlert(alert_0230);
 	}	
 };
@@ -727,7 +665,7 @@ cANDI.suggestForegroundChange = function(cANDI_data, suggestedFgColor, suggested
 //It takes into consideration the font-size and font-weight
 cANDI.contrastDisplay = function(element){
 
-	var cANDI_data = $(element).data("cANDI508");
+	var cANDI_data = $(element).data("candi508");
 
 	//Display Font-size (converts to pt)
 	var size_pt = Math.round(cANDI_data.size * 0.75) + "pt";
@@ -744,7 +682,7 @@ cANDI.contrastDisplay = function(element){
 	displayColorValue("#cANDI508-fg", cANDI_data.fgColor);
 	
 	//Display Minimum Required Ratio
-	$("#cANDI508-minReqRatio").html(cANDI_data.minReq+":1");
+	$("#cANDI508-minReqRatio").html(cANDI_data.minReq+"<span class='cANDI508-ratio-darker'>:1</span>");
 	
 	//Display text-shadow color if it exists
 	//TODO: display the color in a color box, however, browsers order this property's value differently
@@ -758,7 +696,7 @@ cANDI.contrastDisplay = function(element){
 		displayColorValue("#cANDI508-bg", cANDI_data.bgColor);
 		
 		//Display Contrast Ratio
-		$("#cANDI508-ratio").html(cANDI_data.ratio+":1");
+		$("#cANDI508-ratio").html(cANDI_data.ratio+"<span class='cANDI508-ratio-darker'>:1</span>");
 
 		//Display Resylt
 		if(cANDI_data.result === "PASS"){
@@ -810,8 +748,8 @@ function displayColorValue(id, rgbaColor){
 
 //This function will convert an rgb value to a hex value
 function rgbToHex(rgbaColor){
-    return "#" + valueToHex(Math.round(rgbaColor.rgba[0]),0) + valueToHex(Math.round(rgbaColor.rgba[1]),0) + valueToHex(Math.round(rgbaColor.rgba[2]),0);
-	
+	return "#" + valueToHex(Math.round(rgbaColor.rgba[0])) + valueToHex(Math.round(rgbaColor.rgba[1])) + valueToHex(Math.round(rgbaColor.rgba[2]));
+
 	function valueToHex(c){
 		var hex = c.toString(16);
 		return hex.length == 1 ? "0" + hex : hex;
