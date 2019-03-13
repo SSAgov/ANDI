@@ -9,7 +9,7 @@
 	#ANDI508 #lANDI508-viewList-tabs button:focus
 		{border:1px solid lemonchiffon;}
 	#ANDI508 #lANDI508-viewList-tabs button.ANDI508-tab-active
-		{color:#c5c5ff !important; text-decoration:underline !important; top:1px}
+		{color:#a4e8ff !important; text-decoration:underline !important; top:1px}
 
 	#ANDI508 #ANDI508-viewList-table td i
 		{visibility:hidden}
@@ -39,17 +39,23 @@
 
 	/*=Test Page=*/
 	#ANDI508-testPage.lANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
-		{outline:3px dashed red !important;}
+		{outline:3px dashed #df3131 !important;}
 	#ANDI508-testPage.lANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
 		{outline:4px solid deeppink !important;}
 	#ANDI508-testPage.lANDI508-testPage .ANDI508-element.ANDI508-highlight
-		{outline:1px dashed #6464E3 !important;}
+		{outline:1px dashed #409ece !important; animation:pulse_lANDI 3s infinite;}
+		@keyframes pulse_lANDI{
+			50% {outline-color:#015f8f !important;}
+		}
+		
+	#ANDI508-testPage.lANDI508-testPage .lANDI508-anchorTarget
+		{padding-right:1px !important; /*to make anchor targets with no innertext show up*/}
 		
 	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightAmbiguous .lANDI508-ambiguous
-		{border:2.5px solid #6464E3 !important; box-shadow:0 0 25px 1px #6464E3 !important}
+		{border:2.5px solid #6565e4 !important; box-shadow:0 0 25px 1px #6565e4 !important}
 		
 	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightInternal a.ANDI508-element.lANDI508-internalLink
-		{border:2.5px solid #6464E3 !important; box-shadow:0 0 25px 1px #6464E3 !important}
+		{border:2.5px solid #8787fe !important; box-shadow:0 0 25px 1px #8787fe !important}
 		
 	#ANDI508-testPage.lANDI508-testPage.lANDI508-highlightExternal a.ANDI508-element.lANDI508-externalLink
-		{border:2.5px solid #6464E3 !important; box-shadow:0 0 25px 1px #6464E3 !important}
+		{border:2.5px solid #4d9dc8 !important; box-shadow:0 0 25px 1px #4d9dc8 !important}

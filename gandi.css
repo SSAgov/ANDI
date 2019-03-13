@@ -1,13 +1,16 @@
 /*==gANDI==*/
 	/*=Test Page=*/
 	#ANDI508-testPage.gANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
-		{outline:3px dashed red !important;}
+		{outline:3px dashed #df3131 !important;}
 	#ANDI508-testPage.gANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
 		{outline:4px solid deeppink !important;}
 	#ANDI508-testPage.gANDI508-testPage .ANDI508-element.ANDI508-highlight
-		{outline:1px dashed #4aac24 !important;}
+		{outline:1px dashed #5fa370 !important; animation:pulse_gANDI 3s linear infinite;}
 	#ANDI508-testPage.gANDI508-testPage img.ANDI508-element.ANDI508-highlight
-		{outline:2px dashed #4aac24 !important;}
+		{outline:2px dashed #5fa370 !important; animation:pulse_gANDI 3s linear infinite;}
+		@keyframes pulse_gANDI{
+			50% {outline-color:#226633 !important;}
+		}
 	
 	#ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline img.ANDI508-element,
 	#ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline [role=img].ANDI508-element,
@@ -21,10 +24,10 @@
 		{background-image:none !important}
 		
 	#ANDI508-testPage.gANDI508-testPage.gANDI508-highlightBackground .gANDI508-background
-		{border:4px solid #abe573 !important; box-shadow:0 0 25px 2px #abe573 !important}
+		{border:4px solid #6aa432 !important; box-shadow:0 0 25px 2px #abe573 !important}
 	
 	#ANDI508-testPage.gANDI508-testPage.gANDI508-highlightDecorative .gANDI508-decorative
-		{border:4px solid #4aac24 !important; box-shadow:0 0 25px 2px #4aac24 !important}
+		{border:4px solid #47a921 !important; box-shadow:0 0 25px 2px #47a921 !important}
 		
 	#ANDI508-testPage.gANDI508-testPage.gANDI508-highlightFontIcon .gANDI508-fontIcon
-		{border:4px solid #8ec516 !important; box-shadow:0 0 25px 2px #8ec516 !important}
+		{border:4px solid #6da400 !important; box-shadow:0 0 25px 2px #6da400 !important}

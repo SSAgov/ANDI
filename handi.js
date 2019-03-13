@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var handiVersionNumber = "4.0.0";
+var handiVersionNumber = "4.0.2";
 
 //TODO: report whether an element should be visible or invisible to a screen reader
 
@@ -202,29 +202,35 @@ hANDI.analyze = function(){
 };
 
 //This function will detect content hidden using css :before :after content.
-//Current scren readers will not read text injected using this method.
+//Current screen readers will not read text injected using this method in some browsers.
 hANDI.detectCssInjectedContent = function(){
-	//var everyElement = document.querySelectorAll("#ANDI508-testPage *");
-	//var everyElement = TestPageData.allVisibleElements;
-	var before, after, hasHiddenCSSContent, cssDisplay;
+	var before_content, before_style, after_content, after_style, hasHiddenCSSContent, cssDisplay;
 	
 	//Loop through every element on the page
 	for(var x=0; x<TestPageData.allVisibleElements.length; x++){
 		hasHiddenCSSContent = false; //reset to false
 		cssDisplay = "";
 		
-		before = window.getComputedStyle(TestPageData.allVisibleElements[x], ":before").getPropertyValue("content");
-		if(hasContent(before)){
-			//element has injected content using :before
-			hasHiddenCSSContent = true;
-			cssDisplay += before + " ";
+		before_style = window.getComputedStyle(TestPageData.allVisibleElements[x], ":before");
+		if(before_style){
+			before_content = before_style.getPropertyValue("content");
+			if(hasContent(before_content)){ //element has injected content using ::before
+				if(isVisible(before_style)){ //pseudoElement is visible
+					hasHiddenCSSContent = true;
+					cssDisplay += before_content + " ";
+				}
+			}
 		}
-			
-		after = window.getComputedStyle(TestPageData.allVisibleElements[x], ":after").getPropertyValue("content");
-		if(hasContent(after)){
-			//element has injected content using :after
-			hasHiddenCSSContent = true;
-			cssDisplay += after;
+		
+		after_style = window.getComputedStyle(TestPageData.allVisibleElements[x], ":after");
+		if(after_style){
+			after_content = after_style.getPropertyValue("content");
+			if(hasContent(after_content)){ //element has injected content using ::after
+				if(isVisible(after_style)){ //pseudoElement is visible
+					hasHiddenCSSContent = true;
+					cssDisplay += after_content;
+				}
+			}
 		}
 		
 		if(hasHiddenCSSContent){
@@ -233,18 +239,24 @@ hANDI.detectCssInjectedContent = function(){
 		}
 	}
 	
-	//This function will return true if content exists and has printable characters
+	//This function will return true if content exists
 	function hasContent(content){
-		if(content != "none"){
-			//Look for printable characters
-			for(var i=0; i<content.length; i++){
-				if(content.charCodeAt(i) > 32 && content.charCodeAt(i) < 127){
-					if(content.charCodeAt(i) != 34) //Exclude double quote
-						return true;
-				}
-			}
+		if(content !== "none" && content !== "normal" && content !== "counter" && content !== "\"\"" && content !== "\" \""){//content is not empty
+			return true;
 		}
 		return false;
+	}
+	
+	//This function returns true if the style of an element is not hidden
+	//TODO: Can this be replaced by getting the pseudo element and reusing :shown ?
+	function isVisible(style){
+		if(	style.getPropertyValue("visibility") === "hidden" || 
+			style.getPropertyValue("display") === "none" ||
+			( style.getPropertyValue("height") === "0" && style.getPropertyValue("width") === "0" )
+		){
+			return false;
+		}
+		return true;			
 	}
 };
 
@@ -394,7 +406,7 @@ hANDI.results = function(){
 				"The revealed content will not remain revealed after changing modules. ";
 		}
 		else if(elementsWithCssInjectedContent > 0){
-			showStartUpSummaryText += "Content injected with CSS is invisible to a screen reader.";
+			showStartUpSummaryText += "Content injected with CSS may be invisible to a screen reader.";
 		}
 
 		andiBar.showStartUpSummary(showStartUpSummaryText, true);

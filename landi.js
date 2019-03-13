@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "8.0.1";
+var landiVersionNumber = "8.0.3";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
@@ -12,7 +12,7 @@ var lANDI = new AndiModule(landiVersionNumber,"l");
 //This function removes markup in the test page that was added by this module
 AndiModule.cleanup = function(testPage, element){
 	if(element)
-		$(element).removeClass("lANDI508-internalLink lANDI508-externalLink lANDI508-ambiguous");
+		$(element).removeClass("lANDI508-internalLink lANDI508-externalLink lANDI508-ambiguous lANDI508-anchorTarget");
 };
 
 //This object class is used to store data about each link. Object instances will be placed into an array.
@@ -240,6 +240,7 @@ lANDI.analyze = function(){
 				//Determine if the link is an anchor for another link
 				var isDefinitelyAnAnchor = false;
 				var referencingHref = "";
+				
 				//Look through all hrefs to see if any is referencing this element's id or name
 				$("#ANDI508-testPage a[href]").each(function(){
 					referencingHref = $(this).attr("href");
@@ -255,6 +256,9 @@ lANDI.analyze = function(){
 						andiAlerter.throwAlert(alert_0166);
 					else //Link is clickable but not keyboard accessible
 						andiAlerter.throwAlert(alert_0164);
+				}
+				else if(name){ //name is deprecated
+					andiAlerter.throwAlert(alert_007B, [name]);
 				}
 				else{
 					andiAlerter.throwAlert(alert_0167);
@@ -365,8 +369,8 @@ lANDI.analyze = function(){
 	function determineLinkPurpose(href, element){
 		if(typeof href !== "undefined"){
 			if(href.charAt(0) === "#" && href.length > 1){
-				var idRef = href.toLowerCase().slice(1);
-				if(searchForAnchorTarget(idRef)){
+				var idRef = href.slice(1); //do not convert to lowercase
+				if(!isAnchorTargetFound(idRef)){
 					if(element.onclick === null && $._data(element, 'events').click === undefined){//no click events
 						//Throw Alert, Anchor Target not found
 						alerts += alertIcons.danger_anchorTargetNotFound;
@@ -386,13 +390,18 @@ lANDI.analyze = function(){
 			}
 		}
 		
-		//This function searches allIds list to check if anchor target exists
-		function searchForAnchorTarget(idRef){
-			for(var z=0; z<testPageData.allIds.length; z++){
-				if(testPageData.allIds[z].id.toString().toLowerCase() == idRef)
-					return false;
+		//This function searches allIds list to check if anchor target exists. return true if found.
+		function isAnchorTargetFound(idRef){
+			//for(var z=0; z<testPageData.allIds.length; z++){
+			//	if(testPageData.allIds[z].id.toString().toLowerCase() == idRef)
+			//		return true;
+			//}
+			var anchorTarget = document.getElementById(idRef) || document.getElementsByName(idRef)[0];
+			if($(anchorTarget).is(":visible")){
+				$(anchorTarget).addClass("lANDI508-anchorTarget");
+				return true;
 			}
-			return true;
+			return false;
 		}
 	}
 	
@@ -938,8 +947,8 @@ lANDI.viewList_attachEvents_links = function(){
 	$("#ANDI508-viewList-table button.lANDI508-nextTab").each(function(){
 		$(this).click(function(){
 			var allElementsInTestPage = $("#ANDI508-testPage *");
-			//TODO: make it work for <a name=>
-			var anchorTargetElement = document.getElementById($(this).attr("data-andi508-relatedid"));
+			var idRef = $(this).attr("data-andi508-relatedid");
+			var anchorTargetElement = document.getElementById(idRef) || document.getElementsByName(idRef)[0];
 			var anchorTargetElementIndex = parseInt($(allElementsInTestPage).index($(anchorTargetElement)), 10);
 			for(var x=anchorTargetElementIndex; x<allElementsInTestPage.length; x++){
 				if($(allElementsInTestPage).eq(x).is(":tabbable")){

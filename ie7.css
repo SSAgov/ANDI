@@ -4,14 +4,14 @@
 #ANDI508-testPage
 	{position:absolute !important; left:0 !important; z-index:0 !important;}
 #ANDI508-testPage .ANDI508-element.ANDI508-highlight
-	{border:1px dashed orange !important; outline:none;/*no support for outline*/}
+	{border:1px dashed orange !important; outline:0;/*no support for outline*/}
 
 /*lANDI*/
 #ANDI508-testPage.lANDI508-testPage .ANDI508-element.ANDI508-highlight
-	{border:1px dashed #6464E3 !important; outline:none;}
+	{border:1px dashed #6464E3 !important; outline:0;}
 /*gANDI*/
 #ANDI508-testPage.gANDI508-testPage .ANDI508-element.ANDI508-highlight
-	{border:1px dashed #4aac24 !important; outline:none;}
+	{border:1px dashed #4aac24 !important; outline:0;}
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline img.ANDI508-element,
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline input[type=image].ANDI508-element,
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline .ANDI508-element img
@@ -21,11 +21,11 @@
 #ANDI508-testPage.tANDI508-testPage table.ANDI508-highlight.ANDI508-element.ANDI508-element-danger,
 #ANDI508-testPage.tANDI508-testPage table th.ANDI508-highlight.ANDI508-element.ANDI508-element-danger,
 #ANDI508-testPage.tANDI508-testPage table td.ANDI508-highlight.ANDI508-element.ANDI508-element-danger
-	{border:2px dashed red !important; outline:none;/*no support for outline*/}
+	{border:2px dashed red !important; outline:0;/*no support for outline*/}
 
 /*Focus/Hover Highlight*/
 html.ANDI508-testPage body.ANDI508-testPage #ANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
-	{border:2px solid deeppink !important; outline:none;/*no support for outline*/}
+	{border:2px solid deeppink !important; outline:0;/*no support for outline*/}
 
 /*ANDI*/
 #ANDI508 #ANDI508-barControls button

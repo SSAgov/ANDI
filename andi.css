@@ -1,5 +1,5 @@
 /*=====ANDI CSS=====*/
-/*Version 5.00 */
+/*Version 5.0.2 */
 /*This is the main CSS file for ANDI*/
 /*It is important to keep the specificity high to override any test page's own CSS*/
 
@@ -14,18 +14,26 @@ body.ANDI508-testPage
 #ANDI508-testPage input[type='radio'].ANDI508-element,
 #ANDI508-testPage input[type='checkbox'].ANDI508-element
 	{opacity:1 !important; /*to force show hidden radio buttons and checkboxes*/}
-#ANDI508-testPage .ANDI508-highlight.ANDI508-element
-	{outline:1px dashed #fea400 !important;}
+#ANDI508-testPage.fANDI508-testPage .ANDI508-highlight.ANDI508-element
+	{outline:1px dashed #d97f00 !important; animation:pulse_fANDI 3s linear infinite; }
+	@keyframes pulse_fANDI{
+		50% {outline-color:#b85e00 !important;}
+	}
 
 #ANDI508-testPage .ANDI508-highlight.ANDI508-element-danger.ANDI508-element
-	{outline:3px dashed #ef0000 !important;}
+	{outline:3px dashed #dd2f2f !important; animation: pulse_danger 3s linear infinite !important;}
+	/*animation for danger highlight: pulses from orange-yellow to red-orange*/
+	@keyframes pulse_danger{
+		50%{outline-color:#ef7200 !important;}
+	}
 #ANDI508-testPage .ANDI508-highlight.ANDI508-element-active.ANDI508-element
-	{outline:4px solid deeppink !important; animation:pulse 3s infinite;}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,20,147, 0.7);-moz-box-shadow:0 0 0 0 rgba(255,20,147, 0.7);}
-  75%{box-shadow:0 0 0 16px rgba(255,20,147, 0);-moz-box-shadow:0 0 0 16px rgba(255,20,147, 0);}
-  100%{box-shadow:0 0 0 0 rgba(255,20,147, 0);-moz-box-shadow:0 0 0 0 rgba(255,20,147, 0);}
-}
+	{outline:4px solid deeppink !important; animation:pulse_active 3s linear infinite !important;}
+	/*animation for active highlight: pulses an outward pink glow*/
+	@keyframes pulse_active{
+	  0%{box-shadow:0 0 0 0 rgba(255,20,147, 0.7);-moz-box-shadow:0 0 0 0 rgba(255,20,147, 0.7);}
+	  75%{box-shadow:0 0 0 16px rgba(255,20,147, 0);-moz-box-shadow:0 0 0 16px rgba(255,20,147, 0);}
+	  100%{box-shadow:0 0 0 0 rgba(255,20,147, 0);-moz-box-shadow:0 0 0 0 rgba(255,20,147, 0);}
+	}
 
 /*overlay*/
 #ANDI508-testPage span.ANDI508-overlay
@@ -40,10 +48,10 @@ body.ANDI508-testPage
 #ANDI508-testPage .ANDI508-overlay-associated
 	{box-shadow:0 0 2px 5px #C2FF64 !important; animation:none !important;}
 #ANDI508-testPage .ANDI508-overlay-associated.ANDI508-highlight.ANDI508-element
-	{outline:none !important;}
+	{outline:0 !important;}
 #ANDI508-testPage span.ANDI508-overlay:hover,
 #ANDI508-testPage span.ANDI508-overlay:focus
-	{background-color:#C2FF64 !important; border:1px solid black !important; outline:none; cursor:default;}
+	{background-color:#C2FF64 !important; border:1px solid black !important; outline:0; cursor:default;}
 	
 /*===Laser===*/
 #ANDI508-laser-container
@@ -62,7 +70,7 @@ body.ANDI508-testPage
 #ANDI508
 	{background:black !important; color:white !important; box-shadow:0 0 20px 0 gray; padding:4px !important;
 	margin:0 !important; height:auto !important; position:fixed !important; top:0 !important; left:0 !important; 
-	z-index:999999 !important; display:block !important; width:100% !important; border-radius:0 !important;
+	z-index:999999999 !important; display:block !important; width:100% !important; border-radius:0 !important;
 	max-width:none !important; min-height:0 !important}
 /*General Overrides*/
 #ANDI508 h1,
@@ -86,7 +94,7 @@ body.ANDI508-testPage
 #ANDI508 th
 	{font:normal normal normal 10pt/normal Verdana; line-height:normal; letter-spacing:normal; text-align:left;
 	 background:transparent !important; color:white !important; appearance:normal; text-transform:none; opacity:1 !important;
-	 margin:0; padding:0; border:none; border-radius:0; left:0; top:0; vertical-align:baseline; float:none; outline:none !important;
+	 margin:0; padding:0; border:none; border-radius:0; left:0; top:0; vertical-align:baseline; float:none; outline:0 !important;
 	 width:auto; height:auto; min-width:0; max-width:none; min-height:0; max-height:none; overflow:visible; transform:none;
 	 box-shadow:none; text-decoration:none !important; content:none; clear:none; box-sizing:content-box; text-shadow:none;}
 #ANDI508 *::before,
@@ -144,7 +152,7 @@ body.ANDI508-testPage
 	{color:#00e741 !important;}
 #ANDI508 .ANDI508-display-ariaDescribedby,
 #ANDI508 .ANDI508-display-ariaDescribedby span
-	{color:#00dae2 !important;}
+	{color:#12c8f1 !important;} /*00dae2*/
 #ANDI508 .ANDI508-display-label,
 #ANDI508 .ANDI508-display-alt,
 #ANDI508 .ANDI508-display-label span,
@@ -164,7 +172,7 @@ body.ANDI508-testPage
 	{color:#d6ffe1 !important;}
 #ANDI508 .ANDI508-display-addOnProperties,
 #ANDI508 .ANDI508-display-addOnProperties span
-	{color:#ffbdeb !important;}
+	{color:#ffbdc8 !important;} /*ffbdeb*/
 #ANDI508 #ANDI508-accessibleComponentsTable .ANDI508-display-id
 	{color:#959595 !important; font:7pt monospace !important; margin-right:0.5em;}
 
@@ -175,14 +183,14 @@ body.ANDI508-testPage
 #ANDI508 .ANDI508-display-danger a:active,
 #ANDI508 .ANDI508-display-danger a:hover,
 #ANDI508 .ANDI508-display-danger span
-	{color:#ff6767 !important;}
+	{color:#ff8e67 !important;} /*#ff6767*/
 #ANDI508 .ANDI508-display-warning,
 #ANDI508 .ANDI508-display-warning a,
 #ANDI508 .ANDI508-display-warning a:visited,
 #ANDI508 .ANDI508-display-warning a:active,
 #ANDI508 .ANDI508-display-warning a:hover,
 #ANDI508 .ANDI508-display-warning span
-	{color:#ffb03a !important;}
+	{color:#ffb74b !important;} /*#ffb03a*/
 #ANDI508 .ANDI508-display-caution,
 #ANDI508 .ANDI508-display-caution a,
 #ANDI508 .ANDI508-display-caution a:visited,
@@ -229,7 +237,7 @@ body.ANDI508-testPage
 	border-radius:7px; margin-right:7px; font-family:tahoma; color:#e6e6e6 !important; line-height:1 !important; background:black !important;}
 #ANDI508 #ANDI508-module-actions button:hover,
 #ANDI508 #ANDI508-module-actions button:focus
-	{border:1px solid lemonchiffon !important; outline:none !important;}
+	{border:1px solid lemonchiffon !important; outline:0 !important;}
 #ANDI508 #ANDI508-module-actions button.ANDI508-module-action-active
 	{text-decoration:underline !important; color:white !important;}
 #ANDI508 #ANDI508-module-actions .ANDI508-module-action-hidden
@@ -263,7 +271,7 @@ body.ANDI508-testPage
 #ANDI508 #ANDI508-moduleMenu button:hover,
 #ANDI508 #ANDI508-moduleMenu.ANDI508-moduleMenu-expanded button.ANDI508-moduleMenu-selected:hover,
 #ANDI508 #ANDI508-moduleMenu.ANDI508-moduleMenu-expanded button.ANDI508-moduleMenu-selected:focus
-	{outline:none !important; box-shadow:0 0 0 1px #dedab7 !important; border:1px solid #dedab7 !important;}
+	{outline:0 !important; box-shadow:0 0 0 1px #dedab7 !important; border:1px solid #dedab7 !important;}
 
 #ANDI508 #ANDI508-moduleMenu button.ANDI508-moduleMenu-selected
 	{display:block; border:1px solid gray;}
@@ -290,43 +298,43 @@ body.ANDI508-testPage
 #ANDI508 #ANDI508-moduleMenu-button-t,
 #ANDI508.ANDI508-module-t #ANDI508-module-name,
 #ANDI508.ANDI508-module-t #ANDI508-module-actions button.ANDI508-module-action-active
-	{color:#ffc1fb !important;}
+	{color:#febadc !important;} /*ffc1fb*/
 /*lANDI*/
 #ANDI508 .ANDI508-module-name-l,
 #ANDI508 #ANDI508-moduleMenu-button-l,
 #ANDI508.ANDI508-module-l #ANDI508-module-name,
 #ANDI508.ANDI508-module-l #ANDI508-module-actions button.ANDI508-module-action-active
-	{color:#c5c5ff !important;}
+	{color:#a4e8ff !important;} /*c5c5ff*/
 /*gANDI*/
 #ANDI508 .ANDI508-module-name-g,
 #ANDI508 #ANDI508-moduleMenu-button-g,
 #ANDI508.ANDI508-module-g #ANDI508-module-name,
 #ANDI508.ANDI508-module-g #ANDI508-module-actions button.ANDI508-module-action-active
-	{color:#d9ffc5 !important;}
+	{color:#9fe3b0 !important;} /*d9ffc5*/
 /*sANDI*/
 #ANDI508 .ANDI508-module-name-s,
 #ANDI508 #ANDI508-moduleMenu-button-s,
 #ANDI508.ANDI508-module-s #ANDI508-module-name,
 #ANDI508.ANDI508-module-s #ANDI508-module-actions button.ANDI508-module-action-active
-	{color:#daa6ff !important;}
+	{color:#cbbaff !important;} /*daa6ff*/
 /*cANDI*/
 #ANDI508 .ANDI508-module-name-c,
 #ANDI508 #ANDI508-moduleMenu-button-c,
 #ANDI508.ANDI508-module-c #ANDI508-module-name,
 #ANDI508.ANDI508-module-c #ANDI508-module-actions button.ANDI508-module-action-active
-	{color:#feba7b !important;}
+	{color:#feb57b !important;} /*feba7b*/
 /*hANDI*/
 #ANDI508 .ANDI508-module-name-h,
 #ANDI508 #ANDI508-moduleMenu-button-h,
 #ANDI508.ANDI508-module-h #ANDI508-module-name,
 #ANDI508.ANDI508-module-h #ANDI508-module-actions button.ANDI508-module-action-active
-	{color:#eeecaf !important;}
+	{color:#eeecaf !important;} /*eeecaf*/
 /*iANDI*/
 #ANDI508 .ANDI508-module-name-i,
 #ANDI508 #ANDI508-moduleMenu-button-i,
 #ANDI508.ANDI508-module-i #ANDI508-module-name,
 #ANDI508.ANDI508-module-i #ANDI508-module-actions button.ANDI508-module-action-active
-	{color:pink !important;}
+	{color:#f3b4bf !important;} /*ffc0cb*/
 	
 #ANDI508 #ANDI508-module-name
 	{font:bold 20pt monospace !important; margin-right:1px; display:inline;}
@@ -372,8 +380,6 @@ body.ANDI508-testPage
 	{overflow:visible; max-height:none}
 
 /*output*/
-/*#ANDI508 #ANDI508-outputText:hover
-	{overflow:visible; display:block; z-index:9999; position:relative;}*/
 #ANDI508 #ANDI508-outputText
 	{word-wrap:break-word; max-height:5em; line-height:normal; display:block; margin-top:1px; 
 	padding:0px 1px 1px 1.8em; margin-left:2%; background-image:url(icons/output.png) !important;
@@ -445,7 +451,7 @@ body.ANDI508-testPage
 	#ANDI508 #ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting th,
 	#ANDI508 #ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting a,
 	#ANDI508 #ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting a span
-		{color:#ff6abb !important;}
+		{color:#f160b1 !important;}
 
 /*alerts list*/
 #ANDI508 #ANDI508-alerts-list li
@@ -502,7 +508,7 @@ body.ANDI508-testPage
 	{color:#989898 !important;}
 #ANDI508 #ANDI508-barControls #ANDI508-settingsList button:hover,
 #ANDI508 #ANDI508-barControls #ANDI508-settingsList button:focus
-	{outline:none !important; background-color:#313131 !important;}
+	{outline:0 !important; background-color:#313131 !important;}
 #ANDI508 #ANDI508-barControls #ANDI508-settingsList button img
 	{width:11px !important;}
 	

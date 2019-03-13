@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 	
-var sANDIVersionNumber = "4.0.1";
+var sANDIVersionNumber = "4.1.1";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -19,7 +19,6 @@ var olCount = 0;
 var ulCount = 0;
 var dlCount = 0;
 var listRoleCount = 0;
-var fakeHeadingCount = 0;
 var langAttributesCount = 0;
 var roleAttributesCount = 0;
 
@@ -88,26 +87,32 @@ sANDI.analyze = function(){
 			
 			if(AndiModule.activeActionButtons.lists){
 				andiData = new AndiData(this);
-				
+
 				//Is the listitem contained by an appropriate list container?
 				if($(this).is("[role=listitem]")){
 					if(!$(this).closest("[role=list]").length)
 						andiAlerter.throwAlert(alert_0079, ["[role=listitem]","[role=list]"]);
 				}
 				else if($(this).is("li")){
-					if(!$(this).closest("ol,ul").length)
+					var listContainer = $(this).closest("ol,ul");
+					if(!$(listContainer).length){
 						andiAlerter.throwAlert(alert_0079, ["&lt;li&gt;","&lt;ol&gt; or &lt;ul&gt;"]);
+					}
+					else{ //check if listContainer is still semantically a list
+						var listContainer_role = $(listContainer).attr("role");
+						if(listContainer_role && listContainer_role !== "list")
+							andiAlerter.throwAlert(alert_0185, [listContainer_role]);
+					}
 				}
 				else if($(this).is("dd,dt") && !$(this).closest("dl").length){//Is the dl,dt contained by a dl?
 					andiAlerter.throwAlert(alert_007A);
 				}
 				
-				
 				andiCheck.commonNonFocusableElementChecks(andiData, $(this));
 				AndiData.attachDataToElement(this);
 			}
 		}
-		else if($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=application]","main,header,footer,nav,form,aside")){
+		else if($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]","main,header,footer,nav,form,aside")){
 			landmarksArray.push($(this));
 			structureExists = true;
 			
@@ -119,37 +124,11 @@ sANDI.analyze = function(){
 			}
 		}
 		else if(AndiModule.activeActionButtons.headings && headingsArray.length === 0 && $(this).is("p,div,span,strong,em")){
-			//No headings exist, look for fake headings
-			
-			var fakeHeading_limit_textLength = 30;
-			var fakeHeading_limit_fontSize = 23; //px
-			
-			var fakeHeadingFound = false;
-			
-			var fakeHeading_text = $(this).text();
-			if(fakeHeading_text.length < fakeHeading_limit_textLength){
-				//fakeHeading_text is less than char limit
-				var fakeHeading_fontSize = parseInt($(this).css("font-size"));
-				if(fakeHeading_fontSize > fakeHeading_limit_fontSize){
-					//fakeHeading_fontSize is greater than size limit
-					var nextElement = $(this).next().filter(":visible");
-					if($.trim($(nextElement).text()) !== "" && parseInt($(nextElement).css("font-size")) < fakeHeading_fontSize){
-						//next element has text and is smaller than fakeHeading font size
-						fakeHeadingFound = true;
-					}
-					else if(parseInt($(this).parent().css("font-size")) < fakeHeading_fontSize){
-						fakeHeadingFound = true;
-					}
-					else if($(this).css("font-weight") == "bold" || $(this).css("font-weight") == "bolder" || $(this).css("font-weight") >= 700){
-						fakeHeadingFound = true;
-					}
-				}
-			}
-			
-			if(fakeHeadingFound){
-				fakeHeadingCount++;
+			//Since sANDI has not found a heading yet, check if this element is a fake headings
+
+			if(sANDI.isFakeHeading(this)){
 				structureExists = true;
-				
+
 				andiData = new AndiData(this);
 				
 				andiAlerter.throwAlert(alert_0190);
@@ -190,6 +169,52 @@ sANDI.analyze = function(){
 		if($.trim($(this).prop("lang")))
 			langAttributesCount++;
 	});
+};
+
+//This function determine's if the element looks like a heading but is not semantically a heading
+sANDI.isFakeHeading = function(element){
+	
+	var isFakeHeading = false;
+	
+	var limit_textLength = 30; //text longer than this will not be considered a fake heading
+	
+	var limit_fontSize = 22; //px  (an h2 starts around 24px)
+	var limit_boldFontSize = 15; //px
+
+	var text = $.trim($(element).text());
+	if(text.length > 0 && text.length < limit_textLength){
+		//text is not empty, but less than char limit
+		
+		var fakeHeading_fontSize = parseInt($(element).css("font-size"));
+		var fakeHeading_fontWeight = $(element).css("font-weight");
+	
+		if(	fakeHeading_fontSize > limit_fontSize ||
+			(isBold(fakeHeading_fontWeight) && fakeHeading_fontSize > limit_boldFontSize)
+		){ //fakeHeading_fontSize is greater than size limit
+			
+			var nextElement = $(element).next().filter(":visible");
+			
+			if($.trim($(nextElement).text()) !== ""){ //next element has text
+				
+				var nextElement_fontWeight = $(nextElement).css("font-weight");
+				var nextElement_fontSize = parseInt($(nextElement).css("font-size"));
+				
+				if(nextElement_fontSize < fakeHeading_fontSize){
+					//next element's font-size is smaller than fakeHeading font-size
+					isFakeHeading = true;
+				}
+				else if( isBold(fakeHeading_fontWeight) && !isBold(nextElement_fontWeight) ){
+					//next element's font-weight is lighter than fakeHeading font-weight
+					isFakeHeading = true;
+				}
+			}
+		}
+	}
+	return isFakeHeading;
+	
+	function isBold(weight){
+		return (weight === "bold" || weight === "bolder" || weight >= 700);
+	}
 };
 
 //Initialize outline
@@ -595,6 +620,8 @@ AndiModule.inspect = function(element){
 		
 		var elementData = $(element).data("andi508");
 		
+		
+		
 		var addOnProps = AndiData.getAddOnProps(element, elementData,
 			[
 				"aria-level",
@@ -604,8 +631,17 @@ AndiModule.inspect = function(element){
 				"aria-relevant"
 			]);
 		
-		andiBar.displayOutput(elementData, element, addOnProps);
 		andiBar.displayTable(elementData, element, addOnProps);
+		
+		if(AndiModule.activeActionButtons.liveRegions){ //For Live Region mode, update the output live
+			//Copy from the AC table
+			var innerText = $("#ANDI508-accessibleComponentsTable td.ANDI508-display-innerText").first().html();
+			if(innerText){
+				elementData.accName = "<span class='ANDI508-display-innerText'>" + innerText + "</span>";
+			}
+		}
+		
+		andiBar.displayOutput(elementData, element, addOnProps);
 	}
 	
 	//This function assumes the default values of aria-live based on the element's role as defined by spec

@@ -13,22 +13,28 @@
 	#ANDI508-testPage.tANDI508-testPage [role=columnheader].ANDI508-element.ANDI508-highlight,
 	#ANDI508-testPage.tANDI508-testPage [role=rowheader].ANDI508-element.ANDI508-highlight,
 	#ANDI508-testPage.tANDI508-testPage table[role="presentation"].ANDI508-element.ANDI508-highlight
-		{border:1.5px dashed #b03188 !important; outline:none !important;}
+		{border:1.5px dashed #a02178 !important; outline:0 !important; animation:pulse_tANDI_header 3s infinite;}
+		@keyframes pulse_tANDI_header{
+			50% {border-color:#b03188 !important;}
+		}
 	#ANDI508-testPage.tANDI508-testPage td.ANDI508-element.ANDI508-highlight,
 	#ANDI508-testPage.tANDI508-testPage [role=cell].ANDI508-element.ANDI508-highlight,
 	#ANDI508-testPage.tANDI508-testPage [role=gridcell].ANDI508-element.ANDI508-highlight
-		{border:1.5px dotted #e35eb9 !important; outline:none !important;}
+		{border:1.5px dotted #cd7aa8 !important; outline:0 !important; animation:pulse_tANDI 3s infinite;}
+		@keyframes pulse_tANDI{
+			50% {border-color:#c26f9d !important;}
+		}
 	#ANDI508-testPage.tANDI508-testPage table.ANDI508-element.ANDI508-highlight,
 	#ANDI508-testPage.tANDI508-testPage [role=table].ANDI508-element.ANDI508-highlight,
 	#ANDI508-testPage.tANDI508-testPage [role=grid].ANDI508-element.ANDI508-highlight
-		{outline:none !important;}
+		{outline:0 !important;}
 	
 	#ANDI508-testPage.tANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
-		{border:2px dashed red !important; outline:none !important;}
+		{border:2px dashed #df3131 !important; outline:0 !important;}
 	#ANDI508-testPage.tANDI508-testPage table.ANDI508-element.ANDI508-highlight.ANDI508-element-danger,
 	#ANDI508-testPage.tANDI508-testPage [role=table].ANDI508-element.ANDI508-highlight.ANDI508-element-danger,
 	#ANDI508-testPage.tANDI508-testPage [role=grid].ANDI508-element.ANDI508-highlight.ANDI508-element-danger
-		{border:4px dashed red !important; outline:none !important;}	
+		{border:4px dashed #df3131 !important; outline:0 !important;}	
 	
 	#ANDI508-testPage.tANDI508-testPage td.ANDI508-highlight.tANDI508-highlight,
 	#ANDI508-testPage.tANDI508-testPage [role=cell].ANDI508-highlight.tANDI508-highlight,
@@ -47,5 +53,5 @@
 	#ANDI508-testPage.tANDI508-testPage table.ANDI508-element.ANDI508-highlight.ANDI508-element-active,
 	#ANDI508-testPage.tANDI508-testPage [role=table].ANDI508-element.ANDI508-highlight.ANDI508-element-active,
 	#ANDI508-testPage.tANDI508-testPage [role=grid].ANDI508-element.ANDI508-highlight.ANDI508-element-active
-		{border:4px solid deeppink !important; outline:none !important;}
+		{border:4px solid deeppink !important; outline:0 !important;}
 		

@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "4.0.2";
+var cANDIVersionNumber = "4.1.1";
 
 //TODO: select box, check for selected
 
@@ -105,21 +105,28 @@ cANDI.results = function(){
 	if(imgCount > 0)
 		andiAlerter.throwAlert(alert_0231,alert_0231.message,0);
 	
+	//If browser doesn't support input[type=color] nothing will open
+	var colorSelectorWidgets = "<input type='color' id='cANDI508-colorSelectorWidget-fg' value='#000000' hidden /><input type='color' id='cANDI508-colorSelectorWidget-bg' value='#ffffff' hidden />";
+	
 	//Contrast Playground HTML
 	$("#ANDI508-additionalPageResults").append(
 	"<button id='ANDI508-contrastPlayground-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"show contrast playground</button>"+
 	"<div id='cANDI508-contrastPlayground' tabindex='0' class='ANDI508-viewOtherResults-expanded'><h3 class='ANDI508-heading'>Contrast Playground:</h3><div id='cANDI508-contrastPlayground-area'>"+
 	"<div id='cANDI508-playground-instructions'>Enter two hex color values to get the contrast ratio.</div>"+
-	"<div class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-fg' style='background-color:#000000 !important' />"+
-	"<input type='text' id='cANDI508-playground-fg' maxlength='7' title='Text Color Hex' value='#000000' aria-describedby='cANDI508-playground-instructions-controls' />/&nbsp;"+
-	"<div class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-bg' style='background-color:#ffffff !important' />"+
-	"<input type='text' id='cANDI508-playground-bg' maxlength='7' title='Background Color Hex' value='#ffffff' aria-describedby='cANDI508-playground-instructions-controls' />= "+
+	colorSelectorWidgets +
+	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-fg' style='background-color:#000000 !important' aria-label='visual color picker, select text color' />"+
+	"<input type='text' id='cANDI508-playground-fg' maxlength='7' title='Text Color Hex' value='#000000' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />/&nbsp;"+
+	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-bg' style='background-color:#ffffff !important' aria-label='visual color picker, select background color'  />"+
+	"<input type='text' id='cANDI508-playground-bg' maxlength='7' title='Background Color Hex' value='#ffffff' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />= "+
 	"<div tabindex='0' id='cANDI508-playground-result' aria-describedby='cANDI508-playground-instructions'><span id='cANDI508-playground-ratio'>21</span>:1</div><br />"+
 	"<div id='cANDI508-playground-instructions-controls'>Arrow keys adjust brightness: &uarr; lightens, &darr; darkens.</div>"+
 	"<div id='cANDI508-playground-buttons'>"+
 	"<button id='cANDI508-playground-suggest-small' class='ANDI508-viewOtherResults-button'>get small text suggestion</button>"+
 	"<button id='cANDI508-playground-suggest-large' class='ANDI508-viewOtherResults-button'>get large text suggestion</button>"+
 	"</div></div></div>");
+
+	enableColorWidget("fg");
+	enableColorWidget("bg");
 	
 	//Define contrastPlayground button
 	$("#ANDI508-contrastPlayground-button").click(function(){
@@ -227,6 +234,25 @@ cANDI.results = function(){
 	]);
 	
 	$("#ANDI508").focus();
+	
+	//This function will allow the color selection widget to work
+	function enableColorWidget(fgbg){
+		$("#cANDI508-playground-colorSelector-"+fgbg)
+			.attr("tabindex","0")
+			.click(function(){
+				var val = rgbToHex(new Color($(this).css("background-color")));
+				$("#cANDI508-colorSelectorWidget-"+fgbg)
+					.val(val) //set the value of the widget
+					.click() //open the widget
+					.off("change") //so that there is only one listener
+					.on("change", function(){
+						$("#cANDI508-playground-colorSelector-"+fgbg).attr("style", "background-color:"+this.value+" !important;");
+						$("#cANDI508-playground-"+fgbg).val(this.value);
+						cANDI.playground_calc();
+					});
+				return false;
+			});
+	}
 };
 
 //This function will update the info in the Active Element Inspection.
@@ -444,7 +470,7 @@ cANDI.getContrast = function(fgElement){
 		semiTransparency:	semiTransparency,
 		opacity:			opacity,
 		bgImage:			$(bgElement).css("background-image"),
-		size:				parseInt($(fgElement).css("font-size")),
+		size:				parseFloat($(fgElement).css("font-size")),
 		weight:				$(fgElement).css("font-weight"),
 		family:				$(fgElement).css("font-family"),
 		minReq:				undefined,
@@ -467,11 +493,12 @@ cANDI.getContrast = function(fgElement){
 
 		//Set minReq (minimum requirement)
 		cANDI_data.minReq = ratio_small;
+
 		if(cANDI_data.size >= 24)
 			cANDI_data.minReq = ratio_large;
-		else if(cANDI_data.size >= 18 && cANDI_data.weight >= 700) //700 is where bold begins
+		else if(cANDI_data.size >= 18.66 && cANDI_data.weight >= 700) //700 is where bold begins, 18.66 is approx equal to 14pt
 			cANDI_data.minReq = ratio_large;
-				
+
 		if(cANDI_data.bgImage === "none" && !cANDI_data.opacity){
 			//No, Display PASS/FAIL Result and Requirement Ratio
 			if(cANDI_data.ratio >= cANDI_data.minReq){
@@ -667,9 +694,7 @@ cANDI.contrastDisplay = function(element){
 
 	var cANDI_data = $(element).data("candi508");
 
-	//Display Font-size (converts to pt)
-	var size_pt = Math.round(cANDI_data.size * 0.75) + "pt";
-	$("#cANDI508-fontsize").html(size_pt);
+	$("#cANDI508-fontsize").html(convertPxToPt(cANDI_data.size) + "pt");
 
 	//Display Font-weight (if bold)
 	if(cANDI_data.weight >= 700)
@@ -731,6 +756,20 @@ cANDI.contrastDisplay = function(element){
 		}
 
 		$("#cANDI508-result").html("MANUAL TEST NEEDED").addClass("cANDI508-manual");
+	}
+	
+	//This function converts px units to pt
+	function convertPxToPt(px){
+		var pt;
+		//convert px to inches (divide by 96)
+		pt = (px / 96 );
+		//convert inches to pt (multiply by 72)
+		pt = pt * 72;
+		//round to 2 decimals
+		pt = Math.round(pt, 2);
+		//truncate the decimal
+		pt = Math.floor(pt);
+		return pt;
 	}
 };
 

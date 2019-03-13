@@ -12,7 +12,7 @@
 		
 	/*=Test Page=*/
 	#ANDI508-testPage.hANDI508-testPage .ANDI508-forceReveal
-		{border:1px #f0ee87 !important; box-shadow:0 0 25px 1px #f0ee87 !important}
+		{border:1px #864752 !important; box-shadow:0 0 25px 1px #c2838e !important}
 	#ANDI508-testPage.hANDI508-testPage .ANDI508-forceReveal.ANDI508-forceReveal-display
 		{display:inline-block !important;}
 	#ANDI508-testPage.hANDI508-testPage .ANDI508-forceReveal.ANDI508-forceReveal-visibility
@@ -29,15 +29,15 @@
 		{text-indent:0 !important;}
 		
 	#ANDI508-testPage .ANDI508-element.ANDI508-highlight
-		{outline:none !important;}
+		{outline:0 !important;}
 		
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:before,
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:after
-		{outline:1px solid red !important; box-shadow:0 0 20px 1px red !important}
+		{outline:1px solid #ef0000 !important; box-shadow:0 0 20px 1px #ef0000 !important}
 
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:before,
 	#ANDI508-testPage.hANDI508-highlightCssContent .hANDI508-hasHiddenCssContent:after
-		{box-shadow:0 0 20px 4px red !important;}
+		{box-shadow:0 0 20px 4px #ef0000 !important;}
 	#ANDI508-testPage .ANDI508-highlight.ANDI508-element-active.ANDI508-element.hANDI508-hasHiddenCssContent
 		{outline:4px solid deeppink !important;}
 		

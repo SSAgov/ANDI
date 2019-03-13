@@ -5,7 +5,7 @@
 
 function init_module(){
 
-var tandiVersionNumber = "11.0.1";
+var tandiVersionNumber = "11.1.0";
 
 //create tANDI instance
 var tANDI = new AndiModule(tandiVersionNumber,"t");
@@ -401,7 +401,7 @@ AndiModule.inspect = function(element){
 			
 			//Create vars for the looping that's about to happen
 			var s, ci, ri;
-			var row_index_matches, col_index_matches;
+			var row_index_matches, col_index_matches, isSameColgroup, isSameRowgroup;
 			
 			//if inspected element is a td
 			if($(element).is("td")){
@@ -440,21 +440,18 @@ AndiModule.inspect = function(element){
 					rgi = $(this).attr("data-tandi508-rowgroupindex");
 					row_index_matches = index_match(rowIndex, ri);
 					col_index_matches = index_match(colIndex, ci);
-					
+					isSameColgroup = (!colgroupIndex || colgroupIndex == cgi);
+					isSameRowgroup = (!rowgroupIndex || rowgroupIndex == rgi);
 					if($(this).is("th") && s){
-						//get associated th from col
+						//get associated th from column
 						if(col_index_matches && !row_index_matches){
-							if(s == "col" ||
-							(s == "colgroup" && (!colgroupIndex || (colgroupIndex == cgi))))
-							{
+							if( isSameColgroup && (s == "col" || s == "colgroup") ){
 								addHighlight(this, true);
 							}
 						}
 						//get associated th from row
 						else if(row_index_matches && !col_index_matches){
-							if(s == "row" ||
-								(s == "rowgroup" && (!rowgroupIndex || (rowgroupIndex == rgi))))
-							{
+							if( isSameRowgroup && (s == "row" || s == "rowgroup") ){
 								addHighlight(this, true);
 							}
 						}
@@ -462,13 +459,13 @@ AndiModule.inspect = function(element){
 					
 					if(scope){
 						//th has scope
-						if(scope == "col" && col_index_matches){
+						if(isSameColgroup && scope === "col" && col_index_matches){
 							addHighlight(this);
 						}
-						else if(scope == "row" && row_index_matches){
+						else if(scope === "row" && row_index_matches){
 							addHighlight(this);
 						}
-						else if(scope == "colgroup" && col_index_matches){
+						else if(isSameColgroup && scope === "colgroup" && col_index_matches){
 							if($(element).parent().attr("data-tandi508-colgroupsegment")){
 								if(colgroupIndex == cgi)
 									addHighlight(this);
@@ -476,7 +473,7 @@ AndiModule.inspect = function(element){
 							else
 								addHighlight(this);
 						}
-						else if(scope == "rowgroup" && row_index_matches && rowgroupIndex == rgi)
+						else if(scope === "rowgroup" && row_index_matches && rowgroupIndex == rgi)
 							addHighlight(this);
 					}
 					else{
@@ -488,7 +485,7 @@ AndiModule.inspect = function(element){
 						}
 						//No scope assumptions relating to other th
 						else if($(this).is("th")){
-							if(rowIndex == "0" && col_index_matches)
+							if(rowIndex === "0" && col_index_matches)
 								addHighlight(this);
 						}
 					}
@@ -987,6 +984,8 @@ function analyzeTable(table){
 						if(tooManyScopeColLevels)
 							andiAlerter.throwAlert(alert_0043,[tANDI.scopeLevelLimit,"col"]);
 						andiCheck.detectDeprecatedHTML($(cell));
+						if(scope !== "col" && scope !== "row" && scope !== "colgroup" && scope !== "rowgroup")//scope value is invalid
+							andiAlerter.throwAlert(alert_007C,[scope]);
 					}
 				}
 
@@ -1135,6 +1134,8 @@ function analyzeTable(table){
 		var nonHeaderCount = 0;
 		var hasHeaderRow = false;		//true when there are two or more th in a row
 		var hasHeaderCol = false;		//true when two or more rows contain a th
+		var headersMissingRoleCount = 0;//used for alert_004J
+		var cellsNotContainedByRow = 0;	//used for alert_004K
 		var cell_role = (role === "table") ? "[role=cell]" : "[role=gridcell]";
 		//This array is used to keep track of the rowspan of the previous row
 		//They will be checked against before assigning the colIndex.
@@ -1144,8 +1145,8 @@ function analyzeTable(table){
 		
 		//Cache the visible elements (performance)
 		var all_rows = $(table).find("[role=row]").filter(":visible");
-		var all_th = $(all_rows).find("[role=columnheader],[role=rowheader]").filter(":visible");
-		var all_cells = $(all_rows).find("[role=columnheader],[role=rowheader],"+cell_role).filter(":visible");
+		//var all_th = $(all_rows).find("[role=columnheader],[role=rowheader]").filter(":visible");
+		var all_cells = $(table).find("[role=columnheader],[role=rowheader],"+cell_role).filter(":visible");
 
 		//This is a little hack to force the table tag to go first in the index
 		//so that it is inspected first with the previous and next buttons.
@@ -1164,7 +1165,7 @@ function analyzeTable(table){
 			colIndex = 0;
 			colgroupSegmentation_colgroupsPerRowCounter = 0;
 			
-			cells = $(row).find("[role=columnheader],[role=rowheader],"+cell_role).filter(":visible");
+			cells = $(row).find("th,[role=columnheader],[role=rowheader],"+cell_role).filter(":visible");
 			
 			//Set colCount
 			if(colCount < cells.length)
@@ -1174,12 +1175,17 @@ function analyzeTable(table){
 			$(cells).each(function loopA(){
 				//Increment cell counters
 				cell = $(this);
-				if($(cell).is("[role=columnheader],[role=rowheader]")){
+				if($(cell).is("th,[role=columnheader],[role=rowheader]")){
 					headerCount++;
 					if(headerCount > 1)
 						hasHeaderRow = true;
 					if(rowCount > 1)
 						hasHeaderCol = true;
+					
+					if($(cell).is("th") && !$(cell).is("[role=columnheader],[role=rowheader]")){
+						//table cell is missing role
+						headersMissingRoleCount++;
+					}
 				}
 				else{
 					nonHeaderCount++;
@@ -1260,35 +1266,38 @@ function analyzeTable(table){
 			rowIndex++;
 		});
 
-		//Loop C (grab the accessibility components)
+		//Loop C (grab the accessibility components for each cell)
 		$(all_cells).each(function loopC(){
 			cell = $(this);
-			
-			//FOR EACH CELL...
-			
-			//Determine if cell has a child element (link, form element, img)
-			child = $(cell).find("a,button,input,select,textarea,img").first();
-			
-			//Grab accessibility components from the cell
-			andiData = new AndiData(cell[0]);
 
-			if(child.length){
-				//Also grab accessibility components from the child
-				//andiData.grabComponents($(child), true);//overwrite with components from the child, except for innerText
-				//Do alert checks for the child
-				andiCheck.commonFocusableElementChecks(andiData,$(child));
+			if(isContainedByRowRole(cell)){//Is the cell contained by an element with role=row?
+				//Determine if cell has a child element (link, form element, img)
+				child = $(cell).find("a,button,input,select,textarea,img").first();
+				
+				//Grab accessibility components from the cell
+				andiData = new AndiData(cell[0]);
+
+				if(child.length){
+					//Also grab accessibility components from the child
+					//andiData.grabComponents($(child), true);//overwrite with components from the child, except for innerText
+					//Do alert checks for the child
+					andiCheck.commonFocusableElementChecks(andiData,$(child));
+				}
+				else//Do alert checks for the cell
+					andiCheck.commonNonFocusableElementChecks(andiData, $(cell));
+				
+				//If this is not the upper left cell
+				if($(cell).is("[role=columnheader],[role=rowheader]") && !andiData.accName && !($(this).attr("data-tandi508-rowindex") === "1" && $(this).attr("data-tandi508-colindex") === "1"))
+					//Header cell is empty
+					andiAlerter.throwAlert(alert_0132);
+				
+				AndiData.attachDataToElement(cell);
 			}
-			else//Do alert checks for the cell
-				andiCheck.commonNonFocusableElementChecks(andiData, $(cell));
-			
-			//If this is not the upper left cell
-			if($(cell).is("[role=columnheader],[role=rowheader]") && !andiData.accName && !($(this).attr("data-tandi508-rowindex") === "1" && $(this).attr("data-tandi508-colindex") === "1"))
-				//Header cell is empty
-				andiAlerter.throwAlert(alert_0132);
-			
-			AndiData.attachDataToElement(cell);
+			else{
+				console.log("ALERT: table cell is not contained by role=row")
+			}
 		});
-		
+			
 		//Default to scope mode
 		tANDI.hideModeButtons();
 		AndiModule.activeActionButtons.scopeMode = true;
@@ -1300,7 +1309,10 @@ function analyzeTable(table){
 		testPageData.andiElementIndex = 0; //setting this to 0 allows the element to be created at index 1, which places it before the cells
 		andiData = new AndiData(table[0]); //create the AndiData object
 		
-		andiCheck.commonNonFocusableElementChecks(andiData, $(table));		
+		andiCheck.commonNonFocusableElementChecks(andiData, $(table));	
+
+		if(role === "grid")
+			andiAlerter.throwAlert(alert_0233);
 		
 		if(all_rows.length === 0)//no rows
 			andiAlerter.throwAlert(alert_004H,[role]);
@@ -1310,12 +1322,39 @@ function analyzeTable(table){
 			else//No header cells
 				andiAlerter.throwAlert(alert_004G,[role]);
 		}
+		
+		//If any header is missing a role, throw alert
+		if(headersMissingRoleCount)
+			andiAlerter.throwAlert(alert_004J,[role,headersMissingRoleCount]);
+		
+		//If a cell is not contained by a role=row, throw alert
+		if(cellsNotContainedByRow)
+			andiAlerter.throwAlert(alert_004K,[role,cellsNotContainedByRow]);
 
 		cellCount = headerCount + nonHeaderCount;
 		
 		AndiData.attachDataToElement(table);
 		
 		testPageData.andiElementIndex = lastIndex; //set the index back to the last element's index so things dependent on this number don't break
+	
+		//This function determines if the cell is contained by an element with role=row
+		//  and if that row is within the current table
+		function isContainedByRowRole(cell){
+			var containingRow = $(cell).closest("[role=row]");
+			var isContainedByRow = false;
+			if(containingRow){
+				//Check if the containing row is part of this table's role=row elements
+				$(all_rows).each(function(){
+					if($(this).is(containingRow)){
+						isContainedByRow = true;
+						return false; //break out of each loop
+					}
+				});
+			}
+			if(!isContainedByRow)
+				cellsNotContainedByRow++;
+			return isContainedByRow;
+		}
 	}
 }
 
@@ -1505,7 +1544,7 @@ tANDI.viewList_toggle = function(btn){
 //This function will overlay the table markup.
 AndiOverlay.prototype.overlayTableMarkup = function(){
 	var scope, headers, id, role, markupOverlay;
-	$("#ANDI508-testPage .ANDI508-element:not(table,[role=table],[role=grid],[role=treegrid])").each(function(){
+	$("#ANDI508-testPage [data-tandi508-colindex]").each(function(){
 		scope = $(this).attr("scope");
 		headers = $(this).attr("headers");
 		id = this.id;
@@ -1547,36 +1586,54 @@ tANDI.grab_headers = function(element, elementData, table){
 	//stores the actual vaule of the headers, not the parsed (grabbed) headersText
 	elementData.components.headers = headers;
 	
-	function getHeadersReferences(element, ids, table){
-		var idsArray = ids.split(" "); //split the list on the spaces, store into array. So it can be parsed through one at a time.
+	function getHeadersReferences(element, headers, table){
+		var idsArray = headers.split(" "); //split the list on the spaces, store into array. So it can be parsed through one at a time.
 		var accumulatedText = "";//this variable is going to store what is found. And will be returned
 		var message, splitMessage = "";
 		var referencedElement, referencedElementText;
 		var missingReferences = [];
 		var displayHeaders = "";
+		var tableIds = $(table).find("[id]"); //array of all elements within the table that have an id
+		var tableThIds = $(table).find("th[id]"); //array of all th cells within the table that have an id
+		
 		//Traverse through the array
 		for(var x=0;x<idsArray.length;x++){
 			//Can the aria list id be found somewhere on the page?
 			if(idsArray[x] !== ""){
-				//Check if this is referencing an element with a duplicate id
-				andiCheck.areThereAnyDuplicateIds("headers", idsArray[x]);
 				
-				referencedElement = document.getElementById(idsArray[x]);
+				//Set the referenced element (only looking for the id within the same table)
+				referencedElement = undefined; //set to undefined
+				
+				//Loop through all elements within the table that have an id
+				$.each(tableIds,function(){
+					if(this.id === idsArray[x]){
+						referencedElement = this;
+						return;
+					}
+				});
+
 				referencedElementText = "";
 				
-				if($(referencedElement).html() !== undefined){//element with id was found
-					if(!$(referencedElement).closest("table").is(table)) //referenced element is in another table
-						andiAlerter.throwAlert(alert_0062, [idsArray[x]]);
-					else if($(referencedElement).is("td")) //referenced element is a td
+				if($(referencedElement).html() !== undefined && $(referencedElement).closest("table").is(table)){
+					//element with id was found within the same table
+					if($(referencedElement).is("td")) //referenced element is a td
 						andiAlerter.throwAlert(alert_0067, [idsArray[x]]);
 					else if(!$(referencedElement).is("th"))//referenced element is not a th
 						andiAlerter.throwAlert(alert_0066, [idsArray[x]]);
-					else //referenced element is a th
+					else{//referenced element is a th
+						//Check if this is referencing a duplicate id within the same table
+						areThereAnyDuplicateIds_headers(idsArray[x], tableThIds);
 						referencedElementText += andiUtility.getVisibleInnerText(referencedElement);
+					}
 				}
-				else{
-					//No, this id was not found, add to list.
-					missingReferences.push(idsArray[x]);
+				else{//referenced element was not found or was not within the same table
+					referencedElement = document.getElementById(idsArray[x]); //search within entire document for this id
+					
+					if($(referencedElement).html() !== undefined){
+						andiAlerter.throwAlert(alert_0062, [idsArray[x]]); //referenced element is in another table
+					}
+					else //No, this id was not found at all, add to list.
+						missingReferences.push(idsArray[x]);
 				}
 				
 				if(referencedElementText !== "") //Add referenceId
@@ -1593,6 +1650,24 @@ tANDI.grab_headers = function(element, elementData, table){
 			andiAlerter.throwAlert(alert_0068);
 		
 		return displayHeaders;
+		
+		//This function will search the table for th cells with duplicate ids.
+		function areThereAnyDuplicateIds_headers(id, tableThIds){
+			if(id && tableThIds.length > 1){
+				var idMatchesFound = 0;
+				//loop through tableThIds and compare
+				for (z=0; z<tableThIds.length; z++){
+					if(id === tableThIds[z].id){
+						idMatchesFound++;
+						if(idMatchesFound === 2) break; //duplicate found so stop searching, for performance
+					}
+				}
+				if(idMatchesFound > 1){//Duplicate Found
+					var message = "[headers] attribute is referencing a duplicate id [id="+id+"] within the same table";
+					andiAlerter.throwAlert(alert_0011, [message]);
+				}
+			}
+		}
 	}
 };
 

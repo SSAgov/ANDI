@@ -10,7 +10,7 @@
 	{font-family:monospace !important;}
 #ANDI508 #iANDI508-iframeList-container a:hover,
 #ANDI508 #iANDI508-iframeList-container a:focus
-	{text-decoration:underline !important; color:pink !important;}
+	{text-decoration:underline !important; color:#c2838e !important;}
 	
 #ANDI508 #ANDI508-elementNameContainer
 	{display:inline;}
@@ -25,8 +25,11 @@
 	
 /*=Test Page=*/
 	#ANDI508-testPage.iANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
-		{outline:3px dashed red !important;}
+		{outline:3px dashed #df3131 !important;}
 	#ANDI508-testPage.iANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
 		{outline:4px solid deeppink !important;}
 	#ANDI508-testPage.iANDI508-testPage .ANDI508-element.ANDI508-highlight
-		{outline:1px dashed pink !important;}
+		{outline:1px dashed #c2838e !important; animation:pulse_iANDI 3s linear infinite;}
+		@keyframes pulse_iANDI{ 
+			50% {outline-color:#864752 !important;}
+		}
