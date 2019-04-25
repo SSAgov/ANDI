@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "26.2.0";
+var andiVersionNumber = "26.2.3";
 
 //==============//
 // ANDI CONFIG: //
@@ -91,10 +91,10 @@ function launchAndi(){(window.andi508 = function(){
 
 	//Frames handling
 	if(document.getElementsByTagName("frameset")[0]){
-		if(confirm("ANDI has detected frames:\nPress OK to stay on the page.\n\nPress Cancel to test an individual frame.") !== true){
+		if(confirm("ANDI has detected frames:\nPress OK to stay on the page.\nPress Cancel to test an individual frame.") !== true){
 			var oldLocation = document.location;
 			var framesSelectionHead = "<head><title>ANDI Frame Selection</title><style>body{margin-left:1em;}*{font-family:Verdana,Sans-Serif;font-size:12pt}h1{font-weight:bold;font-size:20pt}h2{font-weight:bold;font-size:13pt}li{margin:7px}a{font-family:monospace;margin-right:8px}</style></head>";
-			var framesSelectionBody = "<h1 id='ANDI508-frameSelectionUI'>ANDI</h1><p>This page, '"+document.title+"', uses frames. Each frame must be tested individually. <br />Select a frame from the list below, then launch ANDI.</p><h2>Frames:</h2><ol>";
+			var framesSelectionBody = "<h1 id='ANDI508-frameSelectionUI'>ANDI</h1><p>This page uses frames. The page title is: '"+document.title+"'.<br /><br />Each frame must be tested individually. Select a frame from the list below, then launch ANDI.</p><h2>Frames:</h2><ol>";
 			var title, titleDisplay, framesrc;
 			$("frame").each(function(){
 				//Build Title Display
@@ -458,6 +458,7 @@ var alert_0164 = new Alert("warning","16","Link has click event but is not keybo
 var alert_0165 = new Alert("warning","16","Possible inaccessible link: &lt;a&gt; element has no [href], [id], or [tabindex].","#anchor_purpose_unclear");
 var alert_0166 = new Alert("caution","16","Possible inaccessible link: &lt;a&gt; element has no [href], or [tabindex].","#anchor_purpose_unclear");
 var alert_0167 = new Alert("caution","16","This &lt;a&gt; element is an anchor target; If clicking performs a function, it's not keyboard accessible.","#is_anchor_target");
+var alert_0168 = new Alert("warning","16","&lt;a&gt; without [href] may not be recognized as a link; add [role=link] or [href].","#not_recognized_as_link");
 
 var alert_0171 = new Alert("danger","17","&lt;marquee&gt; element found, do not use.","#marquee_found");
 var alert_0172 = new Alert("danger","17","&lt;blink&gt; element found, do not use.","#blink_found");
@@ -520,7 +521,7 @@ function andiReady(){
 			"<button id='ANDI508-button-help' aria-label='ANDI Help' title='ANDI Help'><img src='"+icons_url+"help.png' alt='' /></button>"+
 			"<button id='ANDI508-button-close' aria-label='Remove ANDI' title='Remove ANDI'><img src='"+icons_url+"close.png' alt='' /></button>";
 		
-		var moduleButtons = "<div id='ANDI508-moduleMenu' role='menu'><div id='ANDI508-moduleMenu-prompt'>Select Module:</div>"+
+		var moduleButtons = "<div id='ANDI508-moduleMenu' role='menu' aria-label='Select a Module'><div id='ANDI508-moduleMenu-prompt'>Select Module:</div>"+
 			//Default (fANDI)
 			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-f'>focusable elements</button>"+
 			//gANDI
@@ -2436,7 +2437,8 @@ AndiData.textAlternativeComputation = function(root){
 					if(root != node && $(node).is("select")){
 						//loop through selected options to accumulate text
 						$(node).find("option:selected").each(function(){
-							accumulatedText += AndiData.addComp(data, "innerText", stepG(this.childNodes[0], data));
+							if(this.childNodes.length)
+								accumulatedText += AndiData.addComp(data, "innerText", stepG(this.childNodes[0], data));
 						});
 					}
 					else if(!$(node).is(exclusions) && $(node).is(":shown")){

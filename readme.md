@@ -33,7 +33,7 @@ If you would like to contribute to ANDI's development, some background knowledge
 
 ## What areas of accessibility does ANDI cover?
 
-ANDI offers the ability to inspect focusable elements, data tables, images, and in-depth link and button analysis, page structure, color contrast, and hidden content detection.
+ANDI offers the ability to inspect focusable elements, images, data tables, page structure, color contrast, in-depth link and button analysis, and hidden content detection.
 
 ## Who maintains ANDI?
 
