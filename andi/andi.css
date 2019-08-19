@@ -1,5 +1,5 @@
 /*=====ANDI CSS=====*/
-/*Version 5.0.2 */
+/*Version 5.0.3 */
 /*This is the main CSS file for ANDI*/
 /*It is important to keep the specificity high to override any test page's own CSS*/
 
@@ -551,6 +551,8 @@ body.ANDI508-testPage
 /*linearize*/
 #ANDI508-testPage .ANDI508-linearized.ANDI508-linearized-position
 	{position:static !important; box-shadow:0 0 25px 1px #33fffd !important;}
+#ANDI508-testPage .ANDI508-linearized.ANDI508-linearized-float
+	{float:none !important; box-shadow:0 0 25px 1px #33fffd !important;}
 
 @media screen and (max-width: 700px){
 	#ANDI508 #ANDI508-module-actions

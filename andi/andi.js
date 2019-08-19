@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "26.2.3";
+var andiVersionNumber = "26.2.4";
 
 //==============//
 // ANDI CONFIG: //
@@ -1390,14 +1390,14 @@ function AndiSettings(){
 	this.linearize = function(state){
 		if(state){//linearize on
 			andiSettings.setting_on(document.getElementById("ANDI508-button-linearize"));
-			var position, display;
+			var css_position, css_float;
 			$("#ANDI508-testPage *").filter(":visible:not(.ANDI508-overlay)").each(function(){
 				//check position property
-				position = $(this).css("position");
-				if(position === "absolute" ||
-					position === "fixed" ||
-					position === "relative" ||
-					position === "sticky")
+				css_position = $(this).css("position");
+				if(css_position === "absolute" ||
+					css_position === "fixed" ||
+					css_position === "relative" ||
+					css_position === "sticky")
 				{
 					if($(this).css("top") !== "auto" ||
 						$(this).css("left") !== "auto" ||
@@ -1407,11 +1407,18 @@ function AndiSettings(){
 						$(this).addClass("ANDI508-linearized ANDI508-linearized-position");
 					}
 				}
+				
+				//check float property
+				css_float = $(this).css("float");
+				if(css_float === "left" || css_float === "right"){
+					$(this).addClass("ANDI508-linearized ANDI508-linearized-float");
+				}
+				
 			});
 		}
 		else{//linearize off
 			andiSettings.setting_off(document.getElementById("ANDI508-button-linearize"));
-			$("#ANDI508-testPage .ANDI508-linearized").removeClass("ANDI508-linearized ANDI508-linearized-position");
+			$("#ANDI508-testPage .ANDI508-linearized").removeClass("ANDI508-linearized ANDI508-linearized-position ANDI508-linearized-float");
 		}
 		andiResetter.resizeHeights(true);
 	};
