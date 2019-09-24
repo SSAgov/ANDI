@@ -13,6 +13,7 @@ For many web developers, accessibility is an unfamiliar and complex territory an
 where accessibility issues occur on the page. To accomplish this, it analyzes the HTML of the web page being testing and extracts accessibility related markup.
 
 > #### Developers like ANDI because:
+
 > * It's easy to install, quick to run, and helps satisfy accessibility requirements.
 >	
 > #### Testers like ANDI because:
