@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "26.2.4";
+var andiVersionNumber = "26.3.1";
 
 //==============//
 // ANDI CONFIG: //
@@ -540,33 +540,33 @@ function andiReady(){
 			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-i'>iframes</button>"+
 			"</div>";
 		
-		var andiBar = "<section id='ANDI508' tabindex='0' aria-label='ANDI Accessibility Test Tool' style='display:none'>"+
+		var andiBar = "<section id='ANDI508' tabindex='-1' aria-label='ANDI' style='display:none'>"+
 		"<div id='ANDI508-header'>"+
-			"<h1 id='ANDI508-toolName-heading' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'><a id='ANDI508-toolName-link' href='#' aria-haspopup='true' aria-label='ANDI "+andiVersionNumber+"'><span id='ANDI508-module-name' data-andi508-moduleversion=''>&nbsp;</span>ANDI</a></h1>"+
+			"<h1 id='ANDI508-toolName-heading'><a id='ANDI508-toolName-link' class='ANDI508-sectionJump' href='#' aria-haspopup='dialog' aria-label='ANDI "+andiVersionNumber+"'><span id='ANDI508-module-name' data-andi508-moduleversion=''>&nbsp;</span>ANDI</a></h1>"+
 			"<div id='ANDI508-moduleMenu-container'>"+
 				moduleButtons+
 			"</div>"+
 			"<div id='ANDI508-module-actions'></div>"+
 			"<div id='ANDI508-loading'>Loading <div id='ANDI508-loading-animation' /></div>"+
-			"<div id='ANDI508-barControls' aria-label='ANDI Controls' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>"+
+			"<div id='ANDI508-barControls' aria-label='ANDI Controls' class='ANDI508-sectionJump' tabindex='-1'>"+
 				menuButtons+
 			"</div>"+
 		"</div>"+
 		"<div id='ANDI508-body' style='display:none'>"+
-			"<div id='ANDI508-activeElementInspection' aria-label='ANDI Active Element Inspection' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>"+
+			"<div id='ANDI508-activeElementInspection' aria-label='Active Element Inspection' class='ANDI508-sectionJump' tabindex='-1'>"+
 				"<div id='ANDI508-activeElementResults'>"+
 					"<div id='ANDI508-elementControls'>"+
-						"<button aria-label='Previous Element' title='Inspect Previous Element' accesskey='"+andiHotkeyList.key_prev.key+"' id='ANDI508-button-prevElement'><img src='"+icons_url+"prev.png' alt='' /></button>"+
-						"<button aria-label='Next Element' title='Inspect Next Element' accesskey='"+andiHotkeyList.key_next.key+"' id='ANDI508-button-nextElement'><img src='"+icons_url+"next.png' alt='' /></button>"+
+						"<button title='Previous Element' accesskey='"+andiHotkeyList.key_prev.key+"' id='ANDI508-button-prevElement'><img src='"+icons_url+"prev.png' alt='' /></button>"+
+						"<button title='Next Element' accesskey='"+andiHotkeyList.key_next.key+"' id='ANDI508-button-nextElement'><img src='"+icons_url+"next.png' alt='' /></button>"+
 						"<br />"+
 					"</div>"+
 					"<div id='ANDI508-startUpSummary' tabindex='0' />"+
 					"<div id='ANDI508-elementDetails'>"+
 						"<div id='ANDI508-elementNameContainer'><h3 class='ANDI508-heading'>Element:</h3> "+
-							"<a href='#' id='ANDI508-elementNameLink' aria-labelledby='ANDI508-elementNameContainer'>&lt;<span id='ANDI508-elementNameDisplay' />&gt;</a>"+
+							"<a href='#' id='ANDI508-elementNameLink' aria-labelledby='ANDI508-elementNameContainer ANDI508-elementNameDisplay'>&lt;<span id='ANDI508-elementNameDisplay' />&gt;</a>"+
 						"</div>"+
 						"<div id='ANDI508-additionalElementDetails'></div>"+
-						"<div id='ANDI508-accessibleComponentsTableContainer' class='ANDI508-scrollable' tabindex='0'>"+
+						"<div id='ANDI508-accessibleComponentsTableContainer' class='ANDI508-scrollable' tabindex='0' aria-labelledby='ANDI508-accessibleComponentsTable-heading'>"+
 							"<h3 id='ANDI508-accessibleComponentsTable-heading' class='ANDI508-heading'>Accessibility Components: <span id='ANDI508-accessibleComponentsTotal'></span></h3>"+
 							"<table id='ANDI508-accessibleComponentsTable' aria-labelledby='ANDI508-accessibleComponentsTable-heading'><tbody /></table>"+
 						"</div>"+
@@ -577,7 +577,7 @@ function andiReady(){
 					"</div>"+
 				"</div>"+
 			"</div>"+
-			"<div id='ANDI508-pageAnalysis' aria-label='ANDI Page Analysis' tabindex='-1' accesskey='"+andiHotkeyList.key_jump.key+"'>"+
+			"<div id='ANDI508-pageAnalysis' aria-label='Page Analysis' class='ANDI508-sectionJump' tabindex='-1'>"+
 				"<div id='ANDI508-resultsSummary'>"+
 					"<h3 class='ANDI508-heading' tabindex='0' id='ANDI508-resultsSummary-heading'></h3>"+
 				"</div>"+
@@ -676,10 +676,18 @@ function andiReady(){
 				andiLaser.drawLaser($(this).offset(),$(activeElement).offset(),$(activeElement));
 			})
 			.on("mouseleave", andiLaser.eraseLaser);
-		//Active Element Jump Hotkey
+		//Active Element Jump and Section Jump Hotkeys
 		$(document).keydown(function(e){
 			if(e.which === andiHotkeyList.key_active.code && e.altKey )
 				$("#ANDI508-testPage .ANDI508-element-active").first().focus();
+			else if(e.which === andiHotkeyList.key_jump.code && e.altKey){
+				//get next element with ANDI508-sectionJump class
+				var nextSectionJump = $(".ANDI508-sectionJump").eq( $(".ANDI508-sectionJump").index( $(":focus") ) + 1 );
+				if(!nextSectionJump.length)
+					$(".ANDI508-sectionJump").first().focus();
+				else
+					$(nextSectionJump).focus();
+			}
 		});
 		//Module Launchers
 		$("#ANDI508-moduleMenu").children("button").each(function(){
@@ -1251,7 +1259,7 @@ function AndiHotkeyList(){
 	}
 	
 	//Set the hotkeys/accesskeys
-	this.key_jump = new AndiHotkey("`","grave");
+	this.key_jump = new AndiHotkey("`","grave",192);
 	this.key_prev = new AndiHotkey(",","comma");
 	this.key_next = new AndiHotkey(".","period");
 	this.key_output = new AndiHotkey("&apos;","apostrophe");
@@ -1287,14 +1295,10 @@ function AndiHotkeyList(){
 			insertHotkeyListItem("Relaunch", andiHotkeyList.key_relaunch.key, andiHotkeyList.key_relaunch.sp)+
 			insertHotkeyListItem("Next Element", andiHotkeyList.key_next.key, andiHotkeyList.key_next.sp)+
 			insertHotkeyListItem("Prev Element", andiHotkeyList.key_prev.key, andiHotkeyList.key_prev.sp)+
-			insertHotkeyListItem("Active Element", andiHotkeyList.key_active.key, andiHotkeyList.key_active.sp);
-	
-		if(!chrome && !safari){
-			//chrome/safari cannot put accesskey focus on static element
-			hotkeyList += insertHotkeyListItem("ANDI Output", andiHotkeyList.key_output.key, andiHotkeyList.key_output.sp);
-			hotkeyList += insertHotkeyListItem("Section Jump", andiHotkeyList.key_jump.key, andiHotkeyList.key_jump.sp);
-		}
-		
+			insertHotkeyListItem("Active Element", andiHotkeyList.key_active.key, andiHotkeyList.key_active.sp)+
+			insertHotkeyListItem("ANDI Output", andiHotkeyList.key_output.key, andiHotkeyList.key_output.sp)+
+			insertHotkeyListItem("Section Jump", andiHotkeyList.key_jump.key, andiHotkeyList.key_jump.sp);
+			
 		hotkeyList += "</ul><h3><a rel='help' href='"+ help_url + "howtouse.html#HoverLock' target='_blank'>Hover Lock:</a></h3><ul aria-label='Hover lock is a feature for mouse users.'><li>&nbsp;&nbsp;&nbsp;hold shift</li></ul></div>";
 		
 		$("#ANDI508-button-keys").after(hotkeyList);
@@ -1535,7 +1539,10 @@ function AndiFocuser(){
 	};
 	//This function will shift the focus to an element even if the element is not tabbable
 	this.focusOn = function(element){
-		if(!$(element).attr("tabindex") && ((browserSupports.isIE && $(element).is("summary")) || !$(element).is(":focusable"))){
+		if(!element.length){
+			alert("Element removed from DOM. Refresh ANDI.");
+		}
+		else if(!$(element).attr("tabindex") && ((browserSupports.isIE && $(element).is("summary")) || !$(element).is(":focusable"))){
 			//"Flash" the tabindex
 			
 			//img with usemap cannot be given focus (browser moves focus to the <area>)
@@ -1567,7 +1574,7 @@ function AndiFocuser(){
 function AndiLaser(){
 	//Draws a laser. Pass in an object containing properties top and left, AKA the result of jQuery offset().
 	this.drawLaser = function(fromHereCoords, toHereCoords, targetObject){
-		if(browserSupports.svg){
+		if(browserSupports.svg && !!targetObject.length){
 			$("#ANDI508-laser").attr("x1",fromHereCoords.left).attr("y1",fromHereCoords.top)
 							   .attr("x2",  toHereCoords.left).attr("y2",  toHereCoords.top);
 			$("#ANDI508-laser-container").css("cssText","display:inline !important");
@@ -1671,7 +1678,7 @@ function AndiUtility(){
 	
 	this.getVisibleInnerText = function(element, root){
 		var innerText = "";
-		var exclusions = ".ANDI508-overlay,script,noscript,iframe,svg";
+		var exclusions = ".ANDI508-overlay,script,noscript,iframe";
 		var node;
 		if(!$(element).is(exclusions) && element.childNodes){
 			//Loop through this element's child nodes
@@ -2285,12 +2292,13 @@ AndiData.textAlternativeComputation = function(root){
 	function stepD(element, data, isRecursion){
 		var accumulatedText = "";
 		var component;
+		var role = $(element).attr("role");
 		
 		if(!isCalcAccDesc){
 			component = $(element).attr("alt");
 			if(component !== undefined){
 				//TODO: what about svg <image>
-				if($(element).isSemantically("","img,input[type=image]")){
+				if( $(element).is("img,input[type=image]") && ( !role || role === "img" ) ){
 					if(!isEmptyComponent(component, "alt", element)){
 						accumulatedText += AndiData.addComp(data, "alt", component, hasNodeBeenTraversed(element));
 					}
@@ -2304,7 +2312,7 @@ AndiData.textAlternativeComputation = function(root){
 				}
 			}
 		}
-
+		
 		if($(element).is("input[type=image],input[type=button],input[type=submit],input[type=reset]")){
 			//value (can be namer or describer)
 			if(!data.value){
@@ -2329,7 +2337,6 @@ AndiData.textAlternativeComputation = function(root){
 
 		if(TestPageData.page_using_table && $(element).is("table")){
 			//caption
-			var role = $(element).attr("role");
 			if(TestPageData.page_using_caption){
 				//caption (can be namer or describer)
 				if(!data.caption){
@@ -2378,7 +2385,7 @@ AndiData.textAlternativeComputation = function(root){
 					accumulatedText += AndiData.addComp(data, "figcaption", component, hasNodeBeenTraversed(element));
 				}
 			}
-			else if($(element).is("svg")){
+			else if(browserSupports.svg && ( $(element).is("svg") || element instanceof SVGElement) ){
 				if(!hasNodeBeenTraversed(element)){
 					component = $(element).find("title").first().text();
 					if(component !== undefined){
@@ -2419,7 +2426,7 @@ AndiData.textAlternativeComputation = function(root){
 	function stepF(element, data, isNameFromContent, isProcessRefTraversal){
 		var accumulatedText = "";
 
-		var exclusions = ".ANDI508-overlay,script,noscript,iframe,svg";
+		var exclusions = ".ANDI508-overlay,script,noscript,iframe";
 		
 		var node, beforePseudo, afterPseudo;
 		var nameFromContent_roles = "[role=button],[role=cell],[role=checkbox],[role=columnheader],[role=gridcell],[role=heading],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[role=radio],[role=row],[role=rowgroup],[role=rowheader],[role=switch],[role=tab],[role=tooltip],[role=tree],[role=treeitem]";
@@ -3275,12 +3282,18 @@ function AndiCheck(){
 				}
 			}
 			else{//not tabbable
-				switch(tagNameText){
-				case "img":
-				case "input[type=image]":
-					message = "Image"+alert_0003.message; break;
-				case "canvas":
-					message = "Canvas"+alert_0008.message; break;
+				//Does this element have a role?
+				if(elementData.role === "img"){
+					message = "[role=img] Element"+alert_0008.message;
+				}
+				else{
+					switch(tagNameText){
+					case "img":
+					case "input[type=image]":
+						if(!elementData.role) message = "Image"+alert_0003.message; break;
+					case "canvas":
+						message = "Canvas"+alert_0008.message; break;
+					}
 				}
 			}
 			
