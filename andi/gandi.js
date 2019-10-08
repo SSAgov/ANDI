@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var gandiVersionNumber = "6.0.1";
+var gandiVersionNumber = "6.0.2";
 
 //TODO: add <video>
 
@@ -166,8 +166,10 @@ gANDI.analyze = function(){
 			)
 		)
 		{
-			andiData = new AndiData(this);
-			AndiData.attachDataToElement(this);
+			if(!$(this).hasClass("ANDI508-element")){
+				andiData = new AndiData(this);
+				AndiData.attachDataToElement(this);
+			}
 			totals.fontIcon++;
 			$(this).addClass("gANDI508-fontIcon");
 		}
