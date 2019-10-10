@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ANDI DEMO - RESCUE.ME</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="DCTERMS:coderOffice" content="DCS" />
+<meta name="DCTERMS:coder" content="SSA" />
+<meta name="DCTERMS:contentOffice" content=" DCS " />
+<meta name="DCTERMS:contentOwner" content="SSA" />
+<meta name="description" content="ANDI DEMO PAGE" />
+
+<link href="style.css" rel="stylesheet" media="all" />
+
+</head>
+<body>
+<div class="testWarning">THIS IS A TEST PAGE TO DEMONSTRATE AN ACCESSIBILITY TEST WITH ANDI. THIS IS NOT A REAL SYSTEM.</div>
+<header>
+<h1 style='display:inline; margin-left:1em'>RESCUE.ME</h1>
+<p style='display:inline; margin-left:2em'>The Super Hero Request System</p>
+</header>
+<main>
+<div id='main'>
+	<h2 style='display:inline;'>We Will Save You.</h2>
+	<p style='margin-left:5px;display:inline;' id='instruct'>Just fill out this simple form and a Super Hero will be on the way.</p>
+
+<div id='page2' class='page'>
+<h3>Page 2 of 2</h3>
+	<strong id='question'>Whom Shall We Send?</strong><br />
+	<p style='font-size:12pt; color:#e14848'>NOTE: If you are in immediate danger, do not request Procrastinationman.</p>
+	<fieldset>
+	<label id='answer1'><input type='radio' name='hero' aria-labelledby='question answer1' />Accessibilityman</label><br />
+	<label id='answer2'><input type='radio' name='hero' aria-labelledby='question answer2' />Procrastinationman</label><br />
+	<label id='answer3'><input type='radio' name='hero' aria-labelledby='question answer3' />UserExperienceboy</label><br />
+	<label id='answer4'><input type='radio' name='hero' aria-labelledby='question answer4' />Inclusionwoman</label>
+	</fieldset>
+	
+	<strong id='whatday'>Choose a Day</strong><br />
+	<input type='text' aria-labelledby='whatday' /><br />
+	<em id='dateformat'>MM/DD/YYYY</em><br /><br />
+	
+	<table>
+	<caption>Super Hero Availability</caption>
+	<tr>
+	<th style='text-align:right'>Name</th>
+	<th scope='col'>Mon</th>
+	<th scope='col'>Tue</th>
+	<th scope='col'>Wed</th>
+	<th scope='col'>Thu</th>
+	<th scope='col'>Fri</th>
+	<th scope='col'>Sat</th>
+	<th scope='col'>Sun</th>
+	</tr>
+	<tr>
+	<th scope='row'>Accessibilityman</th>
+	<td>Y</td>
+	<td>Y</td>
+	<td>N</td>
+	<td>N</td>
+	<td>Y</td>
+	<td>N</td>
+	<td>N</td>
+	</tr>
+	<tr>
+	<th scope='row'>Procrastinationman</th>
+	<td>N</td>
+	<td>N</td>
+	<td>N</td>
+	<td>N</td>
+	<td>N</td>
+	<td>N</td>
+	<td>N</td>
+	</tr>
+	<tr>
+	<th scope='row'>UserExperienceboy</th>
+	<td>Y</td>
+	<td>Y</td>
+	<td>N</td>
+	<td>Y</td>
+	<td>N</td>
+	<td>N</td>
+	<td>Y</td>
+	</tr>
+	<tr>
+	<th scope='row'>Inclusionwoman</th>
+	<td>Y</td>
+	<td>Y</td>
+	<td>Y</td>
+	<td>Y</td>
+	<td>Y</td>
+	<td>Y</td>
+	<td>Y</td>
+	</tr>
+	</table>
+	<br />
+	<p style='font-size:12pt'>For more information <a href="#">Click Here</a></p>
+	<br />
+	<button id='next1' class='btn' accesskey='p' onclick='window.location.href="index.html"'>Previous</button>
+	<button id='next2' class='btn' accesskey='n' onclick='window.location.href="demo3.html"'>Next</button>
+</div>	
+
+</div>
+</main>
+<footer>
+<h2>Super Links:</h2>
+<ul>
+<li><a href="#">United Nations</a></li>
+<li><a href="#">Supervillain Database</a></li>
+<li><a href="#">Spandex Repair</a></li>
+</ul>
+</footer>
+<div class="testWarning">THIS IS A TEST PAGE TO DEMONSTRATE AN ACCESSIBILITY TEST WITH ANDI. THIS IS NOT A REAL SYSTEM.</div>
+</body>
+</html>

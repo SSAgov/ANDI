@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ANDI - Accessibility Test Tool - FAQ</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="DCTERMS:coderOffice" content="DCS" />
+<meta name="DCTERMS:coder" content="SSA" />
+<meta name="DCTERMS:contentOffice" content="DCS" />
+<meta name="DCTERMS:contentOwner" content="SSA" />
+<meta name="description" content="ANDI 508 accessibility test tool Help FAQ" />
+
+<link href="help.css" rel="stylesheet" media="all" />
+<link href="print.css" rel="stylesheet" media="print" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="help.js"></script>
+
+</head>
+<body>
+<header>
+	<h1 class="toolName">ANDI</h1>
+	<a href='#skipnav' class='skipnav'>Skip to Content</a>
+	<nav id='navHeader'>
+		<a href="howtouse.html" class="howtouse">Guide</a>
+		<a href="modules.html" class="modules">Modules</a>
+		<a href="alerts.html" class="alerts">Alerts</a>
+		<a href="faq.html" class="faq">FAQ</a>
+		<a href="developerguide.html" class="developerguide">Developer&nbsp;Tips</a>
+		<a href="install.html" class="install">Install</a>
+	</nav>
+	<div id='pageTitle' class="faq">
+	<h2>Frequently Asked Questions</h2>
+	<p id='pageSummary'>
+	This page provides answers to common questions about ANDI and offers troubleshooting tips.
+	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
+	</p>
+	</div>
+</header>
+<main class="faq" id="skipnav" tabindex="-1" aria-label="main content">
+<nav id='tableOfContents'>
+	<h3>Troubleshooting</h3>
+	<ul>
+		<li><a href="#disabledFavoritesBar">Disabled Favorites/Bookmarks Bar</a></li>
+		<li><a href="#wontLaunch">Won't Launch</a></li>
+		<li><a href="#cantInspect">Can't Inspect Something</a></li>
+		<li><a href="#missingFeature-lasers">No Lasers</a></li>
+		<li><a href="#missingFeature-cANDI">Gimme cANDI</a></li>
+		<li><a href="#displayIssue">Display Issues</a></li>
+		<li><a href="#differentOutput">Different Output</a></li>
+	</ul>
+	<h3>Contact Development Team</h3>
+	<ul>
+		<li><a href="#contactUs">Contact Us</a></li>
+	</ul>
+</nav>
+<div class="division">
+<h2>Troubleshooting</h2>
+	<section tabindex="-1" aria-labelledby="lby-disabledFavoritesBar" id='disabledFavoritesBar' >
+	<details>
+	<summary id="lby-disabledFavoritesBar">Favorites/Bookmarks Bar has been disabled/hidden</summary>
+	<div class='details'>
+	<p>
+	If a web application has disabled the toolbar or favorites/bookmarks menu, and ANDI cannot be launched
+	because the favorites/bookmarks bar cannot be accessed, try one of these workarounds:
+		<div class="example">
+			<ol>
+				<li>Press F10</li>
+				<li>Using Firefox or Internet Explorer...
+					<ul style="font-size:12pt; margin:5px;">
+						<li>Right click on the page or press Shift + F10</li>
+						<li>Firefox: Select "View Page Info"</li>
+						<li>IE: Select "Properties"</li>
+						<li>Click next to Address (URL), press CTRL + A to select the full url</li>
+						<li>CTRL + C to copy the url</li>
+						<li>Open a new browser window paste the url into the address field, press enter</li>
+					</ul>
+				</li>
+				<li>If using IE, press CTRL + N to open a new window at the current (hidden) url.</li>
+				<li>Ask the test page's development team to enable the toolbar during accessibility testing.</li>
+			</ol>
+		</div>
+	</p>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-wontLaunch" id='wontLaunch' >
+	<details>
+	<summary id="lby-wontLaunch">Why won't ANDI launch on this page?</summary>
+	<div class='details'>
+	<p>
+	If after pressing the <span class="brand">ANDI</span> favelet button, <span class="brand">ANDI</span> does not launch after a few seconds,
+	it could be due to a few things:
+		<div class='example'>
+			<ul>
+				<li>
+				It could be due to the page telling the browser to enforce a Content Security Policy directive.
+				To determine if this is the issue, open the browser's Developer Tools (F12)
+				and attempt to launch <span class="brand">ANDI</span>.
+				If the Dev Tools console shows an error message that says
+				<i>"Refused to load the script...because it violates the following Content Security Policy directive"</i>
+				then this is the issue.
+				<br /><br />
+				To use <span class="brand">ANDI</span> on this test page, 
+				make a request to the page owner to add the <span class="brand">ANDI</span> script to the whitelist of approved scripts.
+				<br /><br />
+				If the user desires to use ANDI immediately, Content Security Policy (CSP) can be disabled.
+				Note: It is the user's decision to disable CSP and the user's responsibility to re-enable CSP 
+				when testing with <span class="brand">ANDI</span> has concluded.
+				If users decide not to disable CSP, and <span class="brand">ANDI</span> cannot be launched,
+				it is recommended to use other accessibility testing procedures.
+				<div class="example">
+					<button class="expandButton disableCSP">How to disable CSP in Chrome</button>
+					<ol style="font-size:13pt; display:none;">
+						<li>Install the Disable Content-Security-Policy extension from the Chrome Web Store</li>
+						<li>Select the Disable Content-Security-Policy extension button in the Chrome browser toolbar to disable CSP</li>
+						<li>Navigate to the test page, launch <span class="brand">ANDI</span></li>
+						<li>When done testing with <span class="brand">ANDI</span>, re-enable CSP</li>
+					</ol>
+				</div>
+				<div class="example">
+					<button class="expandButton disableCSP">How to disable CSP in Firefox</button>
+					<ol style="font-size:13pt; display:none;">
+						<li>In the address bar, enter "about:config"</li>
+						<li>Under Preference Name, select "security.csp.enable" to disable it</li>
+						<li>Navigate to the test page, launch <span class="brand">ANDI</span></li>
+						<li>When done testing with <span class="brand">ANDI</span>, re-enable the "security.csp.enable"</li>
+					</ol>
+				</div>
+				<div class="example">
+					<button class="expandButton disableCSP">Use Internet Explorer 11</button>
+					<ol style="font-size:13pt; display:none;">
+						<li>Navigate to the test page in Internet Explorer 11, launch ANDI</li>
+						<li>Internet Explorer does not enforce CSP</li>
+					</ol>
+				</div>
+				</li>
+				<li>
+				There could be a JavaScript error occurring. Open the browser's Developer Tools (F12)
+				and attempt to launch <span class="brand">ANDI</span>. If the Dev Tools console shows a JavaScript error that relates 
+				to <span class="brand">ANDI</span>, then send a link to the test page to <span class="brand">ANDI</span>'s development team 
+				by <a href="https://github.com/SSAgov/ANDI/issues">creating an issue on the GitHub page</a>.
+				</li>
+				<li>
+				Your browser or organization could be preventing scripts (such as <span class="brand">ANDI</span>) from launching from a favorite/bookmark.
+				To determine if this is the case, try this:
+					<ul style="font-size:12pt; margin:1em;">
+						<li>Drag and Drop this link: <a onclick='alert("Drag and Drop the link to your favorites/bookmarks bar");return false;' rel="bookmark" href="javascript:void((function(){alert('Your browser is not blocking JavaScript in favorites/bookmarks')})());">Test Favelet</a> into your browser's favorites/bookmark bar.</li>
+						<li>Activate the favorite/bookmark you just created.</li>
+						<li>If you don't see an alert pop up, then your browser is blocking JavaScript in favorites/bookmarks, in which case you will not be able to use <span class="brand">ANDI</span> in this browser.</li>
+					</ul>				
+				</li>
+				<li>
+				The test page may be very large and have many elements which takes 
+				<span class="brand">ANDI</span> a longer than normal time
+				to analyze. Try waiting a little longer.
+				</li>
+			</ul>
+		</div>
+	</p>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-cantInspect" id='cantInspect' >
+	<details>
+	<summary id="lby-cantInspect">Why can't I inspect this element?</summary>
+	<div class='details'>
+	<p>
+	If <span class="brand">ANDI</span> has been launched and something is not "inspectable,"
+	it could be due to one of these reasons:
+		<div class='example'>
+			<ul>
+				<li>
+				The content of the page may have changed after <span class="brand">ANDI</span>
+				was first launched, and therefore <span class="brand">ANDI</span> is not
+				aware of the new content.
+				Try <a href="howtouse.html#Relaunch">refreshing</a> <span class="brand">ANDI</span>.
+				</li>
+				<li>
+				A <a href="modules.html">different module</a> may need to be selected to detect the element.
+				</li>
+				<li>
+				The test page's CSS may be disguising the element.
+				For example, an element may look like a button,
+				but it's not actually a focusable, keyboard accessible button.
+				<span class="brand">ANDI</span> (focusable elements) would not recognize this element
+				if it wasn't built using a semantic button tag, or doesn't have <code>tabindex</code>.
+				</li>
+				<li>
+				If mouse hover is not able to inspect an element, 
+				try the <a href="howtouse.html#NextElement">Next or Previous Element buttons</a>.
+				</li>
+			</ul>
+		</div>
+	</p>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-missingFeature-lasers" id='missingFeature-lasers' >
+	<details>
+	<summary id="lby-missingFeature-lasers">Where are the lasers?</summary>
+	<div class='details'>
+	<p>
+	<span class="brand">ANDI</span>'s <a href="howtouse.html#Lasers">"lasers"</a> will not work in versions of Internet Explorer prior to 9 
+	(including compatibility modes) because <span class="brand">ANDI</span>'s "lasers" are built using SVG
+	(scalable vector graphics) which are not supported by older IE versions.
+	</p>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-missingFeature-cANDI" id='missingFeature-cANDI' >
+	<details>
+	<summary id="lby-missingFeature-cANDI">Where is cANDI (color contrast)?</summary>
+	<div class='details'>
+	<p>
+	The <code>c</code><span class="brand">ANDI</span> module relies upon functionality
+	that is not available in versions of Internet Explorer prior to 9 
+	(including compatibility modes).
+	Testers will need to perform a <a href="modules.html#cANDI-manualContrastTest">manual contrast test</a> when 
+	<code>c</code><span class="brand">ANDI</span> is not available.
+	</p>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-displayIssue-andiCovering" id='displayIssue-andiCovering' >
+	<details>
+	<summary id="lby-displayIssue-andiCovering">Why is ANDI covering up the test page?</summary>
+	<div class='details'>
+	<p>
+	Since the <span class="brand">ANDI</span> Bar dynamically grows and shrinks depending on the amount
+	of data being displayed for a particular element, mouse hovering can cause the display to overlap 
+	with the Test Page.
+	</p>
+	<p>
+	If <span class="brand">ANDI</span> is continually blocking the view of the Test Page, 
+	use the next previous element buttons which will always keep ANDI out of the way.
+	You can also try <a href="howtouse.html#MiniMode">Mini Mode</a>.
+	</p>
+	<p>
+	If <span class="brand">ANDI</span> is still blocking the test page,
+	it is usually due to the responsive design of the test page reacting
+	to the space the <span class="brand">ANDI</span> Bar is filling.
+	Try maximizing the browser window, or switching to a larger resolution.
+	</p>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-displayIssue-pageLooksBad" id='displayIssue-pageLooksBad' >
+	<details>
+	<summary id="lby-displayIssue-pageLooksBad">Launching ANDI makes the test page look different</summary>
+	<div class='details'>
+	<p>
+	If after launching <span class="brand">ANDI</span>, the page looks odd
+	or different, you may have to bear with it for your testing.
+	<span class="brand">ANDI</span> has to manipulate some CSS in order
+	allow itself to appear on the page - This can sometimes cause display
+	interference.
+	</p>
+	<p>
+	If elements become obscured to the point that you can't test the content
+	behind "floating" elements, you may have to engage ANDI's advanced 
+	setting, <a href="howtouse.html#LinearizePage">linearize page</a>.
+	</p>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-differentOutput" id='differentOutput' >
+	<details>
+	<summary id="lby-differentOutput">Why is ANDI's Output different from the screen reader's?</summary>
+	<div class='details'>
+	<p>
+	Yes, <span class="brand">ANDI</span>'s Output may occasionally be different from the screen reader's.
+	Here are some reasons why the Output may differ:
+	<div class='example'>
+			<ul>
+				<li>
+				<span class="brand">ANDI</span> uses the DOM to calculate the Output, 
+				whereas screen readers rely heavily on the browser's 
+				<a href="http://www.w3.org/TR/core-aam-1.1/#intro_aapi">Accessibility API</a>
+				and also inject some of their own phrasings depending on the element type (button, link, etc).
+				Accessibility APIs, especially Internet Explorer's, have many known issues 
+				that cause a screen reader's speech to be incomplete or innacurate.
+				This means that even though certain tags and attributes are present
+				on a given element, the API may not inform the screen reader of their presence.
+				Since ANDI is not reliant on the browser's Accessibility API,
+				it may be more accurate technically.
+				</li>
+				<li>
+				Some screen reader software has guessing algorithms to assist its users.
+				For users of assistive technology, guessing is a good thing!
+				Guessing makes up for missing or improper accessibility coding.
+				However, screen readers should not be guessing when explicit accessibility coding is present.
+				Since <span class="brand">ANDI</span> is a test tool, it performs no guessing, 
+				and its Output is a direct result of any present programmatic associations.
+				</li>
+				<li>
+				ARIA Role attributes may be involved in the HTML structure, which causes screen readers to add 
+				additional, intentional verbiage.
+				<span class="brand">ANDI</span>'s Output is more closely tied to the direct
+				accessible name and accessible description of an element.
+				</li>
+				<li>
+				When humans write complex software (such as screen readers and accessibility test tools), 
+				bugs are a fact of life! Let's squash them!
+				If after some analysis you find that ANDI should be providing different Output,
+				please reach out to our development team
+				by <a href="https://github.com/SSAgov/ANDI/issues">creating a github issue</a>.
+				</li>
+			</ul>
+		</div>
+	</p>
+	</div>
+	</details>
+	</section>
+</div>
+<div class="division">
+<h2>Contact ANDI's Development Team</h2>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-contactUs" id='contactUs' >
+	<h3 id="lby-contactUs">I have an idea or issue!</h3>
+	<div class='details'>
+	<p>
+	If you have an idea for <span class="brand">ANDI</span>
+	or an issue with its behavior,
+	<a href="https://github.com/SSAgov/ANDI/issues">create an issue on the GitHub page</a>.
+	For issues, please provide a link to a page with the issue.
+	</p>
+	</div>
+	</section>
+</div>
+<footer>
+<a href='#skipnav'>Back To Top</a>
+<a href="/privacy/" class="privacy">Privacy</a>
+</footer>
+</main>
+</body>
+</html>

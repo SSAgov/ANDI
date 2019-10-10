@@ -1,0 +1,1262 @@
+//////////////////////
+//ANDI Release Notes//
+//////////////////////
+
+ANDI 26.2.6
+Allow Section Jump hotkey to work in Chrome
+
+ANDI 26.2.5
+Check if element still in DOM when clicking alert link or focusing laser.
+
+ANDI 26.2.4
+add css float detection to linearize feature
+
+ANDI 26.2.3
+Give name to select module menu
+
+ANDI 26.2.2
+Display page title on frame selection screen
+Fix bug with empty option element contents during recusive name calc
+
+ANDI 26.2.1
+lANDI 8.0.4
+alert to suggest role=link on tabbable links without href
+
+ANDI 26.2.0
+tANDI 11.1.0
+various role=grid alerts added
+
+tANDI 11.0.4
+add alert when aria table header is missing role
+
+ANDI 26.1.13
+Improve accessible name calculation for tricky naming scenarios
+
+ANDI 26.1.8
+type=reset and type=submit assume name when no accessible name or value present
+
+ANDI 26.1.7
+hANDI 4.0.2
+fix bug with injected css content detection
+
+ANDI 26.1.6
+fix output bug when aria-labelledby references return nothing and there is innertext
+
+lANDI 8.0.3
+fix issue with href target case sensitivity
+
+ANDI 26.1.5
+fix issue with label reporting as empty in rare instances
+
+ANDI 26.1.4
+CONTRIBUTION: fix for frames selection menu not working sometimes
+
+ANDI 26.1.3
+tANDI 11.0.3
+improvements to headers reference alert detection.
+
+ANDI 26.1.2
+fix bug when label contained select, textarea, or hidden elements
+
+ANDI 26.1.1
+fix bug where ANDI was injected more than once on pages with multiple <body> elements
+
+ANDI 26.1.0
+Color Changes: improves usability for color blind individuals
+
+tANDI 11.0.2
+Fix issue with colgroup highlighting
+
+ANDI 26.0.18
+Reduce alert level on "more than one title tag" alert
+
+cANDI 4.1.1
+More accurate px to pt conversion
+
+ANDI 26.0.17
+Added alert about deprecated [name] attribute on link when being used as anchor
+
+cANDI 4.1.0
+add color picker to contrast playground (only available on browsers that support input[type=color])
+
+lANDI 8.0.2
+check name attribute for internal links
+
+sANDI 4.0.4
+Live region more "live"
+
+sANDI 4.0.3
+better non-semantic heading detection
+
+ANDI 26.0.16
+cANDI 4.0.2
+fANDI 7.0.0
+gANDI 6.0.1
+hANDI 4.0.0
+iANDI 3.0.1
+lANDI 8.0.1
+sANDI 4.0.1
+tANDI 11.0.1
+Improved TAC calculation
+Additional Add-on properties added
+Visual Changes
+Bug Fixes
+
+ANDI 25.0.3
+fix bug next/prev buttons skip hidden elements
+
+gANDI 5.3.1
+fix bug image map in IE8
+
+sANDI 3.2.1
+live region container element check
+
+ANDI 25.0.2
+search subtree of role=link and role=button elements
+
+
+ANDI 25.0.1
+minor CSS changes
+
+ANDI 25.0.0
+fANDI 6.3.0
+gANDI 5.3.0
+tANDI 10.2.0
+lANDI 7.2.0
+sANDI 3.2.0
+cANDI 3.5.0
+hANDI 3.7.0
+iANDI 2.1.0
+Architectural changes: increased modularization
+
+ANDI 24.3.2
+fix bug with IE and summary element focus
+fix bug with handi html5 hidden attribute not being added back on
+
+ANDI 24.3.0
+fANDI 6.2.0
+gANDI 5.2.0
+tANDI 10.1.0
+lANDI 7.1.0
+sANDI 3.1.0
+cANDI 3.4.0
+hANDI 3.6.0
+build activeActionButton framework which fixes some refresh bugs
+
+ANDI 24.2.3
+fix bug, don't output required when readonly is in output
+
+ANDI 24.2.2
+fix bug, object elements are not natively focusable
+
+gANDI 5.1.0
+Canvas elements are detected and counted as inline images
+
+ANDI 24.2.1
+fix bug - exclude textarea content from innerText grab
+
+ANDI 24.2.0
+getTextOfTree function will check for name from content elements before attempting to look for aria-label on a child
+check if element's aria-labelledby reference is pointing to a label that contains itself so it doesn't grab the aria-label twice
+improve isSemantically function for performance
+
+ANDI 24.1.1
+use native javascript where possible for performance
+improve grab_label function
+tidy up the comments
+
+fANDI 6.1.0
+performance improvement when looping through all elements
+
+hANDI 3.5.0
+detect css ::before/::after content only on visible elements
+
+ANDI 24.1.0
+fANDI 6.0.1
+gANDI 5.0.1
+tANDI 10.0.1
+lANDI 7.0.1
+iANDI 2.0.1
+sANDI 3.0.1
+cANDI 3.3.4
+fix bug with ac table component total
+fix bug were sometimes next element button not working - caused by jquery not adding attributes with uppercase characters - solution was convert all data-* attributes to lowercase
+
+ANDI 24.0.1
+jshint fixes
+
+ANDI 24.0.0
+dynamically grabbing add on properties upon inspection
+improve add-on property output
+include more add-on properties: aria-errormessage, aria-keyshortcuts, aria-multiline, aria-multiselectable, aria-placeholder, aria-roledescription, contenteditable, <details[open]>,  aria-valuemax,  aria-valuemin, aria-valuetext, aria-valuenow
+
+gANDI 5.0.0
+tANDI 10.0.0
+lANDI 7.0.0
+iANDI 2.0.0
+dynamic add-on prop support
+
+fANDI 6.0.0
+canvas elements included in scan
+dynamic add-on prop support
+
+sANDI 3.0.0
+include role=log role=marquee as live regions
+dynamic add-on prop support
+
+cANDI 3.3.3
+small visual fix
+
+ANDI 23.5.1
+Change alert level when aria-labelledby returns no text
+
+gANDI 4.10.4
+fix bug with inline image count display
+
+sANDI 2.6.3
+add aria-hidden check to reading order overlay
+
+ANDI 23.5.0
+sANDI 2.6.2
+improve reading order overlay logic
+
+ANDI 23.4.5
+fix bug where linearize highlighted ANDI overlays
+
+sANDI 2.6.0
+add reading order overlay
+
+tANDI 9.3.3
+gANDI 4.10.3
+fANDI 5.9.1
+cANDI 3.3.2
+lANDI 6.4.4
+fix jslint warnings
+
+ANDI 23.4.4
+fANDI 5.9.0
+support for canvas
+support for details/summary
+
+ANDI 23.4.1
+check for safari in hotkey list presentation
+
+ANDI 23.4.0
+sANDI 2.5.1
+fANDI 5.8.1
+tANDI 9.3.2
+iANDI 1.2.1
+cANDI 3.3.1
+gANDI 4.10.2
+hANDI 3.4.2
+lANDI 6.4.3
+simplify startup summary function
+
+lANDI 6.4.2
+fix bug when href equals empty string
+
+lANDI 6.4.2
+href of empty string is okay
+
+ANDI 23.3.0
+force css download on module updates - prevents css caching issue
+
+iANDI 1.2.0
+change button to "open in new tab" instead of new window
+
+iANDI 1.1.1
+add tabindex to AC table
+
+ANDI 23.2.0
+correct guidance for iframes with/without tabindex
+
+ANDI 23.1.3
+fix bug with aria-labelledby/aria-describedby long output display
+
+ANDI 23.1.2
+escape key handling on menus
+
+sANDI 2.5.0
+split lang button into two: page language and lang attributes
+
+hANDI 3.4.1
+bug fix
+code cleanup
+
+gANDI 4.10.1
+all font icons get output (even without role=img)
+
+ANDI 23.1.0
+Add association highlights to overlays
+bug fix on inserting multiple css files
+code cleanup
+
+fANDI 5.8.0
+bug fix on relaunch from favelet button
+Add association highlights to overlays
+
+sANDI 2.4.0
+Add association highlights to overlays
+
+ANDI 23.0.0
+Add Advanced Settings menu
+Add global linearize toggle
+
+sANDI 2.3.0
+remove linearize from sANDI
+
+sANDI 2.2.0
+popup messages when lang attributes button is pressed
+
+ANDI 22.4.3
+Fixed ANDI Output issue when element's aria-labelledby/aria-describedby is directly referencing a void element like input or img
+
+ANDI 22.4.2
+Fixed JAWS issue with section names
+
+ANDI 22.4.1
+Include heading level in ANDI output
+
+fANDI 5.7.1
+tab order overlay will skip over subsequent radio buttons in a group
+
+ANDI 22.4.0
+fANDI 5.7.0
+Overlays will be placed before or toward the beginning of the element instead of toward the end or after.
+
+fANDI 5.6.1
+fixed bug where aria-pressed was not appearing in AC table
+
+ANDI 22.3.0
+support for sANDI 2.1.0
+
+sANDI 2.1.0
+added alert about greater than zero integar for aria-level
+added alert about role=heading aria-level not conflicting with <h> tag level
+downgraded alert level and modified message for alert about no aria-level when role=heading
+Adjusted heading outline to assume level 2 when aria-level not provided or invalid (defined in ARIA Spec)
+
+tANDI 9.3.1
+fixed bug with multiple next/prev table buttons appearing
+fixed bug with next/prev table buttons sometimes not going to next/prev table
+
+sANDI 2.0.1
+linearize button added
+grouped some action buttons into "more details" dropdown
+
+ANDI 22.2.0
+module action group dropdown code is made global
+
+hANDI 3.4.0
+moved module action group dropdown code to ANDI
+
+hANDI 3.3.3
+fix for key handling of dropdown menu for chrome/firefox
+
+sANDI 1.15.1
+page title popup, special message when empty
+
+gANDI 4.10.0
+font icon detection, exclude role=img and <img>
+
+gANDI 4.9.1
+bug fix
+
+ANDI 22.1.2
+fix for dragon dictation when using ANDI's module menu
+
+ANDI 22.1.1
+when element has a role and no accessible name, special alert message
+
+lANDI 6.4.1
+bug fix in isLinkKeyboardAccessible
+
+ANDI 22.1.0
+gANDI 4.8.0
+lANDI 6.3.0
+sANDI 1.14.0
+iANDI 1.1.0
+fANDI 5.6.0
+cANDI 3.3.0
+tANDI 9.3.0
+mute output when role=presentation/none and isn't focusable
+
+tANDI 9.3.0
+support for role=treegrid
+
+ANDI 22.0.0
+gANDI 4.8.0
+lANDI 6.3.0
+sANDI 1.14.0
+tANDI 9.2.0
+fixed bugs caused by non-typical roles on natively semantic tags
+
+ANDI 21.3.0
+Smarter duplicate ID check
+
+lANDI 6.2.4
+fixed non-unique button and ambiguous link highlighting issue
+
+ANDI 21.2.0
+Added active element pulse animation: Subtle pulse every 1.5 seconds
+
+ANDI 21.1.0
+Dynamically build ANDI hotkeys list on first press
+
+ANDI 21.0.3
+aria-hidden=true means no output
+
+gANDI 4.7.3
+decorative image logic refinements
+
+ANDI 21.0.2
+aria-hidden=true on body or html popup/removal prompt
+placeholder no name alert upgraded to danger
+
+gANDI 4.7.2
+aria-hidden=true is not decorative
+img with aria-label or aria-labelledby and alt="" is not decorative
+look for role=button role=link parents of images
+
+ANDI 21.0.0
+detection of aria-hidden on ancestors
+
+sANDI 1.13.3
+typo corrections
+
+sANDI 1.13.1
+javascript error fix
+
+hANDI 3.3.2
+Individual CSS hiding techniques have been combined into a menu dropdown
+
+ANDI 20.2.4
+Support for fANDI 5.5.0
+
+iANDI 1.0.3
+iframe detected without src (github issue)
+
+fANDI 5.5.0
+Detection of elements with contenteditable
+
+ANDI 20.2.3
+check for role=grid to display tANDI
+
+cANDI 3.2.2
+adjust large text font-size threshold (github issue)
+
+ANDI 20.2.1
+Support for tANDI 9.1.0
+
+tANDI 9.1.0
+Support for ARIA grid (role=grid)
+
+tANDI 9.0.0
+Support for ARIA tables (role=table)
+
+gANDI 4.7.1
+hide background only hides background-image property (github issue)
+
+lANDI 6.2.3
+javascript error fix
+
+ANDI 20.1.0
+Support for tANDI 9.0.0
+
+iANDI 1.0.1
+New module to aid in iframe testing
+Only appears in module menu when there are visible iframes
+Selecting iframe from list or pressing the "test in new window" button will open the iframe independently, in a new window
+
+ANDI 20.0.1
+Remove iframe popup message
+Support for iANDI
+
+sANDI 1.13.0
+Added page title popup
+
+gANDI 4.7.0
+Detects role=image and throws an alert since it is not a valid value for role.
+
+sANDI 1.12.0
+Added Live Regions mode which detects presents of and calculates output for Live Regions (role=alert, role=status, aria-live).
+Removed aria-live from role overlay
+If the Live Region contains a form element, an alert is thrown since it causes JAWS issues.
+
+sANDI 1.11.0
+Basic aria-live attribute detection added in structures "role attributes" button.
+
+fANDI 5.4.0
+Added "label tags" button when label tags are detect on page.
+-pressing the button inserts an overlay flag for each label element.
+-if label has for attribute, for=value is shown
+-if id referenced by for does not exist on page, overlay flag is red with title attribute indicating "no matching id"
+
+ANDI 19.1.0
+Added "show disabled" overlay button when disabled elements are detected.
+
+cANDI 3.2.0
+Include contrast ratio calc of textbox elements
+Throw a single alert when disabled elements (and aria-disable=true) are detected (these don't need contrast testing)
+
+tANDI 8.2.0
+When the active table is without headers attributes, the mode buttons do not appear and scope mode is forced.
+When the active table has headers, mode buttons appear, headers mode is turned on. User has option to toggle modes.
+When Data table has no name, an alert message appears in the table list that reads "Data table with no name, but proceeded by heading" along with the heading text.
+
+tANDI 8.1.1
+Table List
+-Selecting a table from the list allows user to jump directly to the table
+-Each Table on the page will have its name precalculated and presented in the list
+-Any tables without an Name will have "Data Table With No Name" alert in the list
+-The method used to name the table will be presented in the list (aria-labelledby, aria-label, caption, summary, title, element's direct previous sibling is a heading)
+-Tables with role=presentation/none appear as italic "Presentation Table"
+-Tables in the list have a hover laser 
+
+ANDI 19.0.0
+Include table summary in output calculation for tables
+Add laser aimer for legend, figcaption, caption in AC table
+Architecture change which impacts all modules
+
+cANDI 3.1.0
+Provide message about why suggestion was not available when semi-transparency involved
+
+fANDI 5.3.1
+Tab order bug fix
+
+cANDI 3.0.1
+Commented out WCAG level switch (fun while it lasted)
+
+cANDI 3.0.0
+Added ability to change WCAG level from AA to AAA
+grayscale filter toggle added (only appears in browsers that support CSS filter:grayscale – in other words, not IE)
+
+ANDI 18.0.0
+Alert message rewordings/clarifications including small architecture adjustment
+Fixed JAWS issue with module menu
+
+lANDI 
+Speed improvements
+
+ANDI 17.0.0
+Added animated loading message that appears at launch and module change - No animation for IE9 and less.
+
+tANDI 7.7.0
+Massive Speed Improvement (fixed some issues that were causing tANDI to be slow depending on the size of the table)
+
+ANDI 16.7.2
+Speed Improvement (grab label)
+
+ANDI 16.6.0
+Grab Tabindex speed boost
+Detect role types when doing label grabs
+
+cANDI 2.4.0
+Speed improvements
+
+ANDI 16.5.0
+Speed improvement (alert list rendering)
+Fixed an issue were caption was being grabbed from the wrong table
+
+ANDI 16.4.1
+Speed improvements
+
+tANDI 7.4.0
+Moved next table and previous table buttons – added new icon.
+In the startup text, included a line about how tables need to be tested one at a time (only appears if there is more than 1 table).
+
+ANDI 16.0.0
+Better responsive design
+Moved next/prev buttons
+
+ANDI 15.5.0
+Moved the role attribute to the Element section since it is an important property that defines the element. Removed from AC table.
+
+ANDI 15.4.0
+For alerts that do not link to inspectable elements, when clicking on the alert link (right side), a confirm box appears. Pressing OK opens ANDI help page with the alert.
+
+gANDI 4.1.0
+include role=img elements
+
+ANDI 15.2.0
+Detect svg elements with focusable="true"
+Get accessibility components from svg elements
+Improved performance of role=group detection
+
+sANDI 1.7.0
+role attributes overlay
+role=list role=listitem now detected in Lists mode.
+
+ANDI 15.1.0
+Detection of role=radiogroup and role=group – inclusion in AC table and ANDI Output. Appears as "parent" in the AC table
+-when radio buttons (input or role=radio) have a radiogroup ancestor, ANDI will grab components from the radiogroup element. 
+-For all form elements and any other element with a role, ANDI will look at the direct parent for role=group (this is a performance hit, but necessary. Not parsing the full ancestor tree as a compromise)
+
+ANDI 15.0.0
+When certain roles are used, looks for appropriate add-on properties:
+-radio,checkbox ->  grabs aria-readonly, aria-required, aria-invalid, aria-checked
+-radio,checkbox,button -> grabs aria-disabled
+-textbox -> grabs aria-multiline
+Slight global CSS changes
+
+cANDI 2.0.0
+Contrast Playground added. Offers the ability to "play" with colors, calculate a contrast ratio, and get color suggestions.
+
+sANDI 1.5.0
+Added lang attributes overlay: any element that has a lang attribute will be displayed on the screen.
+For the benefit of screen reader users using ANDI, the html lang attribute value will be included in the aria-label of the button so they don't have to tab to the overlay flag.
+
+ANDI 14.2.0
+Iframe selection menu added.
+Iframes can now be tested in a manner similar to frames.
+When an iframe is detected, ANDI will throw a confirmation box.
+Selecting okay, runs ANDI on the main page.
+Selecting cancel, brings up the Iframe selection screen.
+From there, user can select an iframe which loads it in the browser individually.
+User can then launch ANDI on this individual iframe.
+If that iframe contains additional iframes, rinse and repeat.
+
+ANDI 14.1.0
+Each Alert Group will be given the alert level (danger, warning, caution) of its child's highest level.
+
+lANDI 5.2.0
+Links mode will now detect anchor tags that don't have an href and throw an alert under the following conditions:
+If the link has no href, no tabindex, no id, no name, no onclick attribute, no click event attached with jquery, then throw caution alert
+If the link has no href, no tabindex, no id, no name, and has an onclick attribute or a click event attached with jquery, then throw warning alert
+
+ANDI 14.0.0
+cANDI 1.0.1
+cANDI is pushed to the internet for developer use.
+
+cANDI 0.9.0
+Opacity: If opacity less than 1 is found on an element, cANDI result will be MANUAL TEST NEEDED
+Gradient: Elements with gradients are reported as having a background image (that's how it's considered in the CSS), result will be MANUAL TEST NEEDED
+
+cANDI 0.8.0
+Semi-transparent Layers are now being calculated recursively and accurately (fixed bug in third party calculation)
+Results will now be just "PASS" "FAIL" or "MANUAL TEST NEEDED".
+Will not make a color suggestion for elements with any semi-transparency.
+
+cANDI 0.7.0
+Increase precision to 2 decimal spaces
+Change some alert text
+move margin of error number to dimplify display
+ignore elements that are disabled or have aria-disabled='true'
+
+cANDI 0.6.0
+If element has a text-shadow, include the value. (doesn't include this in contrast calculation)
+
+cANDI 0.5.0
+When an element Fails the contrast test, cANDI will determine if a background color should be suggested or a foreground color should be suggested. This suggestion calculation depends on whether the suggested background color is closer to the actual background color, or if the suggested foreground color is closer to the actual foreground color.
+
+cANDI 0.3.0
+When an element fails the contrast test, cANDI will offer a suggested foreground color value that will meet the minimum required ratio.
+
+ANDI 13.10.0
+Support for cANDI
+
+cANDI 0.0.0 (color contrast)
+Provides automatic detection of contrast ratio for text containing elements.
+When an element fails the contrast calculation, an alert is thrown.
+Takes font-size and font-weight into the calculation.
+Upon inspection
+-Displays PASS/FAIL status along with actual contrast ratio and minimum ratio required.
+-Displays the foreground and background colors in a sample box, provides the hex values.
+-Displays the font-size and font weight if bold.
+If inline images are detected on page, a single alert informs the user to perform a manual contrast test.
+If an element that contains text has a background image, an alert informs the user to perform a manual test.
+Doesn't work with IE7 or IE8 docmodes
+
+hANDI 3.0.5
+Parse string of CSS content to only throw the alert when the content value contains printable/speakable characters – this reduces false positives
+
+hANDI 3.0.0
+Detection of content injected using CSS pseudo selectors ::before ::after
+Button to highlight the injected content.
+
+ANDI 13.9.0
+Support for hANDI 3.0.0
+
+ANDI 13.8.1
+When using chrome browser, removed hotkeys from hotkey list for functions that don't work in Chrome (output, section jump) due to Chrome bug
+
+ANDI 13.8.0
+InnerText Output calculation change: When an element contains another element that has aria-label, replace the contained element with the aria-label text
+
+tANDI 7.2.6
+Colgroup fixes. Working better with scope=colgroup. Including colgroup segmentation technique.
+Th inspection will include associating th (in output and highlighting) when scope is used.
+Removed "greater than index" check so that td cells to the left or above th with scope can be included in associations.
+
+ANDI 13.7.0
+Clickable Area (caution) Alert added when checkboxes and radio buttons do not have an association label and their size is less than 21px by 21px
+
+ANDI 13.6.0
+Iframe Alerts added
+-Iframe in tab order with Accessible name throw caution.
+-Iframe in tab order without Accessible name throw warning.
+-Iframe not in tab order, no alerts, no output
+
+ANDI 13.5.3
+Will throw Accesskey duplicate warning when the accesskey is on a link (was only on buttons before)
+
+lANDI 5.1.0
+Button list added.
+Button name comparison
+Throws Warning alert when finds two buttons when same name as another button.
+Added "non-unique buttons" highlight button
+
+tANDI 7.2.1
+markup overlay button will stay pressed when jumping to another table
+markup overlay includes the tagname (th and td)
+
+sANDI 1.4.0
+Added outline indentation for headings
+Added fake heading detection.
+Added fake heading alert
+
+lANDI 5.0.0
+Renamed the module "links/buttons"
+Added link mode, button mode – only one can be selected at a time, just like the other module's modes.
+Move View Link List button location to match usability design of sANDI
+Button output comparison coming in future update.
+
+ANDI 13.5.0
+Support for lANDI 5.0.0
+
+hANDI 1.5.1
+highlight color is a darker shade of yellow
+
+sANDI 1.3.2
+When no structures are found, display message:
+
+tANDI 7.2.0
+The scope mode and headers/id buttons have been split into two buttons to coincide with the usability design of the other modules.
+
+ANDI 13.4.0
+fANDI 4.2.0
+lANDI 4.3.0
+Remove disabled links from focusable elements (disabled form elements are already out of focusable elements) – disabled elements are not focusable and not inspectable with ANDI.
+Throw Caution (just one) when natively tabbable elements have been disabled.
+
+ANDI 13.3.0
+On Frame Selection UI, added detection of title attribute on each frame 
+
+hANDI 1.5.0
+Added the text-indent button. If an element's css text-indent is less than -998px or greater than 998px it will be flagged. (I had to make an educated guess on those numbers. Can tweak if need be.)
+
+hANDI 1.4.2
+The height:0 width:0 button has been re-added, but renamed overflow:hidden since that is the main css attribute that does the actual hiding.
+
+hANDI 1.4.1
+Temporarily removing the "height:0 width:0" button since it is throw false positives. More analysis of the technique is needed.
+
+ANDI 13.2.3
+Fixed bug where pageAnalysis not appearing when launching ANDI, inspecting an element, changing to hANDI, changing to focusable elements
+
+hANDI 1.4.0
+Included html5 hidden attribute detection
+
+ANDI 13.2.2
+Module Action buttons respond to window size (works better with small resolutions)
+IE7 fixes
+
+hANDI 1.3.1
+height:0 width:0 button will accept height:1 OR width:1 and forces overflow to be visible
+
+hANDI 1.3.0
+font-size:0 button added
+
+gANDI 4.0.0
+Included the counts in the button labels
+Detecting popular font icon classes (.fa, .glyphicon, .material-icons). When found adds a highlight button called "font icon"
+
+fANDI 4.1.1
+Removed experimental reveal hidden content button
+
+hANDI 1.1.0
+Hidden Content ANDI – allows the ability to toggle CSS attributes and force-reveal hidden content
+ANDI does not allow a user to run ANDI on force revealed content. – Just meant to be used for discovery.
+
+fANDI 4.0.3
+Experimental button added: Reveal Hidden Content.
+
+ANDI 13.0.0
+fANDI 3.10.0
+sANDI 1.3.0
+tANDI 7.1.0
+lANDI 4.2.0
+gANDI 3.3.0
+All module's action buttons will retain their active (pressed) state when the module is refreshed
+
+ANDI 12.6.0
+Throw alert when tabbable element has aria-hidden=true.
+Include aria-hidden add-on-prop in AC table
+
+sANDI 1.2.1
+Added landmarks mode
+
+sANDI 1.0.0
+Added.
+Will detect headings and lists, press the module action button to highlight the structure: only one mode at a time.
+Option to bring up an outline view for headings.
+
+ANDI 12.2.0
+So that the tester can use ANDI for testing pages designed with frames, when ANDI detects that the page is using frames (not iframe) it will present a frame selection screen.
+
+lANDI 4.0.0
+-Links list now has tabs to filter the types of links in the list (all links, skip links, external links)
+-if a link is an internal skip link and has a true anchor target, a next tab button will appear in the href column which, when pressed, shifts focus to the following tabbable element after the anchor landing element.
+-selecting the "skip links" or "external links" tabs will add a glowing highlight to links on the page that are associated with that tab type
+-inspecting an element with the mouse, keyboard focus, or next/prev element buttons will find the element in the table and color the text pink
+
+ANDI 12.1.3
+Title Attributes overlay button added, only appears when a focusable element has a title, only appears in ANDI
+
+tANDI 7.0.0
+Markup overlay button added, overlays scope, headers, and id within each table cell.
+
+ANDI 12.0.3
+Module Selection buttons have been grouped into a dropdown menu to save on screen real estate.
+The dropdown was moved to the left so that the purpose of the module is more noticeable and is first in the tab order for screen reader users.
+
+lANDI
+3.4.0
+Added column to Links List to provide the link index/sequence number of where it occurs on the page
+
+gANDI 3.1.0
+Support for image maps
+
+ANDI 11.2.0
+When any button causes an additional glowing highlight to appear, the button will use a new icon (Google's find in page icon) - Referring to these as "find" buttons.
+Overlay and Find icons will be gray until pressed.
+
+gANDI 3.0.0
+Added "Find Decorative <img>" button – will highlight any <img> that was explicitly declared decorative
+
+ANDI 11.1.4
+fixed bug where a component that shouldn't matter in the output calculation triggers the output matching prevention
+
+tANDI 6.2.0
+Highlighting now works properly with colgroup/rowgroup
+
+ANDI 11.1.0
+Change the behavior/look of the module buttons to resolve funky mouse hover usability issue
+
+ANDI 11.0.0
+Inspect hover event is fired on mouseenter instead of mouseover. This allows a focusable child to be able to be inspected by mouse when it is contained by a focusable parent!
+Move module buttons to the far right to allow for more room for module action buttons
+Made module buttons more intuitive by allowing hover/focus to spell out the function. Active module function will be spelled out
+Module action buttons color will be color of active module
+
+gANDI 2.2.0
+highlight bg images button added, adds a green border/glow to elements with background images
+buttons renamed
+fade inline button opacity to 30%
+hide bg images button fully removes background images
+
+gANDI 2.1.0
+If an image is contained in a link or button, the inspectable element will be the link or button, not the image
+a single caution alert will be thrown anytime an element uses CSS background-image url
+background image opacity is problematic, changed to rgba temporarily, but needs team decision
+
+ANDI 10.6.1
+Allow alerts to be commented out (if other orgs who fork don't want them) without causing javascript error.
+
+gANDI 2.0.0
+remove inline image button will set the opacity to 10%, the alt text will not be displayed
+remove background image button will set the opacity to 10% (however, this might be problematic, subject to change)
+background images will no longer be in the "flow" of elements analyzed: Only inline images
+(future update will incorporate image-links image-buttons)
+
+lANDI 3.1.1
+When link has target attribute, and name/description does not contain one of the words "new, open, window, tab", throw warning alert that says "Link opens new window or tab without notification."
+When link has role=button throw caution alert asking user to check for spacebar key handling (I may be able to partially check for this automatically in future update)
+
+fANDI 3.4.0
+Show tab order button will take into account tabindexes that are greater than zero (it wasn't before, oops).
+The number on the overlay flag will correspond to the unique sequence index that it occurs on the page.
+When the tabindex is greater than zero, the flag will be orange
+Negative tabindexes still red.
+Title attributes are added to the flags. The title value will either read "tabindex=#" or "natively tabbable"
+
+ANDI 10.1.0
+Duplicate id overlay flags will have title attribute to distinguish for colorblind users.
+The flag tabindexes will have the same tabindex as the element it associates with.
+
+ANDI 10.0.0
+Adjust framework to allow buttons to be inserted to the right of alert group messages
+Added overlay class to handle creation/removal of overlays (tab order indicators, more in the future)
+Overlays will have a tabindex of zero
+The additions above allow for the following:
+-Added a new button (show ids) that will appear when duplicate ids are found.
+-Pressing the button adds overlays containing the element's id. Duplicates will have a red background (will add a title attribute in next update to distinguish for colorblind)
+
+tANDI 5.3.0
+Show scope, headers, and id no matter which mode is selected
+
+tANDI 5.2.4
+Fixed bug where rowspan in header causing misalignment of cell association highlight
+Fixed bug where table alerts where pointing to the last cell instead of the table itself
+
+ANDI 9.11.0
+ANDI relaunch button will relaunch the currently select module
+When a module other than default is being used, when help button is pressed, Jump directly to that module's section of the help page
+
+gANDI 1.0.0
+Allows inspection of graphics: inline images and background images
+Two mode buttons will toggle (hide/show) inline images and background images.
+Css Background-image url will appear in the component table
+Danger alerts when marquee and blink tag are found
+Danger alert when server side image map is found
+Caution alert when alt text contains redundant text such as "image of"  "photo of"
+Warning alert when alt text contains image file name such as ".png" ".gif" ".jpg" …
+Danger alert when alt text is not descriptive enough (i.e. text exactly equals:  "image"  "photo"  "logo"  "icon" "graphic" "graph" "picture" "photograph")
+
+lANDI 3.0.0
+Change alert text for same name different href to: "Ambiguous Link: same name/description as another link but different href."
+Links like this will be referred to as "Ambiguous Links"
+New button added to highlight Ambiguous links
+Highlight will appear as sold blue border with shadow
+
+ANDI 9.9.0
+Modify framework to support throwing alerts for elements other than the element currently being analyzed
+
+lANDI 2.3.0
+Thanks to ANDI version 9.9.0 update, throw alert on also the first instance of link with same name different href
+
+ANDI 9.8.2
+Fixed bug where after ANDI launch if inspectable element got removed from DOM by application javascript, prev/next buttons would fail to shift focus.
+
+tANDI 5.2.0
+removed (commented out) arrow key navigation from 5.1.0
+
+lANDI 2.2.0
+Before throwing, "In-page anchor target not found" alert, check to see if link has onclick logic to prevent false positive. (links like this are being used for javascript purposes, not in-page jump link)
+
+lANDI 2.1.0
+Throws alert when it finds links with same name/description different href
+Throws alert when it cannot find the anchor target of an in-page link
+Throws alert when link text is vague and does not identify its purpose
+Defaults to alert list, "show link list"
+
+tANDI 4.2.1
+Once the end/beginning of table has been reached on inspection, the Next Previous buttons will automatically jump to the next or previous table
+
+tANDI 4.2.1
+fixed bug where presentation table alert was thrown when nested table had the th/scope/headers/caption
+
+tANDI 4.2.0
+In scope mode, output will include assumed th cell associations while inspecting td cells even if scope is not included
+Fixed javascript error with presentation tables
+Fixed nested table disappearing with nested presentation tables
+
+tANDI 4.1.0
+Nested tables now working properly: Outer table will ignore inner tables
+
+tANDI 4.0.0
+Tables are to be analyzed one at a time. "next table" button added to cycle through tables.
+Scope level limit increased to 4 (alert is still a warning). Modified the logic so that it is fully scalable in case the number needs to be increased.
+Presentation tables will trigger alerts when they contain, scope, headers, th, caption, or summary
+Danger level "Scope required" alert removed.
+Caution level "table has no scope" alert remains.
+New danger alert "Scope association missing at &lt;th&gt; intersection." Triggered in this scenario:
+Scope mode on
+th is found without scope
+th is at an x/y intersection of other th
+Alert is thrown on the table, not on the th. Testers will have to find the problem cell themselves until I can modify the framework to add alerts to elements that ANDI has already finished analyzing.
+
+ANDI 9.4.0
+tANDI 3.2.1
+Moved the scope button next to the logo to help draw more attention to it. Other modules may have similar button modes or display switches placed in this location.
+
+ANDI 9.3.0
+-At launch/relaunch, ANDI will always retain the previously focused element and immediately inspect it if it is "inspectable" by the active module, and keep the element in focus. If the element is not inspectable by the active module or nothing is in focus, focus will shift to the ANDI Bar.
+-Horizontal Scrollbars (groan) of the test page will be retained instead of removed.
+
+tANDI 2.5.0
+Throw alert suggesting mode change when Header mode on and table has no headers but has scope
+Throw alert suggesting mode change when Scope mode on and table has no scope but has headers
+Throw caution alert when header cell is empty except for upper left cell
+
+tANDI 2.4.0
+When in Headers mode, throw alert when no headers found
+When In Scope mode, throw alert when no scope found and only one direction of th.
+When In Scope mode, Two directions of th with no scope triggers a danger alert
+
+8.6.0
+Major framework adjustment for modularization
+tANDI Module implemented
+placeholder being displayed in AC table – throws warning only if placeholder is only component and no accessible name
+Next Prev buttons moved
+Various bug fixes
+Hotkey list more accessible to JAWS (arrow keys to navigate, end of list is spoken)
+Startup text adds instruction to read the output of ever element
+
+tANDI 2.0.0
+Ability to select an analysis mode. Default mode is scope. Clicking button will relaunch tANDI into the other mode.
+
+7.3.0
+Hotkeys List has it's own button now instead of tab/hover functionality.
+
+7.1.0
+Swapped output and active element hotkeys, Documentation updated
+
+7.0.0
+Remove hotkey list from version popup
+Add help submenu functionality featuring hotkey list. 
+
+6.8.2
+Spelled out the hotkeys so that jaws will read it properly.
+
+6.8.1
+The ANDI version popup is now keyboard accessible.
+
+6.8.0
+The ANDI version popup includes a hotkey cheat sheet. (Click on the ANDI logo)
+
+6.7.0
+New hotkey: (Alt + single quote) will shift focus to the active element.
+
+6.6
+Remove all title attributes from all ANDI links to satisfy legacy JAWS setting for less than two more months…
+Add Alert Icons
+
+6.5
+Major bug fix, old IE adjustments.
+
+6.4.0
+Add Add-On Properties aria-expanded, aria-controls, aria-pressed
+Accesskey will appear in the output
+Add on propery value will appear in the AC table. "Correct" values that cause SR to speak will appear in output
+
+6.3.0
+Grab the role in put in the AC table
+
+6.2.0
+Added Add-On Properties back into Output
+
+6.1.0
+After pressing the relaunch button (alt+=) or relaunching ANDI with the favelet button, The active element is "retained" in the inspection section with the updated info! This provides a more efficient way to inspect dynamically changing content on the active element.
+
+6.0.0
+Add-On Properties are now separated into multiple table rows.
+The property name and the value will now be displayed.
+The add-on property text will no longer appear in the output.
+accesskey and tabindex are now classified as add-on properties.
+
+5.0.0
+Laser will point to the referenced element, when mouse hovering over aria-labelledby, aria-describedby, and label in the components table.
+
+4.8.1
+When more than 1 referenced id cannot be found on aria-lby aria-dby, assume improper use: danger alert
+
+4.6.0
+For title, alt, and aria-label throw warning if character length exceeds 250 characters.
+
+4.5.0
+Detect HTML5, search for accessibility related deprecated html (table with summary) (a with name)
+
+4.4.0
+Do not throw alerts for in-page anchor landings with no accessible name – saves time wasted investigating false positives
+
+4.2.2
+Since IE7 does not render the numeric of an ordered list, use bullets for IE7 alerts lists
+Added IE compatability mode detection. Throws a caution alert when IE compat mode prior to 11 is detected
+
+4.1.0
+Component type of subtree element now appears in components table. Does not appear in output text (intentional)
+
+4.0.0
+Added Alert Help Links in Output
+
+3.0.0
+Made the active element outline pink for better visibility.
+Added "laser" functionality.
+-hovering over the tagname link will point a laser at the active element.
+-hovering over a link in the alert list and holding shift will point a laser at the element it relates to.
+
+2.2.3
+accesskeys will now appear in Components Table.
+
+2.2.2
+Renamed "Issues" to Alerts. Renamed "Error" to "Danger"
+
+2.2.0
+Added Issue List keyboard navigation: down, up, left, right, enter, asterisk, home, end,
+
+2.1.0
+Expanded the Controls section.
+From left to right:
+-Relaunch ANDI (ALT+=), 
+-Hide/Show Element Highlights, 
+-Mini Mode, 
+-Open ANDI Help page, 
+-Close/Remove ANDI
+
+2.0.3
+Performance Improvements
+Comment Edits
+
+2.0.2
+Figcaption/Caption defined as namers
+
+2.0.0.1
+For elements with negative tabindex, check to see if parent is tabbable before throwing false positive caution
+
+2.0.0
+Issue Handling major overhaul. Converted into objects/arrays for more manageable code and future expansion
+Redefined Issues: Errors (red), Warning (orange), Caution (yellow)
+Issue Group: all Issues will be grouped into categories of expandable lists to minimize scrolling 
+Issues groups headings are h4 tags for better AT navigation
+Items in Issue Groups are numeric lists to help differentiate the links
+
+1.8.2.1
+Added concept of Issue Groups which group the issues into expandable/collapsable lists. Minimizes size of issue list on launch.
+Error: Accesskey value more than one character
+Caution: onmouseover on non-focusable element and has non-focusable ancestors
+Warning: onblur, onchange event warning
+
+1.8.1
+Removed output dropdown and all references to screen readers (legal reasons)
+
+1.8.0
+add middle tier issue: Caution (orange)
+reclassify issues after discussion
+added error: mouse event without keyboard access
+made emptyString "[empty]" a configuration variable
+
+1.7.0
+Removed all jaws and nvda references as directed by management.
+Remove other screen readers from output dropdown as directed by management, can easily add it back in with one line of uncomment
+Added new component, <subtree> which goes into the AC table, and appears in the output if the element has children (a subtree) which have their own namers. For now this is only implemented with nested images but has the potential for full scale recursive parsing on any element.
+Some code organization.
+Added warning for when aria-label is contained in labelledby/describedby reference
+
+1.6.0.3
+Aria-labelledby and aria-describedby grabs will first look for the aria-label of referenced element. (spec says do it)
+
+1.6.0.2
+Added nested image parsing back in without the unused components warning
+Removed URLs in the code for open source release
+Some CSS overrides
+
+1.5.0.1
+Slight architecture adjustment, no cause for alarm. Prep for recursion.
+Nested image parsing temporarily broken until further notice.
+
+1.5.0.0
+New Feature: In the Page Analysis section display a list of all accesskeys found. User can click them to shift the focus to the element with the accesskey.
+New Hotkey: ALT+/ will shift focus directly to the output. This makes using ANDI way more efficient for a JAWS user
+For ANDI output and some errors, ignore label(nested) and legend depending on element type, but keep in AC table
+Some CSS overrides
+
+1.4.0.1
+CSS changes – font readability: verdana
+Code organization, renaming some things to match the Doc.
+Comment Revisions
+JAWS precedence updates for certain html tags
+
+1.4.0
+tabindex now appearing in AC table
+added tabindex error: not a number
+added tabindex warning: element not in tab order
+imageSrc now appearing in AC table for img, input[image], (not finding source for area yet)(not throwing empty warning yet)
+added alt='' warning back for focusable images
+tweaked jaws/nvda logic for: p, h1-h6, label[tabindex], section, span
+
+1.3.0
+New Feature: holding Shift key will not allow the active element to change on mouseover.
+Only throw "Label only allowed on form elements, excluding buttons. With label[for], not nested label
+Combined "do not combine" errors into one error message, separating component combinations by brackets[ ]
+Don't throw empty component error for alt. It's allowed to be empty
+Major organization of errors/warnings
+Warnings now appearing in Output section.
+Display misspelled aria, duplicate for, duplicate id issues to element output
+Performance boost
+
+1.2.1
+Add error: If table has caption and role=presentation
+If label not allowed on element, don't throw error about empty label
+Remove script, noscript, iframe elements from getVisibleTextOfTree
+If JAWS logic doesn't provide any output, add the text "No output or will make a guess" to the Output display
+If NVDA logic doesn't provide any output, add the text "No output" to the Output display
+Make HTML structure changes to AC table for ANDI's own accessibility
+Fix dropdown alignment issue with IE8 only
+Other CSS changes
+Add add-on props to AC table
+
+1.2.0
+CSS change, On test page, Instead of changing position fixed to absolute, keep as fixed and adjust the top height
+Add error when results of aria-labelledby and aria-describedby return empty strings
+Renamed Precedence Ruleset to Output Ruleset and move dropdown next to the Output display section
+
+1.1.3
+Added Do not use aria-label with alt, error
+Added Do not use aria-labelledby with aria-label, error
+Added Do not use aria-label with aria-labelledby error
+
+1.1.2.3
+Add descriptive messages for error_01 for form elements, links, and images in links
+Change the "no id found for ref in aria" error message text to be more descriptive
+If component has been labelled [empty], skip it in the JAWS/NVDA precedence logic
+
+1.1.2.2
+Display issues list even if there are no focusable elements on page
+Big Performance Enhancement:
+-using jquery .filter(':visible') instead of ":visible" is way faster.
+-moved all of the global warning checks into a single loop instead of 5 separate loops
+
+1.1.2.1
+Some IE7 css fixes
+Css override( ::before ::after content=none)
+Get only visible elements (getVisibleTextOfTree) for legend, figcaption, caption
+Run dup 'id' check and dup 'for' check on only visible elements (this made a lot of the unnecessary warnings go away on the UEF pages)
+
+1.1.2
+Wording changes on some error messages based on feedback/recommendations.
+Added Add On Property aria-sort.
+Give addOnProperties a group css class.
+Change Accessibility Output text immediately on selection of Ruleset dropdown when there is an active element.
+Moved add highlight class for performance increase.
+Error Fixes:
+-Fix error where if 'id' is empty in 'id' dupcheck results in javascript error
+-Fix error where if 'for' is empty in 'for' dupcheck results in javascript error
+-Fix a whitescreen issue
+-CSS overrides
+-Fix issue with getVisibleTextOfTree – ":hidden" selector doesn't work in IE or something
+
+1.1.1
+Wording changes on some error messages based on feedback/recommendations
+Created reusable function to deal with innerText children
+Added <title> tag error "Page has no Title"
+Add title attribute to span tags on Accessibility Output to ensure ANDI itself is more accessible
+
+1.1.0.2
+Exclude hidden children (display=none) from innerText
+Exclude screen reader hidden children (aria-hidden) from innerText
+Fix issue with long component text making ANDI appear too large.
+CSS changes to allow for more flexible display
+Added Add On Property aria-haspopup
+Fix issue where if element only has add on props, was not displaying Element is not accessible
+
+1.1.0.1
+Fix issue where repeated ANDI launches was causing the error linking to get confused if the DOM changed between launches.
+
+1.1.0
+New Feature: Cycle through highlighted elements when clicking < or > Alternatively, hotkey alt+comma  and  alt+period
+Update JAWS input[range] and input[image] logic to JAWS 18 precedence
+Performance enhancement on table builder: Only add row if component not empty
+If frames detected on test page, throw alert, stop ANDI
+If iframe detected on test page, throw alert "ANDI does not scan contents of iframe". Continue ANDI (big changes needed to implement iframe highlighting)
+Revised comments
+Error fixes:
+-Don't grab legend if not a form element
+-Throw error if using label with input[image]
+-Fix issue that was causing error throw when describedby used alone with innerText and value elements
+-Throw describedby and title combo error even if namer is found
+-When component contents contain < and > characters, convert to html special character strings (&lt; &gt;) so browser doesn't attempt to parse as html
+-Fix matching catch
+
+ANDI 1.0.0
+Initial Public Release

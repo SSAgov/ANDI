@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ANDI - Modules</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="DCTERMS:coderOffice" content="DCS" />
+<meta name="DCTERMS:coder" content="SSA" />
+<meta name="DCTERMS:contentOffice" content="DCS" />
+<meta name="DCTERMS:contentOwner" content="SSA" />
+<meta name="description" content="ANDI 508 accessibility test tool Help How To Use" />
+
+<link href="help.css" rel="stylesheet" media="all" />
+<link href="print.css" rel="stylesheet" media="print" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="help.js"></script>
+
+</head>
+<body>
+
+<header>
+	<h1 class="toolName">ANDI</h1>
+	<a href='#skipnav' class='skipnav'>Skip to Content</a>
+	<nav id='navHeader'>
+		<a href="howtouse.html" class="howtouse">Guide</a>
+		<a href="modules.html" class="modules">Modules</a>
+		<a href="alerts.html" class="alerts">Alerts</a>
+		<a href="faq.html" class="faq">FAQ</a>
+		<a href="developerguide.html" class="developerguide">Developer&nbsp;Tips</a>
+		<a href="install.html" class="install">Install</a>
+	</nav>
+	<div id='pageTitle' class="modules">
+	<h2>ANDI Modules</h2>
+	<p id='pageSummary'>
+	This page describes the features and functionality of the <span class="brand">ANDI</span> modules.
+	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
+	</p>
+	</div>
+</header>
+<main class="modules" id="skipnav" tabindex="-1" aria-label="main content">
+<nav id='tableOfContents'>
+	<h3><a href="#ANDIdefaultModule">ANDI (focusable elements)</a></h3>
+	<ul>
+		<li><a href="#ANDI-accesskeyList">Accesskey List</a></li>
+		<li><a href="#ANDI-tabOrderIndicators">Tab Order</a></li>
+		<li><a href="#ANDI-titleOverlay">Title Attributes</a></li>
+		<li><a href="#ANDI-labelTagsOverlay">Label Tags</a></li>
+	</ul>
+	<h3><a href="#tANDI"><code class='tANDIcolor'>t</code>ANDI (tables)</a></h3>
+	<ul>
+		<li><a href="#tANDI-tableList">Table List</a></li>
+		<li><a href="#tANDI-prevNextTableButtons">Previous/Next Table</a></li>
+		<li><a href="#tANDI-cellHighlights">Cell Highlights</a></li>
+		<li><a href="#tANDI-tableMarkupButton">Markup</a></li>
+		<li><a href="#tANDI-tableAnalysisMode">Table Analysis Mode (scope, headers/id)</a></li>
+	</ul>
+	<h3><a href="#lANDI"><code class='lANDIcolor'>l</code>ANDI (links)</a></h3>
+	<ul>
+		<li><a href="#lANDI-highlightAmbiguousLinksButton">Ambiguous Links</a></li>
+		<li><a href="#lANDI-showLinkListButton">View Links List</a></li>
+		<li><a href="#lANDI-highlightNonUniqueButtons">Non-unique Buttons</a></li>
+		<li><a href="#lANDI-showButtonListButton">View Buttons List</a></li>
+	</ul>
+	<h3><a href="#gANDI"><code class='gANDIcolor'>g</code>ANDI (graphics/images)</a></h3>
+	<ul>
+		<li><a href="#gANDI-fadeInlineImagesButton">Hide Inline</a></li>
+		<li><a href="#gANDI-highlightDecorativeButton">Decorative Inline</a></li>
+		<li><a href="#gANDI-hideBgImagesButton">Hide Background</a></li>
+		<li><a href="#gANDI-highlightBgImagesButton">Find Background</a></li>
+		<li><a href="#gANDI-findFontIconsButton">Find Font Icons</a></li>
+	</ul>
+	<h3><a href="#sANDI"><code class='sANDIcolor'>s</code>ANDI (structure)</a></h3>
+	<ul>
+		<li><a href="#sANDI-headingsButton">Headings (mode)</a></li>
+		<li><a href="#sANDI-listsButton">Lists (mode)</a></li>
+		<li><a href="#sANDI-landmarksButton">Landmarks (mode)</a></li>
+		<li><a href="#sANDI-liveRegionsButton">Live Regions (mode)</a></li>
+		<li><a href="#sANDI-readingOrder">Reading Order</a></li>
+		<li><a href="#sANDI-pageTitleButton">Page Title</a></li>
+		<li><a href="#sANDI-pageLanguageButton">Page Language</a></li>
+		<li><a href="#sANDI-roleAttributesButton">Role Attributes</a></li>
+		<li><a href="#sANDI-langAttributesButton">Lang Attributes</a></li>
+	</ul>
+	<h3><a href="#cANDI"><code class='cANDIcolor'>c</code>ANDI (color contrast)</a></h3>
+	<ul>
+		<li><a href="#cANDI-contrastRatio">Contrast Ratio</a></li>
+		<li><a href="#cANDI-style">Style</a></li>
+		<li><a href="#cANDI-manualContrastTest">Manual Contrast Test</a></li>
+		<li><a href="#cANDI-contrastPlayground">Contrast Playground</a></li>
+		<li><a href="#cANDI-grayscale">Grayscale</a></li>
+	</ul>
+	<h3><a href="#hANDI"><code class='hANDIcolor'>h</code>ANDI (hidden content)</a></h3>
+	<ul>
+		<li><a href="#hANDI-revealAll">Reveal All</a></li>
+		<li><a href="#hANDI-otherReveals">CSS Hiding Techniques Dropdown</a></li>
+		<li><a href="#hANDI-cssContent">Content ::before ::after</a></li>
+	</ul>
+	<h3><a href="#iANDI"><code class='iANDIcolor'>i</code>ANDI (iframes)</a></h3>
+	<ul>
+		<li><a href="#iANDI-iframeList">iFrame List</a></li>
+		<li><a href="#iANDI-testInNewWindow">Test In New Tab Button</a></li>
+	</ul>
+
+</nav>
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-Modules" id='Modules' >
+	
+	<h2 id="lby-Modules">Modules</h2>
+	<p>
+	ANDI divides accessibility testing into manageable subtasks. 
+	For example: start by testing the focusable elements, then move on to data tables, then check the color contrast, and so on.
+	By selecting a "module" from the module selection dropdown, a user can test different areas of accessibility.
+	</p>
+	<div class="example">
+		<img alt="ANDI Module Launch Buttons" src="images/andi-moduleLaunchButtons.png" class="noshadow fullwidth small" />
+	</div>
+	<div class="example">
+		<table>
+		<caption>Summary of ANDI Modules </caption>
+		<tr>
+			<th scope="col">Module Name</th>
+			<th scope="col">Area of Accessibility</th>
+			<th scope="col">Features</th>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#ANDIdefaultModule">ANDI</a></th>
+			<td>focusable elements (default)</td>
+			<td>Interactive elements, tab order, accesskeys</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#gANDI"><code>g</code>ANDI</a></th>
+			<td>graphics/images</td>
+			<td>Alternative text</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#lANDI"><code>l</code>ANDI</a></th>
+			<td>links/buttons</td>
+			<td>Link comparison, button comparison</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#tANDI"><code>t</code>ANDI</a></th>
+			<td>tables</td>
+			<td>Data tables, cell associations</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#sANDI"><code>s</code>ANDI</a></th>
+			<td>structures</td>
+			<td>Headings, semantic HTML, ARIA roles, language</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#cANDI"><code>c</code>ANDI</a></th>
+			<td>color contrast</td>
+			<td>Automatic contrast calculation</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#hANDI"><code>h</code>ANDI</a></th>
+			<td>hidden content</td>
+			<td>Revealing hidden content</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="#iANDI"><code>i</code>ANDI</a></th>
+			<td>iframes</td>
+			<td>Iframe Content Testing</td>
+		</tr>
+		</table>
+	</div>
+	<p>
+	When a module is selected it will re-scan the page and present results depending on the module selected.
+	Read on for details about each module.
+	</p>
+	</section>
+</div>
+<div class="division">
+	
+	<section tabindex="0" aria-labelledby="lby-ANDIdefaultModule" id='ANDIdefaultModule' >
+	
+	<h2 id="lby-ANDIdefaultModule">ANDI (focusable elements)</h2>
+		<div class='details'>
+		<br />
+		<div class="example">
+			<img alt="ANDI logo" src="images/fandi-logo.png" class="fullwidth small" />
+		</div>
+		<p>When <span class="brand">ANDI</span> is first launched, it will load with the default module
+		which analyzes focusable elements (interactive elements). It will check for conditions that may cause accessibility issues related to focusable elements.
+		<span class="brand">ANDI</span> will present a list of accesskeys found and offers the ability to see the keyboard tab order indicators.
+		</p>
+		<hr />
+		<h3 id='ANDI-accesskeyList'>Accesskey List</h3>
+			<div class="example">
+				<img alt="Accesskeys List with example of accesskeys found" src="images/fandi-accesskeysList.png" style="height:1.2em" />
+			</div>
+			<p>
+			If <span class="brand">ANDI</span> finds an element with an <code>accesskey</code> attribute on the page, 
+			it will display the value in the Accesskey List.
+			</p>
+			<p>
+			The characters in the Accesskey List are links. When selected, the link will move focus 
+			to the element associated with the accesskey.</p>
+			<p>
+			Note: <span class="brand">ANDI</span> will not be able to detect
+			shortcut keys implemented using javascript (key press events).
+			</p>
+		<hr />
+		<h3 id='ANDI-tabOrderIndicators'>Tab Order Indicators</h3>
+			<div class="example">
+				<img alt="show tab order button" src="images/fandi-taborderbutton.png" class="button" />
+			</div>
+			<p>
+			When the Tab Order button is pressed, tab order indicator flags will be overlayed 
+			throughout the page next to each tabbable element. The flags contain a sequential number indicating
+			the "flow" of the tab sequence. 
+			When the Tab Order button is pressed again, it will remove the tab order indicator flags.
+			</p>
+				<div class="example">
+				<img alt="tab order indicators appearing on a test page" src="images/fandi-taborderindicators.png" class="noshadow fullwidth small" />
+				</div>
+			<p>
+			If an element has been taken out of the tab order (tabindex="-1"), the flag will be red 
+			with an "X".
+			If an element has a tabindex greater than zero, the background color of the flag will be orange.
+			All flags have tooltips that provide these additional details in text form.
+			</p>
+		<hr />
+		<h3 id='ANDI-titleOverlay'>Title Attributes Button</h3>
+			<div class="example">
+				<img alt="title Attributes button" src="images/fandi-titleAttributesButton.png" class="button" />
+			</div>
+			<p>When the Title Attributes button is pressed, any focusable element that has a title attribute 
+			will have the the title's value overlayed on the screen.
+			</p>
+				<div class="example">
+				<img alt="title Attributes overlay appearing on a test page" src="images/fandi-titleAttributesOverlay.png" class="fullwidth large" />
+				</div>
+			<p>
+			When the button is pressed again, it will remove the title overlay flags.
+			</p>
+		<hr />
+		<h3 id='ANDI-labelTagsOverlay'>Label Tags Button</h3>
+			<div class="example">
+				<img alt="label tags button" src="images/fandi-labelTagsButton.png" class="button" />
+			</div>
+			<p>When the Label Tags button is pressed, overlays will be added next to each
+			<code>&lt;label&gt;</code> element.
+			</p>
+			<p>
+			If a label has a <code>for</code> attribute, then the value will be displayed.
+			Futhermore, if an <code>id</code> cannot be found that matches the label's <code>for</code> attribute, 
+			then the overlay flag will be colored red and a tooltip will provide the message "no matching id".
+			</p>
+				<div class="example">
+				<img alt="label tags overlay appearing on a test page" src="images/fandi-labelTagsOverlay.png" class="fullwidth small noshadow" />
+				</div>
+			<p>
+			When the button is pressed again, it will remove the label overlay flags.
+			</p>
+		</div>
+	</section>
+</div>
+<div class="division">
+	
+	<section tabindex="0" aria-labelledby="lby-tANDI" id='tANDI' >
+	
+	<h2 id="lby-tANDI"><code>t</code>ANDI (tables)</h2>
+		<div class='details'>
+		<br />
+		<div class="example">
+			<img alt="tANDI overview" src="images/tandi-overview.png" class="fullwidth large" />
+		</div>
+		<p>The tables ANDI (<code>t</code><span class="brand">ANDI</span>) module provides the ability to 
+		inspect tables for column headers and cell associations. It will check for conditions that may cause accessibility issues related to tables.</p>
+		<p id='tandiPageAnalysis.png'>When <code>t</code><span class="brand">ANDI</span> is launched,
+		it will analyze the first table on the page. It will display the size (columns by rows), the cell count.
+		The total number of data tables and total number of presentation tables will also be provided.
+		</p>
+			<div class="example">
+			<img alt="tANDI page analysis section" aria-describedby="tandiPageAnalysis.png" src="images/tandi-pageAnalysis.png" class="fullwidth small" />
+			</div>
+		<p> Unlike other modules, <code>t</code><span class="brand">ANDI</span> analyzes only one table at a time.
+			Because of the one-table-at-a-time approach, all alerts in the 
+			<a href="howtouse.html#AccessibilityAlerts">Accessibility Alerts list</a>
+			refer only to the current table being inspected. 
+			To analyze additional tables on the page, press the "next table" button.
+		</p>
+		<hr />
+		<h3 id='tANDI-tableList'>Table List</h3>
+			<div class="example">
+			<img alt="tANDI table list" aria-describedby="tANDI-tableList" src="images/tandi-tableList.png" class='fullwidth medium' />
+			</div>
+			<p>
+			The table list will include a list of all tables on the page.
+			Selecting a table in the list, will cause that table to be analyzed.
+			For each table in the list:
+			</p>
+				<div class="example">
+					<ul>
+					<li>If the table has <code>role="presentation"</code> or <code>role="none"</code>,
+					"Presentation table" will be displayed.</li>
+					<li>If the table has an accessible name, it will be displayed.</li>
+					<li>If the table has no accessible name but the element preceeding the table is a heading element,
+					"Data Table with No Name, but Preceded by Heading: {heading innertext}" will be displayed.</li>
+					<li>If the table has no accessible name, "Data table with No Name"
+					will be displayed.</li>
+					</ul>
+				</div>
+		<hr />
+		<h3 id='tANDI-prevNextTableButtons'>Previous Table / Next Table Buttons</h3>
+			<div class="example">
+			<img alt="tANDI prev table, next table buttons" aria-describedby="tANDI-prevNextTableButtons-info" src="images/tandi-prevNext.png" class='button' />
+			</div>
+			<p id='tANDI-prevNextTableButtons-info'>
+			If there are more than one table on the page, the "prev table" and "next table" buttons will appear.
+			Pressing these buttons will allow the user to analyze the "next" or "previous" table.
+			Remember, <code>t</code><span class="brand">ANDI</span> analyzes one table at a time so be sure to use these buttons
+			to test all tables on the page.
+			</p>
+			<p>
+			These buttons are not to be confused with the common 
+			<a href="howtouse.html#PreviousNext">previous element / next element buttons</a> which
+			shift focus between the table cells.
+			</p>
+		<hr />
+		<h3 id='tANDI-cellHighlights'>Table Cell Highlights</h3>
+			<p>When <code>t</code>ANDI is launched,
+			data table cells are given borders. When the cells are inspected,
+			background shading will appear for associated cells.</p>
+		<h4>Borders</h4>
+			<div class="example">
+				<img alt="tANDI cell borders" aria-describedby="tANDI-cellBorders" src="images/tandi-borders.png" class="fullwidth small noshadow" />
+			</div>
+			<p id='tANDI-cellBorders'>
+			<code>&lt;th&gt;</code> cells will be given a darker, 2 pixel dashed border
+			and <code>&lt;td&gt;</code> cells, a lighter, 1 pixel dashed border.
+			Any cells or tables with danger level alerts will have a red border and the alert message 
+			will appear in the Output.
+			</p>
+		<h4>Shading</h4>
+			<div class="example">
+				<img alt="tANDI Cell Highlight" aria-describedby="tANDI-cellShading" src="images/tandi-cellHighlight.png" style='width:42%; max-width:170px' class='noshadow' />
+				<img alt="tANDI Header Highlight" aria-describedby="tANDI-cellShading" src="images/tandi-headerHighlight.png" style='width:42%; max-width:170px' class='noshadow' />
+			</div>
+			<p id='tANDI-cellShading'>
+			As a user hovers over a table cell or uses the <a href="howtouse.html#PreviousNext">Next/Previous Element buttons</a>,
+			<code>t</code><span class="brand">ANDI</span> will highlight 
+			associated cells.
+			This highlighting is based on the Table Analysis Mode selected.
+			Associating <code>&lt;th&gt;</code> cells will have darker shading and 
+			<code>&lt;td&gt;</code> cells will have a lighter shading.
+			</p>
+				<hr />
+		<h3 id='tANDI-associatedHeaderText'>Header Cells Text</h3>
+			<div class="example">
+				<img alt="tANDI Accessibility Components" aria-describedby="tANDI-associatedHeaderText-info" src="images/tandi-components.png" class="fullwidth small" />
+			</div>
+			<p id='tANDI-associatedHeaderText-info'>
+			While inspecting data table cells, the <span class="brand">ANDI</span> Output will include text from
+			associated header cells (depending on the Table Analysis Mode selected).
+			The <span class="brand">ANDI</span> Output should be equivalent to 
+			what a screen reader would speak in its table navigation mode.
+			Users should ensure that
+			the Output is complete and accurate for each table cell.
+			</p>
+		<hr />
+		<h3 id='tANDI-tableMarkupButton'>Markup Button</h3>
+			<div class="example">
+				<img alt="tANDI markup button" aria-describedby="tANDI-tableMarkupButton-info" src="images/tandi-markupButton.png"  class="button" />
+			</div>
+			<p id='tANDI-tableMarkupButton-info'>
+			When the Markup button is pressed it will overlay the table association markup 
+			(<code>th/td, scope, headers, id</code>) for the current table being inspected.
+			</p>
+				<div class="example">
+					<img alt="tANDI markup overlay on a text page" aria-describedby="tANDI-tableMarkupButton-info" src="images/tandi-markupButton-example.png" class="noshadow fullwidth medium" />
+				</div>
+			<p>
+			Pressing the button again will remove the markup overlay.
+			</p>
+		<hr />
+		<h3 id='tANDI-tableAnalysisMode'>Table Analysis Mode buttons (scope or headers/id)</h3>
+			<div class="example">
+				<img alt="tANDI Scope Mode On" aria-describedby="tANDI-tableAnalysisMode-info" src="images/tandi-scopeMode.png" class="button" />
+				<img alt="tANDI Headers/id Mode On" aria-describedby="tANDI-tableAnalysisMode-info" src="images/tandi-headersMode.png" class="button" />
+			</div>
+			<p id='tANDI-tableAnalysisMode-info'>
+			If <code>t</code><span class="brand">ANDI</span>
+			has detected the use of <code>headers</code> attributes on the table being inspected,
+			the table analysis mode buttons "scope mode" and "headers/id mode" will appear.
+			These toggle buttons control <code>t</code><span class="brand">ANDI</span>'s analysis algorithm which 
+			calculates cell-header associations based on 
+			<a href="developerguide.html#dataTableCellAssociations">the Scope Method or the Headers/id Method</a>.
+			<code>t</code><span class="brand">ANDI</span> defaults to "scope mode" when 
+			<code>headers</code> attributes are not present.
+			</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-lANDI" id='lANDI' >
+	
+	<h2 id="lby-lANDI"><code>l</code>ANDI (links/buttons)</h2>
+	<div class='details'>
+	<br />
+		<div class="example">
+		<img alt="lANDI overview" src="images/landi-overview.png" class="fullwidth large" />
+		</div>
+		<p>The links/buttons ANDI (<code>l</code><span class="brand">ANDI</span>) module provides the ability to 
+		inspect "clickable" links and buttons for uniqueness, completeness, and accuracy.</p>
+		<p>
+		<code>l</code><span class="brand">ANDI</span> detects 
+		potential accessibility issues with links such as 
+		non-distinguishable or ambiguous links, the presence and functionality of internal or within-page "skip links",
+		and links with a missing or non-descriptive accessible name/description.
+		</p>
+		<p>
+		<code>l</code><span class="brand">ANDI</span> will also detect
+		potential accessibility issues with buttons such as the automatic detection of non-unique buttons.
+		</p>
+		<hr />
+		<h3>Links (mode)</h3>
+			<div class="example">
+				<img alt="lANDI Links Mode Button" src="images/landi-linksMode.png" class="button" />
+			</div>
+			<p id='lANDI-linksModeButton'>
+			This button will appear when <code>l</code><span class="brand">ANDI</span> detects
+			links that have an <code>href</code> on the page (<code>&lt;a href="url.html"&gt;</code>).
+			</p>
+			<p>
+			When this mode is engaged, all visible links will receive blue highlights. 
+			</p>
+		
+		<h3>Ambiguous Links Button</h3>
+			<div class="example">
+				<img alt="lANDI Ambiguous Links Button" aria-describedby="lANDI-highlightAmbiguousLinksButton" src="images/landi-ambiguouslinks.png" class="button" />
+			</div>
+			<p id='lANDI-highlightAmbiguousLinksButton'>
+			If <code>l</code><span class="brand">ANDI</span> has detected ambiguous links on the page,
+			the Ambiguous Links button will appear. When this button is pressed it will highlight all ambiguous links on the page
+			with a solid blue border and shadow.
+			</p>
+				<div class="example">
+					<img alt="lANDI ambiguous links highlighted on test page" aria-describedby="lANDI-highlightAmbiguousLinksButton" src="images/landi-ambiguouslinks-example.png" class='noshadow' style='width:8em' />
+				</div>
+			<p>
+			An ambiguous link means that another link exists on the page with an identical name/description
+			but each link points to a different destination (the <code>href</code>s are different).
+			See the <a href="alerts.html#ambiguous_link">Ambiguous Link alert details</a> for reasons why this is an accessibility concern.
+			</p>
+			
+		<h3>View Links List Button</h3>
+			<div class="example">
+				<img alt="lANDI Links List Button" aria-describedby="lANDI-showLinkListButton" src="images/landi-linkslistbutton.png" style='height:1.7em' />
+			</div>
+			<p id='lANDI-showLinkListButton'>
+			When this button is pressed, it will hide the <a href='howtouse.html#AccessibilityAlerts'>Accessibility Alert List</a> 
+			and display a list of every link on the page. The list will contain
+			alerts, the accessible name &amp; description of the link, and the href.
+			</p>
+				<div class="example">
+					<img alt="lANDI Links List" aria-describedby="lANDI-showLinkListButton" src="images/landi-pageAnalysis.png" class="fullwidth medium" />
+				</div>
+			<div class="example">
+			<table style="max-width:700px; width:90%">
+				<caption>Links List Columns</caption>
+				<tr>
+					<th scope="row">#</th>
+					<td>
+					The "index" number of the link.
+					i.e. the order in which the link sequentially occurs in the code.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Alerts</th>
+					<td>
+					If the link has a link-related alert, an Alert icon.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Accessible Name &amp; Description</th>
+					<td>
+					The accessible name and accessible description.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">href</th>
+					<td>
+					The href value of the link. 
+					Internal links (<code>href="#..."</code>) will shift focus. 
+					Javascript links (<code>href="javascript:...()"</code>): do nothing. 
+					All others open a new window (or tab) at the location of the href.
+					</td>
+				</tr>
+			</table>
+			</div>
+			<div class="example">
+			<table style="max-width:700px; width:90%">
+			<caption>Links List Tabs</caption>
+				<tr>
+					<th scope="row">All Links Tab</th>
+					<td>
+					Display all links in the links list.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Skip Links Tab</th>
+					<td>
+					Filter only internal/skip links to appear in the list.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">External Links Tab</th>
+					<td>
+					Filter only external links to appear in the list.
+					</td>
+				</tr>
+			</table>
+			</div>
+		<hr />
+		<h3>Buttons (mode)</h3>
+			<div class="example">
+				<img alt="lANDI Buttons Mode Button" src="images/landi-buttonsMode.png" class="button" />
+			</div>
+			<p id='lANDI-buttonsModeButton'>
+			This button will appear when <code>l</code><span class="brand">ANDI</span> detects
+			buttons on the page.
+			</p>
+				<div class="example">
+				<ul>
+				<li><code>&lt;button&gt;</code></li>
+				<li><code>&lt;input type="button"&gt;</code></li>
+				<li><code>&lt;input type="submit"&gt;</code></li>
+				<li><code>&lt;input type="reset"&gt;</code></li>
+				<li><code>&lt;input type="image"&gt;</code></li>
+				<li>an element with <code>role="button"</code></li>
+				</ul>
+				</div>
+			<p>
+			When this mode is engaged, all visible buttons on the page will receive highlights.
+			</p>
+		<h3>Non-Unique Buttons Button</h3>
+			<div class="example">
+				<img alt="lANDI Non-Unique Buttons Button" src="images/landi-nonUniqueButtons.png" class="button" />
+			</div>
+			<p id='landi-highlightNonUniqueButtons'>
+			If <code>l</code><span class="brand">ANDI</span> has detected non-unique buttons on the page,
+			the Non-Unique Buttons button will appear. When this button is pressed it will highlight all non-unique buttons on the page
+			with a solid blue border and shadow.
+			</p>
+			<p>
+			An non-unique button means that another button exists on the page with an identical name/description.
+			See the <a href="alerts.html#non_unique_button">Non-Unique Button alert details</a> for reasons why this is an accessibility concern.
+			</p>
+		<h3>View Buttons List Button</h3>
+			<div class="example">
+				<img alt="lANDI Buttons List Button" aria-describedby="lANDI-showButtonListButton" src="images/landi-buttonsList.png" class="fullwidth medium" />
+			</div>
+			<p id='lANDI-showButtonListButton'>
+			When this button is pressed, it will hide the <a href='howtouse.html#AccessibilityAlerts'>Accessibility Alert List</a> 
+			and display a list of every button on the page. The list will contain
+			alerts and the accessible name &amp; description of the button.
+			</p>
+			<div class="example">
+			<table style="max-width:90%">
+				<caption>Buttons List Columns</caption>
+				<tr>
+					<th scope="row">#</th>
+					<td>
+					The "index" number of the button.
+					i.e. the order in which the button sequentially occurs in the code.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Alerts</th>
+					<td>
+					If the button has a button-related alert, an Alert icon.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Accessible Name &amp; Description</th>
+					<td>
+					The accessible name and description.
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Accesskey</th>
+					<td>
+					If the button has an <a href="developerguide.html#accesskey">accesskey attribute</a>, the value.
+					</td>
+				</tr>
+			</table>
+			</div>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-gANDI" id='gANDI' >
+	
+	<h2 id="lby-gANDI"><code>g</code>ANDI (graphics/images)</h2>
+	<div class='details'>
+	<br />
+		<div class="example">
+		<img alt="gANDI overview" src="images/gandi-overview.png" class="fullwidth large"  />
+		</div>
+		<p>The graphics ANDI (<code>g</code><span class="brand">ANDI</span>) module provides the ability to 
+		test the accessibility of graphics/images including the presence of alternative text.</p>
+		<p>When <code>g</code><span class="brand">ANDI</span> is launched
+		it will display the number of images found, including inline, background, and image links.
+		It will also reveal any accessibility alerts associated with images.
+		<code>g</code><span class="brand">ANDI</span> provides the ability to toggle the appearance of the images
+		for enhanced visual detection and screen shot capturing purposes.
+		</p>
+		<p>
+			In addition to <a href="howtouse.html#AccessibilityAlerts">common alerts</a>, <code>g</code><span class="brand">ANDI</span> will test for 
+			accessibility issues relating to graphics/images such as 
+			<code>&lt;marquee&gt;</code>, <code>&lt;blink&gt;</code>, alt text containing file names,
+			redundant phrases in alt text ("image of", "photo of", etc.),
+			non-descriptive alt text ("image", "photo", etc.), and presence of server-side image maps.
+			</p>
+		<hr />
+		<h3 id='gANDI-fadeInlineImagesButton'>Hide Inline (Images) Button</h3>
+			<div class="example">
+				<img alt="gANDI Fade Inline Images Button" aria-describedby="gANDI-fadeInlineImagesButton-descr" src="images/gandi-fadeInlineImagesButton.png" class="button" />
+			</div>
+			<p id='gANDI-fadeInlineImagesButton-descr'>
+			The Hide Inline button helps a visual user detect which images are inline (in the foreground).
+			When this button is pressed it will "fade" inline images 
+			(<code>&lt;img&gt;</code>, <code>&lt;input type='image'&gt;</code>, <code>[role=img]</code>) 
+			from the page.
+			This is accomplished by dropping the image's opacity to 30%.
+			</p>
+			<p>
+			Pressing the button again will restore the inline images to the original opacity.
+			</p>
+			<p>
+			When testing for accessibility, a <code>g</code><span class="brand">ANDI</span> user should 
+			inspect every non-decorative inline image, read the ANDI Output which should contain 
+			a meaningful description of the image.
+			</p>
+		<hr />
+		<h3 id='gANDI-highlightDecorativeButton'>Decorative Inline (Images) Button</h3>
+			<div class="example">
+				<img alt="Highlight Decorative &lt;img&gt; Button" aria-describedby="gANDI-highlightDecorativeButton-info" src="images/gandi-highlightDecorativeButton.png" class="button" />
+			</div>
+			<p id='gANDI-highlightDecorativeButton-info'>
+			The Decorative Inline button helps a visual user detect which <code>&lt;img&gt;</code> 
+			elements have been programmatically declared decorative by the web author.
+			</p>
+			<p>
+			When this button is pressed it will add a dark green glowing border around <code>&lt;img&gt;</code> elements
+			with any of the following markup:
+			</p>
+				<div class="example">
+					<ul>
+					<li><code>alt=""</code> or <code>alt=" "</code></li>
+					<li><code>role="presentation"</code> or <code>role="none"</code></li>
+					<li><code>aria-hidden="true"</code></li>
+					</ul>
+				</div>
+			<p>
+			Pressing the button again will remove the border.
+			</p>
+			<p>
+			When testing for accessibility, a <code>g</code><span class="brand">ANDI</span> user should 
+			ensure that every inline image declared as decorative is truly decorative 
+			and does not need an additional description or explanation.
+			</p>
+		<hr />
+		<h3 id='gANDI-hideBgImagesButton'>Hide Background (Images) Button</h3>
+			<div class="example">
+				<img alt="gANDI Hide Background Images Button" aria-describedby="gANDI-hideBackgroundImagesButton" src="images/gandi-hideBackgroundImagesButton.png" class="button" />
+			</div>
+			<p id='gANDI-hideBackgroundImagesButton'>
+			The Hide Background button helps a visual user detect background images.
+			When this button is pressed it will remove background images from the page 
+			(CSS property <code>background-image</code> contains a url).
+			</p>
+			<p>
+			Pressing the button again will reload the background images.
+			</p>
+			<p>
+			When testing for accessibility, a <code>g</code><span class="brand">ANDI</span> user should 
+			ensure that background images are truly decorative.
+			If not, a text alternative description of the background image must appear somewhere on the page.
+			</p>
+		<hr />
+		<h3 id='gANDI-highlightBgImagesButton'>Find Background (Images) Button</h3>
+			<div class="example">
+				<img alt="gANDI Highlight Background Images Button" aria-describedby="gANDI-highlightBackgroundImagesButton" src="images/gandi-highlightBackgroundImagesButton.PNG" class="button" />
+			</div>
+			<p id='gANDI-highlightBackgroundImagesButton'>
+			The Find Background button helps a visual user detect images coded as background images
+			(CSS property <code>background-image</code> contains a url).
+			When this button is pressed it will add a glowing green border 
+			around every element that contains a background image.
+			</p>
+			<p>
+			Pressing the button again will remove background image highlights.
+			</p>
+			<p>
+			When testing for accessibility, a <code>g</code><span class="brand">ANDI</span> user should 
+			ensure that background images are truly decorative (not informative).
+			If not, a text alternative description of the background image must appear somewhere on the page.
+			</p>
+		<hr />
+		<h3 id='gANDI-findFontIconsButton'>Font Icons Button</h3>
+			<div class="example">
+				<img alt="gANDI Find Font Icons Button" src="images/gandi-findFontIconsbutton.png" style='height:1.7em' />
+			</div>
+			<p>
+			The Font Icons button detects graphics that use the font icon technique.
+			When this button is pressed it will add a glowing green border 
+			around every font icon element found that does not have 
+			<code>[role=img]</code>.
+			<p>
+			Pressing the button again will remove font icon highlights.
+			</p>
+			<p>
+			A Font icon is a technique used to place an icon on the page using a font-family instead of an 
+			<code>&lt;img&gt;</code> tag or CSS background image. 
+			<code>g</code><span class="brand">ANDI</span> will check for the following types of font icons:
+			</p>
+				<div class="example">
+				<ul>
+					<li>Google Material Icons <code>class="material-icons"</code></li>
+					<li>Font Awesome <code>class="fa"</code></li>
+					<li>Glyphicons <code>class="glyphicon"</code></li>
+					<li><code>data-icon</code> attribute</li>
+				</ul>
+				</div>
+		<hr />
+	</div>
+	</section>
+</div>
+
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-sANDI" id='sANDI'>
+	
+	<h2 id="lby-sANDI"><code>s</code>ANDI (structures)</h2>
+	<div class='details'>
+		<div class="example">
+			<img alt="sANDI overview" src="images/sandi-overview.png" class="fullwidth large"  />
+		</div>
+		<p>The structures ANDI (<code>s</code><span class="brand">ANDI</span>) module provides the ability to 
+		test for the presence of semantic tags and ARIA roles associated with page structure.</p>
+		<p>When <code>s</code><span class="brand">ANDI</span> is launched
+		it will display three buttons: headings, lists, landmarks.
+		The buttons will contain the total number of their respective structures.
+		For example: 3 headings, 2 lists, 0 landmarks.
+		Pressing one of the buttons, toggles <code>s</code><span class="brand">ANDI</span> into that respective mode.
+		While one mode is engaged, the other modes will become disengaged.
+		</p>
+		<hr />
+		<h3 id='sANDI-headingsButton'>Headings (mode)</h3>
+			<div class="example">
+				<img alt="sANDI headings mode" src="images/sandi-headingsMode.png" class="button" />
+			</div>
+			<p>
+			Pressing the Headings Button will engage Headings mode, and disengage the other modes.
+			</p>
+			<p>
+			Headings are an important part of page structure because they provide the topic of the sections on a page.
+			Assitive technologies often provide a mechanism to quickly jump from heading to heading in a manner
+			similar to how the human eye allows a sighted user to quickly scan for the major headings on a page.
+			</p>
+			<p>
+			In this mode, <code>s</code><span class="brand">ANDI</span> will find and highlight heading tags
+			(<code>&lt;h1&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;h4&gt;, &lt;h5&gt;, &lt;h6&gt;</code>)
+			as well as any element that has been defined as a heading using ARIA attributes
+			(<code>role="heading"</code> with <code>aria-level</code>)
+			</p>
+			<p>
+			Pressing the View Outline button will display an outline of all headings 
+			ordered by the sequence in which they occur in the code.
+			The order displayed in the outline should match the order in which they appear in a headings list provided by assitive technologies.
+			</p>
+				<div class="example">
+				<img alt="hANDI headings view outline expanded" src="images/sandi-headingsOutlineExpanded.png" class="fullwidth medium" />
+				</div>
+		<hr />
+		<h3 id='sANDI-listsButton'>Lists (mode)</h3>
+			<div class="example">
+				<img alt="sANDI lists mode" src="images/sandi-listsMode.png" class="button" />
+			</div>
+			<p>
+			Pressing the Lists Button will engage Lists mode, and disengage the other modes.
+			</p>
+			<p>
+			Lists are a common way to handle the grouping of common items.
+			When the user of a webpage wants to look for navigation or other items that may be in list form, sighted users
+			use their eyes to scan for the presence of a list and can begin reading.
+			As an alternative for users who are visually impaired, assitive technologies often provide 
+			a mechanism to quickly jump to and through lists on the page.
+			</p>
+			<p>
+			In this mode, <code>s</code><span class="brand">ANDI</span> will find and highlight all list types
+			(<code>&lt;ul&gt;, &lt;ol&gt;, &lt;dl&gt;</code>)
+			and list items
+			(<code>&lt;li&gt;, &lt;dt&gt;, &lt;dd&gt;</code>)
+			</p>
+		<hr />
+		<h3 id='sANDI-landmarksButton'>Landmarks (mode)</h3>
+			<div class="example">
+				<img alt="sANDI landmarks mode" src="images/sandi-landmarksMode.png" class="button" />
+			</div>
+			<p>
+			Pressing the Landmarks Button will engage Landmarks mode, and disengage the other modes.
+			</p>
+			<p>
+			Certain HTML tags and attributes exist to provide semantics to the structure of a web page.
+			These semantic structures (navigation, main, form, etc.) are referred to as landmarks.
+			While programmatically hidden from visual users, assitive technologies often provide a mechanism 
+			for users to scan the page for landmarks to improve the efficiency of page navigation in a manner similar
+			to a sighted user moving their eyes to different areas of the page.
+			</p>
+			<p>
+			In this mode, <code>s</code><span class="brand">ANDI</span> will find and highlight all landmark tags
+			(<code>&lt;main&gt;, &lt;header&gt;, &lt;footer&gt;, &lt;nav&gt;, &lt;form&gt;, &lt;aside&gt;</code>)
+			as well as any element that has been declared as a landmark using ARIA attributes
+			(<code>role="banner", role="complementary", role="contentinfo", role="form", role="main", role="navigation", role="search", role="application"</code>)
+			</p>
+		<hr />
+		<h3 id='sANDI-liveRegionsButton'>Live Regions (mode)</h3>
+			<div class="example">
+				<img alt="sANDI live regions mode" src="images/sandi-liveRegionsMode.png" class="button" />
+			</div>
+			<p>
+			Pressing the Live Regions Button will engage Live Regions mode, and disengage the other modes.
+			</p>
+			<p>
+			Live regions are areas of a page that a screen reader monitors for content changes.
+			When the live region's content changes, the screen reader will read the new content.
+			These regions are useful for notifications, status messages, and alerts.
+			</p>
+			<p>
+			In this mode, <code>s</code><span class="brand">ANDI</span> will find and highlight all live regions.
+			Live regions contain one or more of the following attribute/values:
+			<code>role="alert", role="status", aria-live="polite", aria-live="assertive"</code>.
+			</p>
+		<hr />
+		<h3 id='sANDI-readingOrder'>Reading Order</h3>
+			<p>
+			When the the Reading Order Button is pressed, 
+			numerical indicator flags will be overlayed 
+			throughout the page next to each block of text.
+			The flags contain a sequential number indicating
+			the order in which a screen reader will read the blocks of text.
+			The sequence numbering is based on the text's location 
+			in the HTML source code.
+			</p>
+			<p>
+			If an element has been hidden from a screen reader
+			using <code>aria-hidden="true"</code>,
+			but remains visible to sighted users
+			the flag will be red with an "X" indicating that the element
+			will not be included in the reading order.
+			</p>
+		<hr />
+		<h3>more details dropdown</h3>
+		<br />
+		<div class="example">
+				<img alt="sANDI more details dropdown" src="images/sandi-moreDetails.png" class="medium" />
+			</div>
+		<h4 id='sANDI-pageTitleButton'>page title</h4>
+			<p>
+			This button will provide a popup that contains 
+			the Page title (from the &lt;title&gt; tag).
+			</p>
+		<h4 id='sANDI-pageLanguageButton'>page language</h4>
+			<p>
+			This button will provide a popup that contains 
+			the defined language of the page (the <code>lang</code> attribute from the &lt;html&gt; element).
+			</p>
+		<h4 id='sANDI-roleAttributesButton'>role attributes</h4>
+			<p>
+			This button will add an overlay flag near any element with a <code>role</code> attribute.
+			</p>
+		<h4 id='sANDI-langAttributesButton'>lang attributes</h4>
+			<p>
+			This button will add an overlay flag near any element with a <code>lang</code> attribute.
+			This is useful for a "language of parts" test: 
+			Passages of text in other languages need the <code>lang</code> attribute defined 
+			so that screen readers are aware of what language the words should be pronounced.
+			</p>
+			<p>
+			Use the "page language" button to check the entire page's language.
+			</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-cANDI" id='cANDI' >
+	
+	<h2 id="lby-cANDI"><code>c</code>ANDI (color contrast)</h2>
+	<div class='details'>
+		<div class="example">
+		<img alt="cANDI overview" src="images/candi-overview.PNG" class="fullwidth large"  />
+		</div>
+		<p>The color contrast ANDI (<code>c</code><span class="brand">ANDI</span>) module 
+		automatically detects accessibility issues relating to color contrast.</p>
+		<p>When <code>c</code><span class="brand">ANDI</span> is launched
+		it searches for HTML elements that contain text and grabs the text color and the background color.
+		These two color values are used to calculate the contrast ratio.
+		If the contrast ratio does not meet the minimum requirement for accessibility, the user will be alerted.
+		</p>
+		<p>
+		When a text-containing element is inspected
+		<code>c</code>ANDI will display the Element tag name, the calculated Contrast Ratio, the Style, and any Alerts.
+		</p>
+		<hr />
+		<h3 id='cANDI-contrastRatio'>Contrast Ratio</h3>
+			<div class="example">
+				<img alt="cANDI contrast ratio pass" src="images/candi-contrastPass.png" class="fullwidth small" aria-describedby='cANDI-contrastResult' />
+				<br /><br />
+				<img alt="cANDI contrast ratio fail" src="images/candi-contrastFail.png" class="fullwidth small" aria-describedby='cANDI-contrastResult' />
+			</div>
+			<p>
+			The Contrast Ratio section will display 
+			the calculated contrast ratio, the Pass/Fail status, and the minimum required contrast ratio (Min Req).
+			</p>
+			<p>
+			The Min Req is calculated using 
+			the text color and background color, the font-size, and the font weight.
+			For additional information on contrast ratio requirements
+			refer to the <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">WCAG Contrast Guidelines</a>.
+			</p>
+				<div class="example" id='cANDI-contrastResult'>
+				<dl>
+					<dt>PASS</dt>
+					<dd>Elements that have a contrast ratio greater than or equal to the minimum required contrast ratio pass the contrast test and are accessible.</dd>
+					
+					<dt>FAIL</dt>
+					<dd>Elements that have a contrast ratio less than the minimum required contrast ratio fail the contrast test and are not accessible.</dd>
+					
+					<dt>MANUAL TEST NEEDED</dt>
+					<dd>Elements that contain a background image or gradient require a <a href="#cANDI-manualContrastTest">manual contrast test</a>
+					since the contrast cannot be determined using programmatic DOM analysis.</dd>
+				</dl>
+				</div>
+			<h4>Minimum Required Contrast Ratio (Min Req)</h4>
+			<p>
+			As a minimum, WCAG recommends that text should have a contrast ratio of 4.5:1. 
+			For large text, the minimum ratio is relaxed to 3:1. (WCAG defines large text as font-sizes of 18pt or 14pt bold).
+			A higher contrast ratio allows for more readable text. 
+			For example, black text on a white background produces the maximum contrast at a ratio of 21:1.
+			</p>
+			
+			<h4>Precision</h4>
+			<p>
+			<code>c</code><span class="brand">ANDI</span> calculates the contrast ratio 
+			to a precision of two decimal places.
+			Therefore, a 4.49:1 would fail a minimum contrast requirement of 4.5:1.
+			Similarly, a 2.99:1 would fail a minimum contrast requirement of 3:1.
+			</p>
+			
+		<hr />
+		<h3 id='cANDI-style'>Style</h3>
+			<div class="example">
+				<img alt="cANDI style text color and background color with suggestion" src="images/candi-styleTable.png" aria-describedby='cANDI-styleTable' class="fullwidth small" />
+			</div>
+			<p>
+			The Style section lists the following:
+			</p>
+				<div class="example" id='cANDI-styleTable'>
+				<dl>
+					<dt>Text Color:</dt>
+						<dd>The color of the text (CSS <code>color</code> property) - displayed as a sample color box and hex value.</dd>
+					
+					<dt>Background:</dt>
+						<dd>Starting at the element, the element's ancestor tree is traversed until it finds either:
+							<br />a background image or gradient (CSS <code>background-image</code> property),
+							<br />or the color of the background (CSS <code>background-color</code> property) - displayed as a sample color box and hex value.
+						</dd>
+
+					<dt>Font:</dt>
+						<dd>The font size (CSS <code>font-size</code> property) - always converted to pt units.
+						<br />Optionally, the font weight (CSS font-size property) if bold (700 or greater).
+						</dd>
+						
+					<dt>Suggested Color:</dt>
+					<dd>If the contrast ratio does not meet the minimum requirement, and there is no semi-transparency involved
+					<code>c</code><span class="brand">ANDI</span> will suggest color that could be applied to satisfy 
+					the minimum contrast ratio requirement - displayed as a sample color box and hex value.</dd>
+					
+					<dt>Text-Shadow:</dt>
+						<dd>The text shadow (CSS <code>text-shadow</code> property) if it was defined.</dd>
+						
+				</dl>
+				</div>
+		<hr />
+		<h3 id='cANDI-manualContrastTest'>Manual Contrast Test</h3>
+			<div class="example">
+				<img alt="cANDI manual contrast test needed" src="images/candi-contrastManual.png" class="fullwidth medium"  />
+			</div>
+			<p>
+			When <code>c</code><span class="brand">ANDI</span> cannot automatically calculate the contrast, testers will need to perform
+			a manual color contrast test. This is done using an additional tool
+			that includes a color selector (eye dropper) to select a pixel from the text
+			and a pixel from the background. Most tools used for this purpose will do the contrast calculation after the two colors are selected.
+			One such tool (free and available for download)
+			is the <a href="https://github.com/ThePacielloGroup/CCA-Win/releases/">Colour Contrast Analyser</a>.
+			</p>
+		<hr />
+		<h3 id='cANDI-contrastPlayground'>Contrast Playground</h3>
+			<div class="example">
+				<img alt="cANDI contrast playground" src="images/candi-contrastPlayground.png" class="fullwidth medium"  />
+			</div>
+			<p>
+			The Contrast Playground can be used to adjust two color values and 
+			have the contrast ratio automatically calculated.
+			To show the Contrast Playground, press the "show contrast playground" button.
+			</p>
+			<p>
+			When the contrast ratio is below 4.5:1 the "get small text suggestion" button will appear.
+			Similarly, when the contrast ratio is below 3:1 the "get large text suggestion" button will appear.
+			Pressing either of these buttons will adjust the color values so that the minimum required ratio is met.
+			</p>
+			<p>
+			When focus is on either of the color value entry boxes, pressing the keyboard arrow keys up or down will
+			adjust the brightness of the color. Up lightens, down darkens. Doing so will immediately recalculate the
+			contrast ratio.
+			</p>
+		<hr />
+		<h3 id="cANDI-grayscale">Grayscale</h3>
+			<div class="example">
+				<img alt="cANDI grayscale button" aria-describedby="cANDI-grayscale" src="images/candi-grayscale.png" class="button" />
+			</div>
+			<p>
+			This button will transform the test page into grayscale (black and white) viewing mode.
+			This feature is useful to determine where meaningful color may be used.
+			NOTE: The grayscale button will not appear in Internet Explorer.
+			</p>
+		<hr />
+		<h3>IE Compatability Modes</h3>
+			<p>
+			Pages running in Internet Explorer Compatability modes (IE8 or earlier) cannot be tested with <code>c</code><span class="brand">ANDI</span>.
+			</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-hANDI" id='hANDI' >
+	
+	<h2 id="lby-hANDI"><code>h</code>ANDI (hidden content)</h2>
+	<div class='details'>
+		<div class="example">
+		<img alt="hANDI overview" src="images/handi-overview.PNG" class="fullwidth large"  />
+		</div>
+		<p>The hidden content ANDI (<code>h</code><span class="brand">ANDI</span>) module provides the ability to 
+		discover the presence of hidden content that should be tested for accessibility.
+		</p>
+		<p>
+		The purpose of <code>h</code><span class="brand">ANDI</span> is to expediate the discovery process 
+		by notifying a tester that hidden content exists on the page.
+		A tester should then find the triggers or processes that "naturally" cause the hidden content to appear,
+		since testing content that is forced to be revealed is not reliable and not part of the natural "flow" of the page.
+		To enforce this practice, any content revealed by <code>h</code><span class="brand">ANDI</span>
+		will be "unrevealed" when launching another <span class="brand">ANDI</span> module.
+		</p>
+		<p>When <code>h</code><span class="brand">ANDI</span> is launched
+		it will detect common CSS hiding techniques used and provide buttons which provide the ability to
+		toggle the CSS and thus reveal the hidden content.
+		</p>
+		<p>
+		All revealed content will be given a glowing yellow border.
+		Since the content was forced to appear, 
+		it will most likely cause unusual display or alignment issues on the test page.
+		</p>
+		<hr />
+		<h3 id='hANDI-revealAll'>Reveal All Button</h3>
+			<div class="example">
+				<img alt="hANDI reveal all button" aria-describedby="hANDI-revealAll" src="images/handi-revealAllButton.png" class="button" />
+			</div>
+			<p>
+			Pressing the Reveal All Button will reveal all content hidden using the techniques which
+			<code>h</code><span class="brand">ANDI</span> has detected.
+			</p>
+		<hr />
+		<h3 id='hANDI-otherReveals'>CSS Hiding Techniques Dropdown</h3>
+			<div class="example">
+			<img alt="hANDI CSS Hiding Techniques Dropdown" aria-describedby="hANDI-otherReveals" src="images/handi-otherRevealButtons.png" class="medium noshadow" />
+			</div>
+			<p>
+			This dropdown contains other buttons which
+			will toggle the display of elements being hidden using a particular technique.
+			Sometimes, an element may have more than one hiding technique applied 
+			and may need more than one of the buttons to be engaged
+			to get the content to appear.
+			</p>
+			<p>
+			Options that may appear within this dropdown are:
+			</p>
+				<div class="example">
+				<ul>
+				<li>display:none</li>
+				<li>visibility:hidden</li>
+				<li>position:absolute</li>
+				<li>opacity:0</li>
+				<li>overflow:hidden</li>
+				<li>font-size:0</li>
+				<li>text-indent</li>
+				<li>text-indent</li>
+				<li>html5 hidden</li>
+				</ul>
+				</div>
+			<h4>position:absolute</h4>
+			<p>
+			For an element to be hidden off screen using CSS <code>position:absolute</code>, it must also have an extreme 
+			<code>left, right, top, bottom</code> value assigned.
+			<code>h</code><span class="brand">ANDI</span> only reveals absolute positioned elements that are off screen.
+			</p>
+			<p>
+			Elements visually hidden with this technique, are usually available to a screen reader.
+			</p>
+			<h4>html5 hidden</h4>
+			<p>
+			Introduced in HTML5, the global hidden attribute allows a developer to hide anything.
+			Some browsers render these elements as CSS <code>display:none</code>. Therefore,
+			to reveal these elements, a <code>h</code><span class="brand">ANDI</span> user may have to also press the 
+			"display:none" button. 
+			</p>
+			<p>
+			Screen readers will not be able to read elements visually hidden with this technique.
+			</p>
+			<h4>text-indent</h4>
+			<p>
+			This hiding technique uses a CSS <code>text-indent</code> with a large negative value.
+			Only negative values less than -998 will be recognized as hidden by <code>h</code><span class="brand">ANDI</span>.
+			</p>
+			<p>
+			Elements visually hidden with this technique are usually available to a screen reader.
+			</p>
+		<hr />
+		<h3 id='hANDI-cssContent'>Content ::before ::after Button</h3>
+			<div class="example">
+				<img alt="hANDI content ::before ::after button"  src="images/handi-contentBeforeAfterButton.png" class="button" />
+			</div>
+			<p>
+			This button will appear when text content has been injected using the CSS 
+			pseudo-elements <code>::before</code> or <code>::after</code>.
+			Depending on the browser, text injected using this technique may not available to 
+			screen readers, therefore, an alert will be thrown when this technique is detected.
+			</p>
+			<p>
+			When this button is pressed, the injected CSS text content will be highlighted on the screen.
+			</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-iANDI" id='iANDI' >
+	
+	<h2 id="lby-iANDI"><code>i</code>ANDI (iframes)</h2>
+	<div class='details'>
+		<div class="example">
+		<img alt="iANDI overview" src="images/iandi-overview.png" class="fullwidth large"  />
+		</div>
+		<p>
+		The iframes <span class="brand">ANDI</span> (<code>i</code><span class="brand">ANDI</span>) module allows users to 
+		test the contents of iframes for accessibility.
+		NOTE: Iframes need to be tested independently in a new window because browsers do not allow
+		javascript/CSS manipulation of iframes in an effort to prevent security vulnerabilities.
+		</p>
+		<hr />
+		<h3 id='iANDI-iframeList'>iFrame List</h3>
+			<div class="example">
+				<img alt="iANDI iFrame List" aria-describedby="iANDI-iframeList" src="images/iANDI-iframeList.png" class="fullwidth medium" />
+			</div>
+			<p>
+			Pressing the "View Iframe List" button will expand the iFrame list.
+			Selecting a link in the iFrame list will open the iFrame independently in a new window.
+			Pressing the "Hide Iframe List" button will collapse the iFrame list.
+			</p>
+		<hr />
+		<h3 id='iANDI-testInNewWindow'>Test In New Tab Button</h3>
+			<div class="example">
+				<img alt="iANDI iFrame List" aria-describedby="iANDI-testInNewWindow" src="images/iANDI-testInNewWindow.png" class="button" />
+			</div>
+			<p>
+			Pressing the Test In New Tab Button will open the iFrame independently in a new tab.
+			Testers can then launch <span class="brand">ANDI</span> to test the iFrame.
+			</p>
+			<p>
+			NOTE: Depending on how the iframe is built, this feature may not work as expected.
+			</p>
+	</div>
+	</section>
+</div>
+
+<footer>
+<a href='#skipnav'>Back To Top</a>
+<a href="/privacy/" class="privacy">Privacy</a>
+</footer>
+</main>
+</body>
+</html>

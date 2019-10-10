@@ -1,0 +1,14 @@
+@media print {
+	#tableOfContentsControl, #navHeader, .skipnav, footer, #tableOfContents img{
+		display:none !important;
+    }
+	#tableOfContents{
+		display:inline !important;
+	}
+	div.division{
+		border-radius:0 !important;
+	}
+	*{
+		color:black !important;
+	}
+}

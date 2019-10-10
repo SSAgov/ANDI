@@ -1,0 +1,91 @@
+*{
+font-family:serif
+}
+
+footer,main,nav,header{
+margin:0;
+padding:10px;
+}
+html,body{
+margin:0;
+padding:0;
+}
+
+fieldset{
+width:50%;
+margin:10px;
+}
+
+footer{
+background-color:lightgray;
+}
+
+header{
+background-color:lightblue;
+}
+
+main{
+display:block
+}
+
+#main{
+margin-left:5em !important
+}
+
+th{font-weight:bold; text-align:left;}
+
+td{font-weight:normal}
+
+th,td{
+border:1px solid black;
+padding:3px;
+}
+
+table{
+border-collapse:collapse
+}
+
+label{
+font-weight:bold;
+}
+
+.page{
+border:1px solid black; border-radius: 10px; 
+padding-left:1em; margin-left:2em; margin-top:1em; width:auto; display:block;
+padding-right:1em; padding-bottom:1em; margin-right:4em;
+}
+
+.hide{
+display:none;
+}
+
+h1{
+	font-size:26pt
+}
+h2{
+	font-size:20pt; margin:0
+}
+h3{
+	font-size:18pt
+}
+p{
+	font-size:16pt
+}
+.btn{
+	border-radius:8px; border:2px solid black; font-size:15pt; margin-right:0.5em;
+}
+.address label{
+	width:5em;
+	display: inline-block;
+	margin-bottom:10px;
+}
+
+i{color:#990000; font-style:normal}
+
+fieldset{border:none;}
+
+strong{font-size:14pt}
+
+em{font-size:10pt}
+
+.testWarning{background-color:#990000; color:white; padding:5px;}

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ANDI - Accessibility Testing Tool - How To Use</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="DCTERMS:coderOffice" content="DCS" />
+<meta name="DCTERMS:coder" content="SSA" />
+<meta name="DCTERMS:contentOffice" content="DCS" />
+<meta name="DCTERMS:contentOwner" content="SSA" />
+<meta name="description" content="ANDI 508 accessibility test tool Help How To Use" />
+
+<link href="help.css" rel="stylesheet" media="all" />
+<link href="print.css" rel="stylesheet" media="print" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="help.js"></script>
+
+</head>
+<body>
+
+<header>
+	<h1 class="toolName">ANDI</h1>
+	<a href='#skipnav' class='skipnav'>Skip to Content</a>
+	<nav id='navHeader'>
+		<a href="howtouse.html" class="howtouse">Guide</a>
+		<a href="modules.html" class="modules">Modules</a>
+		<a href="alerts.html" class="alerts">Alerts</a>
+		<a href="faq.html" class="faq">FAQ</a>
+		<a href="developerguide.html" class="developerguide">Developer&nbsp;Tips</a>
+		<a href="install.html" class="install">Install</a>
+	</nav>
+	<div id='pageTitle' class="howtouse">
+	<h2>ANDI Guide</h2>
+	<p id='pageSummary'>
+	This page describes the features and functionality of <span class="brand">ANDI</span>,
+	the Accessible Name and Description Inspector accessibility testing tool.
+	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
+	</p>
+	</div>
+</header>
+<main class="howtouse" id="skipnav" tabindex="-1" aria-label="main content">
+<nav id='tableOfContents'>
+	
+	<h3>The Test Page</h3>
+	<ul>
+		<li><a href="#LaunchingANDI">Launching ANDI</a></li>
+		<li><a href="#ElementHighlights">Element Highlights</a></li>
+	</ul>
+	<h3><a href="#ActiveElementInspection">Active Element Inspection</a></h3>
+	<ul>
+		<li><a href="#ElementTagName">Element Name</a></li>
+		<li><a href="#AccessibilityComponentsTable">Accessibility Components Table</a></li>
+		<li><a href="#ANDIOutput">ANDI Output</a></li>
+	</ul>
+	<h3><a href="#PageAnalysis">Page Analysis</a></h3>
+	<ul>
+		<li><a href="#TotalElementsFound">Total Elements Found</a></li>
+		<li><a href="#PreviousNext">Previous Next Element Buttons
+			<img alt=" " src="images/icon-prev.png" class="navIcon" />
+			<img alt=" " src="images/icon-next.png" class="navIcon" />
+			</a></li>
+		<li><a href="#AdditionalPageDetails">Additional Page Details</a></li>
+		<li><a href="#AccessibilityAlerts">Accessibility Alerts</a></li>
+	</ul>
+	<h3><a href="#ModuleLaunchers">Module Selection Menu</a></h3>
+	<ul>
+		<li><a href="modules.html#ANDIdefaultModule">ANDI (focusable elements)</a></li>
+		<li><a href="modules.html#gANDI"><code>g</code>ANDI (graphics/images)</a></li>
+		<li><a href="modules.html#lANDI"><code>l</code>ANDI (links)</a></li>
+		<li><a href="modules.html#tANDI"><code>t</code>ANDI (tables)</a></li>
+		<li><a href="modules.html#sANDI"><code>s</code>ANDI (structures)</a></li>
+		<li><a href="modules.html#hANDI"><code>h</code>ANDI (hidden content)</a></li>
+	</ul>
+	<h3>Controls</h3>
+	<ul>
+		<li><a href="#Relaunch">Relaunch Button
+			<img alt=" " src="images/icon-reload.png" class="navIcon" /></a></li>
+		<li><a href="#AdvancedSettings">Advanced Settings
+			<img alt=" " src="images/icon-settings-off.png" class="navIcon" /></a></li>
+		<li><a href="#HotkeysList">Hotkeys List Button 
+			<img alt=" " src="images/icon-keys-off.png" class="navIcon" /></a></li>
+		<li><a href="#Help">Help Button
+			<img alt=" " src="images/icon-help.png" class="navIcon" /></a></li>
+		<li><a href="#Close">Close Button
+			<img alt=" " src="images/icon-close.png" class="navIcon" /></a></li>
+		<li><a href="#VersionPopup">Version Popup</a></li>
+	</ul>
+	<h3>Advanced Settings</h3>
+	<ul>
+		<li><a href="#ElementHighlightsButton">Element Highlights Toggle</a></li>
+		<li><a href="#LinearizePage">Linearize Page</a></li>
+		<li><a href="#MiniMode">MiniMode</a></li>
+	</ul>
+	<h3><a href="#Hotkeys">Hotkeys</a></h3>
+	<ul>
+		<li><a href="#RefreshHotkey">Relaunch
+				<span aria-hidden='true'>(</span>alt+=<span aria-hidden='true'>)</span></a></li>
+		<li><a href="#OutputJump">Output Jump
+				<span aria-hidden='true'>(</span>alt+'<span aria-hidden='true'>)</span></a></li>
+		<li><a href="#ActiveElementJump">Active Element Jump
+				<span aria-hidden='true'>(</span>alt+/<span aria-hidden='true'>)</span></a></li>
+		<li><a href="#NextElement">Next Element
+				<span aria-hidden='true'>(</span>alt+<span class='screenReaderOnly'>period</span><span aria-hidden='true'>.)</span></a></li>
+		<li><a href="#PreviousElement">Previous Element
+				<span aria-hidden='true'>(</span>alt+<span class='screenReaderOnly'>comma</span><span aria-hidden='true'>,)</span></a></li>
+		<li><a href="#SectionJump">Section Jump
+				<span aria-hidden='true'>(</span>alt+`<span aria-hidden='true'>)</span></a></li>
+	</ul>
+	<h3>Mouse Controls</h3>
+	<ul>
+		<li><a href="#Lasers">Lasers</a></li>
+		<li><a href="#HoverLock">Hover Lock</a></li>
+	</ul>
+	<h3>Concurrent Use</h3>
+	<ul>
+		<li><a href="#WithScreenReaders">With Screen Readers</a></li>
+		<li><a href="#WithDeveloperTools">With Developer Tools</a></li>
+	</ul>
+	<h3>Limitations</h3>
+	<ul>
+		<li><a href="#DynamicContent">Dynamic Content</a></li>
+		<li><a href="#Frames/iFrames">Frames/iFrames</a></li>
+		<li><a href="#ShadowDOM">Shadow DOM</a></li>
+		<li><a href="#JavaScriptErrors">JavaScript Errors</a></li>
+		<li><a href="#TestPageManipulation">Test Page Manipulation</a></li>
+		<li><a href="#TestingANDIWithANDI">Testing ANDI with ANDI</a></li>
+	</ul>
+</nav>
+<!--==========================-->
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-LaunchingANDI" id='LaunchingANDI' >
+	<h2 id="lby-LaunchingANDI">Launching ANDI</h2>
+	<div class='details'>
+	<p>
+	Navigate to the page to be tested.
+	Launch <span class="brand">ANDI</span> by clicking on the favorite/bookmark labelled 
+	"<span class="brand">ANDI</span>". <span class="brand">ANDI</span> will be inserted onto the page. 
+	<a href="install.html">Get Installation Instructions</a>
+	</p>
+	<video autoplay controls loop muted aria-label="ANDI being launched">
+		<source src="videos/andi-accessibility-test-tool.mp4" type="video/mp4" />
+		<img alt="ANDI accessibility test tool automated scan of web page" src="images/andi-accessibility-test-tool.png" class="fullwidth large" />
+	</video>
+	<p>
+	If you are experiencing issues launching <span class="brand">ANDI</span> please 
+	<a href="faq.html#wontLaunch">visit the FAQ</a>.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ElementHighlights" id='ElementHighlights' >
+	<h2 id="lby-ElementHighlights">Element Highlights</h2>
+	<div class='details'>
+	<p>After <span class="brand">ANDI</span> has finished scanning the page, all focusable/interactive elements 
+	will be given visual highlights.</p>
+	<h3>Focusable Elements:</h3>
+	<p id="highlight-normal.gif">
+		<img alt="Textbox with orange outline - focusable element without danger alert" aria-describedby="highlight-normal.gif" src="images/highlight-normal.gif" class="startingImage noshadow" />
+		Focusable elements will be highlighted with an orange dashed outline (1 pixel thickness) signifying that some 
+		accessibility markup was found for the element. A tester should inspect these elements to determine if the 
+		<a href="#AndiOutput">ANDI Output</a> is appropriate for its context in the page.
+	</p>
+	<h3>Focusable Elements with Danger Alert: <img alt="danger icon" src="images/icon-danger.png" class="noshadow" /></h3>
+	<p id='highlight-danger.gif'>
+		<img alt="Textbox with red outline - danger alert" aria-describedby="highlight-danger.gif" src="images/highlight-danger.gif" class="startingImage noshadow" />
+		If <span class="brand">ANDI</span> has found a high priority level 
+		<a href="#AccessibilityAlerts">Accessibility Alert</a> associated with an element, 
+		the element will be highlighted with a red, dashed outline (3 pixel thickness).
+	</p>
+	<h3 tabindex="-1" id="ActiveElement">The Active Element:</h3>
+	<p id='highlight-active.gif'>
+		<img alt="Textbox with purple outline - active element" aria-describedby='highlight-active.gif' src="images/highlight-active.gif" class="startingImage noshadow" />
+		As a user navigates the test page
+		<span class="brand">ANDI</span> will inspect the element that has 
+		focus or is hovered over with the mouse. The element being inspected is called the
+		"Active Element" and will be highlighted with a pinkish-purple solid outline (4 pixel thickness). 
+		The Active Element's accessibility markup will be displayed in the 
+		<a href="#AccessibilityComponentsTable">Accessibility Components</a> section 
+		and its text alternative computation (what a screen reader would say) will appear in the 
+		<a href="#AndiOutput">ANDI Output</a> section.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ActiveElementInspection" id="ActiveElementInspection">
+		
+		<h2 id="lby-ActiveElementInspection">Active Element Inspection</h2>
+		<div class='details'>
+		<p>
+		This section allows a user to see accessibility information
+		for the <a href="#ActiveElement">Active Element</a>.
+		</p>
+		<p>
+		As an element on the page is focused on or hovered over, this section will be updated with information for that element.
+		To prevent this section from updating on mouse hover, hold the shift key (<a href="#HoverLock">Hover Lock</a>).
+		</p>
+			<div class="example">
+			<img alt="Active Element Inspection section" aria-describedby="andi02.png" src="images/andi-inspectionSection.png" class="fullwidth small" />
+			</div>
+		<p id="andi02.png">
+		This section displays the Element tag name or role, Accessibility Components, <span class="brand">ANDI</span> Output, 
+		and any Alerts associated with the Active Element.
+		</p>
+		</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ElementTagName" id='ElementTagName' class="sub" >
+		
+		<h3 id="lby-ElementTagName">Element Name / Role</h3>
+		<div class='details'>
+		<p id='andi-elementTagName.png'>
+		<span class="brand">ANDI</span> displays the HTML tag and ARIA role of the Active Element.
+		</p>
+			<div class="example">
+			<img alt='Element: <input type="text">' src="images/andi-elementTagName.png" aria-describedby='andi-elementTagName.png' class="fullwidth small" />
+			</div>
+		<p>
+		This item also functions as a link which, when followed, will shift 
+		the focus to the element's location on the page. 
+		Hovering over this item will draw a 
+		<a href="#Lasers">"laser"</a> which points to the location of the element on the test page.
+		</p>
+		</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-AccessibilityComponentsTable" id='AccessibilityComponentsTable' class="sub" >
+		
+		<h3 id="lby-AccessibilityComponentsTable">Accessibility Components Table</h3>
+		<div class='details'>
+		<p id='andi-AcTable.png'>As <span class="brand">ANDI</span> scans the test page, it searches for HTML tags and attributes that influence the accessibility 
+		of the elements on the page. These tags and attributes are referred to as Accessibility Components
+		and are presented in a table.</p>
+			<div class="example">
+			<img alt="Accessibility Components Table, 3 components displayed" aria-describedby='andi-AcTable.png' src="images/andi-AcTable.png" class="fullwidth small" />
+			</div>
+		<br />
+		<p>Some components scanned for are:
+			<code>aria-label</code>, <code>aria-labelledby</code>, <code>aria-describedby</code>,
+			<code>alt</code>, <code>title</code>, <code>&lt;caption&gt;</code>, <code>&lt;figcaption&gt;</code>,
+			<code>&lt;label&gt;</code>, <code>&lt;legend&gt;</code>, 
+			<code>innerText</code>.
+		For more information about Accessibility Components, see the <a href="developerguide.html">Developer Guide</a>.
+		</p>
+		</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ANDIOutput" id='AndiOutput' class="sub" >
+	
+	<h3 id="lby-ANDIOutput">ANDI Output</h3>
+	<div class='details'>
+	<p>
+	<span class="brand">ANDI</span>'s Output displays what a screen reader should read audibly
+	which is the 
+	<a href="developerguide.html#NamingAndDescribing">accessible name</a>
+	and <a href="developerguide.html#NamingAndDescribing">accessible description</a>.
+	It will also include some phrasings depending on the presence of certain 
+	<a href="http://www.w3.org/TR/wai-aria/states_and_properties" target="_blank">states and properties</a>
+	plus any associating <a href="#AccessibilityAlerts">Accessibility Alerts</a> that <span class="brand">ANDI</span> has detected.
+	</p>
+
+	<div class="example">
+	<img alt="ANDI Output with example output text" aria-describedby='andi-andiOutput.png' src="images/andi-andiOutput.png" class="fullwidth small" />
+	</div>
+	
+	<p id='andi-andiOutput.png'>
+	The calculation is based primarily on <a href="https://www.w3.org/WAI/standards-guidelines/wcag/">W3C</a> specifications, 
+	and where specifications are unsupported or vague, 
+	it is based on thorough analysis of modern screen reader behavior.
+	</p>
+	
+	<h4>Alerts in the Output</h4>
+		<p>Alerts appearing in the Output link to a help page with information about the Alert.</p>
+
+	<h4>Difference Between Screen Reader Output</h4>
+		<p>Users can expect that 
+		<span class="brand">ANDI</span>'s accessible name and description Output is accurate 
+		and should be voiced by screen readers that follow standards. 
+		</p>
+		<p>Screen readers will often add additional verbiage on certain elements 
+		such as "button" for buttons and "graphic" for images. 
+		<span class="brand">ANDI</span> does not incorporate these phrasings and only 
+		outputs the text of the components.
+		For example, if the word "button" is in the accessible name or description of a button, 
+		a screen reader will most likely say "button" twice, <span class="brand">ANDI</span> would not.
+		</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-PageAnalysis" id='PageAnalysis' >
+	
+	<h2 id="lby-PageAnalysis">Page Analysis</h2>
+	<div class='details'>
+	<p>After <span class="brand">ANDI</span> has analyzed the page,
+	it will present results in the Page Analysis section.
+	</p>
+		<div class="example">
+		<img alt="Page Analysis section" aria-describedby="andi-pageAnalysisSection.png" src="images/andi-pageAnalysisSection.png" class="fullwidth medium" />
+		</div>
+	<p id="andi-pageAnalysisSection.png">
+	Appearing in this section are the Total Elements Found, Previous/Next Element Buttons, 
+	Additional Page Details, and The Accessibility Alerts List.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-TotalElementsFound" id='TotalElementsFound' class="sub" >
+		
+		<h3 id="lby-TotalElementsFound">Total Elements Found</h3>
+		<div class='details'>
+		<p>
+		<span class="brand">ANDI</span> will display the total number of elements found on the page,
+		The element types depend on the <a href="modules.html">module</a> selected.
+		</p>
+		</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-PreviousNext" id='PreviousNext' class="sub" >	
+		<h3 id="lby-PreviousNext">Previous/Next Element Buttons</h3>
+		<div class="imageHeading">
+		<img alt="previous button" src="images/andi-nextprev.png" style="height:3em" />
+		</div>
+		<div class='details'>
+		<p>
+		When pressed, focus will shift to the highlighted element which precedes or follows the active element
+		based on the page's HTML structure; essentially the "previous" or "next" element that <span class="brand">ANDI</span> has analyzed.
+		</p>
+		</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-AdditionalPageDetails" id='AdditionalPageDetails' class="sub" >
+		
+		<h3 id="lby-AdditionalPageDetails">Additional Page Details</h3>
+		<div class='details'>
+		<p>Depending on the module selected, there may be additional results
+		displayed in this section. 
+		For example: accesskeys, table list, links list, graphics details.
+		</p>
+		<p>For more information refer to each <a href="modules.html">module's documentation</a>.</p>
+		</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-AccessibilityAlerts" id='AccessibilityAlerts' class="sub" >
+	
+	<h3 id="lby-AccessibilityAlerts">Accessibility Alerts</h3>
+	<div class='details'>
+	<p>
+	When <span class="brand">ANDI</span> is launched, every HTML element is analyzed
+	for conditions that commonly cause accessibility issues, depending on the <a href="modules.html">module</a> selected. 
+	When such a condition is found, <span class="brand">ANDI</span> generates an Alert which helps a user pinpoint
+	potential accessibility issues.
+	</p>
+		<div class="example">
+		<img alt="Accessibility Alerts with example of alerts" src="images/andi-alertsList.png" class="fullwidth medium" />
+		</div>
+	<p>
+	Alerts are contained in the Accessibility Alerts list.
+	The alerts are categorized into three Alert Levels which indicate the likelihood 
+	that an accessibility defect is present:
+	</p>
+		<div class="example">
+		<ul>
+		<li>Danger (red, X icon) - almost certain likelihood of an issue</li>
+		<li>Warning (orange, ! icon) - likelihood of an issue or inconsistent behavior with screen readers</li>
+		<li>Caution (yellow, ? icon) - needs further investigation</li>
+		</ul>
+		</div>
+	<p>
+	Alerts in the list are organized into groupings.
+	Expanding a group reveals alert messages specific to elements on the page.
+	The messages are links that when followed will place focus on the element to which the alert associates.
+	</p>
+	<p>
+	Alerts associating with the Active Element will appear in the <span class="brand">ANDI</span> Output.
+	Activating an alert in the <span class="brand">ANDI</span> Output will open an
+	<a href="alerts.html">Alerts Help</a> page which provides details about the specific Alert and remediation steps.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ModuleLaunchers" id='ModuleLaunchers' class="sub" >
+		
+		<h2 id="lby-ModuleLaunchers">Module Selection Menu</h2>
+		<div class='details'>
+		<p>
+		When <span class="brand">ANDI</span> is first launched, 
+		it scans for focusable/interactive elements.
+		To test other areas of accessibility, 
+		<span class="brand">ANDI</span> features the ability to launch specialized "modules".
+		</p>
+			<div class="example">
+				<img alt="ANDI Module Launch Buttons: focusable elements, graphics/images, links, tables, structures, color contrast, hidden content" src="images/andi-moduleLaunchButtons.png" class="noshadow fullwidth small" />
+			</div>
+		<p>See the <a href="modules.html">Modules Help page</a> for more information about each module.</p>
+		</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ControlsSettingsButtons">
+	
+	<h2 id="lby-ControlsSettingsButtons">Controls / Settings Buttons</h2>
+	<div class='details'>
+	<p>
+	Controls and Settings buttons are found 
+	in the in the upper right corner of <span class="brand">ANDI</span>'s display.
+	</p>
+		<div class="example">
+		<img alt="Controls Settings Buttons" aria-describedby='andi09.png' src="images/andi-settingsButtons.png" class="fullwidth small" />
+		</div>
+	<p id='andi09.png'>
+	The buttons are as follows: Relaunch, Advanced Settings, Hotkeys, Help, and Close.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-Relaunch" id='Relaunch' class="sub" >
+	
+	<h3 id="lby-Relaunch">Refresh</h3>
+	<div class="imageHeading">
+	<img alt="relaunch button" src="images/icon-reload.png" class="controlButton" />
+	</div>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with alt and equal sign highlighted - refresh ANDI" src="images/hotkey-equals.png" class="hotkey" />
+	To run <span class="brand">ANDI</span> consecutively on a test page, press the 
+	refresh button. Alternatively, <span aria-hidden='true'>(</span>alt+=<span aria-hidden='true'>)</span>
+	or pressing the browser's favorite/bookmark button labeled "ANDI"
+	will relaunch <span class="brand">ANDI</span>.</p>
+	<p>
+	When <span class="brand">ANDI</span> is refreshed it will first remove the 
+	<span class="brand">ANDI</span> Bar from from the page along with markup it added to the test page
+	and restart afresh.
+	There should be no need to refresh the test page and then refresh <span class="brand">ANDI</span>.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-AdvancedSettings" id='AdvancedSettings' class="sub" >
+	
+	<h3 id="lby-AdvancedSettings">Advanced Settings</h3>
+	<div class="imageHeading">
+	<img alt="advanced settings button" src="images/icon-settings-off.png" class="controlButton" />
+	</div>
+	<div class='details'>
+	<p>
+	Pressing this button will open a menu with some settings for advanced users.
+	</p>
+	<p>
+	The <a href='#AdvancedSettingsDetails'>details of each advanced setting are explained below</a>.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-HotkeysList" id='HotkeysList' class="sub" >
+	
+	<h3 id="lby-HotkeysList">Hotkeys List Button</h3>
+	<div class="imageHeading">
+	<img alt="hotkeys list button - on" title="Press to Show ANDI Hotkeys List" src="images/icon-keys-on.png" class="controlButton" />
+	<img alt="hotkeys list button - off" title="Press to Hide ANDI Hotkeys List" src="images/icon-keys-off.png" class="controlButton" />
+	</div>
+	<div class='details'>
+	<p id='andi-hotkeys.png'>Pressing the Hotkeys List button will cause a list 
+	of <a href="#Hotkeys"><span class="brand">ANDI</span>'s hotkeys</a> to appear for quick reference.
+	</p>
+		<div class="example">
+		<img alt="ANDI hotkey list" aria-describedby='andi-hotkeys.png' src="images/andi-hotkeys.png" class='noshadow' />
+		</div>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-Help" id='Help' class="sub" >
+	
+	<h3 id="lby-Help">Help Button</h3>
+	<div class="imageHeading">
+	<img alt="help button" src="images/icon-help.png" class="controlButton" />
+	</div>
+	<div class='details'>
+	<p>Pressing the Help button opens up ANDI Help (the site you are reading now) in a new window.</p>
+	<p>If this button is pressed when a module other than "focusable elements" has been selected, 
+	it will open the Help for that module.</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-Close" id='Close' class="sub" >
+	
+	<h3 id="lby-Close">Close Button</h3>
+	<div class="imageHeading">
+	<img alt="close button" src="images/icon-close.png" class="controlButton" />
+	</div>
+	<div class='details'>
+	<p>Pressing the Close Button will remove <span class="brand">ANDI</span>'s display from the page along with all 
+	markup it added to the test page. Navigating away from the Test Page or hitting the browser's refresh button (F5)
+	will also remove <span class="brand">ANDI</span>.</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-VersionPopup" id='VersionPopup' >
+	
+	<h3 id="lby-VersionPopup">Version Popup</h3>
+	<div class='details'>
+	<p>By clicking the "ANDI" heading text in the upper left of the <span class="brand">ANDI</span> Bar, 
+	a popup will be displayed containing the version number of <span class="brand">ANDI</span> and the module version number.</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-AdvancedSettingsDetails" id='AdvancedSettingsDetails' >
+		<h2 id="lby-AdvancedSettingsDetails">Advanced Settings</h2>
+		
+		<div class="example">
+		<img alt="Advanced Settings Menu" src="images/andi-advancedSettings.png" class="fullwidth small" />
+		</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ElementHighlightsButton" id='ElementHighlightsButton' class="sub" >
+	
+	<h3 id="lby-ElementHighlightsButton">Element Highlights Toggle</h3>
+	<div class='details'>
+	<p>
+	This setting will allow a user to hide or show the 
+	<a href="#ElementHighlights">Element Highlights</a> (outlines) on the test page.</p>
+	<p>
+	All functions of <span class="brand">ANDI</span> remain with the highlights turned off; 
+	this control is strictly cosmetic.
+	</p>
+	<p>
+	An <span class="brand">ANDI</span> user who is visually impaired can find similar information that 
+	the highlights indicate in the <span class="brand">ANDI</span> Output section.
+	</p>
+	<p>
+	When performing a test of visual indication of focus, 
+	it is best to have this setting off or not have ANDI launched.
+	</p>
+	<p>
+	Note: The ability to turn off element highlights is not available 
+	in pages rendered in Internet Explorer 7 or less compatibility modes.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-LinearizePage" id='LinearizePage' class="sub" >
+	
+	<h3 id="lby-LinearizePage">Linearize Page Option</h3>
+	<div class='details'>
+	<p>
+	This setting will "linearize" the page by searching for elements that have been positioned with CSS,
+	and repositioning them in the order in which a screen reader would detect them.
+	</p>
+	<p>
+	Elements that have been repositioned will have a teal colored halo around them.
+	</p>
+	<p>
+	This can be useful when testing the meaningful sequence of elements on the page.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-MiniMode" id='MiniMode' class="sub" >
+	
+	<h3 id="lby-MiniMode">MiniMode Display Option</h3>
+	<div class='details'>
+		<p>This setting condenses <span class="brand">ANDI</span> so that more of the test page is visible.</p>
+		<p>When MiniMode is ON, <span class="brand">ANDI</span>'s display will appear as follows:</p>
+			<div class="example" id='andi-minimodeEngaged.png'>
+			<ol>
+			<li>The Accessible Components Table and Page Analysis section (All Alerts) will be hidden.</li>
+			<li>The Element Name/Role, Output (including alerts associating with that element), 
+			and Settings/Controls Buttons, Next and Previous Element buttons, and Module Selection Menu will remain visible.</li>
+			</ol>
+			</div>
+			<div class="example">
+			<img alt="ANDI with Minimode Engaged" aria-describedby='andi-minimodeEngaged.png' src="images/andi-minimodeEngaged.png" class="fullwidth large" />
+			</div>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-Hotkeys" id='Hotkeys' >
+	
+	<h2 id="lby-Hotkeys">Hotkeys</h2>
+	<div class='details'>
+	<p>
+	<span class="brand">ANDI</span> has a few built-in hotkeys (also known as shortcut keys) 
+	to aid a keyboard user in quick navigation.
+	</p>
+	<div class="example">
+	<table>
+		<caption>ANDI Hotkeys Cheatsheet</caption>
+		<tr>
+		<th scope='row'><code style="font-size:16pt">alt+=</code></th>
+		<td>Relaunch</td>
+		<td rowspan="6">
+		<img alt="keyboard with all hotkeys highlighted" src="images/hotkey-allkeys.png" class="noshadow fullwidth medium" />
+		</td>
+		</tr>
+		<tr>
+		<th scope='row'><code style="font-size:16pt">alt+'</code></th>
+		<td>Output Jump</td>
+		</tr>
+		<tr>
+		<th scope='row'><code style="font-size:16pt">alt+/</code></th>
+		<td>Active Element Jump</td>
+		</tr>
+		<tr>
+		<th scope='row'><code style="font-size:16pt">alt+<span class='screenReaderOnly'>period</span><span aria-hidden='true'>.</span></code></th>
+		<td>Next Element</td>
+		</tr>
+		<tr>
+		<th scope='row'><code style="font-size:16pt">alt+<span class='screenReaderOnly'>comma</span><span aria-hidden='true'>,</span></code></th>
+		<td>Previous Element</td>
+		</tr>
+		<tr>
+		<th scope='row'><code style="font-size:16pt">alt+<span class='screenReaderOnly'>grave accent</span><span aria-hidden='true' style="font-size:19pt">`</span></code></th>
+		<td>Section Jump</td>
+		</tr>
+	</table>
+	</div>
+	<p>
+	NOTE: Firefox browser uses <code>shift+alt</code> for hotkeys.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-RefreshHotkey" id='RefreshHotkey' class="sub" >
+	
+	<h3 id="lby-RefreshHotkey">Refresh <span aria-hidden='true'>(</span>alt+=<span aria-hidden='true'>)</span></h3>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with alt and equal sign highlighted - refresh ANDI" src="images/hotkey-equals.png" class="hotkey" />
+	To run <span class="brand">ANDI</span> consecutively on a test page, simply press the 
+	hotkey (alt &amp; equal sign). Alternativly, pressing the browser's favorite/bookmark button labeled "ANDI"
+	can relaunch <span class="brand">ANDI</span>.</p>
+	<p>
+	When <span class="brand">ANDI</span> is refreshed it will first remove the <span class="brand">ANDI</span> Bar
+	from the page along with all markup it added to the test page and restart afresh. 
+	In other words, there is no need to refresh the test page and then relaunch <span class="brand">ANDI</span>.
+	</p>
+	<p>
+	This Relaunch hotkey has the same function as the <a href="#Relaunch">Relaunch Button</a>.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-OutputJump" id='OutputJump' class="sub" >
+	
+	<h3 id="lby-OutputJump">Output Jump <span aria-hidden='true'>(</span>alt+'<span aria-hidden='true'>)</span></h3>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with alt and apostrophe highlighted - output jump" src="images/hotkey-singlequote.png" class="hotkey" />
+	This hotkey (alt &amp; apostrophe) will shift the focus to the <span class="brand">ANDI</span> Output. 
+	If a screen reader is being used, it would then read the text of the Output.
+	For a visually impaired user, this is very useful when paired with the Active Element Jump hotkey.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ActiveElementJump" id='ActiveElementJump' class="sub" >
+	
+	<h3 id="lby-ActiveElementJump">Active Element Jump <span aria-hidden='true'>(</span>alt+/<span aria-hidden='true'>)</span></h3>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with alt and slash highlighted - active element jump" src="images/hotkey-slash.png" class="hotkey" />
+	When this hotkey (alt &amp; forward slash) is pressed 
+	the focus will shift to the Active Element on the test page.
+	For a visually impaired user, this is very useful when paired with the Output Jump hotkey.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-NextElement" id='NextElement' class="sub" >
+	
+	<h3 id="lby-NextElement">Next Element <span aria-hidden='true'>(</span>alt+<span class='screenReaderOnly'>period</span><span aria-hidden='true'>.)</span></h3>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with alt and period highlighted - next element" src="images/hotkey-period.png" class="hotkey" />
+	When pressed, focus will shift to the highlighted element which follows the active element
+	based on the page's HTML structure; essentially the "next" element.</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-PreviousElement" id='PreviousElement' class="sub" >
+	
+	<h3 id="lby-PreviousElement">Previous Element <span aria-hidden='true'>(</span>alt+<span class='screenReaderOnly'>comma</span><span aria-hidden='true'>,)</span></h3>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with alt and comma highlighted - previous element" src="images/hotkey-comma.png" class="hotkey" />
+	When pressed, focus will shift to the highlighted element which precedes the active element
+	based on the page's HTML structure; essentially the "previous" element.</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-SectionJump" id='SectionJump' class="sub" >
+	
+	<h3 id="lby-SectionJump">Section Jump <span aria-hidden='true'>(</span>alt+`<span aria-hidden='true'>)</span></h3>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with alt and grave highlighted - section jump" src="images/hotkey-grave.png" class="hotkey" />
+	Repeatedly hitting this hotkey (alt &amp; grave accent) will allow a user to jump between four sections in order:
+	</p>
+		<div class="example">
+		<ol>
+		<li>The ANDI logo (the "beginning" of ANDI)</li>
+		<li>The Controls Settings Buttons (upper right)</li>
+		<li>The Active Element Inspection Section (left)</li>
+		<li>The Page Analysis Section (right)</li>
+		</ol>
+		</div>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<h2>Mouse Controls</h2>
+	<section tabindex="0" aria-labelledby="lby-Lasers" id='Lasers' >
+	
+	<h3 id="lby-Lasers">Lasers</h3>
+	<div class='details'>
+	<p>
+	<span class="brand">ANDI</span> has the capability to overlay the test page with a "laser" for the 
+	purpose of quickly pointing out the location of associated elements.
+	</p>
+	<h4>Tag Name Laser</h4>
+	<p>When using the mouse to hover over the 
+	<a href="#ElementTagName">Element Name</a> in the Active Element Display,
+	a laser will appear on the test page which points at 
+	the location of the element that is being inspected in the Active Element Display.
+	</p>
+	<h4>Alert List Lasers</h4>
+	<p>A laser appears when holding the shift key and using the mouse to hover over
+	Alerts in the <a href="#AccessibilityAlerts">Alerts List</a>.
+	</p>
+	<h4>Component Lasers</h4>
+	<p>
+	Hovering over the
+	<code>aria-labelledby</code>, <code>aria-describedby</code>, or <code>&lt;label&gt;</code> 
+	component text in the 
+	<a href="#AccessibilityComponentsTable">Accessibility Components Table</a> 
+	will draw a laser which points to the associated element from where the text was retrieved.
+	</p>
+	<h4>Additional Notes:</h4>
+	<p>
+	The lasers will not persist on the screen. i.e. the moment a link is clicked or the mouse moves off the link, it 
+	will disappear. 
+	It is possible to take a screen shot while the laser is on screen during mouse hover
+	by hitting the keyboard's Print Screen key.
+	</p>
+	<p>
+	Since <span class="brand">ANDI</span>'s lasers are built using SVG (scalable vector graphics)
+	<span class="brand">ANDI</span>'s lasers will not work in versions of Internet Explorer prior to 9 (including compatibility modes).
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-HoverLock" id='HoverLock' >
+	
+	<h3 id="lby-HoverLock">Hover Lock</h3>
+	<div class='details'>
+	<p>
+	<img alt="keyboard with shift highlighted" src="images/hotkey-shift.png" class="hotkey" />
+	When using the mouse to hover over elements on the test page,
+	holding down the shift key will "lock" the Active Element 
+	display. While holding down the shift key, if the mouse cursor passes over other elements, 
+	the Active Element Display will not change (by design). 
+	Releasing the shift key will allow the user to change the Active Element being inspected, as normal.</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<h2>Concurrent Use</h2>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-WithScreenReaders" id='WithScreenReaders' >
+	
+	<h3 id="lby-WithScreenReaders">With Screen Readers</h3>
+	<div class='details'>
+	<p><span class="brand">ANDI</span> is fully accessible and can be used concurrently with a screen reader.</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-WithDeveloperTools" id='WithDeveloperTools' >
+	
+	<h3 id="lby-WithDeveloperTools">With Developer Tools</h3>
+	<div class='details'>
+	<p><span class="brand">ANDI</span> can be used concurrently with an inspection tool such as a browser's Developer Tools.
+	Artifacts from <span class="brand">ANDI</span> such as 
+	custom <code>data-andi508-*</code> attributes and <code>ANDI508-*</code> CSS 
+	classes will appear on elements in the test page but should not affect test page functionality.</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<h2>Limitations</h2>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-DynamicContent" id='DynamicContent' >
+	
+	<h3 id="lby-DynamicContent">Dynamic Content</h3>
+	<div class='details'>
+	<p>If an area on the Test Page changes dynamically (e.g. clicking on something opens up a submenu or 
+	alters screen text), <span class="brand">ANDI</span> will not know that the page has changed. 
+	To test the updated content, simply <a href="#Relaunch">refresh <span class="brand">ANDI</span></a> 
+	and inspect the newly displayed area.</p>
+	<p>
+	The Active Element will be retained on refresh, and the components, output, and alerts,
+	will be updated.
+	This provides a way to test dynamically changing properties such as the current state of
+	a table column sorter or an expand/collapse controller.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-FramesiFrames" id='Frames/iFrames' >
+	
+	<h3 id="lby-FramesiFrames">Frames/iFrames</h3>
+	<div class='details'>
+	<p>When <span class="brand">ANDI</span> detects frames or iframes on the page, 
+	it offers the ability to test the frames and iframes independently in a new window.</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ShadowDOM" id='ShadowDOM' >
+	
+	<h3 id="lby-ShadowDOM">Shadow DOM</h3>
+	<div class='details'>
+	<p>Currently, <span class="brand">ANDI</span> does not recurse into Shadow DOM trees.
+	Therefore, content within Shadow DOMs cannot be tested with <span class="brand">ANDI</span> at this time.
+	</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-TestPageManipulation" id='TestPageManipulation' >
+	
+	<h3 id="lby-TestPageManipulation">Manipulation of the Test Page DOM</h3>
+	<div class='details'>
+	<p><span class="brand">ANDI</span> minimizes the manipulation of the test page DOM, 
+	however certain alterations must be made.
+	To some elements <span class="brand">ANDI</span> may add <code>data-*</code> attributes and some 
+	CSS classes.
+	These attributes and classes include the string "ANDI508".
+	To elements that have css fixed positions, <span class="brand">ANDI</span> will adjust the top or 
+	bottom distance to ensure that the elements are not blocking view of the 
+	<span class="brand">ANDI</span> Bar.
+	When the Close button is pressed,
+	<span class="brand">ANDI</span> will be removed from the page along with 
+	all modifications to the elements it touched.</p>
+	</div>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-TestingANDIWithANDI" id='TestingANDIWithANDI' >
+	
+	<h3 id="lby-TestingANDIWithANDI">Testing ANDI With ANDI</h3>
+	<div class='details'>
+	<p><span class="brand">ANDI</span> cannot be used to test <span class="brand">ANDI</span> since it 
+	fully removes itself before launch. Nice try though.
+	To test <span class="brand">ANDI</span> for accessibility, 
+	users will have to revert to archaic methods such as directly looking at the code
+	or listening to a screen reader yap about.</p>
+	</div>
+	</section>
+</div>
+<footer>
+<a href='#skipnav'>Back To Top</a>
+<a href="/privacy/" class="privacy">Privacy</a>
+</footer>
+</main>
+</body>
+</html>

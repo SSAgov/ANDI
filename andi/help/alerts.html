@@ -1,0 +1,3461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ANDI - Alerts</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="DCTERMS:coderOffice" content="DCS" />
+<meta name="DCTERMS:coder" content="SSA" />
+<meta name="DCTERMS:contentOffice" content="DCS" />
+<meta name="DCTERMS:contentOwner" content="SSA" />
+<meta name="description" content="ANDI 508 accessibility test tool Help Alerts" />
+
+<link href="help.css" rel="stylesheet" media="all" />
+<link href="print.css" rel="stylesheet" media="print" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="help.js"></script>
+
+</head>
+<body>
+<header>
+<h1 class="toolName">ANDI</h1>
+<a href='#skipnav' class='skipnav'>Skip to Content</a>
+<nav id='navHeader'>
+<a href="howtouse.html" class="howtouse">Guide</a>
+<a href="modules.html" class="modules">Modules</a>
+<a href="alerts.html" class="alerts">Alerts</a>
+<a href="faq.html" class="faq">FAQ</a>
+<a href="developerguide.html" class="developerguide">Developer&nbsp;Tips</a>
+<a href="install.html" class="install">Install</a>
+</nav>
+<div id='pageTitle' class="alerts">
+<h2>ANDI Alerts</h2>
+<p id='pageSummary'>
+This page provides detailed information about ANDI's Accessibility Alerts.
+<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
+</p>
+</div>
+</header>
+<main class="alerts" id="skipnav" tabindex="-1" aria-label="main content">
+<nav id='tableOfContents'>
+	<h3 tabindex="0">Elements with No Accessible Name</h3>
+	<ul>
+		<li class='danger'><a href="#no_name">No Accessible Name</a></li>
+		<li class='danger'><a href="#placeholder_no_name">Placeholder, But No Name</a></li>
+	</ul>
+	<h3 tabindex="0">Duplicate Attributes Found</h3>
+	<ul>
+		<li class='danger'><a href="#dup_id">Duplicate ID</a></li>
+		<li class='danger'><a href="#dup_for">Duplicate For</a></li>
+	</ul>
+	<h3 tabindex="0">Components That Should Not Be Used Alone</h3>
+	<ul>
+		<li class='danger'><a href="#dby_alone">ARIA-describedBy Alone</a></li>
+		<li class='danger'><a href="#legend_alone">Legend Alone</a></li>
+	</ul>
+	<h3 tabindex="0">Misspelled ARIA Attributes</h3>
+	<ul>
+		<li class='danger'><a href="#misspell">Misspelled attribute</a></li>
+		<li class='danger'><a href="#aria_role">ARIA-Role not valid</a></li>
+	</ul>
+	<h3 tabindex="0">Table Alerts</h3>
+	<ul>
+		<li class='danger'><a href="#scope_invalid">Scope Value Invalid</a></li>
+		<li class='danger'><a href="#headers_only_for_th_td">Headers Only for TH, TD</a></li>
+		<li class='danger'><a href="#table_has_no_th">Table Has No TH</a></li>
+		<li class='danger'><a href="#table_mixing_scope_and_headers">Table Mixing Scope and Headers</a></li>
+		<li class='danger'><a href="#table_has_no_headers">Table Has No Headers/ID</a></li>
+		<li class='danger'><a href="#switch_table_analysis_mode">Switch Table Analysis Mode</a></li>
+		<li class='danger'><a href="#no_scope_at_intersection">No Scope at TH Intersection</a></li>
+		<li class='danger'><a href="#aria_table_grid_structure">ARIA Table/Grid Structure</a></li>
+		<li class='warning'><a href="#too_many_scope_levels">Too Many Scope Levels</a></li>
+		<li class='warning'><a href="#pres_table_not_have">Presentation Table Markup</a></li>
+		<li class='warning'><a href="#table_nontypical_role">Table with Nontypical Role</a></li>
+		<li class='warning'><a href="#header_missing_role">Table Header Missing Role</a></li>
+		<li class='warning'><a href="#cells_not_contained_by_row_role">Table Cells not Contained by Row</a></li>
+		<li class='caution'><a href="#table_has_no_scope">Table Has No Scope</a></li>
+	</ul>
+	<h3 tabindex="0">Accesskey Alerts</h3>
+	<ul>
+		<li class='danger'><a href="#accesskey_more_one">Accesskey Multiple Values</a></li>
+		<li class='caution'><a href="#accesskey_duplicate">Accesskey Duplicate</a></li>
+	</ul>
+	<h3 tabindex="0">Reference Alerts</h3>
+	<ul>
+		<li class='warning'><a href="#ref_id_not_found">ARIA Reference ID Not Found</a></li>
+		<li class='danger'><a href="#improper_ref_id_usage">Improper Reference Attribute Possible</a></li>
+		<li class='danger'><a href="#headers_ref_not_th">Headers Reference Not TH</a></li>
+		<li class='danger'><a href="#image_map_ref_not_found">Image map reference not found</a></li>
+		<li class='warning'><a href="#ref_legend">ARIA referencing legend</a></li>
+		<li class='warning'><a href="#ref_has_ref">ARIA referencing an ARIA reference</a></li>
+		<li class='warning'><a href="#ref_is_duplicate">ARIA referencing id multiple times</a></li>
+		<li class='warning'><a href="#ref_is_direct_and_indirect">ARIA reference direct and indirect</a></li>
+		<li class='warning'><a href="#headers_refs_no_text">Headers References No Text</a></li>
+		<li class='warning'><a href="#headers_ref_is_td">Headers Reference is TD</a></li>
+		<li class='warning'><a href="#headers_ref_external">Headers Referencing External Element</a></li>
+	</ul>
+	<h3 tabindex="0">Invalid HTML Alerts</h3>
+	<ul>
+		<li class='danger'><a href="#page_title_empty">Page Title Empty</a></li>
+		<li class='danger'><a href="#page_title_none">No Page Title</a></li>
+		<li class='danger'><a href="#page_title_multiple">Multiple Page Titles</a></li>
+		<li class='danger'><a href="#too_many_legends">More Legends Than Fieldsets</a></li>
+		<li class='danger'><a href="#too_many_figcaptions">More Figcaptions Than Figures</a></li>
+		<li class='danger'><a href="#too_many_captions">More Captions Than Tables</a></li>
+		<li class='danger'><a href="#tabindex_not_number">Tabindex Not A Number</a></li>
+		<li class='danger'><a href="#li_no_container">List Item No Container</a></li>
+		<li class='danger'><a href="#dd_dt_no_container">Description List Item No Container</a></li>
+		<li class='warning'><a href="#deprecated_html">Deprecated Attribute</a></li>
+		<li class='warning'><a href="#scope_value_invalid">Scope Value Invalid</a></li>
+		<li class='caution'><a href="#deprecated_html_a_name">Name Attribute Deprecated on &lt;a&gt;</a></li>
+	</ul>
+	<h3 tabindex="0">Misuses of Alt attribute</h3>
+	<ul>
+		<li class='warning'><a href="#alt_only_for_images">Alt Only For Images</a></li>
+	</ul>
+	<h3 tabindex="0">Misuses of Label Tag</h3>
+	<ul>
+		<li class='warning'><a href="#explicit_label_for_forms">Explicit Label For Form Elements</a></li>
+		<li class='warning'><a href="#explicit_label_not_for_buttons">Explicit Label Not For Buttons</a></li>
+	</ul>
+	<h3 tabindex="0">Unreliable Component Combinations</h3>
+	<ul>
+		<li class='warning'><a href="#unreliable_component_combine">Unreliable Component Combination</a></li>
+	</ul>
+	<h3 tabindex="0">JavaScript Event Cautions</h3>
+	<ul>
+		<li class='caution'><a href="#javascript_event_caution">JavaScript Event Found</a></li>
+	</ul>
+	<h3 tabindex="0">Tab Order Alerts</h3>
+	<ul>
+		<li class='danger'><a href="#decorative_image_tab_order">Decorative Image In Tab Order</a></li>
+		<li class='warning'><a href="#role_tab_order">Element with Role Not In Tab Order</a></li>
+		<li class='caution'><a href="#not_in_tab_order">Focusable Element Not In Tab Order</a></li>
+		<li class='caution'><a href="#not_in_tab_order_no_name">Element Not In Tab Order, No Name</a></li>
+		<li class='warning'><a href="#iframe_contents_not_in_tab_order">Iframe Contents Not In Tab Order</a></li>
+		<li class='caution'><a href="#disabled_elements">Disabled Elements Found</a></li>
+		<li class='warning'><a href="#canvas_not_keyboard_accessible">Canvas No Focusable Fallback</a></li>
+		<li class='caution'><a href="#canvas_has_focusable_fallback">Canvas Has Focusable Fallback</a></li>
+	</ul>
+	<h3 tabindex="0">Empty Components Found</h3>
+	<ul>
+		<li class='caution'><a href="#empty_header_cell">Empty Header Cell</a></li>
+		<li class='caution'><a href="#live_region_empty">Empty Live Region</a></li>
+	</ul>
+	<h3 tabindex="0">Unused Components</h3>
+	<ul>
+		<li class='caution'><a href="#image_alt_not_used">Image Alt Not Used</a></li>
+	</ul>
+	<h3 tabindex="0">Excessive Text</h3>
+	<ul>
+		<li class='warning'><a href="#character_length">Attribute Length Exceeds Character Limit</a></li>
+	</ul>
+	<h3 tabindex="0">Link Alerts</h3>
+	<ul>
+		<li class='warning'><a href="#ambiguous_link">Ambiguous Link</a></li>
+		<li class='warning'><a href="#link_click_no_keyboard_access">Link Click But No Keyboard Access</a></li>
+		<li class='warning'><a href="#not_recognized_as_link">Not Recognized As Link</a></li>
+		<li class='caution'><a href="#vague_link">Vague Link Text</a></li>
+		<li class='caution'><a href="#anchor_purpose_unclear">Possible Inaccessible Link</a></li>
+		<li class='caution'><a href="#is_anchor_target">Is an Anchor Target</a></li>
+	</ul>
+	<h3 tabindex="0">Graphics Alerts</h3>
+	<ul>
+		<li class='danger'><a href="#marquee_found">Marquee Found</a></li>
+		<li class='danger'><a href="#blink_found">Blink Found</a></li>
+		<li class='danger'><a href="#server_side_image_map">Server Side Image Map</a></li>
+		<li class='danger'><a href="#image_alt_not_descriptive">Image Alt Not Descriptive</a></li>
+		<li class='danger'><a href="#area_not_in_map">Area Not In Map</a></li>
+		<li class='warning'><a href="#image_alt_contains_file_name">Image Alt File Name</a></li>
+		<li class='caution'><a href="#image_alt_redundant_phrase">Image Alt Redundant Phrase</a></li>
+		<li class='caution'><a href="#ensure_bg_images_decorative">Ensure Background Images Are Decorative</a></li>
+	</ul>
+	<h3 tabindex="0">Improper ARIA Usage</h3>
+	<ul>
+		<li class='danger'><a href="#ariahidden">Element has Aria-hidden</a></li>
+		<li class='danger'><a href="#live_region_form_element">Form Element in Live Region</a></li>
+		<li class='danger'><a href="#live_region_not_container">Live Region not Container</a></li>
+		<li class='danger'><a href="#role_image_invalid">Role=image is Invalid</a></li>
+		<li class='danger'><a href="#non_list_role">List Container Has Non-List Role</a></li>
+		<li class='warning'><a href="#arialevel_not_gt_zero_integar">Aria-level not &gt;0 Integar</a></li>
+	</ul>
+	<h3 tabindex="0">Button Alerts</h3>
+	<ul>
+		<li class='warning'><a href="#non_unique_button">Non-Unique Button</a></li>
+	</ul>
+	<h3 tabindex="0">Structure Alerts</h3>
+	<ul>
+		<li class='warning'><a href="#not_semantic_heading">Not Using Semantic Heading Markup</a></li>
+		<li class='warning'><a href="#conflicting_heading_level">Conflicting Heading Level</a></li>
+		<li class='warning'><a href="#role_heading_no_arialevel">Heading Role No Aria-Level</a></li>
+	</ul>
+	<h3 tabindex="0">Small Clickable Areas</h3>
+	<ul>
+		<li class='caution'><a href="#label_clickable_area">Label Would Increase Clickable Area</a></li>
+	</ul>
+	<h3 tabindex="0">Inaccessible CSS Content</h3>
+	<ul>
+		<li class='warning'><a href="#pseudo_before_after">Content injected using CSS</a></li>
+	</ul>
+	<h3 tabindex="0">Manual Tests Needed</h3>
+	<ul>
+		<li class='warning'><a href="#manual_contrast_test_bgImage">Element Has Background Image</a></li>
+		<li class='caution'><a href="#manual_contrast_test_img">If Images Contain Text</a></li>
+		<li class='caution'><a href="#manual_contrast_test_opacity">Opacity less than 1</a></li>
+		<li class='caution'><a href="#grid_navigation_test">Test Role=Grid Navigation</a></li>
+	</ul>
+	<h3 tabindex="0">Contrast Alerts</h3>
+	<ul>
+		<li class='danger'><a href="#min_contrast">Contrast ratio minimum requirement</a></li>
+	</ul>
+</nav>
+
+<div class="division">
+	<section tabindex="0">
+	<h2>What is an Accessibility Alert?</h2>
+	<div class='details'>
+	<p>When <span class="brand">ANDI</span> is launched, it automatically analyzes 
+	every HTML element currently on the page 
+	looking for conditions that cause accessibility issues. 
+	When it finds such a condition, <span class="brand">ANDI</span> generates an Alert which helps a user pinpoint
+	potential accessibility issues.</p>
+	<p>
+	This help page explains the conditions which cause Alerts to appear, the reason why they appear,
+	and how to fix or further investigate the issue.</p>
+	</div>
+
+	<h2>What are the Alert levels?</h2>
+	<div class='details'>
+	<p>Alerts are categorized into three priority levels:</p>
+		<div class="example">
+			<span class="message danger" style="padding:5px">1. <img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Danger Alerts: Red Alerts containing a triangle icon with an "x" signify the highest alert level</span><br />
+			Danger Alerts provide notification that accessibility defects are highly likely. 
+			These should be corrected to improve the page's accessibility.
+		</div>
+		<div class="example">
+			<span class="message warning" style="padding:5px">2. <img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Warning Alerts: Orange Alerts containing a triangle icon with an "!" signify a moderate alert level</span><br />
+			Warning Alerts signal that screen reader inconsistencies are likely or information on the page
+			may not be communicated consistently to all users.
+		</div>
+		<div class="example">
+			<span class="message caution" style="padding:5px">3. <img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Caution Alerts: Yellow Alerts containing a triangle icon with a "?" signify the lowest alert level</span><br />
+			Caution Alerts signal that accessibility issues could exist but need further investigation.
+		</div>
+	</div>
+
+	<h2>Does an Alert mean there is definitely a problem?</h2>
+	<div class='details'>
+	<p>No, not always.
+	It's up to a human to evaluate <span class="brand">ANDI</span>'s results 
+	and make the final decision on whether or not there is an accessibility issue.
+	<span class="brand">ANDI</span> is merely an inspection tool used for this purpose.
+	</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-no_name" id='no_name'>
+	
+	<h2 id="lby-no_name">Alert: No Accessible Name</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Form Element has no accessible name, associated label, or title.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element has no accessible name, or title.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Image has no accessible name, alt, or title.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Table has no accessible name, caption, or title.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Figure has no accessible name, figcaption, or title. </li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> %%% Element has no accessible name. </li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Iframe has no accessible name or [title]. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has no HTML markup that would provide an accessible name for the element.
+	This is the most common Alert.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader would either read nothing for this element or may make a guess.</p>
+
+	<h3>What should be done?</h3>
+	<p>Add HTML markup that will provide a name for the element. 
+	Add one "Namer" to the element depending on the type of element:</p>
+	<div class="example">
+		<ul>
+		<li>All elements can use <code>aria-labelledby</code> or <code>aria-label</code> attributes.</li>
+		<li>Form elements can use an explicit <code>&lt;label&gt;</code> with a <code>for</code> attribute pointing to the <code>id</code> of the form element,
+		 or a <code>&lt;label&gt;</code> that contains the form element.</li>
+		<li>Images can use the <code>alt</code> attribute.</li>
+		<li>Tables can use the <code>&lt;caption&gt;</code> tag.</li>
+		<li>Figures can use the <code>&lt;figcaption&gt;</code> tag.</li>
+		<li>Container type elements <code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>, <code>&lt;li&gt;</code>, etc. can contain text which will provide a name.</li>
+		<li>All elements can use the <code>title</code> attribute.</li>
+		</ul>
+	</div>
+	</div>
+	<a href="developerguide.html#Namers">more info about accessible name</a>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-placeholder_no_name" id='placeholder_no_name'>
+	
+	<h2 id="lby-placeholder_no_name">Alert: Placeholder, But No Name</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Placeholder provided, but element has no accessible name.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This input or textarea element has no HTML markup that would provide an accessible name 
+	for the element, but it does have a <code>placeholder</code> attribute.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader may read the <code>placeholder</code> text,
+	however, placeholder is not part of the accessible name calculation.</p>
+
+	<h3>What should be done?</h3>
+	<p>Add one Namer or Describer that will provide an accessible name for the element 
+	such as <code>aria-labelledby</code>, <code>aria-label</code>, or an associated <code>&lt;label&gt;</code>.</p>
+	</div>
+	<a href="developerguide.html#Namers">more info about accessible name</a>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-dup_id" id='dup_id'>
+	
+	<h2 id="lby-dup_id">Alert: Duplicate ID</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [%%%] is referencing a duplicate id [id=%%%]; Element ids should be unique.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element has a duplicate id and is referenced by a &lt;label[for]&gt;; Element ids should be unique.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has an accessibility component that is 
+	referencing a duplicate <code>id</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	It is an HTML requirement that element <code>id</code> values must be unique.
+	Some accessibility components reference other elements by their <code>id</code>.
+	If <code>id</code>s are the same (duplicated) among several elements, 
+	an element may be referencing the wrong element,
+	and the screen reader output may not be correct.
+	</p>
+	<p>
+	Accessibility Components that use <code>id</code> references are:
+	<code>aria-labelledby</code>,
+	<code>aria-describedby</code>,
+	table cell <code>headers</code>,
+	the <code>for</code> attribute of a <code>&lt;label&gt;</code>,
+	and many other <code>aria-*</code> attributes.
+	</p>
+	<p>
+	In addition to accessibility concerns, 
+	when <code>id</code>s are not unique there may be JavaScript event
+	issues if the duplicate ids are referenced by the beloved
+	JavaScript method <code>getElementById</code>.
+	</p>
+	
+	<h3>What causes this?</h3>
+	<p>
+	Often, this is the result of a developer copying and pasting 
+	an element and forgetting to change the <code>id</code>.
+	It's possible that a developer may not know that ids 
+	<a href="http://www.w3.org/TR/2011/WD-html5-20110525/elements.html#the-id-attribute" target="w3c">must be unique according to W3C standards</a>.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>The value of each <code>id</code> on the page should be made unique.</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-dup_for" id='dup_for'>
+	
+	<h2 id="lby-dup_for">Alert: Duplicate For</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> More than one &lt;label[for=%%%]&gt; associates with this element [id=%%%].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element is associated with a <code>&lt;label&gt;</code> 
+	whose <code>for</code> attribute value
+	matches the value of another label's <code>for</code> attribute. i.e. a "duplicate for".</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>When a screen reader is trying to make an associate between a form element and a label, if there are 
+	multiple label's with the same <code>for</code> value, a screen reader might read the label that was not intended to be associated with the 
+	element. W3C specifications do not explicitly state that duplicate <code>for</code> attributes should not be used, 
+	however screen readers do not support such usage.</p>
+
+	<h3>What causes this?</h3>
+	<p>Often, this is the result of a developer copying and pasting a label and forgetting to change 
+	the value of the <code>for</code> attribute on the pasted label.</p>
+
+	<h3>What should be done?</h3>
+	<p>Ensure that the <code>for</code> attributes are unique, and correctly pointing to the id of the 
+	associating form element.
+	</p>
+	<p>
+	If the concatenation of the text of multiple labels is the intention, then use the 
+	<code>aria-labelledby</code> attribute whose value is a space delimited list of ids which point to the ids of the labels.
+	</p>
+	<a href="developerguide.html#label">more info about label</a>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-dby_alone" id='dby_alone'>
+	
+	<h2 id="lby-dby_alone">Alert: ARIA-describedBy Alone</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [aria-describedby] should be used in combination with a component that provides an accessible name.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>The only HTML markup found on the element that provides accessibility information is the 
+	<code>aria-describedby</code> attribute.<p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Screen readers expect an accessible name to be provided when aria-describedby is used. If there is no name,
+	a screen reader might fail and read irrelevant text or make a guess.</p>
+
+	<h3>What should be done?</h3>
+	<p>One option is to simply use <code>aria-labelledby</code> instead of <code>aria-describedby</code>.
+	Another option is to provide an accessible name along with the <code>aria-describedby</code> by adding an
+	 <code>aria-labelledby</code>, <code>aria-label</code>, or other element-specific "Namer".</p>
+	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-legend_alone" id='legend_alone'>
+	
+	<h2 id="lby-legend_alone">Alert: Legend Alone</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> &lt;legend&gt; should be used in combination with a component that provides an accessible name.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This type of element, can make use of the <code>&lt;legend&gt;</code> tag, 
+	however <code>&lt;legend&gt;</code> should not be used as the only means of which to name or describe an element.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>For all elements except a fieldset, legend does not technically provide a name. When used alone,
+	screen readers may not read correctly or may double speak.</p>
+
+	<h3>What should be done?</h3>
+	<p>If a <code>&lt;legend&gt;</code> tag is being used to describe a group of form elements, 
+	the best practice to name each individual form element is to add a <code>&lt;label&gt;</code> tag associated with 
+	the form element (<code>&lt;label for="id"&gt;</code>) or contain the form element within a label.</p>
+	<a href="developerguide.html#legend">more info about legend</a>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-misspell" id='misspell'>
+	
+	<h2 id="lby-misspell">Alert: Misspelled attribute</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [aria-labeledby] is mispelled, use [aria-labelledby].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>The element contains a typo or misspelling of an ARIA attribute.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Most screen readers do not check for attribute misspellings or attempt to interpret syntax errors.
+	Therefore, the misspelled ARIA attributes will not provide the intended accessibility information.</p>
+
+	<h3>What should be done?</h3>
+	<p>The misspelling should be corrected since a developer explicitly attempted to add additional accessibility 
+	information.</p>
+	<p>
+	ANDI checks for the following misspellings:
+	</p>
+		<div class="example">
+		<ul>
+		<li><code>aria-labeledby</code></li>
+		<li><code>arialabelledby</code></li>
+		<li><code>labelledby</code></li>
+		<li><code>ariadescribedby</code></li>
+		<li><code>describedby</code></li>
+		<li><code>arialabel</code></li>
+		</ul>
+		</div>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-aria_role" id='aria_role'>
+	
+	<h2 id="lby-aria_role">Alert: ARIA-Role Not Valid</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [aria-role] not a valid attribute, use [role] instead.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>The element contains an attribute that does not exist: <code>aria-role</code>.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Most screen readers do not check for attribute misspellings or attempt to interpret syntax errors.
+	Therefore, aria-role will not provide the intended accessibility information.</p>
+
+	<h3>What should be done?</h3>
+	<p>Most likely, the attribute <code>role</code> was intended to be used on this element.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-scope_invalid" id='scope_invalid'>
+	
+	<h2 id="lby-scope_invalid">Alert: Scope Value Invalid.</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Scope attribute value [scope=%%%] is invalid.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "scope" and
+	this element has a <code>scope</code> attribute but the value is invalid.</p>
+	<p>
+	If <code>scope</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "headers".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader will not make the correct cell associations if the value is invalid.</p>
+
+	<h3>What should be done?</h3>
+	<p>Change the value of the scope attribute to 
+	<code>col</code>, <code>row</code>, <code>colgroup</code>, or <code>rowgroup</code>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-headers_only_for_th_td" id='headers_only_for_th_td'>
+	
+	<h2 id="lby-headers_only_for_th_td">Alert: Headers Only for TH, TD.</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />[headers] attribute only valid on &lt;th&gt; or &lt;td&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "headers" and
+	this element has a <code>headers</code> attribute
+	but is not a <code>&lt;td&gt;</code> or <code>&lt;th&gt;</code></p>
+	<p>
+	If <code>headers</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "scope".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader will not make the intended cell associations.</p>
+
+	<h3>What should be done?</h3>
+	<p>Move the <code>headers</code> attribute to a table cell such as a 
+	<code>&lt;td&gt;</code> or <code>&lt;th&gt;</code> and ensure that the reference id is pointing to the correct 
+	<code>&lt;th&gt;</code>.</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-table_has_no_th" id='table_has_no_th'>
+	
+	<h2 id="lby-table_has_no_th">Alert: Table Has No TH.</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />Table has no &lt;th&gt; cells.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This table doesn't have any <code>&lt;th&gt;</code> cells.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A data table should have <code>&lt;th&gt;</code> cells so that a screen reader can 
+	associate header cells with the data cells.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	If the table is a "presentation" table used for layout instead of data, 
+	then <code>role="presentation"</code> should be added to the <code>&lt;table&gt;</code> and no <code>&lt;th&gt;</code> tags should be used.
+	</p>
+	<p>
+	Otherwise, if the table is intended to provide data, use <code>&lt;th&gt;</code> cells to make the header associations.
+	In addition, for accessibility, table headers must have additional markup to make the associations: 
+	<code>scope</code> or <code>headers</code>/<code>id</code>.
+	More information here: <a href="developerguide.html#dataTableCellAssociations">How to make data table cell associations</a>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-table_mixing_scope_and_headers" id='table_mixing_scope_and_headers'>
+	
+	<h2 id="lby-table_mixing_scope_and_headers">Alert: Table Mixing Scope and Headers.</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />Table using both [scope] and [headers], may cause screen reader issues.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This table has cells using both <code>scope</code> attributes and
+	<code>headers</code>/<code>id</code>.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader may not correctly associate the cells since it has to account for both <code>scope</code> and
+	<code>headers</code>/<code>id</code>.
+	If modifications are made to this table in the future, the associations may become broken and its accessibility would suffer. 
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	As a best practice, choose one cell association method appropriate for the table design: 
+	either <code>scope</code> or <code>headers</code>/<code>id</code>.
+	More information here: <a href="developerguide.html#dataTableCellAssociations">How to make data table cell associations</a>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-table_has_no_headers" id='table_has_no_headers'>
+	
+	<h2 id="lby-table_has_no_headers">Alert: Table Has No Headers/ID.</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />Table has no [headers/id] associations.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "headers" and
+	This table has no <code>headers</code>/<code>id</code> associations.</p>
+	<p>
+	If <code>headers</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "scope".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader may not correctly associate header cells to the data cells.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Tables must make header cell associations using either <code>headers</code>/<code>id</code> or <code>scope</code>.
+	If applicable for this table, add <code>id</code> attributes to the <code>&lt;th&gt;</code> cells
+	and <code>headers</code> attributes to the <code>&lt;td&gt;</code> cells 
+	which point at the <code>id</code> of their associated <code>&lt;th&gt;</code>.
+	More information here: <a href="developerguide.html#dataTableCellAssociations">How to make data table cell associations</a>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-switch_table_analysis_mode" id='switch_table_analysis_mode'>
+	
+	<h2 id="lby-switch_table_analysis_mode">Alert: Switch Table Analysis Mode.</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />Table has no [scope] but does have [headers], switch to 'headers/id mode'.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />Table has no [headers/id] but does have [scope], switch to 'scope mode'.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	<span class="brand">ANDI</span> is suggesting that the user test the table in the other Table Analysis Mode
+	because it has detected accessibility markup for the other mode.
+	</p>
+	
+	<h3>What should be done?</h3>
+	<p>
+	Change the Table Analysis Mode and determine if the table is accessible.
+	<a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-no_scope_at_intersection" id='no_scope_at_intersection'>
+	
+	<h2 id="lby-no_scope_at_intersection">Alert: No Scope at TH Intersection.</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" />Scope association needed at intersection of &lt;th&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This table contains column or row headers (<code>&lt;th&gt;</code>) that intersect. One or more <code>&lt;th&gt;</code> at the "intersection" positions are missing a required scope attribute.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	When a <code>&lt;th&gt;</code> cell is positioned at an "intersection" of table headers
+	a screen reader may not be able to correctly assume the direction in which the <code>&lt;th&gt;</code>
+	points.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	To all <code>&lt;th&gt;</code> cells at table header intersections, add a <code>scope</code> attribute with 
+	a value that indicates the direction in which the cell points. (<code>scope="col"</code> or <code>scope="row"</code>).
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-aria_table_grid_structure" id='aria_table_grid_structure'>
+	
+	<h2 id="lby-aria_table_grid_structure">Alert: ARIA Table/Grid Structure Issue.</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />ARIA table has no [role=cell] cells.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />ARIA grid has no [role=gridcell] cells.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />ARIA table/grid has no [role=columnheader] or [role=rowheader] cells.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />ARIA table/grid has no [role=row] rows.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This page has a tabular structure built using an ARIA table or ARIA grid design pattern,
+	but there is an issue with the structure.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A user who is visually impaired and relying on a screen reader will not be able
+	to fully navigate the ARIA table or ARIA grid
+	when the proper structure is not in place.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Correct the structure to abide by the standards for an 
+	<a href="http://www.w3.org/TR/wai-aria-practices-1.1/#table">ARIA table</a>, or 
+	<a href="http://www.w3.org/TR/wai-aria-practices-1.1/#grid">ARIA grid</a>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-too_many_scope_levels" id='too_many_scope_levels'>
+	
+	<h2 id="lby-too_many_scope_levels">Alert: Too Many Scope Levels.</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Table has more than %%% rows/cols using [scope].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "scope" and
+	this table has cells using the <code>scope</code> attribute but there are more than two "levels".
+	</p>
+		<div class="example">
+		The following is an example of a table with too many levels of scope.
+		Notice that the third row exceeds the scope limit of 2 levels max.
+		<br /><br />
+		<code>
+		&lt;table&gt;<br />
+		&lt;caption&gt;too many levels of scopes table&lt;/caption&gt;<br />
+		&lt;tr&gt;&lt;th scope="col"&gt;good&lt;/th&gt;&lt;th scope="col"&gt;good&lt;/th&gt;&lt;/tr&gt;<br />
+		&lt;tr&gt;&lt;th scope="col"&gt;good&lt;/th&gt;&lt;th scope="col"&gt;good&lt;/th&gt;&lt;/tr&gt;<br />
+		&lt;tr&gt;&lt;th scope="col"&gt;good&lt;/th&gt;&lt;th scope="col"&gt;good&lt;/th&gt;&lt;/tr&gt;<br />
+		&lt;tr&gt;<code style="color:#ef0000">&lt;th scope="col"&gt;bad &lt;/th&gt;&lt;th scope="col"&gt;bad &lt;/th&gt;</code>&lt;/tr&gt;<br />
+		&lt;tr&gt;&lt;td&gt;data&lt;/td&gt;&lt;td&gt;data&lt;/td&gt;&lt;/tr&gt;<br />
+		&lt;/table&gt;
+		</code>
+		</div>
+	<p>
+	If <code>scope</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "headers".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader may not associate all header cells intended.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	There are several remediation options:
+	</p>
+		<div class="example">
+		<ul>
+			<li>Reorganize the table to minimize the complexity and depth of header cells.</li>
+			<li>Divide the table into multiple tables.</li>
+			<li>Remove all <code>scope</code> attributes and strictly use <code>headers</code>/<code>id</code>.</li>
+		</ul>
+		</div>
+	<p>
+	More information here: <a href="developerguide.html#dataTableCellAssociations">How to make data table cell associations</a>
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-pres_table_not_have" id='pres_table_not_have'>
+	
+	<h2 id="lby-pres_table_not_have">Alert: Presentation Table Markup.</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Presentation table has data table markup (%%%); Is this a data table?</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This layout table, marked with <code>role="presentation"</code>, has HTML markup reserved for data tables.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader may see the data table markup, 
+	and make cell associations or add verbosity to the elements within the presentation table.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	For this presentation table, remove HTML markup intended for data tables.
+	</p>
+		<div class="example">
+		<ul>
+			<li><code>&lt;caption&gt;</code>: replace with a heading tag (<code>h1, h2, h3...</code>)</li>
+			<li><code>&lt;th&gt;</code>: replace with <code>&lt;td&gt;</code></li>
+			<li><code>scope</code>: remove this attribute</li>
+			<li><code>headers/id</code>: remove any headers attributes</li>
+			<li><code>summary</code>: remove this attribute</li>
+		</ul>
+		</div>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-table_nontypical_role" id='table_nontypical_role'>
+	
+	<h2 id="lby-table_nontypical_role">Alert: Table with Nontypical Role.</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" />&lt;table&gt; with [role=%%%] is not recognized as a data table.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This table has a <code>role</code> with a value that is not
+	<code>presentation</code>,
+	<code> none</code>,
+	<code> table</code>,
+	<code> grid</code>,
+	or
+	<code>treegrid</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	An element's role overrides the semantics of the tagname.
+	This means a screen reader only considers the role value
+	and does not recognize that the element's tagname is <code>&lt;table&gt;</code>.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	If this <code>&lt;table&gt;</code> element looks like a data table 
+	(contains cells with organized data),
+	then it should have either no role or a role that signifies a data table
+	such as <code>role="table"</code>.
+	</p>
+	<p>
+	If the table is primarily used for presentation/layout, 
+	then the role should be <code>role="presentation"</code>. 
+	</p>
+	<p>
+	Otherwise, test the element according to the role.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-header_missing_role" id='header_missing_role'>
+	
+	<h2 id="lby-header_missing_role">Alert: Table Header Missing Role.</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" />&lt;table[role=%%%]&gt; has &lt;th&gt; cells missing columnheader or rowheader role.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This <code>&lt;table&gt;</code> has an ARIA <code>role</code> of 
+	<code>table</code>|<code>grid</code>|<code>treegrid</code>
+	and contains <code>&lt;th&gt;</code> cells that don't have the role of 
+	<code>columnheader</code> or <code>rowheader</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader may not make the correct cell to header associations when
+	native html is mixed with ARIA.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Within an ARIA table, the role of each header cell should be explicitly defined.
+	Ensure that each header cell has a <code>role</code> attribute with the value of 
+	<code>columnheader</code> or <code>rowheader</code>.
+	</p>
+	<p>
+	Furthermore, each data cell should have a <code>role</code> attribute with the value of 
+	<code>cell</code> or <code>gridcell</code>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-cells_not_contained_by_row_role" id='cells_not_contained_by_row_role'>
+	
+	<h2 id="lby-cells_not_contained_by_row_role">Alert: Table Cells not Contained by Row.</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" />&lt;table[role=%%%]&gt; has cells not contained by [role=row].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This <code>[role=table]</code> or <code>[role=grid]</code> element
+	has <code>[role=cell]</code> or <code>[role=gridcell]</code>
+	cells that are not contained by an element with <code>[role=row]</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader user may skip these cells while navigating this table/grid
+	since they are not programmatically part of the table.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Adjust the structure of this table or grid so that 
+	each cell is contained by a row (an element with <code>[role=row]</code>).
+	</p>
+	<p>
+	Example:<br />
+	<code>
+	&lt;div role="table" aria-label="Fruit Inventory"&gt;<br />
+	&nbsp;&lt;div <b>role="row"</b>&gt;<br />
+	&nbsp;&nbsp;&lt;div role="cell"&gt; Apples &lt;/div&gt;<br />
+	&nbsp;&nbsp;&lt;div role="cell"&gt; Oranges &lt;/div&gt;<br />
+	&nbsp;&lt;/div&gt;<br />
+	...<br />
+	&lt;/div&gt;
+	</code>
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	
+	<section tabindex="0" aria-labelledby="lby-table_has_no_scope" id='table_has_no_scope'>
+	
+	<h2 id="lby-table_has_no_scope">Alert: Table Has No Scope.</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" />Table has no [scope] associations.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "scope" and 
+	this table has no <code>scope</code> attributes.</p>
+	<p>
+	If <code>scope</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "headers".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader may not correctly associate header cells to the data cells.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Tables must make header cell associations using additional markup.
+	If applicable for this table design, add <code>scope</code> attributes to the <code>&lt;th&gt;</code> cells
+	using the appropriate values: <code>col</code>, <code>row</code>, <code>colgroup</code>, or <code>rowgroup</code>.
+	More information here: <a href="developerguide.html#dataTableCellAssociations">How to make data table cell associations</a>.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-accesskey_more_one" id='accesskey_more_one'>
+	
+	<h2 id="lby-accesskey_more_one">Alert: Accesskey Multiple Values</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [accessKey] value "%%%" has more than one character.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>An <code>accesskey</code> with more than one character as its value was found on this element.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Multi-character accesskeys do not work in any browser. Some browsers support space delimited values,
+	but such use is not a recommended practice.</p>
+
+	<h3>What should be done?</h3>
+	<p>Set the <code>accesskey</code> value to use only one character.</p>
+	<a href="developerguide.html#accesskey">more info about accesskey</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-accesskey_duplicate" id='accesskey_duplicate'>
+	
+	<h2 id="lby-accesskey_duplicate">Alert: Accesskey Duplicate</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Duplicate [accessKey=%%%] found.
+	</ul>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Duplicate AccessKey found [value].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has an <code>accesskey</code> attribute that matched another element's <code>accesskey</code>.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>The accesskey functionality may not work as intended.
+	Accesskeys on buttons and links must be unique.
+	Some browsers allow for a "focus jump" functionality when duplicate accesskeys are placed on elements
+	that aren't links and buttons.
+	However, when a shared accesskey is placed on links or buttons,
+	usually only the first button or link will be selected.</p>
+	<h3>What should be done?</h3>
+	<p>
+	As a best practice, make each <code>accesskey</code> unique.
+	If multiple buttons or links share the same function, put the accesskey on only one.
+	</p>
+	<a href="developerguide.html#accesskey">more info about accesskey</a>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ref_id_not_found" id='ref_id_not_found'>
+	
+	<h2 id="lby-ref_id_not_found">Alert: ARIA Reference ID Not Found</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Element referenced by [%%%] with [id=%%%] not found.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has an <code>aria-labelledby</code> or <code>aria-describedby</code> 
+	that points to an <code>id</code> that cannot be found on the page. 
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Important accessibility information might be missing. Screen readers will not notify a user that 
+	the <code>id</code> could not be found.</p>
+
+	<h3>What causes this?</h3>
+	<p>This may be due to one of these reasons:</p>
+		<div class="example">
+		<ul>
+			<li>The web author may not be using 
+				<code>aria-labelledby</code>/<code>aria-describedby</code> correctly:
+				These attributes expect one or more <code>id</code>s; 
+				Multiple <code>id</code>s should be separated by spaces, not commas.</li>
+			<li>The web author may have changed an element's <code>id</code>,
+				but forgot to change the reference in the <code>aria-labelledby</code>/<code>aria-describedby</code>.</li>
+			<li>The referenced element will eventually be injected onto the page using scripting.
+				This is a common error/form validation design, in which case, is not an accessibility issue.</li>
+		</ul>
+		</div>
+	<h3>What should be done?</h3>
+	<p>
+	Deeper investigation of the code is needed.
+	</p>
+	<p>
+		Attributes <code>aria-labelledby</code> and <code>aria-describedby</code>
+		should only contain <code>id</code> references, not text directly inserted into the attribute's value.
+		Example:
+	</p>
+		<div class="example">
+		<ul>
+			<li>GOOD: <code>aria-labelledby="id1"</code></li>
+			<li>BAD: <code>aria-labelledby="What is your favorite color?"</code></li>
+		</ul>
+		</div>
+	<p>
+		When multiple <code>id</code>s are used, 
+		they should be space delimited, not comma delimited.
+		Example:
+	</p>
+		<div class="example">
+		<ul>
+			<li>GOOD: <code>aria-labelledby="id1 id2 id3"</code></li>
+			<li>BAD: <code>aria-labelledby="id1,id2,id3"</code></li>
+			<li>BAD: <code>aria-labelledby="id1, id2, id3"</code></li>
+		</ul>
+		</div>
+	<a href="developerguide.html#aria-labelledby">more info about aria-labelledby</a> |
+	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-improper_ref_id_usage" id='improper_ref_id_usage'>
+	
+	<h2 id="lby-improper_ref_id_usage">Alert: Improper Reference Attribute Possible</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Improper use of [aria-labelledby] possible: Referenced ids "%%%" not found.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Improper use of [aria-describedby] possible: Referenced ids "%%%" not found.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Improper use of [headers] possible: Referenced ids "%%%" not found.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>More than one <code>id</code> referenced by an <code>aria-labelledby</code>,
+	<code>aria-describedby</code>, or cell <code>headers</code> cannot be found on the page.
+	<span class="brand">ANDI</span> suggests that the attribute is not being used properly.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Important accessibility information might be missing. 
+	Screen readers will not notify a user when the <code>id</code> references cannot be found.</p>
+
+	<h3>What causes this?</h3>
+	<p>This is typically caused by the developer not understanding that
+	<code>aria-labelledby</code>, <code>aria-describedby</code>, <code>headers</code> values are meant to contain
+	<code>id</code> references and literal text was mistakenly added directly into the attribute's value.
+	Another possibility is that a developer may have intended to reference elements 
+	that were later removed or the <code>id</code> values were changed. 
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>Ensure that the attribute is being used properly: 
+	A list of <code>id</code> references only and not literal text.
+	</p>
+	<a href="developerguide.html#aria-labelledby">more info about aria-labelledby</a> |
+	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a> |
+	<a href="developerguide.html#dataTableCellAssociations">more info about data table cell associations</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-headers_ref_not_th" id='headers_ref_not_th'>
+	
+	<h2 id="lby-headers_ref_not_th">Alert: Headers Reference Not TH</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element referenced by [headers] attribute with [id=%%%] is not a &lt;th&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "headers" and
+	this cell is referencing an element that is not a <code>&lt;th&gt;</code>.</p>
+	<p>
+	If <code>headers</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "scope".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader will not make the intended cell association.</p>
+
+	<h3>What should be done?</h3>
+	<p>The <code>headers</code> attribute should reference the <code>id</code> 
+	of a <code>&lt;th&gt;</code>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-image_map_ref_not_found" id='image_map_ref_not_found'>
+	
+	<h2 id="lby-image_map_ref_not_found">Alert: Image map reference not found</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> &lt;img&gt; referenced by image map %%% not found.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span> found an image map (<code>&lt;map&gt;</code>) that references an 
+	(<code>&lt;img&gt;</code>) that does not exist on the page.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	The image map will not work for all users.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that the <code>name</code> attribute of the <code>&lt;map&gt;</code> points to an 
+	<code>&lt;img&gt;</code> that has a matching <code>usemap</code>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ref_legend" id='ref_legend'>
+	<h2 id="lby-ref_legend">Alert: ARIA referencing legend</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [%%%] is referencing a legend which may cause speech verbosity.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has an <code>aria-labelledby</code> or <code>aria-describedby</code> attribute
+	that is referencing a <code>&lt;legend&gt;</code> element.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This arrangement may cause speech verbosity; 
+	the text within the <code>&lt;legend&gt;</code> may be read more than once by a screen reader.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Either remove the reference to the <code>&lt;legend&gt;</code> from the 
+	<code>aria-labelledby</code>/<code>aria-describedby</code> or change the 
+	<code>&lt;legend&gt;</code> to a generic tag that carries no semantics such as <code>&lt;strong&gt;</code>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ref_has_ref" id='ref_has_ref'>
+	<h2 id="lby-ref_has_ref">Alert: ARIA referencing an ARIA reference</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [%%%] reference contains another [%%%] reference which won't be used for this Output.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has an <code>aria-labelledby</code>|<code>aria-describedby</code> 
+	that is referencing an element that has 
+	an <code>aria-labelledby</code>|<code>aria-describedby</code> or contains an element that has an 
+	<code>aria-labelledby</code>|<code>aria-describedby</code>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	While this arrangement should not directly cause an accessibility issue,
+	the output may not be as expected. 
+	When traversing an <code>aria-labelledby</code>|<code>aria-describedby</code> reference, subsequent 
+	<code>aria-labelledby</code>|<code>aria-describedby</code> references will not be followed
+	to prevent the possibility of causing an infinite loop while trying to calculate the accessible name/description.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that this element's output is as expected.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ref_is_duplicate" id='ref_is_duplicate'>
+	<h2 id="lby-ref_is_duplicate">Alert: ARIA referencing id multiple times</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [%%%] is directly referencing [id=%%%] multiple times which may cause speech verbosity.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has an <code>aria-labelledby</code> or <code>aria-describedby</code> 
+	that is referencing the same element more than once.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This will directly cause speech verbosity because the referenced element will be read each time it is referenced.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	It's rare that listing the same id multiple times in an ARIA reference is intentional.
+	Most likely it is a copy/paste coding error.
+	Ensure that the output is as expected, and remove any unintended duplicated id references
+	in the element's <code>aria-labelledby</code> or <code>aria-describedby</code> attributes.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ref_is_direct_and_indirect" id='ref_is_direct_and_indirect'>
+	<h2 id="lby-ref_is_direct_and_indirect">Alert: ARIA reference direct and indirect</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [%%%] is directly and indirectly referencing [id=%%%] which may cause speech verbosity.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has an <code>aria-labelledby</code> or <code>aria-describedby</code> 
+	that is referencing an element both directly and indirectly.
+	Directly because the referenced element's id is in the id reference list.
+	Indirectly because the element is contained by an element that is being directly referenced.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This may cause speech verbosity because the referenced element may be read more than once.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that any referenced elements that are not contained by other referenced elements.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-headers_refs_no_text" id='headers_refs_no_text'>
+	
+	<h2 id="lby-headers_refs_no_text">Alert: Headers References No Text</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Element's [headers] references provide no association text.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "headers" and
+	this cell is using a <code>headers</code> attribute but the 
+	elements it references do not provide header cell association text.</p>
+	<p>
+	If <code>headers</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "scope".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader will not communicate the intended header cell associations.</p>
+
+	<h3>What causes this?</h3>
+	<p>The referenced cell has no HTML markup that would provide text such as innerHTML.</p>
+
+	<h3>What should be done?</h3>
+	<p>Either modify the referenced elements by adding text contents, 
+	or point the <code>headers</code> at the id of a different element that does provide text.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-anchor_target_not_found" id='anchor_target_not_found'>
+	
+	<h2 id="lby-anchor_target_not_found">Alert: Anchor Target Not Found</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> In-page anchor target with [id=%%%] not found.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This link's href points to the id of an element on the page that cannot be found.
+	NOTE: <span class="brand">ANDI</span> should not throw this alert if a javascript 
+	"click event handler" is attached to this link.
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If this link is intended to be used as an in-page jump, or skip to content link, it may not function as intended.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Testers should click on the link to discover if the link is functional as an in-page jump/bookmark.
+	If the link has no function, add the element with the id to the page or remove the link.
+	Further evaluation or a discussion with the web author may be needed to determine the purpose of this link.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-headers_ref_is_td" id='headers_ref_is_td'>
+	
+	<h2 id="lby-headers_ref_is_td">Alert: Headers Reference is TD</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [headers] attribute is referencing a &lt;td&gt; with [id=%%%].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p><span class="brand">ANDI</span>'s Table Analysis Mode is set to "headers" and
+	this cell is referencing an element that is a <code>&lt;td&gt;</code>.</p>
+	<p>
+	If <code>headers</code> associations are not appropriate for this table's design, 
+	change the Table Analysis Mode to "scope".
+	<br /><a href="modules.html#tANDI-tableAnalysisMode">How to choose the right Table Analysis Mode</a>
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader may not make the intended cell association.</p>
+
+	<h3>What should be done?</h3>
+	<p>The <code>headers</code> attribute should reference the <code>id</code> 
+	of a <code>&lt;th&gt;</code>.
+	The web author may be able to simply convert the <code>&lt;td&gt;</code> into a <code>&lt;th&gt;</code>
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-headers_ref_external" id='headers_ref_external'>
+	
+	<h2 id="lby-headers_ref_external">Alert: Headers Referencing External Element</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [headers] attribute is referencing an element [id=%%%] external to its own table.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This table cell has a <code>headers</code> attribute which is referencing the <code>id</code> of
+	an element that is not in the same table.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader most likely will not make this header association because
+	a <code>headers</code> attribute should only reference <code>&lt;th&gt;</code>
+	cells in the same table.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that all <code>headers</code> attributes are referencing <code>&lt;th&gt;</code>
+	cells in the same table.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-page_title_empty" id='page_title_empty'>
+	
+	<h2 id="lby-page_title_empty">Alert: Page Title Empty</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Page &lt;title&gt; cannot be empty.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>A <code>&lt;title&gt;</code> tag was found in the page's <code>&lt;head&gt;</code> but the contents
+	were empty.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader would not read a concise, logical title for the page, and would instead read the url.</p>
+
+	<h3>What should be done?</h3>
+	<p>Add text contents to the <code>&lt;title&gt;</code> tag in the page's <code>&lt;head&gt;</code>.</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-page_title_none" id='page_title_none'>
+	
+	<h2 id="lby-page_title_none">Alert: No Page Title</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Page has no &lt;title&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>A <code>&lt;title&gt;</code> tag could not be found in the page's <code>&lt;head&gt;</code> or the
+	<code>document.title</code> was not set.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader would not read a concise, logical title for the page, and would instead read the url.</p>
+
+	<h3>What should be done?</h3>
+	<p>Add a <code>&lt;title&gt;</code> tag in the page's <code>&lt;head&gt;</code>.</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-page_title_multiple" id='page_title_multiple'>
+	
+	<h2 id="lby-page_title_multiple">Alert: Multiple Page Titles</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Page has more than one &lt;title&gt; tag.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>More than one <code>&lt;title&gt;</code> tag was found in the page's <code>&lt;head&gt;</code>.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader will not read both <code>&lt;title&gt;</code> tags. Therefore,
+	if any important information is in another <code>&lt;title&gt;</code>, that information may not be spoken.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	To prevent any likelihood of an accessibility issue, 
+	ensure that there is only one <code>&lt;title&gt;</code> and that title is in the <code>&lt;head&gt;</code>.
+	Use <a href="modules.html#sANDI-pageTitleButton">ANDI (Structures), "page title"</a>
+	to view the actual page title; determine if the title is sufficient.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-too_many_legends" id='too_many_legends'>
+	
+	<h2 id="lby-too_many_legends">Alert: More Legends Than Fieldsets</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> There are more legends (%%%) than fieldsets (%%%).</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>More <code>&lt;legend&gt;</code> tags were found on the page than <code>&lt;fieldset&gt;</code> tags.</p>
+
+	<h3>What causes this?</h3>
+	<p>A <code>&lt;legend&gt;</code> could have been placed on the page without being contained in a
+	<code>&lt;fieldset&gt;</code>. Another possibility is that more than one <code>&lt;legend&gt;</code> could have been 
+	placed in a <code>&lt;fieldset&gt;</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p><code>&lt;legend&gt;</code> tags serve no semantic purpose outside of a <code>&lt;fieldset&gt;</code>. 
+	Moreover, each <code>&lt;fieldset&gt;</code> should contain only one <code>&lt;legend&gt;</code>.
+	Either of these scenarios could signify that a developer did not add proper markup to the page, and therefore
+	the accessible name and descriptions of the form elements could be semantically incorrect.</p>
+
+	<h3>What should be done?</h3>
+	<p>Ensure that this page's <code>&lt;legend&gt;</code> tags are contained within a 
+	<code>&lt;fieldset&gt;</code> and are at a 1:1 ratio. Remember that a <code>&lt;legend&gt;</code> only describes a group of
+	form elements; each form element must have an explicit label to provide an accessible name.</p>
+	<a href="developerguide.html#legend">more info about legend</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-too_many_figcaptions" id='too_many_figcaptions'>
+	
+	<h2 id="lby-too_many_figcaptions">Alert: More Figcaptions Than Figures</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> There are more figcaptions (%%%) than figures (%%%).</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>More <code>&lt;figcaption&gt;</code> tags were found on the page than <code>&lt;figure&gt;</code> tags.</p>
+
+	<h3>What causes this?</h3>
+	<p>A <code>&lt;figcaption&gt;</code> could have been placed on the page without being contained in a
+	<code>&lt;figure&gt;</code>. Another possibility is that more than one <code>&lt;figcaption&gt;</code> could have been 
+	placed in a <code>&lt;figure&gt;</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p><code>&lt;figcaption&gt;</code> tags serve no semantic purpose outside of a <code>&lt;figure&gt;</code>. 
+	Moreover, each <code>&lt;figure&gt;</code> should contain only one <code>&lt;figcaption&gt;</code>.
+	Either of these scenarios could signify that a developer did not add proper markup to the page, and therefore
+	the accessible name and description of elements could be semantically incorrect.</p>
+
+	<h3>What should be done?</h3>
+	<p>Ensure that each of this page's <code>&lt;figcaption&gt;</code> tags are contained within a 
+	<code>&lt;figure&gt;</code> and are at a 1:1 ratio. Remember that a <code>&lt;figcaption&gt;</code> names a <code>&lt;figure&gt;</code>
+	and by default does not name or describe other elements contained within the figure. If an element within the figure 
+	should be named or described by the <code>&lt;figcaption&gt;</code>, point an <code>aria-labelledby</code> or 
+	<code>aria-describedby</code> at the <code>&lt;figcaption&gt;</code>.</p>
+	<a href="developerguide.html#figcaption">more info about figcaption</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-too_many_captions" id='too_many_captions'>
+	
+	<h2 id="lby-too_many_captions">Alert: More Captions Than Tables</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> There are more captions (%%%) than tables (%%%).</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>More <code>&lt;caption&gt;</code> tags were found on the page than <code>&lt;table&gt;</code> tags.</p>
+
+	<h3>What causes this?</h3>
+	<p>A <code>&lt;caption&gt;</code> could have been placed on the page without being contained in a
+	<code>&lt;table&gt;</code>. Another possibility is that more than one <code>&lt;caption&gt;</code> could have been 
+	placed in a <code>&lt;table&gt;</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p><code>&lt;caption&gt;</code> tags serve no semantic purpose outside of a <code>&lt;table&gt;</code>. 
+	Moreover, each <code>&lt;table&gt;</code> should contain only one <code>&lt;caption&gt;</code>.
+	Either of these scenarios could signify that a developer did not add proper markup to the page, and therefore
+	the accessible name and description of elements could be semantically incorrect.</p>
+
+	<h3>What should be done?</h3>
+	<p>Ensure that each of this page's <code>&lt;caption&gt;</code> tags are contained within a 
+	<code>&lt;table&gt;</code> and are at a 1:1 ratio.</p>
+	<a href="developerguide.html#caption">more info about caption</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-tabindex_not_number" id='tabindex_not_number'>
+	
+	<h2 id="lby-tabindex_not_number">Alert: Tabindex Not A Number</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Tabindex value "%%%" is not a number.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>An element was found on the page with a non-numeric value for the <code>tabindex</code> attribute.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Browser behavior is inconsistent in this scenario. Some browsers will replace the value with a negative
+	tabindex, others will not change the value. Regardless, a keyboard user will not be able to place focus on such an element.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>Ensure that the value of the <code>tabindex</code> attribute is a numeric, positive or negative integer.
+	Remember that only positive values allow for keyboard focus using the tab key. Negative values are meant for programmatically
+	controlling focus with JavaScript.
+	</p>
+	<a href="developerguide.html#tabindex">more info about tabindex</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-li_no_container" id='li_no_container'>
+	
+	<h2 id="lby-li_no_container">Alert: List Item No Container</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> List item &lt;li&gt; is not contained by a list container &lt;ol&gt; or &lt;ul&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This list item (<code>&lt;li&gt;</code>) is not contained by a list container tag (<code>&lt;ol&gt;</code> or <code>&lt;ul&gt;</code>).
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Since the list item tag carries a semantic meaning, it should be contained within a list container.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	If the list item (<code>&lt;li&gt;</code>) is meant to be part of a list, contain it within a list container tag (<code>&lt;ol&gt;</code> or <code>&lt;ul&gt;</code>).
+	Otherwise, use a different tag for the item such as <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, or <code>&lt;span&gt;</code>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-dd_dt_no_container" id='dd_dt_no_container'>
+	
+	<h2 id="lby-dd_dt_no_container">Alert: Description List Item No Container</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Description list item is not contained by a description list container &lt;dl&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This description list item (<code>&lt;dd&gt;</code> or <code>&lt;dt&gt;</code>) is not contained by a description list container tag (<code>&lt;dl&gt;</code>).
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Since the description list item tags carry semantic meaning, they should be contained within a description list container.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	If the description list item (<code>&lt;dd&gt;</code> or <code>&lt;dt&gt;</code>) is meant to be part of a description list, 
+	contain it within a description list container tag (<code>&lt;dl&gt;</code>).
+	Otherwise, use a different tag for the item such as <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, or <code>&lt;span&gt;</code>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-deprecated_html" id='deprecated_html'>
+	<h2 id="lby-deprecated_html">Alert: Deprecated Attribute</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Using HTML5, found deprecated {attribute/tag}</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>ANDI detected an HTML5 doctype and the presence of a deprecated attribute or tag.
+	A deprecated attribute or tag means it’s being phased out and there are better, more flexible alternatives.
+	</p>
+	<p>
+	ANDI will throw this Alert when it finds:
+	</p>
+		<div class="example">
+		<ul>
+			<li>A <code>summary</code> attribute on a table</li>
+			<li>A <code>name</code> attribute on an <code>a</code> link</li>
+			<li>A <code>scope</code> attribute on an table <code>td</code> cell</li>
+		</ul>
+		</div>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Screen readers may not support deprecated HTML.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Abide by the specifications of the doctype being used.</p>
+	<p>
+	With HTML5,
+	</p>
+		<div class="example">
+		<ul>
+			<li>Instead of <code>summary</code> on a table, use <code>aria-label</code> or <code>&lt;caption&gt;</code></li>
+			<li>Instead of <code>name</code> on an <code>a</code> link, use <code>id</code></li>
+			<li>Instead of <code>scope</code> attribute on an <code>td</code>, use a <code>th</code> (table header) cell</li>
+		</ul>
+		</div>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-scope_value_invalid" id='scope_value_invalid'>
+	<h2 id="lby-scope_value_invalid">Alert: Scope Value Invalid</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [scope=%%%] value is invalid; acceptable values are col, row, colgroup, or rowgroup.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has a <code>scope</code> attribute 
+	with a value that is invalid.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader may not make the correct header to cell associations within this data table.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that all <code>scope</code> attributes
+	have valid values. Valid values for the <code>scope</code> attribute are:
+	</p>
+	<div class="example">
+		<ul>
+			<li><code>scope="col"</code></li>
+			<li><code>scope="row"</code></li>
+			<li><code>scope="colgroup"</code></li>
+			<li><code>scope="rowgroup"</code></li>
+		</ul>
+	</div>
+	<p>
+	Note that <code>scope="column"</code> is invalid.
+	The <code>scope</code> attribute should be used with <code>&lt;th&gt;</code> elements only.
+	</p>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-deprecated_html_a_name" id='deprecated_html_a_name'>
+	<h2 id="lby-deprecated_html_a_name">Alert: Name Attribute Deprecated on &lt;a&gt;</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> This &lt;a&gt; element has [name=%%%] which is a deprecated way of making an anchor target; use [id].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This <code>&lt;a&gt;</code> element is the anchor target of an in-page link.
+	It is using the <code>name</code> attribute, which is deprecated, instead of the <code>id</code> attribute.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Since the <code>name</code> attribute has been deprecated for <code>&lt;a&gt;</code> elements,
+	future browsers may not support this as a valid technique.
+	Therefore, this page's accessibility could be impacted in the future if
+	the in-page link targeting this anchor doesn't function as expected.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Replace the <code>name</code> attribute on the anchor target with an <code>id</code> attribute.
+	</p>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-alt_only_for_images" id='alt_only_for_images'>
+	
+	<h2 id="lby-alt_only_for_images">Alert: Alt Only For Images</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [alt] attribute is meant for &lt;img&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has an <code>alt</code> attribute and is not an image: <code>&lt;img&gt;</code>, 
+	<code>&lt;input[type=image]&gt;</code>, or <code>&lt;area&gt;</code>.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Not all screen readers will announce the <code>alt</code> attribute for non-image elements. Therefore, some
+	accessibility information that was intentionally added in the <code>alt</code> value may not be spoken.</p>
+
+	<h3>What should be done?</h3>
+	<p>Do not use the <code>alt</code> attribute for non-images. 
+	Instead use the global attribute
+	<code>aria-label</code> to provide an accessible name or 
+	<code>title</code> to provide an accessible description.</p>
+	<a href="developerguide.html#alt">more info about alt</a> |
+	<a href="developerguide.html#aria-label">more info about aria-label</a> |
+	<a href="developerguide.html#title">more info about title</a>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-explicit_label_for_forms" id='explicit_label_for_forms'>
+	
+	<h2 id="lby-explicit_label_for_forms">Alert: Explicit &lt;label&gt; For Form Elements</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Explicit &lt;label[for]&gt; only works with form elements.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>The <code>for</code> attribute of a <code>&lt;label&gt;</code> is pointing to the <code>id</code> of 
+	this element which is not a form element.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Some screen readers will not announce an explicit label on non-form elements. Therefore, the associating
+	<code>&lt;label&gt;</code> may not be read as part of the accessible name of this element.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	This element does not derive its accessible name from <code>&lt;label&gt;</code>.
+	Consider using <code>aria-label</code> or <code>aria-labelledby</code> on the element.</p>
+	<a href="developerguide.html#label">more info about label</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-explicit_label_not_for_buttons" id='explicit_label_not_for_buttons'>
+	
+	<h2 id="lby-explicit_label_not_for_buttons">Alert: Explicit &lt;label&gt; Not For Buttons</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Explicit &lt;label[for]&gt; shouldn't be used with buttons.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>The <code>for</code> attribute of a <code>&lt;label&gt;</code> is pointing to the <code>id</code> of 
+	this element which is a button.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Some screen readers will not announce an explicit label on buttons. Therefore, the associating
+	<code>&lt;label&gt;</code> may not be read as part of the accessible name of this button.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Since buttons do not derive their accessible name from other <code>&lt;label&gt;</code> elements.
+	</p>
+		<div class="example">
+			<ul>
+			<li>For <code>&lt;button&gt;</code> or <code>role=button</code> elements
+			stick with innerHTML.</li>
+			<li>For <code>&lt;input type="submit"&gt;</code> or <code>&lt;input type="button"&gt;</code>
+			use <code>value</code>.</li>
+			<li>For <code>&lt;input type="image"&gt;</code>
+			use <code>alt</code>.</li>
+			</ul>
+		</div>
+	<a href="developerguide.html#label">more info about label</a>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-unreliable_component_combine" id='unreliable_component_combine'>
+	
+	<h2 id="lby-unreliable_component_combine">Alert: Unreliable Component Combination</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Combining %%% produces inconsistent screen reader results.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element contains multiple accessibility components which <span class="brand">ANDI</span>'s "One Namer, One Describer" 
+	methodology discourages.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>When elements have multiple Namers or multiple Describers, screen reader precedence differs wildly.
+	To minimize these differences and ensure consistent screen reader output, follow <span class="brand">ANDI</span>'s methodology.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Only one Namer should be used at a time. Only one Describer should be used at a time.
+	</p>
+	<p>
+	ANDI defines the following components as Namers. Choose one:
+	</p>
+		<div class="example">
+			<ul>
+			<li><code>aria-labelledby</code></li>
+			<li><code>aria-label</code></li>
+			<li><code>label</code> (form elements)</li>
+			<li><code>alt</code> (images)</li>
+			<li><code>value</code> (input buttons)</li>
+			<li><code>figcaption</code> (figure)</li>
+			<li><code>caption</code> (table)</li>
+			<li><code>innerText</code> (container elements)</li>
+			</ul>
+		</div>
+	<p>
+	ANDI defines the following components as Describers. Choose one:
+	</p>
+		<div class="example">
+			<ul>
+			<li><code>aria-describedby</code></li>
+			<li><code>legend</code> (form elements &amp; only with label)</li>
+			<li><code>title</code></li>
+			</ul>
+		</div>
+	<a href="developerguide.html#Namers">more info about Namers</a> |
+	<a href="developerguide.html#Describers">more info about Describers</a>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-javascript_event_caution" id='javascript_event_caution'>
+	
+	<h2 id="lby-javascript_event_caution">Alert: JavaScript Event Found</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> JavaScript event %%% may cause keyboard accessibility issues; investigate.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has a JavaScript event. Events <span class="brand">ANDI</span> scans for: <code>onBlur</code>, <code>onChange</code>, <code>onDblClick</code></p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>The presence of JavaScript events does not mean there is a definite accessibility issue. However, 
+	depending on what the JavaScript event was programmed to do, an accessibility issue could exist. Examples:
+	</p>
+		<div class="example">
+		<ul>
+		<li>A select box has an <code>onChange</code> event.
+		A keyboard user must be able to make selections (using arrow keys) without a mouse
+		without focus moving away from the select box.
+		</li>
+		<li>A text box has an <code>onBlur</code> event.
+		If tabbing off the text box causes something to change dynamically, 
+		a visually impaired user should be notified.
+		</li>
+		<li>An element has an <code>onDblClick</code> event.
+		A keyboard only user who cannot use a mouse,
+		cannot perform a double click.
+		</li>
+		</ul>
+		</div>
+	<h3>What should be done?</h3>
+	<p>Test the element to ensure that the JavaScript events do not cause accessibility 
+	issues such as focus loss or confusion, keyboard traps, or dynamic screen changes without notification.</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<section tabindex="0" aria-labelledby="lby-decorative_image_tab_order" id='decorative_image_tab_order'>
+	<h2 id="lby-decorative_image_tab_order">Alert: Decorative Image In Tab Order</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Image defined as decorative is in the keyboard tab order.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This image contains a programmatic contradiction: 
+	it was defined as decorative using <code>role="presentation"</code> or <code>alt=""</code>, 
+	but it has a non-negative <code>tabindex</code> which places it in the keyboard tab order.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	When tabbing to this decorative image, a screen reader may read nothing or may read incorrectly.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Decorative Images should not be in the tab order, therefore, remove the <code>tabindex</code>.
+	If the image is not decorative, include a text description of the image using the <code>alt</code> attribute.
+	In general, images do not have to be in the keyboard tab order.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-role_tab_order" id='role_tab_order'>
+	<h2 id="lby-role_tab_order">Alert: Element with Role Not In Tab Order</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Element with [role=%%%] not in the keyboard tab order.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has a <code>role</code> attribute with a value that tells a screen reader
+	that the element is interactive
+	(example: <code>role="link"</code>, <code>role="button"</code>)
+	but it cannot be navigated to using the keyboard tab key.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	An individual that cannot use a mouse (a keyboard-only user) uses the tab key as the primary means of navigating a page.
+	Keyboard-only users expect most interactive elements (links, buttons, form elements)
+	to be in the tab order since that is the standard behavior for these types of elements.
+	When an HTML element is defined as an interactive element using the <code>role</code> attribute,
+	additional handling often needs to be added to ensure that the interactive element is accessible to keyboard-only users.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	If this element should be in the tab order, add <code>tabindex="0"</code> to the element.
+	Otherwise, if navigation to the element is handled by other means (such as arrow keys), test
+	to ensure that the element can be accessed using only a keyboard.
+	In addition, links and buttons should be able to be activated using only a keyboard
+	(enter key for links), (spacebar and enter key for buttons).
+	</p>
+	<p>
+	Alternatively, use semantic HTML tags 
+	(<code>&lt;a&gt;</code>,<code>&lt;button&gt;</code>) 
+	instead of generic tags with a role attribute 
+	(<code>&lt;div role="link"&gt;</code>,<code>&lt;div role="button"&gt;</code>)
+	and the browser will automatically handle most keyboard accessibility requirements.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-not_in_tab_order" id='not_in_tab_order'>
+	<h2 id="lby-not_in_tab_order">Alert: Focusable Element Not In Tab Order</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element not in keyboard tab order.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has a <code>tabindex</code> value that is negative.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Elements with negative <code>tabindex</code> values cannot achieve focus 
+	using the keyboard's tab key.
+	However, focus may be moved to such elements programmatically using JavaScript.</p>
+
+	<h3>What should be done?</h3>
+	<p>Verify that this element should not be in the tab order. 
+	Also ensure that related functionality is not restricted to mouse use only.
+	If the element should be in the tab order, then change the tabindex value to zero (<code>tabindex="0"</code>).
+	</p>
+	<a href="developerguide.html#tabindex">more info about tabindex</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-not_in_tab_order_no_name" id='not_in_tab_order_no_name'>
+	
+	<h2 id="lby-not_in_tab_order_no_name">Alert: Element Not In Tab Order, No Name</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element not in keyboard tab order and has no accessible name.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has a <code>tabindex</code> value that is negative and it has no accessible name.</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>Elements with negative <code>tabindex</code> values cannot achieve focus using the keyboard's tab key.
+	However, focus can be placed on such elements programmatically using JavaScript. Also, elements must have an accessible name.</p>
+
+	<h3>What should be done?</h3>
+	<p>Ensure that not being able to tab to the element is acceptable and related functionality is not 
+	restricted to mouse use only. Also ensure that when focus is shifted to the element, a proper accessible name is provided.</p>
+	<a href="developerguide.html#tabindex">more info about tabindex</a> |
+	<a href="developerguide.html#Namers">more info about accessible name</a>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-iframe_contents_not_in_tab_order" id='iframe_contents_not_in_tab_order'>
+	
+	<h2 id="lby-iframe_contents_not_in_tab_order">Alert: Iframe Contents Not In Tab Order</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Iframe contents are not in keyboard tab order because iframe has negative tabindex.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This <code>iframe</code> element has a <code>tabindex</code> value that is negative
+	(such as <code>tabindex="-1"</code>) and it contains focusable elements.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Because this <code>iframe</code> has a negative <code>tabindex</code>, the 
+	contents of the <code>iframe</code> cannot be accessed (tabbed to) using a keyboard.
+	This means that users who cannot use a mouse 
+	and rely on a keyboard for navigation will not be able to
+	interact with elements inside this <code>iframe</code>.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Remove the <code>tabindex</code> attribute from the <code>iframe</code>,
+	or set the tabindex to zero (<code>tabindex="0"</code>).
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-disabled_elements" id='disabled_elements'>
+	<h2 id="lby-disabled_elements">Alert: Disabled Elements Found</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Page has %%% disabled elements invisible to a screen reader.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	Disabled Elements (<code>disabled="disabled"</code>) were found on the page.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Elements disabled using the <code>disabled</code> attribute are not in the tab order.
+	Therefore, a person who is visually impaired and using a keyboard to tab through the page
+	may not know that the field is disabled.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Provide an accessible alternative so that all users know which fields are disabled.
+	There are a number of ways to do so:
+	</p>
+		<div class="example">
+			<ul>
+			<li>Provide a text description on the page that fields are disabled.</li>
+			<li>Use attributes <code>readonly</code>, <code>aria-readonly="true"</code>, or <code>aria-disabled="true"</code>
+				combined with CSS to make the element look disabled (grayed out).</li>
+			<li>Instead of using the native semantic tag (<code>&lt;input&gt;, &lt;button&gt;, &lt;a&gt;</code>)
+				use a generic tag <code>&lt;div&gt;, &lt;p&gt;, &lt;span&gt;</code> with a <code>tabindex="0"</code>
+				to present the uneditable/unalterable information.</li>
+			<li>Completely remove the element if it is not necessary.</li>
+			<li>Rather than disabling buttons/links, allow the user to press the button/link as normal
+				and provide a message to the user saying that the function is not permitted for whatever reason.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-canvas_not_keyboard_accessible" id='canvas_not_keyboard_accessible'>
+	<h2 id="lby-canvas_not_keyboard_accessible">Alert: Canvas No Focusable Fallback</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> If &lt;canvas&gt; element is interactive with mouse, it's not keyboard accessible because there is no focusable fallback content.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	A <code>&lt;canvas&gt;</code> element was found that has no focusable elements within the fallback content.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A <code>&lt;canvas&gt;</code> by default is not keyboard accessible.
+	When a <code>&lt;canvas&gt;</code> element is interactive,
+	javascript is used to control mouse click and hover events.
+	Users who primarily rely on a keyboard for navigation cannot interact with 
+	a <code>&lt;canvas&gt;</code> element unless keyboard accessible elements 
+	and event handling are provided.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Making a <code>&lt;canvas&gt;</code> fully accessible requires 
+	a high degree of javascript skill.
+	</p>
+	<p>
+	If the <code>&lt;canvas&gt;</code> is interactive using a mouse, then
+	the <code>&lt;canvas&gt;</code> should include keyboard-focusable (tabbable) elements 
+	within the "fallback" content which will provide keyboard users with functionality 
+	that is equivalent to what is available to mouse users.
+	</p>
+	<p>
+	For example, if the <code>&lt;canvas&gt;</code> has several "hit regions"
+	or "clickable areas", buttons could be provided within the canvas fallback content
+	that will perform a similar function as the hit regions. 
+	(As always any such controls should be properly named and described).
+	</p>
+	<p>
+	To provide visual indication of focus when
+	a fallback control receives focus, 
+	a focus event should be added to the fallback control
+	which highlights the hit region with which it associates.
+	</p>
+	<p>
+	It is acceptable if the keyboard functionality that mimics mouse
+	functionality exists outside of the <code>&lt;canvas&gt;</code> element
+	or even exists outside this page.
+	However, users should be informed about any alternatives.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-canvas_has_focusable_fallback" id='canvas_has_focusable_fallback'>
+	<h2 id="lby-canvas_has_focusable_fallback">Alert: Canvas Has Focusable Fallback</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> &lt;canvas&gt; element has focusable fallback content; Test for keyboard equivalency to mouse functionality.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	A <code>&lt;canvas&gt;</code> element was found that has focusable elements within the fallback content.
+	Some additional, manual testing is needed.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A <code>&lt;canvas&gt;</code> by default is not keyboard accessible.
+	When a <code>&lt;canvas&gt;</code> element is interactive,
+	javascript is used to control mouse click and hover events.
+	Users who primarily rely on a keyboard for navigation cannot interact with 
+	a <code>&lt;canvas&gt;</code> element unless keyboard accessible elements 
+	and event handling are provided.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	This particular canvas has some focusable fallback content, which is good.
+	However, some manual testing needs to be done to determine 
+	if any important mouse accessible functionality has a 
+	keyboard accessible alternative.
+	</p>
+	<p>
+	If the <code>&lt;canvas&gt;</code> is interactive using a mouse, then
+	the <code>&lt;canvas&gt;</code> should include keyboard-focusable (tabbable) elements 
+	within the "fallback" content which will provide keyboard users with functionality 
+	that is equivalent to what is available to mouse users.
+	</p>
+	<p>
+	For example, if the <code>&lt;canvas&gt;</code> has several "hit regions"
+	or "clickable areas", buttons could be provided within the canvas fallback content
+	that will perform a similar function as the hit regions. 
+	(As always any such controls should be properly named and described).
+	</p>
+	<p>
+	To provide visual indication of focus when
+	a fallback control receives focus, 
+	a focus event should be added to the fallback control
+	which highlights the hit region with which it associates.
+	</p>
+	<p>
+	It is acceptable if the keyboard functionality that mimics mouse
+	functionality exists outside of the <code>&lt;canvas&gt;</code> element
+	or even exists outside this page.
+	However, users should be informed about any alternatives.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-empty_header_cell" id='empty_header_cell'>
+	
+	<h2 id="lby-empty_header_cell">Alert: Empty &lt;th&gt; Cell.</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Empty &lt;th&gt; cell.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This cell is a <code>&lt;th&gt;</code> and it is empty (has no Namer).</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>A screen reader will not read anything for this header since it is empty.</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Add text to categorize the purpose of the column or row. Table header cells should not be empty.
+	</p>
+	<h3>Exclusions</h3>
+	<p>
+	With some table designs it is acceptable for a header cell to be empty. 
+	For example, when it is at the intersection of a row of headers and a column of headers.
+	This alert will not be thrown for header cells at the upper left position of a table.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-live_region_empty" id='live_region_empty'>
+	
+	<h2 id="lby-live_region_empty">Alert: Empty Live Region.</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Live region has no innerText content.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element has been designated as a live region, but its contents are empty (no innerHTML).</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Because screen readers only monitor a live region's contents for changes,
+	a screen reader will not presently announce anything for this live region.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	This may not be an issue if the live region is supposed to be empty at a given moment.
+	When the live region is dynamically updated with content changes, 
+	refresh ANDI and check the output. If the output still has this alert,
+	it is likely that the live region is not being used properly.
+	Screen readers do not monitor a live region's HTML attributes for changes.
+	For example, if the live region's <code>aria-label</code> value is dynamically changing,
+	a screen reader automatically speak the changes.
+	Ensure that dynamic content changes to the live region are occuring within
+	the innerHTML of the live region.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-image_alt_not_used" id='image_alt_not_used'>
+	
+	<h2 id="lby-image_alt_not_used">Alert: Image Alt Not Used</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Image is presentational; its [alt] will not be used in output.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This image has been declared presentational/decorative using 
+	<code>role=presentation</code> or <code>role=none</code> 
+	but it has a non-empty <code>alt</code> attribute.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader will not speak the <code>alt</code> text since it 
+	sees the image as presentational or decorative.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	If the image is truly decorative (non-meaningful) ensure that the output relating to this image
+	is as expected.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-character_length" id='character_length'>
+	
+	<h2 id="lby-character_length">Alert: Attribute Length Exceeds Character Limit</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [%%%] attribute length exceeds 250 characters; consider condensing.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>This element's 
+	<code>title</code>,
+	<code>alt</code>, or 
+	<code>aria-label</code>
+	attribute value has a length that exceeds 250 characters.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	An accessible name should be a concise identifier of an element.
+	A screen reader has no way of skipping through sections of long accessible names.
+	Shortening the accessible name will help with efficient page navigation using
+	a screen reader.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	If a long amount of text is needed, shorten the accessible name and use the 
+	<code>aria-describedby</code> attribute. The <code>aria-describedby</code> provides a 
+	screen reader user a way to make a selection to hear more information about
+	an element.
+	</p>
+	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ambiguous_link" id='ambiguous_link'>
+	
+	<h2 id="lby-ambiguous_link">Alert: Ambiguous Link</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Ambiguous Link: same name/description as another link but different href.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This link shares an identical accessible name and accessible description as another link on the page, but the
+	hrefs are different.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Ambiguous links are a potential problem for all users, not just users of assistive technologies (screen readers).
+	Because of this ambiguity (the name/description of the links are the same, but the destinations are different)
+	a user may to navigate to an unintended location.
+	</p>
+	<p>
+	
+	Moreover, screen reader users have the capability to bring up a list of links by which 
+	they can efficiently navigate.
+	If the links in such a list are not unique and "self-defining",
+	then the accessibility of the page is affected.
+	</p>
+			
+	<h3>What should be done?</h3>
+	<p>
+	If the hrefs are different, the accessible name and accessible description of each link should be uniquely identified.
+	Note that, if the hrefs are identical, the link names/descriptions can be the same or different.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-vague_link" id='vague_link'>
+	
+	<h2 id="lby-vague_link">Alert: Vague Link Text</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Link text is vague and does not identify its purpose.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	The accessible name and description of this link is vague and does not provide a meaningful context.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A person who is visually impaired may not be able to determine the full purpose of this link
+	without seeking out its context in relation to nearby elements on the page.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Provide a meaningful accessible name/description for this link.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-link_click_no_keyboard_access" id='link_click_no_keyboard_access'>
+	
+	<h2 id="lby-link_click_no_keyboard_access">Alert: Link Click But No Keyboard Access</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Link has click event but not keyboard accessible.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This link does not have an <code>href</code> or <code>tabindex</code> and a javascript click event was detected.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This link performs some function but is not in the tab order.
+	It may not be accessible to users who navigate using a keyboard.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that the ANDI Output is appropriate.
+	</p>
+	<p>
+	Close <span class="brand">ANDI</span> and
+	test whether the link can be accessed using the tab key, shift+tab keys,
+	arrow keys or other documented keys.
+	</p>
+	<p>
+	For a link to be in the keyboard tab order add
+	an <code>href="#"</code>, or <code>href="javascript:void(0)"</code>, 
+	or <code>tabindex="0"</code>.
+	</p>
+	<p>
+	If an <code>href</code> is not being used it may be necessary to add 
+	<code>role="link"</code> to the <code>&lt;a&gt;</code> element so that a screen reader 
+	will recognize the element as a link and include it in its Links List functionality.
+	</p>
+	
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-not_recognized_as_link" id='not_recognized_as_link'>
+	
+	<h2 id="lby-not_recognized_as_link">Alert: Not Recognized As Link</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> &lt;a&gt; without [href] may not be recognized as a link; add [role=link] or [href].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This <code>&lt;a&gt;</code> element has a <code>tabindex</code>
+	but it does not have an <code>href</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader may not identify this element as a link
+	and the user may not know that the element is actionable.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Does this element function like a link?
+	Click on it using a mouse.
+	Navigate to it using the keyboard and press the enter key.
+	</p>
+	<p>
+	If the element performs a function, add <code>role="link"</code> to the element or add an <code>href</code>.
+	Doing so will ensure that the screen reader will identify the element as a link.
+	</p>
+	<p>
+	NOTE: If the element appears and operates like a button, add <code>role="button"</code>
+	and ensure that the element can be pressed using the space bar key.
+	</p>
+	<p>
+	If this element does not perform a function when clicked, this element might be an
+	anchor target, in which case, disregard this alert.
+	</p>
+	
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-anchor_purpose_unclear" id='anchor_purpose_unclear'>
+	
+	<h2 id="lby-anchor_purpose_unclear">Alert: Possible Inaccessible Link</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Possible inaccessible link: &lt;a&gt; element has no [href], [id], or [tabindex].</li>
+	</ul>
+	<br />
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Possible inaccessible link: &lt;a&gt; element has no [href], or [tabindex].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	The use of the <code>&lt;a&gt;</code> tag for this element is unclear.
+	This <code>&lt;a&gt;</code> element is not in the tab order (no <code>href</code> or <code>tabindex</code>).
+	It might have no <code>id</code> or deprecated <code>name</code> attribute (which would indicate that it is an anchor target).
+	And ANDI could not detect a javascript click event.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This element is missing some important components 
+	which would allow it to be accessible 
+	to users who use the keyboard to navigate.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	This element is suspect to accessibility issues.
+	Use a mouse to click on the link and observe any functionality.
+	Any functionality should be able to be performed using only a keyboard.
+	</p>
+	<p>
+	Generally, links using the <code>&lt;a&gt;</code> tag should have an <code>href</code>
+	or <code>tabindex="0"</code> and <code>role="link"</code>.
+	</p>
+	<p>
+	If this <code>&lt;a&gt;</code> element is being used as a anchor target for another link
+	or control, use the <code>id</code> attribute.
+	</p>
+	<p>
+	Use <span class="brand">ANDI</span> to test the Output of the link or anchor target.
+	Close <span class="brand">ANDI</span> and ensure that the element is focusable
+	and there is a visual indication when the element receives focus.
+	</p>
+	<p>
+	If this element does not function as a link or anchor target,
+	do not use the <code>&lt;a&gt;</code> tag for this element; use a different tag name.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-is_anchor_target" id='is_anchor_target'>
+	
+	<h2 id="lby-is_anchor_target">Alert: Is Anchor Target</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> This &lt;a&gt; element is an anchor target; If clicking performs a function, it's not keyboard accessible.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This <code>&lt;a&gt;</code> element is the target of another link's <code>href</code>
+	and the element does not have an <code>href</code> or <code>tabindex</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This would only be an accessibility concern if 
+	clicking this link performs a function.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Close <span class="brand">ANDI</span> and use a mouse to
+	click on the element. Observe whether it performs a function.
+	Using only a keyboard, try to access the element and perform the function.
+	</p>
+	<p>
+	If clicking does not perform a function,
+	there are no keyboard accessibility issues with the element.
+	Otherwise, to make the link keyboard accessible 
+	add an <code>href</code> or <code>tabindex="0"</code> and <code>role="link"</code>.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-marquee_found" id='marquee_found'>
+	
+	<h2 id="lby-marquee_found">Alert: Marquee Found</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> &lt;marquee&gt; element found, do not use.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element is a <code>&lt;marquee&gt;</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This element can trigger seizures in some individuals when the content is large.
+	In addition the constantly moving text within a <code>&lt;marquee&gt;</code> element 
+	can be difficult to read for people with low vision 
+	or who have cognition disorders like dyslexia.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Do not use the <code>&lt;marquee&gt;</code> tag and do not allow any text to constantly move or scroll on the page.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-blink_found" id='blink_found'>
+	
+	<h2 id="lby-blink_found">Alert: Blink Found</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> &lt;blink&gt; element found, do not use.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element is a <code>&lt;blink&gt;</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This element can trigger seizures in some individuals when the content is large.
+	In addition, the blinking/flashing text within a <code>&lt;blink&gt;</code> element 
+	can be difficult to read for people with low vision 
+	or who have cognition disorders like dyslexia.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Do not use the <code>&lt;blink&gt;</code> tag and do not allow any text to repeatedly blink or flash on the page.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-server_side_image_map" id='server_side_image_map'>
+	
+	<h2 id="lby-server_side_image_map">Alert: Server Side Image Map</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Server side image map found.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element contains a sever side image map.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Server side image maps cannot be navigated by screen reader users and keyboard-only users.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Do not use server side image maps. Client side image maps are acceptable but must be made accessible 
+	by adding <code>alt</code> attributes to the <code>&lt;area&gt;</code> tags.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-image_alt_not_descriptive" id='image_alt_not_descriptive'>
+	
+	<h2 id="lby-image_alt_not_descriptive">Alert: Image Alt Not Descriptive</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Image [alt] text is not descriptive.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This image has <code>alt</code> text that does not provide an equivalent text description conveying the purpose 
+	and/or function of the image.
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If the image does not have a text alternative description that contains a meaningful representation of the image,
+	then the image is not accessible to a person who is blind or visually impaired and uses a screen reader.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	The image alt text or other Namer/Describer should provide a text alternative or brief description of the image.
+	</p>
+	<p>
+	Alternatively,
+	if the image is purely decorative and does not require an explanation,
+	add <code>role=presentation</code> to the image or set the alt value to an empty string <code>alt=""</code>.
+	Doing so will ensure that the screen reader does not try to describe the image.
+	</p>
+
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-area_not_in_map" id='area_not_in_map'>
+	
+	<h2 id="lby-area_not_in_map">Alert: Area Not In Map</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> &lt;area&gt; not contained in &lt;map&gt;.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	<span class='brand'>ANDI</span> has found an an image map element, (<code>&lt;area&gt;</code>),
+	that is not contained within a <code>&lt;map&gt;</code> element.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	To create a proper client-side image map, <code>&lt;area&gt;</code> elements must be within a <code>&lt;map&gt;</code> element.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-image_alt_contains_file_name" id='image_alt_contains_file_name'>
+	
+	<h2 id="lby-image_alt_contains_file_name">Alert: Image Alt File Name</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Image [alt] text contains file name.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	The image alt text contains a file name such as ".jpg", ".gif", ".png".
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If the image does not have a text alternative description that contains a meaningful representation of the image,
+	then the image is not accessible to a person who is blind or visually impaired and uses a screen reader.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	The image alt text or other Namer/Describer should provide a text alternative or brief description of the image.
+	</p>
+	<p>
+	Alternatively,
+	if the image is purely decorative and does not require an explanation,
+	add <code>role=presentation</code> to the image or set the alt value to an empty string <code>alt=""</code>.
+	Doing so will ensure that the screen reader does not try to describe the image.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-image_alt_redundant_phrase" id='image_alt_redundant_phrase'>
+	
+	<h2 id="lby-image_alt_redundant_phrase">Alert: Image Alt Redundant Phrase</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Redundant phrase in image [alt] text.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	The image alt contains a redundant phrase such as "image of ...", "photo of ...".
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader will automatically announce the word "graphic"
+	when an <code>&lt;img&gt;</code> tag is being used, therefore, 
+	including the redundant phrase in the alt text increases verbosity.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Remove the redundant phrase from the <code>alt</code> value.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ensure_bg_images_decorative" id='ensure_bg_images_decorative'>
+	
+	<h2 id="lby-ensure_bg_images_decorative">Alert: Ensure Background Images Are Decorative</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Ensure that background images are decorative.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	<span class='brand'>ANDI</span> has found at least one element that contains a CSS <code>background-image</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If the background image is not decorative or contains important information, a person who is visually impaired
+	may miss important information if the image does not have a text description or text equivalent 
+	somewhere on the page.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that all non-decorative background images have a text alternative description somewhere on the page.
+	</p>
+	</div>
+	</section>
+	
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ariahidden" id='ariahidden'>
+	
+	<h2 id="lby-ariahidden">Alert: Element has Aria-hidden</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element is hidden from screen reader using [aria-hidden=true].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has been hidden from a screen reader using <code>aria-hidden="true"</code>.
+	The element may be a child of another element with <code>aria-hidden="true"</code>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If the element is interactive, it should be recognized by the screen reader.
+	When an element has  <code>aria-hidden="true"</code>
+	or is a child of an element with  <code>aria-hidden="true"</code>,
+	the screen reader will ignore the element.</p>
+	<h3>What should be done?</h3>
+	<p>
+	<code>aria-hidden="true"</code> is meant to be used in rare situations 
+	where a screen reader should ignore visual elements.
+	</p>
+	<p>
+	Focusable elements should not be ignored and, therefore, 
+	should not have <code>aria-hidden="true"</code>
+	and should not have an anscestor element with <code>aria-hidden="true"</code>.
+	</p>
+	<p>
+	If the element should be hidden from the screen reader 
+	because the visual information is communicated by alternate means,
+	then the <code>aria-hidden="true"</code> element should not be tabbable.
+	<code>tabindex="-1"</code> will remove an element from the tab order.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-live_region_form_element" id='live_region_form_element'>
+	<h2 id="lby-live_region_form_element">Alert: Live Region Form Element</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Live Region contains a form element.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	There is a "live region" on this page (<code>aria-live</code>) 
+	that contains a form element.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Screen readers monitor live regions and will speak changes 
+	whenever the content of the live region changes.
+	</p>
+	<p>
+	If a form element is contained within the live region,
+	the screen reader will be reading out the live region contents 
+	when the form element changes causing confusion and verbosity 
+	for screen reader users.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Remove form elements from the live region 
+	or move the <code>aria-live</code> to another element.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-live_region_not_container" id='live_region_not_container'>
+	<h2 id="lby-live_region_not_container">Alert: Live Region Not Container</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> A live region can only be a container element.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element is not a container element (cannot contain text or other elements)
+	and it is designated as a "live region" (<code>aria-live</code>).
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Screen readers monitor live regions and will speak changes 
+	whenever the content of the live region changes.
+	Since this element is not a container element and therefore has no contents,
+	the design will not work as expected. i.e. screen readers will not recognize 
+	changes to this live region.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Only container elements (such as a <code>&lt;div&gt;</code>)
+	can be designated as live regions. Changes to the contents (innerText) of the
+	live region will trigger the screen reader to speak the changed content.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-role_image_invalid" id='role_image_invalid'>
+	<h2 id="lby-role_image_invalid">Alert: Role=Image is Invalid</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [role=image] is invalid; Use [role=img].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has a <code>role</code> attribute with a value of <code>"image"</code>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	<code>"image"</code> is not a valid value for <code>role</code>.
+	A screen reader will not recognize this element as an image.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Change the value to <code>"img"</code>, as in <code>role="img"</code>
+	so that the screen reader will recognize the element as an image.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-non_list_role" id='non_list_role'>
+	<h2 id="lby-non_list_role">Alert: List Container Has Non-List Role</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> List item's container is not recognized as a list because it has [role=%%%].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This list element <code>&lt;li&gt;</code> is contained by a 
+	list container element <code>&lt;ol&gt;</code> or <code>&lt;ul&gt;</code>
+	but the list container has a role that changes its semantics to
+	something that is not a list container.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader will not recognize this as a list
+	because the semantics of the list container have been overridden with 
+	a <code>role</code> attribute.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Remove the <code>role</code> from the list container, 
+	or if it is necessary, move it to another containing element.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-arialevel_not_gt_zero_integar" id='arialevel_not_gt_zero_integar'>
+	
+	<h2 id="lby-arialevel_not_gt_zero_integar">Alert: Aria-Level not Greater Than Zero Integar</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [aria-level] is not a greater-than-zero integar; level 2 will be assumed.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	The <code>aria-level</code> attribute is not greater than zero and/or is not an integar.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	When the <code>aria-level</code> on a <code>role="heading"</code> element is not a greater than zero integar,
+	a screen reader will default the heading level to level 2.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that the <code>aria-level</code> value is valid
+	and is an appropriate level for it's location on the page.
+	</p>
+	</div>
+	</section>
+	
+</div>
+
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-non_unique_button" id='non_unique_button'>
+	
+	<h2 id="lby-non_unique_button">Alert: Non-Unique Button</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Non-unique button: same name/description as another button.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This button has the same accessible name and description as another button.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If these buttons perform different functions or use a different set of data, 
+	then they each need to be uniquely identified.
+	A person who is visually impaired may not be aware of the button's context (its location on the page).
+	If two or more buttons have the same accessible name and description, then functionality should also be the same
+	no matter which buttons is pressed. 
+	</p>
+	<p>
+	For example, consider a data table with buttons labeled "Delete" on every row.
+	An identifying description about what is going to be deleted must be programmatically
+	associated with the button, otherwise a user may delete the wrong item.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	If the buttons perform a different function or use a different set of data, either rename the buttons
+	or attach a unique description to the button using the
+	<code>aria-describedby</code> or <code>title</code> attributes.
+	Otherwise, if the buttons are truly identical and perform the same function 
+	using the same data, no change is required.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-not_semantic_heading" id='not_semantic_heading'>
+	
+	<h2 id="lby-not_semantic_heading">Alert: Not Using Semantic Heading Markup</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Element visually conveys heading meaning but not using semantic heading markup. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element appears to be a false heading.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Headings (text that is concise, has a large font size or bold font weight)
+	provide a way to visually organize and categorize sections of a page.
+	Users of assitive technology are able to quickly navigate web pages when headings exist on a page.
+	However, headings must be coded properly using semantic heading tags 
+	(<code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>)
+	in order for users of AT to navigate.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Convert this false heading, and any others on the page, into one of the semantic heading tags:
+	<code>&lt;h1&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;h4&gt;, &lt;h5&gt;, &lt;h6&gt;</code>.
+	</p>
+	</div>
+	</section>
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-conflicting_heading_level" id='conflicting_heading_level'>
+	
+	<h2 id="lby-conflicting_heading_level">Alert: Conflicting Heading Level</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Heading element level &lt;h#&gt; conflicts with [aria-level=%%%]. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This heading element's heading level implied by its tag name,
+	(<code>&lt;h1&gt;</code> - <code>&lt;h6&gt;</code>)
+	does not match the numeric <code>aria-level</code> value.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	The intended heading level may not be communicated to users of assitive technology.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Always ensure that the heading level used is the proper 
+	heading level in relation to the content and other headings on the page.
+	When <code>role="heading"</code> is used, the 
+	<code>aria-level</code> will supercede the heading level from the tag name.
+	Therefore, either:
+	</p>
+		<div class="example">
+			<ul>
+				<li>
+				Only use native semantics: Remove <code>role="heading"</code> 
+				and the <code>aria-level</code> from the element
+				which will result in the level of the heading tag chosen.
+				Doing so will resolve this alert.
+				</li>
+				<li>
+				Use a generic element like <code>&lt;div&gt;</code> with
+				<code>role="heading"</code> and the <code>aria-level</code>
+				instead of an <code>&lt;h1&gt;</code> - <code>&lt;h6&gt;</code> heading element.
+				Doing so will resolve this alert.
+				</li>
+				<li>
+				Disregard this alert and know that the <code>aria-level</code> supercedes the tag name's heading level.
+				</li>
+			</ul>
+		</div>
+	<p>
+	As a best practice, stick with native semantics instead of ARIA whenever possible.
+	</p>
+	</div>
+	</section>
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-role_heading_no_arialevel" id='role_heading_no_arialevel'>
+	
+	<h2 id="lby-role_heading_no_arialevel">Alert: Heading Role No Aria-Level</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [role=heading] used without [aria-level]; level 2 will be assumed.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element was defined as a heading using <code>role="heading"</code> 
+	but it was not given a heading level using <code>aria-level</code>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader will assume the heading level to be level 2 since 2 is the <a href="http://www.w3.org/TR/core-aam-1.1/#document-handling_author-errors">default aria-level</a>.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Use semantic HTML headings (<code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>, <code>&lt;h4&gt;</code>, <code>&lt;h5&gt;</code>, <code>&lt;h6&gt;</code>)
+	instead of <code>role="heading"</code> 
+	or add the <code>aria-level</code> attribute to the element and assign it a positive numeric value.
+	</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-label_clickable_area" id='label_clickable_area'>
+	
+	<h2 id="lby-label_clickable_area">Alert: Label Would Increase Clickable Area</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> An associated &lt;label&gt; would increase the clickable area of this element. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This radio button or checkbox does not have an associated <code>&lt;label&gt;</code> and 
+	the size of the radio button or checkbox is less than 21px by 21px.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	People with motor disabilities who can used a mouse may have trouble clicking on a small target less than 21px by 21px.
+	Note: This size limit (21px by 21px) is arbitrarily determined and not an official WCAG requirement.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	<a href="developerguide.html#label">Adding an associated <code>&lt;label&gt;</code></a> to a radio button or checkbox allows a mouse user 
+	to click on the label to select the radio button or checkbox. This increases the size of the clickable area.
+	An associated <code>&lt;label&gt;</code> is also a standard way of providing an accessible name for a radio button or checkbox.
+	</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-pseudo_before_after" id='pseudo_before_after'>
+	
+	<h2 id="lby-pseudo_before_after">Alert: Content injected using CSS</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Content has been injected using CSS pseudo-elements ::before or ::after. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This page has content injected using the CSS pseudo-elements ::before or ::after.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Depending on the browser being used, Content injected using this technique may not recognized by screen readers, 
+	therefore, the text may not be communicated to individuals using assistive technologies.
+	Specifically, in Internet Explorer screen readers will not detect recognize CSS pseudo-element content.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	If the content is meaningful or important, it should be made apparent to a blind individual using a screen reader.
+	</p>
+	<p>
+	If the meaning of the injected content is available elsewhere on the page, no change is needed.
+	Otherwise, remediation options are as follows:
+	</p>
+	<div class="example">
+		<ul>
+		<li>Abandon the CSS content injection technique and place text directly on the screen or use inline images.</li>
+		<li>Properly <a href="developerguide.html#NamingAndDescribing">name and describe</a> elements with which the injected css content associates.</li>
+		</ul>
+	</div>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-manual_contrast_test_bgimage" id='manual_contrast_test_bgimage'>
+	
+	<h2 id="lby-manual_contrast_test_bgimage">Alert: Element Has Background Image</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Element has background-image; Perform a manual contrast test. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element is "on top of" a background-image, therefore, the contrast ratio cannot be automatically determined.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Informational text should have a contrast ratio that allows the text to be readable by people with moderately low vision.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Perform a manual contrast ratio test by selecting the primary color of the background image
+	and the primary foreground color of the text using a color selector tool (<a href="https://github.com/ThePacielloGroup/CCAe">Colour Contrast Analyser Installation</a>).
+	</p>
+	<p>
+	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">WCAG AA Contrast Ratio requirement</a> is as follows:
+	</p>
+	<div class="example">
+		<ul>
+		<li>For Large Text (font-size of 18pt or font-size of 14pt and bold) a contrast ratio of at least 3:1</li>
+		<li>Otherwise a contrast ratio of at least 4.5:1</li>
+		<li>Logo or brand name text does not have to meet a contrast ratio requirement.</li>
+		</ul>
+	</div>
+	</div>
+	</section>
+
+
+	<section tabindex="0" aria-labelledby="lby-manual_contrast_test_img" id='manual_contrast_test_img'>
+	
+	<h2 id="lby-manual_contrast_test_img">Alert: If Images Contain Text</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Page has images; If images contain text; Perform a manual contrast test. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	The page contains inline images (<code>&lt;img&gt;</code>, <code>&lt;input[type='image']&gt;</code>, or <code>&lt;svg&gt;</code>).
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If an image contains informational text, that text should have a contrast ratio that allows the text to be readable by people with moderately low vision.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	If the images on this page contain informational text,
+	perform a manual contrast ratio test by selecting the primary background color
+	and the primary foreground color of the text using a color selector tool (<a href="https://github.com/ThePacielloGroup/CCAe">Colour Contrast Analyser Installation</a>).
+	</p>
+	<p>
+	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">WCAG AA Contrast Ratio requirement</a> is as follows:
+	</p>
+	<div class="example">
+		<ul>
+		<li>For Large Text (font-size of 18pt or font-size of 14pt and bold) a contrast ratio of at least 3:1</li>
+		<li>Otherwise a contrast ratio of at least 4.5:1</li>
+		<li>Logo or brand name text does not have to meet a contrast ratio requirement.</li>
+		</ul>
+	</div>
+	</div>
+	</section>
+	
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-manual_contrast_test_opacity" id='manual_contrast_test_opacity'>
+	
+	<h2 id="lby-manual_contrast_test_opacity">Alert: Element Has Background Image</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Opacity Less Than 100%; Perform a manual contrast test. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has a CSS property <code>opacity</code> with a value that is less than 1, thus making it semi-transparent.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	By reducing the opacity value to less than one, the element's foreground color and background color is affected and
+	will lower the contrast ratio. Informational text should have a contrast ratio that allows the text to be readable by people with moderately low vision.
+	</p>
+	<h3>Is this really an issue? (disabled elements)</h3>
+	<p>
+	Sometimes developers use CSS opacity to make an element appear disabled.
+	Disabled elements do not need to be included in a contrast test, 
+	but it is up to the tester to determine if the element is in a disabled state.
+	Moreover, to communicate to a screen reader user that an element is disabled,
+	the element should have <code>aria-disabled="true"</code>.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	If the text is not in a disabled state,
+	perform a manual contrast ratio test by selecting the primary color of the background image
+	and the primary foreground color of the text using a color selector tool (<a href="https://github.com/ThePacielloGroup/CCAe">Colour Contrast Analyser Installation</a>).
+	</p>
+	<p>
+	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">WCAG AA Contrast Ratio requirement</a> is as follows:
+	</p>
+	<div class="example">
+		<ul>
+		<li>For Large Text (font-size of 18pt or font-size of 14pt and bold) a contrast ratio of at least 3:1</li>
+		<li>Otherwise a contrast ratio of at least 4.5:1</li>
+		<li>Logo or brand name text does not have to meet a contrast ratio requirement.</li>
+		</ul>
+	</div>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-grid_navigation_test" id='grid_navigation_test'>
+	
+	<h2 id="lby-grid_navigation_test">Alert: Test Role=Grid Navigation</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> [role=grid] found; test navigation of design pattern.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	An element with <code>role="grid"</code> was detected on the page.
+	</p>
+	
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	When the grid receives focus, a screen reader will announce specific navigation instructions. 
+	Therefore, users have certain expectations on how a grid should operate.
+	</p>
+		
+	<h3>What should be done?</h3>
+	<p>
+	Developers should follow
+	<a href="https://www.w3.org/TR/wai-aria-practices/#grid">W3C WAI-ARIA Authoring Practices for Grids</a>.
+	</p>
+	
+	<p>
+	The developer must manage focus within the grid using JavaScript
+	and a tester should ensure that proper navigation has been implemented.
+	It is advisable to close <span class="brand">ANDI</span> while testing the navigation 
+	of the Grid, however, <span class="brand">ANDI</span> can be used to test the naming 
+	and describing (<span class="brand">ANDI</span> Output) of the elements within the grid.
+	</p>
+	
+	<p>
+	Summary of grid operation expectations:
+	</p>
+	<div class="example">
+		<ul>
+		<li>Only one element in the grid should be in the tab order at one time 
+			(roving tabindex concept).</li>
+		<li>All focusable elements in the grid should be navigable using the arrow keys.</li>
+		<li>Other key commands can be used to navigate the grid (e.g. Page Up, Page Down, Home, End)</li>
+		<li>If the grid contains interactive elements (such as form fields or buttons), 
+			focus should be sent to the interactive element and
+			not the gridcell that contains it.</li>
+		</ul>
+	</div>
+	
+	<p>
+	A properly implemented grid is an excellent, usable, accessible interface. 
+	A developer should have advanced knowledge of accessibility 
+	requirements and must implement the grid to the specifications of
+	the WAI ARIA Authoring Practices.
+	In many instances, native HTML data table markup using <code>&lt;table&gt;</code> structure
+	or <a href="https://www.w3.org/TR/wai-aria-practices/#table">ARIA role="table"</a>
+	structure should sufficiently meet the needs of the user.
+	</p>
+	
+	</div>
+	</section>
+</div>
+
+<div class="division">
+
+
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-min_contrast" id='min_contrast'>
+	
+	<h2 id="lby-min_contrast">Alert: Contrast ratio minimum requirement</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Text does not meet minimum requirement 4.5:1.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Text does not meet large text minimum requirement 3:1. </li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element does not provide enough contrast between the text and the background color.
+	In other words, the contrast ratio does not meet the minimum requirement. 
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Informational text should have a contrast ratio that allows the text to be readable by 
+	individuals with moderately low vision.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Adjust the text color and/or the background color of this element so that the contrast ratio is at or above the minimum required contrast ratio.
+	</p>
+	<p>
+	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">WCAG AA Contrast Ratio requirement</a> is as follows:
+	</p>
+		<div class="example">
+			<ul>
+			<li>For Large Text (font-size of 18pt or font-size of 14pt and bold) a contrast ratio of at least 3:1</li>
+			<li>Otherwise a contrast ratio of at least 4.5:1</li>
+			<li>Logo, brand name, and decorative text does not have to meet a contrast ratio requirement.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+</div>
+
+<footer>
+<a href='#skipnav'>Back To Top</a>
+<a href="/privacy/" class="privacy">Privacy</a>
+</footer>
+</main>
+</body>
+</html>
