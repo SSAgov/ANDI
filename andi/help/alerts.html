@@ -3432,40 +3432,40 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<div class='details'>
 	<ul class='message danger'>
 	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element is hidden from screen reader using [aria-hidden=true] resulting in no output.</li>
+	</ul>
+	<ul class='message warning'>
 	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Element is hidden from screen reader using [aria-hidden=true] resulting in no output.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
 	<p>
 	This element has been hidden from a screen reader using <code>aria-hidden="true"</code>.
-	Note: The element may be a child of another element with <code>aria-hidden="true"</code>.
+	Note: The element may be contained by (an anscestor of) an element with <code>aria-hidden="true"</code>.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	If the element is interactive or a sole source of meaningful information,
+	If the element is interactive or the sole source of meaningful information,
 	it should be recognized by a screen reader so that a user with a vision disability
 	can interact with the element or access its meaning.
-	<p>
 	</p>
-	When an element has  <code>aria-hidden="true"</code>
-	or is a child of an element with <code>aria-hidden="true"</code>,
-	the screen reader will ignore the element.</p>
+	<p>
+	When an element is denoted as <code>aria-hidden="true"</code>
+	the screen reader will entirely ignore the element.
+	</p>
 	<h3>What should be done?</h3>
 	<p>
-	<code>aria-hidden="true"</code> is meant to be used in specific situations 
-	where a screen reader user can safely ignore visual elements or interactive elements.
-	It's okay to use <code>aria-hidden="true"</code> 
-	when:
+	<code>aria-hidden="true"</code> is meant to be used in specific situations. 
+	It's okay to use <code>aria-hidden="true"</code> when:
 	<div class="example">
 		<ul>
-			<li>the visual information is decorative only (not meanigful), </li>
-			<li>the meaningful visual information is communicated elsewhere, or</li>
-			<li>the interactive control has an accessible alternative interface elsewhere</li>
+			<li>The element contains visual information that is decorative only (not meanigful), </li>
+			<li>The element contains meaningful visual information that is communicated to screen reader users elsewhere on the page, or</li>
+			<li>The element is an interactive control that can only be controlled with a mouse and and there exists a keyboard accessible alternative to perform the functionality</li>
 		</ul>
 	</div>
 	</p>
 	<p>
-	It is rare that focusable elements can be ignored.
+	It is rare that focusable elements should have <code>aria-hidden="true"</code>.
 	Most likely, if an element is focusable it 
 	should not have <code>aria-hidden="true"</code>
 	and should not have an anscestor element with <code>aria-hidden="true"</code>.
@@ -3477,7 +3477,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	and will hide the element from screen reader users.
 	</p>
 	<p>
-	One example where <code>aria-hidden="true"</code> is acceptable
+	One example where <code>aria-hidden="true"</code> usage is acceptable and common
 	is in the case of modal dialogs.
 	When the modal is open, the "grayed-out background" should not be accessible to any user.
 	This inaccessible content may have <code>aria-hidden="true"</code> to complement the 
