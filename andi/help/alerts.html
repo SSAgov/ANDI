@@ -174,7 +174,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</ul>
 	<h3 tabindex="0">Improper ARIA Usage</h3>
 	<ul>
-		<li class='danger'><a href="#ariahidden">Element has Aria-hidden</a></li>
 		<li class='danger'><a href="#live_region_form_element">Form Element in Live Region</a></li>
 		<li class='danger'><a href="#live_region_not_container">Live Region not Container</a></li>
 		<li class='danger'><a href="#role_image_invalid">Role=image is Invalid</a></li>
@@ -209,6 +208,10 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3 tabindex="0">Contrast Alerts</h3>
 	<ul>
 		<li class='danger'><a href="#min_contrast">Contrast ratio minimum requirement</a></li>
+	</ul>
+	<h3 tabindex="0">Aria-hidden Alerts</h3>
+	<ul>
+		<li class='danger'><a href="#ariahidden">Element has Aria-hidden</a></li>
 	</ul>
 </nav>
 
@@ -2011,21 +2014,31 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-not_in_tab_order">Alert: Focusable Element Not In Tab Order</h2>
 	<div class='details'>
 	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element not in keyboard tab order.</li>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element not in keyboard tab order; should it be tabbable?</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
-	<p>This element has a <code>tabindex</code> value that is negative.</p>
+	<p>
+	This element has a <code>tabindex</code> value that is negative.
+	A negative tabindex is not always an accessibility issue, 
+	but you'll need to do some manual inspection of this element.
+	</p>
 
 	<h3>Why is this an accessibility concern?</h3>
-	<p>Elements with negative <code>tabindex</code> values cannot achieve focus 
-	using the keyboard's tab key.
-	However, focus may be moved to such elements programmatically using JavaScript.</p>
+	<p>
+	Elements with negative <code>tabindex</code> values 
+	cannot receive focus using the keyboard's tab key. 
+	Users who cannot use a mouse due to a disability and users who prefer a keyboard 
+	use the tab key as a primary means of navigation.
+	Keyboard users may not be able to access elements which are not in the tab order.
+	</p>
 
 	<h3>What should be done?</h3>
-	<p>Verify that this element should not be in the tab order. 
-	Also ensure that related functionality is not restricted to mouse use only.
-	If the element should be in the tab order, then change the tabindex value to zero (<code>tabindex="0"</code>).
+	<p>
+	Some manual inpsection of the element is needed.
+	Test for keyboard operability.
+	Ensure that the functionality of this element is not restricted to mouse users only.
+	If the element should be in the tab order, an easy way to do so is to change the tabindex value to zero (<code>tabindex="0"</code>).
 	</p>
 	<a href="developerguide.html#tabindex">more info about tabindex</a>
 	</div>
@@ -2829,45 +2842,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 </div>
 <div class="division">
 
-
-	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-ariahidden" id='ariahidden'>
-	
-	<h2 id="lby-ariahidden">Alert: Element has Aria-hidden</h2>
-	<div class='details'>
-	<ul class='message danger'>
-	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element is hidden from screen reader using [aria-hidden=true].</li>
-	</ul>
-	<br />
-	<h3>Why did ANDI alert this?</h3>
-	<p>
-	This element has been hidden from a screen reader using <code>aria-hidden="true"</code>.
-	The element may be a child of another element with <code>aria-hidden="true"</code>.
-	</p>
-	<h3>Why is this an accessibility concern?</h3>
-	<p>
-	If the element is interactive, it should be recognized by the screen reader.
-	When an element has  <code>aria-hidden="true"</code>
-	or is a child of an element with  <code>aria-hidden="true"</code>,
-	the screen reader will ignore the element.</p>
-	<h3>What should be done?</h3>
-	<p>
-	<code>aria-hidden="true"</code> is meant to be used in rare situations 
-	where a screen reader should ignore visual elements.
-	</p>
-	<p>
-	Focusable elements should not be ignored and, therefore, 
-	should not have <code>aria-hidden="true"</code>
-	and should not have an anscestor element with <code>aria-hidden="true"</code>.
-	</p>
-	<p>
-	If the element should be hidden from the screen reader 
-	because the visual information is communicated by alternate means,
-	then the <code>aria-hidden="true"</code> element should not be tabbable.
-	<code>tabindex="-1"</code> will remove an element from the tab order.
-	</p>
-	</div>
-	</section>
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-live_region_form_element" id='live_region_form_element'>
 	<h2 id="lby-live_region_form_element">Alert: Live Region Form Element</h2>
@@ -3009,7 +2983,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 </div>
 
 <div class="division">
-
 
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-non_unique_button" id='non_unique_button'>
@@ -3413,7 +3386,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 
 <div class="division">
 
-
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-min_contrast" id='min_contrast'>
 	
@@ -3448,6 +3420,69 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 			<li>Logo, brand name, and decorative text does not have to meet a contrast ratio requirement.</li>
 			</ul>
 		</div>
+	</div>
+	</section>
+</div>
+
+<div class="division">
+<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-ariahidden" id='ariahidden'>
+	
+	<h2 id="lby-ariahidden">Alert: Element has Aria-hidden</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element is hidden from screen reader using [aria-hidden=true] resulting in no output.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Element is hidden from screen reader using [aria-hidden=true] resulting in no output.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has been hidden from a screen reader using <code>aria-hidden="true"</code>.
+	Note: The element may be a child of another element with <code>aria-hidden="true"</code>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If the element is interactive or a sole source of meaningful information,
+	it should be recognized by a screen reader so that a user with a vision disability
+	can interact with the element or access its meaning.
+	<p>
+	</p>
+	When an element has  <code>aria-hidden="true"</code>
+	or is a child of an element with <code>aria-hidden="true"</code>,
+	the screen reader will ignore the element.</p>
+	<h3>What should be done?</h3>
+	<p>
+	<code>aria-hidden="true"</code> is meant to be used in specific situations 
+	where a screen reader user can safely ignore visual elements or interactive elements.
+	It's okay to use <code>aria-hidden="true"</code> 
+	when:
+	<div class="example">
+		<ul>
+			<li>the visual information is decorative only (not meanigful), </li>
+			<li>the meaningful visual information is communicated elsewhere, or</li>
+			<li>the interactive control has an accessible alternative interface elsewhere</li>
+		</ul>
+	</div>
+	</p>
+	<p>
+	It is rare that focusable elements can be ignored.
+	Most likely, if an element is focusable it 
+	should not have <code>aria-hidden="true"</code>
+	and should not have an anscestor element with <code>aria-hidden="true"</code>.
+	</p>
+	<p>
+	If the element should not be used by all users,
+	hide the element using css <code>display:none</code>
+	which will remove the element from the screen 
+	and will hide the element from screen reader users.
+	</p>
+	<p>
+	One example where <code>aria-hidden="true"</code> is acceptable
+	is in the case of modal dialogs.
+	When the modal is open, the "grayed-out background" should not be accessible to any user.
+	This inaccessible content may have <code>aria-hidden="true"</code> to complement the 
+	"grayed out" visual cue.
+	</p>
 	</div>
 	</section>
 </div>

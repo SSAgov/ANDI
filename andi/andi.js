@@ -2,13 +2,15 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "26.3.1";
+var andiVersionNumber = "26.4.0";
 
 //==============//
 // ANDI CONFIG: //
 //==============//
 //URLs
-var host_url = "https://www.ssa.gov/accessibility/andi/";
+var host_url = "file://C:/WS/repos/github/SSAgov/ANDI/andi/";
+//var host_url = "http://asbstaff.ssahosttest.ba.ssa.gov/tools/andi/";
+//var host_url = "https://www.ssa.gov/accessibility/andi/";
 var help_url = host_url+"help/";
 var icons_url = host_url+"icons/";
 
@@ -436,8 +438,8 @@ var alert_0101 = new Alert("warning","10","Combining %%% may produce inconsisten
 
 var alert_0112 = new Alert("caution","11","JavaScript event %%% may cause keyboard accessibility issues; investigate.","#javascript_event_caution");
 
-var alert_0121 = new Alert("caution","12","Focusable element not in keyboard tab order.","#not_in_tab_order");
-var alert_0122 = new Alert("caution","12","Focusable element not in keyboard tab order and has no accessible name.","#not_in_tab_order_no_name");
+var alert_0121 = new Alert("caution","12","Focusable element is not in keyboard tab order; should it be tabbable?","#not_in_tab_order");
+var alert_0122 = new Alert("caution","12","Focusable element is not in keyboard tab order and has no accessible name; should it be tabbable?","#not_in_tab_order_no_name");
 var alert_0123 = new Alert("warning","12","Iframe contents are not in keyboard tab order because iframe has negative tabindex.","#iframe_contents_not_in_tab_order");
 var alert_0124 = new Alert("warning","12","If &lt;canvas&gt; element is interactive with mouse, it's not keyboard accessible because there is no focusable fallback content.","#canvas_not_keyboard_accessible");
 var alert_0125 = new Alert("warning","12","Element with [role=%%%] not in the keyboard tab order.","#role_tab_order");
@@ -470,7 +472,6 @@ var alert_0177 = new Alert("caution","17","Ensure that background images are dec
 var alert_0178 = new Alert("danger","17","&lt;area&gt; not contained in &lt;map&gt;.","#area_not_in_map");
 
 var alert_0180 = new Alert("warning","18","[aria-level] is not a greater-than-zero integar; level 2 will be assumed.","#arialevel_not_gt_zero_integar");
-var alert_0181 = new Alert("danger","18","Element is hidden from screen reader using [aria-hidden=true].","#ariahidden");
 var alert_0182 = new Alert("danger","18","Live Region contains a form element.","#live_region_form_element");
 var alert_0183 = new Alert("danger","18","[role=image] is invalid; Use [role=img].","#role_image_invalid");
 var alert_0184 = new Alert("danger","18","A live region can only be a container element.","#live_region_not_container");
@@ -498,6 +499,9 @@ var alert_0250 = new Alert("warning","25","Page has %%% disabled %%%; Disabled e
 var alert_0251 = new Alert("caution","25","Page has %%% disabled elements; Disabled elements do not require sufficient contrast.","#disabled_contrast",
 	new AlertButton("show disabled", "ANDI508-alertButton-disabledElementsOverlay", function(){andiOverlay.overlay_disabledElements(true);}, overlayIcon));
 
+var alert_0260 = new Alert("danger","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","#ariahidden");
+var alert_0261 = new Alert("warning","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","#ariahidden");
+	
 //==================//
 // DISPLAY HANDLING //
 //==================//
@@ -818,6 +822,7 @@ function AndiBar(){
 		var outputText = ""; //reset - this will hold the output text to be displayed
 		
 		if(!checkAlerts("dangers")){ //No dangers found during load
+
 			if(!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !$(element).is(":focusable"))){
 				
 				if(elementData.accGroup)
@@ -2122,8 +2127,7 @@ AndiData.grab_semantics = function(element, data){
 //==============================//
 AndiData.textAlternativeComputation = function(root){
 
-	//TODO: what if an ancestor is aria-hidden?
-	var isAriaHidden = ($(root).attr("aria-hidden") === "true") ? true : false;
+	var isAriaHidden = traverseAriaHidden(root);
 	var isNamed = false;
 	var isDescribed = false;
 	var component;
@@ -2133,6 +2137,18 @@ AndiData.textAlternativeComputation = function(root){
 	//check against this list to prevent infinite loops
 	var nodesTraversed;
 	var isCalcAccDesc = false;
+	
+	//This function recursively travels up the anscestor tree looking for aria-hidden=true.
+	//Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
+	//TODO: This is expensive
+	function traverseAriaHidden(element){
+		if($(element).is("#ANDI508-testPage"))
+			return false;
+		else if($(element).attr("aria-hidden") === "true")
+			return true;
+		else
+			return traverseAriaHidden($(element).parent());
+	}
 
 	function calcAccName(result){
 		if(!isNamed && result){
@@ -3130,24 +3146,22 @@ function AndiCheck(){
 
 	//This function is used to check for alerts related to focusable elements
 	this.commonFocusableElementChecks = function(andiData, element){
+		this.hasThisElementBeenHiddenFromScreenReader(element, andiData, true);
 		this.wasAccessibleNameFound(andiData);
 		this.areThereComponentsThatShouldntBeCombined(andiData);
-		//this.areAnyComponentsEmpty();
 		this.areThereAnyMisspelledAria(element);
 		this.areThereAnyDuplicateFors(element, andiData);
 		this.areThereAnyTroublesomeJavascriptEvents(element);
-		this.clickableAreaCheck(element,andiData);
-		this.hasThisElementBeenHiddenFromScreenReader(element);
+		this.clickableAreaCheck(element, andiData);
 	};
 	
 	//This function is used to check for alerts related to non-focusable elements
-	this.commonNonFocusableElementChecks = function(andiData, element, elementMustHaveName){
-		if(elementMustHaveName)
+	this.commonNonFocusableElementChecks = function(andiData, element, isElementMustHaveName){
+		this.hasThisElementBeenHiddenFromScreenReader(element, andiData);
+		if(isElementMustHaveName)
 			this.wasAccessibleNameFound(andiData);
 		this.areThereComponentsThatShouldntBeCombined(andiData);
-		//this.areAnyComponentsEmpty();
 		this.areThereAnyMisspelledAria(element);
-		this.hasThisElementBeenHiddenFromScreenReader(element);
 	};
 	
 	//==Test Page Checks==//
@@ -3219,99 +3233,102 @@ function AndiCheck(){
 
 	//This function will throw alert_0001 depending on the tagName passed
 	this.wasAccessibleNameFound = function(elementData){
-		var tagNameText = elementData.tagNameText;
-		if(!elementData.accName){
-			var placeholderCheck = false;
-			var message;
-			if(tagNameText === "iframe"){
-				if(elementData.tabindex)
-					andiAlerter.throwAlert(alert_0007);
-				else//no tabindex
-					andiAlerter.throwAlert(alert_0009);
-			}
-			else if(elementData.isTabbable){
-				//Does this element have a role?
-				if(elementData.role){
-					var roleCapitalized = elementData.role.charAt(0).toUpperCase()+elementData.role.slice(1);
-					message = roleCapitalized+" Element"+alert_0008.message;
-				}
-				//Is this an input element, excluding input[image]?
-				else if(tagNameText.includes("input") && tagNameText != "input[type=image]"){
-					switch(tagNameText){
-					case "input[type=text]":
-						message = "Textbox"+alert_0001.message; placeholderCheck = true; break;
-					case "input[type=radio]":
-						message = "Radio Button"+alert_0001.message; break;
-					case "input[type=checkbox]":
-						message = "Checkbox"+alert_0001.message; break;
-					default:
-						message = "Input Element"+alert_0001.message;
-					}
-				}
-				//All other elements:
-				else switch(tagNameText){
-					case "a":
-						message = "Link"+alert_0002.message;
-						break;
-					case "img":
-					case "input[type=image]":
-						message = "Image"+alert_0003.message; break;
-					case "button":
-						message = "Button"+alert_0002.message; break;
-					case "select":
-						message = "Select"+alert_0001.message; break;
-					case "textarea":
-						message = "Textarea"+alert_0001.message; placeholderCheck = true; break;
-					case "table":
-						message = alert_0004.message; break;
-					case "figure":
-						message = alert_0005.message; break;
-					case "th":
-					case "td":
-						message = "Table Cell"+alert_0002.message; break;
-					case "input[type=search]":
-					case "input[type=url]":
-					case "input[type=tel]":
-					case "input[type=email]":
-					case "input[type=password]":
-						placeholderCheck = true; break;
-					case "canvas":
-						message = "Canvas"+alert_0008.message; break;
-					default:
-						message = "Element"+alert_0002.message;
-				}
-			}
-			else{//not tabbable
-				//Does this element have a role?
-				if(elementData.role === "img"){
-					message = "[role=img] Element"+alert_0008.message;
-				}
-				else{
-					switch(tagNameText){
-					case "img":
-					case "input[type=image]":
-						if(!elementData.role) message = "Image"+alert_0003.message; break;
-					case "canvas":
-						message = "Canvas"+alert_0008.message; break;
-					}
-				}
-			}
-			
-			if(message){
-				//If element has placeholder and no accessible name, throw alert_0006
-				if(elementData.placeholder && placeholderCheck)
-					andiAlerter.throwAlert(alert_0006);
-				else //Element has no accessible name and no placeholder
-					andiAlerter.throwAlert(alert_0001,message);
-			}
-			
-			if(elementData.components.ariaDescribedby)
-				//element has no name but has ariaDescribedby
-				andiAlerter.throwAlert(alert_0021);
+		if(!elementData.isAriaHidden){ //element is not aria-hidden=true and not contained by aria-hidden=true
+			var tagNameText = elementData.tagNameText;
+			if(!elementData.accName){
 				
-			if(elementData.components.legend)
-				//element has no name but has legend
-				andiAlerter.throwAlert(alert_0022);
+				var placeholderCheck = false;
+				var message;
+				if(tagNameText === "iframe"){
+					if(elementData.tabindex)
+						andiAlerter.throwAlert(alert_0007);
+					else//no tabindex
+						andiAlerter.throwAlert(alert_0009);
+				}
+				else if(elementData.isTabbable){
+					//Does this element have a role?
+					if(elementData.role){
+						var roleCapitalized = elementData.role.charAt(0).toUpperCase()+elementData.role.slice(1);
+						message = roleCapitalized+" Element"+alert_0008.message;
+					}
+					//Is this an input element, excluding input[image]?
+					else if(tagNameText.includes("input") && tagNameText != "input[type=image]"){
+						switch(tagNameText){
+						case "input[type=text]":
+							message = "Textbox"+alert_0001.message; placeholderCheck = true; break;
+						case "input[type=radio]":
+							message = "Radio Button"+alert_0001.message; break;
+						case "input[type=checkbox]":
+							message = "Checkbox"+alert_0001.message; break;
+						default:
+							message = "Input Element"+alert_0001.message;
+						}
+					}
+					//All other elements:
+					else switch(tagNameText){
+						case "a":
+							message = "Link"+alert_0002.message;
+							break;
+						case "img":
+						case "input[type=image]":
+							message = "Image"+alert_0003.message; break;
+						case "button":
+							message = "Button"+alert_0002.message; break;
+						case "select":
+							message = "Select"+alert_0001.message; break;
+						case "textarea":
+							message = "Textarea"+alert_0001.message; placeholderCheck = true; break;
+						case "table":
+							message = alert_0004.message; break;
+						case "figure":
+							message = alert_0005.message; break;
+						case "th":
+						case "td":
+							message = "Table Cell"+alert_0002.message; break;
+						case "input[type=search]":
+						case "input[type=url]":
+						case "input[type=tel]":
+						case "input[type=email]":
+						case "input[type=password]":
+							placeholderCheck = true; break;
+						case "canvas":
+							message = "Canvas"+alert_0008.message; break;
+						default:
+							message = "Element"+alert_0002.message;
+					}
+				}
+				else{//not tabbable
+					//Does this element have a role?
+					if(elementData.role === "img"){
+						message = "[role=img] Element"+alert_0008.message;
+					}
+					else{
+						switch(tagNameText){
+						case "img":
+						case "input[type=image]":
+							if(!elementData.role) message = "Image"+alert_0003.message; break;
+						case "canvas":
+							message = "Canvas"+alert_0008.message; break;
+						}
+					}
+				}
+				
+				if(message){
+					//If element has placeholder and no accessible name, throw alert_0006
+					if(elementData.placeholder && placeholderCheck)
+						andiAlerter.throwAlert(alert_0006);
+					else //Element has no accessible name and no placeholder
+						andiAlerter.throwAlert(alert_0001,message);
+				}
+				
+				if(elementData.components.ariaDescribedby)
+					//element has no name but has ariaDescribedby
+					andiAlerter.throwAlert(alert_0021);
+					
+				if(elementData.components.legend)
+					//element has no name but has legend
+					andiAlerter.throwAlert(alert_0022);
+			}
 		}
 	};
 
@@ -3415,24 +3432,16 @@ function AndiCheck(){
 			andiAlerter.throwAlert(alert_0031);
 	};
 	
-	//This function will throw alert_0181
+	//This function will throw alert_0260 or alert_0261
 	//if the element has aria-hidden=true or is a child of an element with aria-hidden=true
 	//NOTE: role=presentation/none are not factored in here 
 	//      because browsers automatically ignore them if the element is focusable
-	this.hasThisElementBeenHiddenFromScreenReader = function(element){
-		if(TestPageData.page_using_ariahidden){
-			if(isAriaHidden(element))
-				andiAlerter.throwAlert(alert_0181);
-		}
-		//This function recursively travels up the anscestor tree looking for aria-hidden=true.
-		//Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
-		function isAriaHidden(element){
-			if($(element).is("#ANDI508-testPage"))
-				return false;
-			else if($(element).attr("aria-hidden") === "true")
-				return true;
-			else
-				return isAriaHidden($(element).parent());
+	this.hasThisElementBeenHiddenFromScreenReader = function(element, elementData, isDangerous){
+		if(elementData.isAriaHidden){
+			if(isDangerous) //this type of element should not be hidden from screen reader
+				andiAlerter.throwAlert(alert_0260); //danger level alert
+			else //this type of element could be hidden by a screen reader, but tester should investigate
+				andiAlerter.throwAlert(alert_0261); //warning level alert
 		}
 	};
 	
@@ -3859,7 +3868,8 @@ function AndiAlerter(){
 		new AlertGroup("CSS Content Alerts"),
 		new AlertGroup("Manual Tests Needed"),
 		new AlertGroup("Contrast Alerts"),
-		new AlertGroup("Disabled Element Alerts")					//25
+		new AlertGroup("Disabled Element Alerts"),					//25
+		new AlertGroup("Aria-Hidden Alerts")
 		];
 	};
 	
@@ -3976,16 +3986,11 @@ function TestPageData(){
 		//Determine if role=table/grid is being used
 		if(!TestPageData.page_using_table && (role === "table" || role === "grid"))
 			TestPageData.page_using_table = true;
-		
-		//Determine if aria-hidden=true is being used
-		if(!TestPageData.page_using_ariahidden && ((elementData && elementData.isAriaHidden) || $(element).attr("aria-hidden") === "true"))
-			TestPageData.page_using_ariahidden = true;
 	};
 }
 //These variables store whether the testPage is using certain elements.
 TestPageData.page_using_table = false;
 TestPageData.page_using_caption = false;
-TestPageData.page_using_ariahidden = false;
 
 //==============//
 // jQuery Load: //
