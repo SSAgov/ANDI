@@ -884,13 +884,19 @@ function AndiBar(){
 		
 		function buildTableBody(){
 			
-			displayGrouping(elementData.grouping);
-			displayEmptyComponents(elementData.empty);
-			displayConcatenatedInnerText();
-			displayComponents(elementData.components);
-			displayAddOnProps();
-			displaySubtreeComponents();
-
+			if(!elementData.isAriaHidden){
+				displayGrouping(elementData.grouping);
+				displayEmptyComponents(elementData.empty);
+				displayConcatenatedInnerText();
+				displayComponents(elementData.components);
+				displayAddOnProps();
+				displaySubtreeComponents();
+			}
+			else{
+				//Don't display any other components because the aria-hidden=true makes them not matter
+				displayAriaHiddenOnly();
+			}
+			
 			function buildRow(displayClass, headerText, cellText){
 				return "<tr><th class='ANDI508-display-"+displayClass+"' scope='row'>"+
 					headerText+": </th><td class='ANDI508-display-"+displayClass+"'>"+
@@ -947,6 +953,10 @@ function AndiBar(){
 					rows += buildRow("addOnProperties", "src", elementData.src);
 				if(elementData.placeholder)
 					rows += buildRow("addOnProperties", "placeholder", elementData.placeholder);
+			}
+			
+			function displayAriaHiddenOnly(){
+				rows += buildRow("addOnProperties", "aria-hidden", "true");
 			}
 			
 			function displaySubtreeComponents(){
@@ -2817,7 +2827,9 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		prop.out = (prop.val === "true" || prop.val === "menu") ? "menu" : (prop.val === "listbox") ? "listbox" : (prop.val === "tree") ? "tree" : (prop.val === "grid") ? "grid" : (prop.val === "dialog") ? "dialog" : "";
 		pushProp();
 	}
-	if(hasProp("aria-hidden")){
+	if(elementData.isAriaHidden){
+		prop.name = "aria-hidden"
+		prop.val = "true";
 		prop.out = "";
 		pushProp();
 	}
