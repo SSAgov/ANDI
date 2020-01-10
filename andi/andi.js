@@ -1769,8 +1769,11 @@ function AndiUtility(){
 	//Return: Array [displayText, contentLiteral]
 	this.getPseudoContent = function(pseudo, element){
 		var contentLiteral = (oldIE) ? "" : window.getComputedStyle(element, ":"+pseudo).content;
-		
+
 		if(contentLiteral !== "none" && contentLiteral !== "normal" && contentLiteral !== "counter" && contentLiteral !== "\"\""){//content is not none or empty string
+
+			contentLiteral = stripContentKeywords(contentLiteral);
+			
 			var displayText = "";
 			if(!!hasReadableCharacters(contentLiteral));
 				return [displayText, contentLiteral];
@@ -1782,8 +1785,8 @@ function AndiUtility(){
 				
 			//replaces \a with a space
 			content = content.replace(/\\a /," ");
-			
-			for(var i=1; i<content.length-1; i++){//starts at 1 and end at length-1 to ignore the starting and ending double quotes
+						
+			for(var i=0; i<content.length; i++){
 				unicode = content.charCodeAt(i);
 				
 				c = content.charAt(i);
@@ -1799,6 +1802,16 @@ function AndiUtility(){
 				}
 			}
 			return displayText;
+		}
+		
+		function stripContentKeywords(c){
+			//gets common content keywords and their values between parens and the parens
+			var regex_keywords = /(url\()(.*)(\))|(counter\()(.*)(\))|(counters\()(.*)(\))/;
+			
+			//removes common content keywords and their values between parens and the parens
+			c = c.replace(regex_keywords,'');
+			
+			return c;
 		}
 	};
 
@@ -3724,7 +3737,7 @@ function AndiAlerter(){
 						"' role='group' id='ANDI508-alertGroup_"+$.inArray(group, AndiAlerter.alertGroups)+
 						"'><a href='#' class='ANDI508-alertGroup-toggler' tabindex='0' role='treeitem' aria-expanded='false' "+
 						"aria-label='"+group.level+" "+totalAlerts+" "+group.heading+"'>"+
-						group.heading+": (<span class='ANDI508-total'>"+totalAlerts+"</span>)</a><ol class='ANDI508-alertGroup-list'>";
+						group.heading+": (<span class='ANDI508-total' style='display:inline'>"+totalAlerts+"</span>)</a><ol class='ANDI508-alertGroup-list'>";
 					for(var d=0; d<group.dangers.length; d++)
 						html += "<li class='ANDI508-display-danger'><a " + "aria-posinset='"+parseInt(d+1)+"' aria-setsize='"+totalAlerts+"' " + group.dangers[d];
 					for(var w=0; w<group.warnings.length; w++)
