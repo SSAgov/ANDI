@@ -1771,8 +1771,6 @@ function AndiUtility(){
 		var contentLiteral = (oldIE) ? "" : window.getComputedStyle(element, ":"+pseudo).content;
 
 		if(contentLiteral !== "none" && contentLiteral !== "normal" && contentLiteral !== "counter" && contentLiteral !== "\"\""){//content is not none or empty string
-
-			contentLiteral = stripContentKeywords(contentLiteral);
 			
 			var displayText = "";
 			if(!!hasReadableCharacters(contentLiteral));
@@ -1785,7 +1783,9 @@ function AndiUtility(){
 				
 			//replaces \a with a space
 			content = content.replace(/\\a /," ");
-						
+			
+			content = stripContentKeywords(content);
+			
 			for(var i=0; i<content.length; i++){
 				unicode = content.charCodeAt(i);
 				
@@ -1801,9 +1801,16 @@ function AndiUtility(){
 					displayText += c;
 				}
 			}
+			
+			//strip double quotes
+			//TODO: do it more "carefully"
+			var regex_everydoublequote = /"/g;
+			displayText = displayText.replace(regex_everydoublequote,'');
+			
 			return displayText;
 		}
 		
+		//This function removes CSS content keywords for display purposes
 		function stripContentKeywords(c){
 			//gets common content keywords and their values between parens and the parens
 			var regex_keywords = /(url\()(.*)(\))|(counter\()(.*)(\))|(counters\()(.*)(\))/;
