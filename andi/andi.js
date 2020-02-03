@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "26.4.2";
+var andiVersionNumber = "26.4.3";
 
 //==============//
 // ANDI CONFIG: //
@@ -2628,7 +2628,7 @@ AndiData.textAlternativeComputation = function(root){
 			getGroupingText($(element).closest("[role=menu],[role=menubar]"));
 		}
 		//legend
-		if(!groupingText && testPageData.page_using_fieldset && $(element).isSemantically("[role=checkbox],[role=radio],[role=textbox],[role=option]","input,select,textarea,fieldset")){
+		if(!groupingText && testPageData.page_using_fieldset && $(element).isSemantically("[role=checkbox],[role=radio],[role=textbox],[role=option]","input,select,textarea")){
 			component = grab_legend(element);
 			if(component !== undefined){
 				groupingText += AndiData.addComp(data.components, "legend", component);
