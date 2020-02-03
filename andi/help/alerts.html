@@ -118,7 +118,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3 tabindex="0">Misuses of Label Tag</h3>
 	<ul>
 		<li class='warning'><a href="#explicit_label_for_forms">Explicit Label For Form Elements</a></li>
-		<li class='warning'><a href="#explicit_label_not_for_buttons">Explicit Label Not For Buttons</a></li>
 	</ul>
 	<h3 tabindex="0">Unreliable Component Combinations</h3>
 	<ul>
@@ -1808,40 +1807,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	This element does not derive its accessible name from <code>&lt;label&gt;</code>.
 	Consider using <code>aria-label</code> or <code>aria-labelledby</code> on the element.</p>
-	<a href="developerguide.html#label">more info about label</a>
-	</div>
-	</section>
-	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-explicit_label_not_for_buttons" id='explicit_label_not_for_buttons'>
-	
-	<h2 id="lby-explicit_label_not_for_buttons">Alert: Explicit &lt;label&gt; Not For Buttons</h2>
-	<div class='details'>
-	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Explicit &lt;label[for]&gt; shouldn't be used with buttons.</li>
-	</ul>
-	<br />
-	<h3>Why did ANDI alert this?</h3>
-	<p>The <code>for</code> attribute of a <code>&lt;label&gt;</code> is pointing to the <code>id</code> of 
-	this element which is a button.</p>
-
-	<h3>Why is this an accessibility concern?</h3>
-	<p>Some screen readers will not announce an explicit label on buttons. Therefore, the associating
-	<code>&lt;label&gt;</code> may not be read as part of the accessible name of this button.</p>
-
-	<h3>What should be done?</h3>
-	<p>
-	Since buttons do not derive their accessible name from other <code>&lt;label&gt;</code> elements.
-	</p>
-		<div class="example">
-			<ul>
-			<li>For <code>&lt;button&gt;</code> or <code>role=button</code> elements
-			stick with innerHTML.</li>
-			<li>For <code>&lt;input type="submit"&gt;</code> or <code>&lt;input type="button"&gt;</code>
-			use <code>value</code>.</li>
-			<li>For <code>&lt;input type="image"&gt;</code>
-			use <code>alt</code>.</li>
-			</ul>
-		</div>
 	<a href="developerguide.html#label">more info about label</a>
 	</div>
 	</section>

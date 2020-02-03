@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "26.4.1";
+var andiVersionNumber = "26.4.2";
 
 //==============//
 // ANDI CONFIG: //
@@ -430,7 +430,6 @@ var alert_007C = new Alert("warning","7","[scope=%%%] value is invalid; acceptab
 var alert_0081 = new Alert("warning","8","[alt] attribute is meant for &lt;img&gt; elements.","#alt_only_for_images");
 
 var alert_0091 = new Alert("warning","9","Explicit &lt;label[for]&gt; only works with form elements.","#explicit_label_for_forms");
-var alert_0092 = new Alert("warning","9","Explicit &lt;label[for]&gt; shouldn't be used with buttons.","#explicit_label_not_for_buttons");
 
 var alert_0101 = new Alert("warning","10","Combining %%% may produce inconsistent screen reader results.","#unreliable_component_combine");
 
@@ -3412,10 +3411,7 @@ function AndiCheck(){
 			for(var f=0; f<testPageData.allFors.length; f++){
 				referencedElement = document.getElementById(testPageData.allFors[f].htmlFor);
 				if(referencedElement && $(referencedElement).hasClass("ANDI508-element")){
-					if($(referencedElement).isSemantically("[role=button]","input[type=submit],input[type=button],input[type=reset],input[type=image],button"))
-						//is a button
-						andiAlerter.throwAlertOnOtherElement($(referencedElement).attr("data-andi508-index"), alert_0092);
-					else if(!$(referencedElement).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]","input,select,textarea,[contenteditable=true],[contenteditable='']"))
+					if(!$(referencedElement).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]","input,select,textarea,button,[contenteditable=true],[contenteditable='']"))
 						//is not a form element
 						andiAlerter.throwAlertOnOtherElement($(referencedElement).attr("data-andi508-index"), alert_0091);
 				}
