@@ -43,7 +43,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3 tabindex="0">Elements with No Accessible Name</h3>
 	<ul>
 		<li class='danger'><a href="#no_name">No Accessible Name</a></li>
-		<li class='danger'><a href="#placeholder_no_name">Placeholder, But No Name</a></li>
 	</ul>
 	<h3 tabindex="0">Duplicate Attributes Found</h3>
 	<ul>
@@ -297,29 +296,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li>All elements can use the <code>title</code> attribute.</li>
 		</ul>
 	</div>
-	</div>
-	<a href="developerguide.html#Namers">more info about accessible name</a>
-	</section>
-	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-placeholder_no_name" id='placeholder_no_name'>
-	
-	<h2 id="lby-placeholder_no_name">Alert: Placeholder, But No Name</h2>
-	<div class='details'>
-	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Placeholder provided, but element has no accessible name.</li>
-	</ul>
-	<br />
-	<h3>Why did ANDI alert this?</h3>
-	<p>This input or textarea element has no HTML markup that would provide an accessible name 
-	for the element, but it does have a <code>placeholder</code> attribute.</p>
-
-	<h3>Why is this an accessibility concern?</h3>
-	<p>A screen reader may read the <code>placeholder</code> text,
-	however, placeholder is not part of the accessible name calculation.</p>
-
-	<h3>What should be done?</h3>
-	<p>Add one Namer or Describer that will provide an accessible name for the element 
-	such as <code>aria-labelledby</code>, <code>aria-label</code>, or an associated <code>&lt;label&gt;</code>.</p>
 	</div>
 	<a href="developerguide.html#Namers">more info about accessible name</a>
 	</section>

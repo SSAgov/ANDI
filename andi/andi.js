@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "26.4.3";
+var andiVersionNumber = "27.0.0";
 
 //==============//
 // ANDI CONFIG: //
@@ -362,7 +362,6 @@ var alert_0002 = new Alert("danger","0"," has no accessible name, innerText, or 
 var alert_0003 = new Alert("danger","0"," has no accessible name, [alt], or [title].","#no_name");
 var alert_0004 = new Alert("danger","0","Table has no accessible name, &lt;caption&gt;, or [title].","#no_name");
 var alert_0005 = new Alert("danger","0","Figure has no accessible name, &lt;figcaption&gt;, or [title].","#no_name");
-var alert_0006 = new Alert("danger","0","[placeholder] provided, but element has no accessible name.","#placeholder_no_name");
 var alert_0007 = new Alert("danger","0","Iframe has no accessible name or [title].","#no_name");
 var alert_0008 = new Alert("danger","0"," has no accessible name.","#no_name");
 var alert_0009 = new Alert("warning","0","Iframe has no accessible name or [title].","#no_name");
@@ -948,8 +947,6 @@ function AndiBar(){
 				
 				if(elementData.src)
 					rows += buildRow("addOnProperties", "src", elementData.src);
-				if(elementData.placeholder)
-					rows += buildRow("addOnProperties", "placeholder", elementData.placeholder);
 			}
 			
 			function displayAriaHiddenOnly(){
@@ -2058,8 +2055,6 @@ AndiData.grab_coreProperties = function(element){
 	grab_tabindex();
 	grab_accesskey();
 	grab_imageSrc();
-	if($(element).is("input,textarea"))
-		grab_placeholder();
 	
 	function grab_tabindex(){
 		AndiData.data.isTabbable = true; //assume true (prove to be false)
@@ -2118,12 +2113,6 @@ AndiData.grab_coreProperties = function(element){
 			imageSrc = imageSrc.split("/").pop(); //get the filename and extension only
 			AndiData.data.src = imageSrc;
 		}
-	}
-	
-	function grab_placeholder(){
-		var placeholder = $(element).attr("placeholder");
-		if(placeholder)
-			AndiData.data.placeholder = placeholder;
 	}
 };
 
@@ -2216,6 +2205,7 @@ AndiData.textAlternativeComputation = function(root){
 		if(!$(root).is(stepF_exclusions))
 			calcAccName(stepF(root, AndiData.data.components));
 		calcAccName(stepI(root, AndiData.data.components));
+		calcAccName(stepJ(root, AndiData.data.components));
 		
 		//Calculate Accessible Description
 		isCalcAccDesc = true;
@@ -2276,11 +2266,19 @@ AndiData.textAlternativeComputation = function(root){
 										else if(calcRefName(stepE(refElement, refData))); //embedded control
 										else if(calcRefName(stepF(refElement, refData, true, true))); //name from content
 										else if(calcRefName(stepI(refElement, refData))); //title attribute
+										else if(calcRefName(stepJ(refElement, refData))); //placeholder
 									}
 									else{//Referenced Element has already been traversed. 
 										andiAlerter.throwAlert(alert_006E, [attribute, idsArray[x]]);
 										var refData = {}; //will be discarded
-										var alreadyTraversedText = (stepC(refElement, refData) || stepD(refElement, refData) || /*stepE(refElement, refData) ||*/ stepF(refElement, refData, true, true) || stepI(refElement, refData) );
+										var alreadyTraversedText = (
+											stepC(refElement, refData) || 
+											stepD(refElement, refData) || 
+											//stepE(refElement, refData) ||
+											stepF(refElement, refData, true, true) || 
+											stepI(refElement, refData) ||
+											stepJ(refElement, refData) 
+											);
 										AndiData.addComp(data, componentType, [alreadyTraversedText, refElement, idsArray[x]]);
 									}
 								}
@@ -2510,6 +2508,7 @@ AndiData.textAlternativeComputation = function(root){
 							else if(root != node && calcSubtreeName( stepE(node, subtreeData) ) ); //embedded control
 							else if(root != node && calcSubtreeName( stepF(node, subtreeData, true, isProcessRefTraversal), true) ); //name from content
 							else if(calcSubtreeName( stepI(node, subtreeData, true) ) ); //title attribute
+							else if(calcSubtreeName( stepJ(node, subtreeData) ) ); //placeholder
 							
 							pushSubtreeData(data, subtreeData, node);
 						}
@@ -2599,6 +2598,22 @@ AndiData.textAlternativeComputation = function(root){
 			}
 			accumulatedText += text;
 		}
+	}
+	
+	//stepJ - placeholder
+	function stepJ(element, data){
+		var accumulatedText = "";
+		
+		if(!isCalcAccDesc){
+			if($(element).is("textarea") || ( $(element).is("input") && $(element).is("[type=text],[type=password],[type=search],[type=tel],[type=email],[type=url]") ) ){
+				component = $(element).attr("placeholder");
+				if(!isEmptyComponent(component, "placeholder", element)){
+					accumulatedText += AndiData.addComp(data, "placeholder", component);
+				}
+			}
+		}
+		
+		return accumulatedText;
 	}
 	
 	//stepZ: //grouping
@@ -3266,7 +3281,6 @@ function AndiCheck(){
 			var tagNameText = elementData.tagNameText;
 			if(!elementData.accName){
 				
-				var placeholderCheck = false;
 				var message;
 				if(tagNameText === "iframe"){
 					if(elementData.tabindex)
@@ -3284,7 +3298,7 @@ function AndiCheck(){
 					else if(tagNameText.includes("input") && tagNameText != "input[type=image]"){
 						switch(tagNameText){
 						case "input[type=text]":
-							message = "Textbox"+alert_0001.message; placeholderCheck = true; break;
+							message = "Textbox"+alert_0001.message; break;
 						case "input[type=radio]":
 							message = "Radio Button"+alert_0001.message; break;
 						case "input[type=checkbox]":
@@ -3306,7 +3320,7 @@ function AndiCheck(){
 						case "select":
 							message = "Select"+alert_0001.message; break;
 						case "textarea":
-							message = "Textarea"+alert_0001.message; placeholderCheck = true; break;
+							message = "Textarea"+alert_0001.message; break;
 						case "table":
 							message = alert_0004.message; break;
 						case "figure":
@@ -3314,12 +3328,6 @@ function AndiCheck(){
 						case "th":
 						case "td":
 							message = "Table Cell"+alert_0002.message; break;
-						case "input[type=search]":
-						case "input[type=url]":
-						case "input[type=tel]":
-						case "input[type=email]":
-						case "input[type=password]":
-							placeholderCheck = true; break;
 						case "canvas":
 							message = "Canvas"+alert_0008.message; break;
 						default:
@@ -3343,11 +3351,7 @@ function AndiCheck(){
 				}
 				
 				if(message){
-					//If element has placeholder and no accessible name, throw alert_0006
-					if(elementData.placeholder && placeholderCheck)
-						andiAlerter.throwAlert(alert_0006);
-					else //Element has no accessible name and no placeholder
-						andiAlerter.throwAlert(alert_0001,message);
+					andiAlerter.throwAlert(alert_0001,message);
 				}
 				
 				if(elementData.components.ariaDescribedby)
