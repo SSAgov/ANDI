@@ -2064,14 +2064,12 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<div class="example">
 			<ul>
 			<li>Provide a text description on the page that fields are disabled.</li>
-			<li>Use attributes <code>readonly</code>, <code>aria-readonly="true"</code>, or <code>aria-disabled="true"</code>
-				combined with CSS to make the element look disabled (grayed out).</li>
-			<li>Instead of using the native semantic tag (<code>&lt;input&gt;, &lt;button&gt;, &lt;a&gt;</code>)
-				use a generic tag <code>&lt;div&gt;, &lt;p&gt;, &lt;span&gt;</code> with a <code>tabindex="0"</code>
-				to present the uneditable/unalterable information.</li>
-			<li>Completely remove the element if it is not necessary.</li>
+			<li>For native textbox type elements use <code>readonly</code> attribute combined with CSS to make the element look disabled (grayed out).</li>
+			<li>Use <code>aria-disabled="true"</code>, prevent the element from functioning using JavaScript and modify CSS to make the element look disabled (grayed out).</li>
+			<li>Convert the value of the element into screen text and ensure that the element's label still appears on screen.</li>
 			<li>Rather than disabling buttons/links, allow the user to press the button/link as normal
 				and provide a message to the user saying that the function is not permitted for whatever reason.</li>
+			<li>Completely remove the element if it is not necessary.</li>
 			</ul>
 		</div>
 	</div>
