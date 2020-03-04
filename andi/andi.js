@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.0.0";
+var andiVersionNumber = "27.0.1";
 
 //==============//
 // ANDI CONFIG: //
@@ -2607,7 +2607,7 @@ AndiData.textAlternativeComputation = function(root){
 		if(!isCalcAccDesc){
 			if($(element).is("textarea") || ( $(element).is("input") && $(element).is("[type=text],[type=password],[type=search],[type=tel],[type=email],[type=url]") ) ){
 				component = $(element).attr("placeholder");
-				if(!isEmptyComponent(component, "placeholder", element)){
+				if($.trim(component) != ""){
 					accumulatedText += AndiData.addComp(data, "placeholder", component);
 				}
 			}
