@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.0.2";
+var andiVersionNumber = "27.0.3";
 
 //==============//
 // ANDI CONFIG: //
@@ -1287,15 +1287,11 @@ function AndiHotkeyList(){
 	
 	//This function builds ANDI's hotkey list html
 	this.buildHotkeyList = function(){
-		var firefox, chrome, safari = false;		
-		if(navigator.userAgent.toLowerCase().includes("firefox"))
-			firefox = true;
-		else if(navigator.userAgent.toLowerCase().includes("chrome"))
-			chrome = true;
-		else if(navigator.userAgent.toLowerCase().includes("safari"))
-			safari = true;
+
+		var isMac = navigator.platform.toLowerCase().indexOf('mac') >= 0;
+		var isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
 		
-		var hotkeyTrigger = (firefox) ? "shift+alt+" : (safari) ? "ctrl+alt+" : "alt+";
+		var hotkeyTrigger = (isMac) ? "ctrl+alt+" : (isFirefox) ? "shift+alt+" : "alt+";
 		
 		var hotkeyList = "<div id='ANDI508-hotkeyList'>"+
 			"<h3><a rel='help' href='"+ help_url + "howtouse.html#Hotkeys' target='_blank'>Hotkeys:</a></h3>"+
