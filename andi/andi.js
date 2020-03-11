@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.0.1";
+var andiVersionNumber = "27.0.2";
 
 //==============//
 // ANDI CONFIG: //
@@ -1762,13 +1762,15 @@ function AndiUtility(){
 	//This function checks for pseudo element content
 	//Return: Array [displayText, contentLiteral]
 	this.getPseudoContent = function(pseudo, element){
-		var contentLiteral = (oldIE) ? "" : window.getComputedStyle(element, ":"+pseudo).content;
+		if(window.getComputedStyle(element, ":"+pseudo).display !== "none"){
+			//pseudo element is not display:none
+			var contentLiteral = (oldIE) ? "" : window.getComputedStyle(element, ":"+pseudo).content;
 
-		if(contentLiteral !== "none" && contentLiteral !== "normal" && contentLiteral !== "counter" && contentLiteral !== "\"\""){//content is not none or empty string
-			
-			var displayText = "";
-			if(!!hasReadableCharacters(contentLiteral));
-				return [displayText, contentLiteral];
+			if(contentLiteral !== "none" && contentLiteral !== "normal" && contentLiteral !== "counter" && contentLiteral !== "\"\""){//content is not none or empty string
+				var displayText = "";
+				if(!!hasReadableCharacters(contentLiteral));
+					return [displayText, contentLiteral];
+			}
 		}
 		return undefined;
 		
