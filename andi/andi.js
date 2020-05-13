@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.0.3";
+var andiVersionNumber = "27.0.4";
 
 //==============//
 // ANDI CONFIG: //
@@ -547,7 +547,7 @@ function andiReady(){
 				moduleButtons+
 			"</div>"+
 			"<div id='ANDI508-module-actions'></div>"+
-			"<div id='ANDI508-loading'>Loading <div id='ANDI508-loading-animation' /></div>"+
+			"<div id='ANDI508-loading'>Loading <div id='ANDI508-loading-animation'></div></div>"+
 			"<div id='ANDI508-barControls' aria-label='ANDI Controls' class='ANDI508-sectionJump' tabindex='-1'>"+
 				menuButtons+
 			"</div>"+
@@ -560,19 +560,19 @@ function andiReady(){
 						"<button title='Next Element' accesskey='"+andiHotkeyList.key_next.key+"' id='ANDI508-button-nextElement'><img src='"+icons_url+"next.png' alt='' /></button>"+
 						"<br />"+
 					"</div>"+
-					"<div id='ANDI508-startUpSummary' tabindex='0' />"+
+					"<div id='ANDI508-startUpSummary' tabindex='0'></div>"+
 					"<div id='ANDI508-elementDetails'>"+
 						"<div id='ANDI508-elementNameContainer'><h3 class='ANDI508-heading'>Element:</h3> "+
-							"<a href='#' id='ANDI508-elementNameLink' aria-labelledby='ANDI508-elementNameContainer ANDI508-elementNameDisplay'>&lt;<span id='ANDI508-elementNameDisplay' />&gt;</a>"+
+							"<a href='#' id='ANDI508-elementNameLink' aria-labelledby='ANDI508-elementNameContainer ANDI508-elementNameDisplay'>&lt;<span id='ANDI508-elementNameDisplay'></span>&gt;</a>"+
 						"</div>"+
 						"<div id='ANDI508-additionalElementDetails'></div>"+
 						"<div id='ANDI508-accessibleComponentsTableContainer' class='ANDI508-scrollable' tabindex='0' aria-labelledby='ANDI508-accessibleComponentsTable-heading'>"+
 							"<h3 id='ANDI508-accessibleComponentsTable-heading' class='ANDI508-heading'>Accessibility Components: <span id='ANDI508-accessibleComponentsTotal'></span></h3>"+
-							"<table id='ANDI508-accessibleComponentsTable' aria-labelledby='ANDI508-accessibleComponentsTable-heading'><tbody /></table>"+
+							"<table id='ANDI508-accessibleComponentsTable' aria-labelledby='ANDI508-accessibleComponentsTable-heading'><tbody></tbody></table>"+
 						"</div>"+
 						"<div id='ANDI508-outputContainer'>"+
 							"<h3 class='ANDI508-heading' id='ANDI508-output-heading'>ANDI Output:</h3>"+
-							"<div id='ANDI508-outputText' class='ANDI508-scrollable' tabindex='0' accesskey='"+andiHotkeyList.key_output.key+"' aria-labelledby='ANDI508-output-heading ANDI508-outputText' />"+
+							"<div id='ANDI508-outputText' class='ANDI508-scrollable' tabindex='0' accesskey='"+andiHotkeyList.key_output.key+"' aria-labelledby='ANDI508-output-heading ANDI508-outputText'></div>"+
 						"</div>"+
 					"</div>"+
 				"</div>"+
@@ -581,14 +581,14 @@ function andiReady(){
 				"<div id='ANDI508-resultsSummary'>"+
 					"<h3 class='ANDI508-heading' tabindex='0' id='ANDI508-resultsSummary-heading'></h3>"+
 				"</div>"+
-				"<div id='ANDI508-additionalPageResults' />"+
-				"<div id='ANDI508-alerts-list' />"+
+				"<div id='ANDI508-additionalPageResults'></div>"+
+				"<div id='ANDI508-alerts-list'></div>"+
 			"</div>"+
 		"</div>"+
 		"</section>";
 		
 		if(browserSupports.svg)
-			andiBar += "<svg id='ANDI508-laser-container'><title>ANDI Laser</title><line id='ANDI508-laser' /></svg>";
+			andiBar += "<svg id='ANDI508-laser-container'><title>ANDI Laser</title><line id='ANDI508-laser'></line></svg>";
 		
 		var body = $("body").first();
 		
@@ -599,7 +599,7 @@ function andiReady(){
 		$("html").addClass("ANDI508-testPage");
 		$(body)
 			.addClass("ANDI508-testPage")
-			.wrapInner("<div id='ANDI508-testPage' style='"+body_padding+body_margin+"' />") //Add an outer container to the test page
+			.wrapInner("<div id='ANDI508-testPage' style='"+body_padding+body_margin+"' ></div>") //Add an outer container to the test page
 			.prepend(andiBar); //insert ANDI display into body
 		
 	}

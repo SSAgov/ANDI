@@ -114,9 +114,9 @@ cANDI.results = function(){
 	"<div id='cANDI508-contrastPlayground' tabindex='0' class='ANDI508-viewOtherResults-expanded'><h3 class='ANDI508-heading'>Contrast Playground:</h3><div id='cANDI508-contrastPlayground-area'>"+
 	"<div id='cANDI508-playground-instructions'>Enter two hex color values to get the contrast ratio.</div>"+
 	colorSelectorWidgets +
-	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-fg' style='background-color:#000000 !important' aria-label='visual color picker, select text color' />"+
+	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-fg' style='background-color:#000000 !important' aria-label='visual color picker, select text color'></button>"+
 	"<input type='text' id='cANDI508-playground-fg' maxlength='7' title='Text Color Hex' value='#000000' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />/&nbsp;"+
-	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-bg' style='background-color:#ffffff !important' aria-label='visual color picker, select background color'  />"+
+	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-bg' style='background-color:#ffffff !important' aria-label='visual color picker, select background color'></button>"+
 	"<input type='text' id='cANDI508-playground-bg' maxlength='7' title='Background Color Hex' value='#ffffff' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />= "+
 	"<div tabindex='0' id='cANDI508-playground-result' aria-describedby='cANDI508-playground-instructions'><span id='cANDI508-playground-ratio'>21</span>:1</div><br />"+
 	"<div id='cANDI508-playground-instructions-controls'>Arrow keys adjust brightness: &uarr; lightens, &darr; darkens.</div>"+
@@ -266,14 +266,14 @@ AndiModule.inspect = function(element){
 		
 		$("#ANDI508-additionalElementDetails").html(
 			"<div tabindex='0' style='margin-bottom:1px' accesskey='"+andiHotkeyList.key_output.key+"'>"+
-				"<h3 class='ANDI508-heading'>Contrast Ratio<span aria-hidden='true'>:</span></h3> <span id='cANDI508-ratio' /> <span id='cANDI508-result' /> "+
-				"<span id='cANDI508-minReq'><span class='ANDI508-screenReaderOnly'>, </span>Min<span class='ANDI508-screenReaderOnly'>imum</span> Req<span class='ANDI508-screenReaderOnly'>uirement</span><span aria-hidden='true'>:</span></span> <span id='cANDI508-minReqRatio' />"+
+				"<h3 class='ANDI508-heading'>Contrast Ratio<span aria-hidden='true'>:</span></h3> <span id='cANDI508-ratio'></span> <span id='cANDI508-result'></span> "+
+				"<span id='cANDI508-minReq'><span class='ANDI508-screenReaderOnly'>, </span>Min<span class='ANDI508-screenReaderOnly'>imum</span> Req<span class='ANDI508-screenReaderOnly'>uirement</span><span aria-hidden='true'>:</span></span> <span id='cANDI508-minReqRatio'></span>"+
 			"</div>"+
 			"<h3 class='ANDI508-heading' id='cANDI508-heading-style'>Style:</h3>"+
 			"<table id='cANDI508-table-style' aria-labelledby='cANDI508-heading-style'><tbody tabindex='0'>"+
-				"<tr><th scope='row' class='cANDI508-label'>Text&nbsp;Color:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-foreground' /><span id='cANDI508-fg' /></td></tr>"+
-				"<tr><th scope='row' class='cANDI508-label'>Background:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-background' /><span id='cANDI508-bg' /></td></tr>"+
-				"<tr><th scope='row' class='cANDI508-label'>Font:</th><td><span id='cANDI508-fontweight' /> <span id='cANDI508-fontsize' /> <span id='cANDI508-fontfamily' /></td></tr>"+
+				"<tr><th scope='row' class='cANDI508-label'>Text&nbsp;Color:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-foreground'></div><span id='cANDI508-fg'></span></td></tr>"+
+				"<tr><th scope='row' class='cANDI508-label'>Background:</th><td><div class='cANDI508-colorSelector' id='cANDI508-colorSelector-background'></div><span id='cANDI508-bg'></span></td></tr>"+
+				"<tr><th scope='row' class='cANDI508-label'>Font:</th><td><span id='cANDI508-fontweight'></span> <span id='cANDI508-fontsize'></span> <span id='cANDI508-fontfamily'></span></td></tr>"+
 			"</tbody></table>"
 		).show();
 		
@@ -603,7 +603,7 @@ cANDI.getSuggestedColorHTML = function(cANDI_data){
 		
 		suggestedColor = rgbToHex(suggestedColor);
 		
-		suggestedColorHtml += ":</th><td><div class='cANDI508-colorSelector' style='background-color:"+suggestedColor+" !important;' />";
+		suggestedColorHtml += ":</th><td><div class='cANDI508-colorSelector' style='background-color:"+suggestedColor+" !important;'></div>";
 		suggestedColorHtml += "<span id='cANDI508-suggested'>"+suggestedColor+"</span></td></tr>";
 	}
 	else{
