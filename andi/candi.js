@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "4.1.1";
+var cANDIVersionNumber = "4.1.2";
 
 //TODO: select box, check for selected
 
