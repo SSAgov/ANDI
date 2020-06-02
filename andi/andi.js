@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.0.4";
+var andiVersionNumber = "27.1.0";
 
 //==============//
 // ANDI CONFIG: //
@@ -76,13 +76,13 @@ function launchAndi(){(window.andi508 = function(){
 
 	//Ensure that $ is mapped to jQuery
 	window.jQuery = window.$ = jQuery;
-	
+
 	//Check <html> and <body> elements for aria-hidden=true
 	if($("html").first().attr("aria-hidden") === "true" || $("body").first().attr("aria-hidden") === "true"){
 		if(confirm("ANDI has detected aria-hidden=true on the <html> or <body> elements which would render this page invisible to a screen reader.\n\nPress OK to remove the aria-hidden=true from the <html> and <body> elements to continue.")){
 			$("html").removeAttr("aria-hidden");
 			$("body").removeAttr("aria-hidden");
-		}		
+		}
 		else{
 			alert("ANDI will not continue while aria-hidden=true is on <html> or <body> elements.");
 			return; //Stops ANDI
@@ -121,13 +121,13 @@ function launchAndi(){(window.andi508 = function(){
 		alert("Select a frame, then launch ANDI.");
 		return;
 	}
-	
+
 	//Get ANDI ready to launch the first module
 	andiReady();
 
 	//Default Module Launch
 	AndiModule.launchModule(AndiModule.module);
-	
+
 	//Load previously saved settings.
 	andiSettings.loadANDIsettings();
 
@@ -158,7 +158,7 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 		//Append module's css file. The version number is added to the href string (?v=) so that when the module is updated, the css file is reloaded and not pulled from browser cache
 		$("head").append("<link id='andiModuleCss' href='"+host_url+moduleLetter+"andi.css?v="+moduleVersionNumber+"' type='text/css' rel='stylesheet' />");
 	}
-	
+
 	//Module Selection Menu Operation
 	$("#ANDI508-moduleMenu")
 		.on("mouseover",AndiModule.showMenu)
@@ -184,7 +184,7 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	//The module should implement these priveleged methods
 	this.analyze = undefined;
 	this.results = undefined;
-	
+
 	//Set Default Module function logic
 	AndiModule.hoverability = function(event){
 		if(!event.shiftKey) //check for holding shift key
@@ -196,7 +196,7 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 		andiResetter.resizeHeights();
 	};
 	AndiModule.cleanup = function(){}; //Cleanup does nothing by default
-		
+
 	//Previous Element Button - modules may overwrite this
 	//Instantiating a module will reset any overrides
 	$("#ANDI508-button-prevElement").off("click").click(function(){
@@ -213,7 +213,7 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 				if($(prev).length && $(prev).is(":visible")){
 					andiFocuser.focusByIndex(x - 1);
 					break;
-				}					
+				}
 			}
 		}
 	});
@@ -232,7 +232,7 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 				if($(next).length && $(next).is(":visible")){
 					andiFocuser.focusByIndex(x + 1);
 					break;
-				}					
+				}
 			}
 		}
 	});
@@ -273,7 +273,7 @@ AndiModule.showMenu = function(){
 };
 AndiModule.hideMenu = function(){
 	//setTimeout and :focus check are needed to fix a timing issue in firefox and chrome
-	setTimeout(function(){ 
+	setTimeout(function(){
 		if(!$(":focus").hasClass("ANDI508-moduleMenu-option"))
 			$("#ANDI508-moduleMenu").removeClass("ANDI508-moduleMenu-expanded");
 	}, 5);
@@ -282,39 +282,39 @@ AndiModule.hideMenu = function(){
 //This function will launch a module.
 //	module:	the letter of the module
 AndiModule.launchModule = function(module){
-	
+
 	//Remove previously selected modules
 	$("#ANDI508-moduleMenu button")
 		.attr("tabindex","-1")
 		.removeClass("ANDI508-moduleMenu-selected ANDI508-moduleMenu-unavailable")
 		.removeAttr("aria-selected")
 		.find("img").first().remove();
-	
+
 	//Select this module
 	$("#ANDI508-moduleMenu-button-"+module)
 		.addClass("ANDI508-moduleMenu-selected")
 		.attr("tabindex","0")
 		.attr("aria-selected","true")
 		.append("<img src='"+icons_url+"dropdown.png' role='presentation' />");
-	
+
 	andiBar.showModuleLoading();
 
 	setTimeout(function(){//Slight delay so that the ANDI bar appears earlier
 		$("#ANDI508-testPage")
 			.addClass(module+"ANDI508-testPage");
-		
+
 		//if current module is not this module
 		if(AndiModule.module != module){
 			AndiModule.module = module; //Set current module to launched module
 			AndiModule.activeActionButtons = {}; //Reset action buttons
 		}
-		
+
 		testPageData = new TestPageData(); //get fresh test page data
 
 		//Global Checks
 		andiCheck.isThereExactlyOnePageTitle();
 		andiCheck.areThereMoreExclusiveChildrenThanParents();
-		
+
 		//Load the module's script
 		var script = document.createElement("script");
 		var done = false;
@@ -325,14 +325,14 @@ AndiModule.launchModule = function(module){
 
 		$("#andiModuleScript").remove(); //Remove previously added module script
 		$("#andiModuleCss").remove();//remove previously added module css
-		
+
 		//Execute the module's script
 		document.getElementsByTagName("head")[0].appendChild(script);
-		
+
 		$("#ANDI508").removeClass().addClass("ANDI508-module-"+module).show();
-		
+
 		andiBar.hideModuleLoading();
-		
+
 		andiResetter.resizeHeights();
 	},1);//end setTimeout
 };
@@ -366,11 +366,11 @@ var alert_0007 = new Alert("danger","0","Iframe has no accessible name or [title
 var alert_0008 = new Alert("danger","0"," has no accessible name.","#no_name");
 var alert_0009 = new Alert("warning","0","Iframe has no accessible name or [title].","#no_name");
 
-var alert_0011 = new Alert("danger","1","%%%; element ids should be unique.","#dup_id", 
+var alert_0011 = new Alert("danger","1","%%%; element ids should be unique.","#dup_id",
 							new AlertButton("show ids", "ANDI508-alertButton-duplicateIdOverlay", function(){andiOverlay.overlay_duplicateIds();}, overlayIcon));
 var alert_0012 = new Alert("danger","1","More than one &lt;label[for=%%%]&gt; associates with this element [id=%%%].","#dup_for");
 
-var alert_0021 = new Alert("danger","2","[aria-describedby] should be used in combination with a component that provides an accessible name.","#dby_alone");
+var alert_0021 = new Alert("warning","2","[aria-describedby] should be used in combination with a component that provides an accessible name.","#dby_alone");
 var alert_0022 = new Alert("danger","2","&lt;legend&gt; should be used in combination with a component that provides an accessible name.","#legend_alone");
 
 var alert_0031 = new Alert("danger","3","[aria-labeledby] is mispelled, use [aria-labelledby].","#misspell");
@@ -497,7 +497,7 @@ var alert_0251 = new Alert("caution","25","Page has %%% disabled elements; Disab
 
 var alert_0260 = new Alert("danger","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","#ariahidden");
 var alert_0261 = new Alert("warning","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","#ariahidden");
-	
+
 //==================//
 // DISPLAY HANDLING //
 //==================//
@@ -505,13 +505,13 @@ var alert_0261 = new Alert("warning","26","Element is hidden from screen reader 
 //This private function will get ANDI ready
 //Will add dependencies, insert the ANDI bar, add legacy css, define the controls
 function andiReady(){
-	
+
 	andiResetter.hardReset();
 	dependencies();
 	appendLegacyCss();
 	insertAndiBarHtml();
 	defineControls();
-	
+
 	//This function creates main html structure of the ANDI Bar.
 	function insertAndiBarHtml(){
 		var menuButtons =
@@ -520,7 +520,7 @@ function andiReady(){
 			"<button id='ANDI508-button-keys' aria-label='ANDI Hotkeys List' title='ANDI Hotkeys List'><img src='"+icons_url+"keys-off.png' alt='' /></button>"+
 			"<button id='ANDI508-button-help' aria-label='ANDI Help' title='ANDI Help'><img src='"+icons_url+"help.png' alt='' /></button>"+
 			"<button id='ANDI508-button-close' aria-label='Remove ANDI' title='Remove ANDI'><img src='"+icons_url+"close.png' alt='' /></button>";
-		
+
 		var moduleButtons = "<div id='ANDI508-moduleMenu' role='menu' aria-label='Select a Module'><div id='ANDI508-moduleMenu-prompt'>Select Module:</div>"+
 			//Default (fANDI)
 			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-f'>focusable elements</button>"+
@@ -539,7 +539,7 @@ function andiReady(){
 			//iANDI
 			"<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-i'>iframes</button>"+
 			"</div>";
-		
+
 		var andiBar = "<section id='ANDI508' tabindex='-1' aria-label='ANDI' style='display:none'>"+
 		"<div id='ANDI508-header'>"+
 			"<h1 id='ANDI508-toolName-heading'><a id='ANDI508-toolName-link' class='ANDI508-sectionJump' href='#' aria-haspopup='dialog' aria-label='ANDI "+andiVersionNumber+"'><span id='ANDI508-module-name' data-andi508-moduleversion=''>&nbsp;</span>ANDI</a></h1>"+
@@ -586,24 +586,24 @@ function andiReady(){
 			"</div>"+
 		"</div>"+
 		"</section>";
-		
+
 		if(browserSupports.svg)
 			andiBar += "<svg id='ANDI508-laser-container'><title>ANDI Laser</title><line id='ANDI508-laser'></line></svg>";
-		
+
 		var body = $("body").first();
-		
+
 		//Preserve original body padding and margin
 		var body_padding = "padding:"+$(body).css("padding-top")+" "+$(body).css("padding-right")+" "+$(body).css("padding-bottom")+" "+$(body).css("padding-left")+"; ";
 		var body_margin = "margin:"+$(body).css("margin-top")+" 0px "+$(body).css("margin-bottom")+" 0px; ";
-		
+
 		$("html").addClass("ANDI508-testPage");
 		$(body)
 			.addClass("ANDI508-testPage")
 			.wrapInner("<div id='ANDI508-testPage' style='"+body_padding+body_margin+"' ></div>") //Add an outer container to the test page
 			.prepend(andiBar); //insert ANDI display into body
-		
+
 	}
-	
+
 	//This function appends css shims to the head of the page which are needed for old IE versions
 	function appendLegacyCss(){
 		if(oldIE){
@@ -611,9 +611,9 @@ function andiReady(){
 				"<!--[if lt IE 9]><link href='"+host_url+"ie8.css' rel='stylesheet' /><![endif]-->");
 		}
 	}
-	
+
 	//This function defines what the ANDI controls/settings do.
-	//Controls are: Relaunch, Highlights, Mini Mode, Hotkey List, Help, Close, TagName link, 
+	//Controls are: Relaunch, Highlights, Mini Mode, Hotkey List, Help, Close, TagName link,
 	// prev/next button, module laucnhers, active element jump hotkey, version popup
 	function defineControls(){
 		//ANDI Relaunch Button
@@ -623,7 +623,7 @@ function andiReady(){
 				return false;
 			})
 			.focus(andiSettings.hideSettingsList);
-			
+
 		//ANDI Settings
 		$("#ANDI508-button-settings")
 			.click(function(){
@@ -655,7 +655,7 @@ function andiReady(){
 				var helpLocation = "howtouse.html";
 				if(AndiModule.module != "f") //jump directly to the module on the help page
 					helpLocation = "modules.html#" + AndiModule.module + "ANDI";
-				
+
 				window.open(help_url+helpLocation, "_ANDIhelp",'width=810,height=620,scrollbars=yes,resizable=yes').focus();
 			})
 			.focus(andiHotkeyList.hideHotkeysList);
@@ -705,19 +705,19 @@ function andiReady(){
 
 	//This function sets up several dependencies for running ANDI on the test page.
 	function dependencies(){
-		
+
 		//Define :focusable and :tabbable pseudo classes. Code from jQuery UI
 		$.extend($.expr[ ':' ], {data: $.expr.createPseudo ? $.expr.createPseudo(function(dataName){return function(elem){return !!$.data(elem, dataName);};}) : function(elem, i, match){return !!$.data(elem, match[ 3 ]);},
 			focusable: function(element){return focusable(element, !isNaN($.attr(element, 'tabindex')));},
 			tabbable: function(element){var tabIndex = $.attr(element, 'tabindex'),isTabIndexNaN = isNaN(tabIndex); return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
 		}});
-		
+
 		//Define :shown
 		//Similar to :visible but doesn't include elements with visibility:hidden,
 		$.extend(jQuery.expr[':'], {
 			shown: function (elem){return $(elem).css("visibility") !== "hidden" && $(elem).is(":visible");}
 		});
-		
+
 		//Define isSemantically, Based on jquery .is method
 		//Parameters: should be css selector strings
 		//	roles:	semantic roles to check against. Example: "[role=link]"
@@ -732,15 +732,15 @@ function andiReady(){
 					return $(this).is(tags);
 			}
 		});
-		
-		//Define focusable function: Determines if something is focusable and its ancestors are visible. 
+
+		//Define focusable function: Determines if something is focusable and its ancestors are visible.
 		//Code based on jQuery UI, modifications: disabled links, svg[focusable=true], tabindex=""
 		function focusable(element){
 			var nodeName = element.nodeName.toLowerCase();
 			var tabindex = $.attr(element, "tabindex"); //intentionally using jquery
 			var isTabIndexNotNaN = !isNaN(tabindex) && tabindex !== "";
 			if(nodeName === "area"){
-				var map = element.parentNode; var mapName = map.name; 
+				var map = element.parentNode; var mapName = map.name;
 				if(!element.href || !mapName || map.nodeName.toLowerCase() !== "map") return false;
 				var img = $("img[usemap=\\#" + mapName + "]")[0]; return !!img && visibleParents(img);
 			}
@@ -749,19 +749,19 @@ function andiReady(){
 				!element.disabled
 				: nodeName === "a" ?
 					(element.href && !element.disabled) || isTabIndexNotNaN
-					: isTabIndexNotNaN || 
+					: isTabIndexNotNaN ||
 					//check for focusable svg
-					(nodeName === "svg" && $.attr(element, "focusable") === "true") || 
+					(nodeName === "svg" && $.attr(element, "focusable") === "true") ||
 					//check for contenteditable="true" or contenteditable=""
 					($.attr(element, "contenteditable") === "true" || $.attr(element, "contenteditable") === "")
-				) && visibleParents(element); 
+				) && visibleParents(element);
 			function visibleParents(element){
 				return !$(element).parents().addBack().filter(function(){
 					return $.css(this, "visibility") === "hidden";
 				}).length;
 			}
 		}
-		
+
 		//Define .includes() to make indexOf more readable.
 		if (!String.prototype.includes){
 			String.prototype.includes = function(search, start){
@@ -771,16 +771,16 @@ function andiReady(){
 				else return this.indexOf(search, start) !== -1;
 			};
 		}
-		
+
 		//Define isContainerElement: This support function will return true if an element can contain text (is not a void element)
 		(function($){
 			var visibleVoidElements = ['area','br','embed','hr','img','input','menuitem','track','wbr'];
 			$.fn.isContainerElement = function(){return ($.inArray($(this).prop("tagName").toLowerCase(), visibleVoidElements) == -1);};
 		}(jQuery));
-		
+
 		//Define Object.keys for old IE
 		if (!Object.keys) {Object.keys=(function(){'use strict';var hasOwnProperty = Object.prototype.hasOwnProperty,hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),dontEnums = ['toString','toLocaleString','valueOf','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','constructor'],dontEnumsLength = dontEnums.length;return function(obj) {if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {throw new TypeError('Object.keys called on non-object');}var result = [], prop, i;for (prop in obj) {if (hasOwnProperty.call(obj, prop)) {result.push(prop);}}if (hasDontEnumBug) {for (i = 0; i < dontEnumsLength; i++) {if (hasOwnProperty.call(obj, dontEnums[i])) {result.push(dontEnums[i]);}}}return result;};}());}
-		
+
 		//Define Array.indexOf for old IE
 		if(!Array.prototype.indexOf){Array.prototype.indexOf = function(obj, start){ for (var i = (start || 0), j = this.length; i < j; i++){if (this[i] === obj) { return i; } } return -1;};}
 	}
@@ -809,28 +809,31 @@ function AndiBar(){
 			$("#ANDI508-pageAnalysis").show();
 		}
 	};
-	
+
 	//This function will display the output depending on the logic of the module Output Logic
 	//which should be defined in each module.
 	//It will also add the alerts to the output.
 	//No output will be displayed if there are danger level alerts.
 	this.displayOutput = function(elementData, element, addOnProps){
 		var outputText = ""; //reset - this will hold the output text to be displayed
-		
+
 		if(!checkAlerts("dangers")){ //No dangers found during load
 
 			if(!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !$(element).is(":focusable"))){
-				
+
 				if(elementData.accGroup)
 					outputText += elementData.accGroup + " ";
 				if(elementData.accName){
 					outputText += elementData.accName;
-					
+
 					//Matching: if accessible name matches accessible description, don't output the description
 					if(elementData.accDesc && matchingTest(elementData.accName, elementData.accDesc))
 						outputText += " " + elementData.accDesc;
 				}
-				
+				else{ //no accessible name, provide accessible description
+					outputText += " " + elementData.accDesc;
+				}
+
 				if(addOnProps && addOnProps[0])
 					outputText += " " + wrapText("addOnProperties", addOnProps[0]);
 			}
@@ -840,7 +843,7 @@ function AndiBar(){
 
 		//Place the output display into the container.
 		$("#ANDI508-outputText").html(outputText);
-		
+
 		function checkAlerts(alertType){
 			if(elementData[alertType].length){
 				for(var a=0; a<elementData[alertType].length; a++)
@@ -849,37 +852,37 @@ function AndiBar(){
 			}
 			return false;
 		}
-		
+
 		function wrapText(displayType, text){
 			return " <span class='ANDI508-display-"+displayType+"'>" + text + "</span>";
 		}
-		
+
 		function matchingTest(a, b){
 			a = andiUtility.normalizeOutput(a);
 			b = andiUtility.normalizeOutput(b);
 			return (a !== b);
 		}
 	};
-	
+
 	//This function displays the Accessible Components table.
 	//Only shows components containing data.
 	//Will display message if no accessible components were found.
 	this.displayTable = function(elementData, element, addOnProps){
 		var accessibleComponentsTableBody = $("#ANDI508-accessibleComponentsTable").children("tbody").first();
-		
+
 		//Reset the table to empty
 		$(accessibleComponentsTableBody).html("");
-		
+
 		var rows = "";
 		buildTableBody();
 		if(rows)
 			$(accessibleComponentsTableBody).append(rows);
-		
+
 		andiCheck.wereComponentsFound(elementData.isTabbable, accessibleComponentsTableBody);
 		andiLaser.createReferencedComponentLaserTriggers();
-		
+
 		function buildTableBody(){
-			
+
 			if(!elementData.isAriaHidden){
 				displayGrouping(elementData.grouping);
 				displayEmptyComponents(elementData.empty);
@@ -892,18 +895,18 @@ function AndiBar(){
 				//Don't display any other components because the aria-hidden=true makes them not matter
 				displayAriaHiddenOnly();
 			}
-			
+
 			function buildRow(displayClass, headerText, cellText){
 				return "<tr><th class='ANDI508-display-"+displayClass+"' scope='row'>"+
 					headerText+": </th><td class='ANDI508-display-"+displayClass+"'>"+
 					cellText+"</td></tr>";
 			}
-			
+
 			function displayGrouping(grouping){
 				if(grouping)
 					rows += buildRow("grouping", grouping.role, grouping.text);
 			}
-			
+
 			function displayEmptyComponents(emptyComponents){
 				for(var componentName in emptyComponents){
 					if(emptyComponents.hasOwnProperty(componentName)){
@@ -911,7 +914,7 @@ function AndiBar(){
 					}
 				}
 			}
-			
+
 			function displayConcatenatedInnerText(){
 				if(!$(element).is("table") || $(element).is("[role=presentation],[role=none]") ){ //other exclusions are handled by the getVisibleInnerText
 					var innerText = andiUtility.formatForHtml($.trim(andiUtility.getVisibleInnerText(element, element)));
@@ -919,7 +922,7 @@ function AndiBar(){
 						rows += buildRow("innerText", "innerText", innerText);
 				}
 			}
-			
+
 			function displayComponents(components){
 				for(var component in components){
 					if(component === "ariaLabelledby" || component === "ariaDescribedby"){
@@ -938,25 +941,25 @@ function AndiBar(){
 					}
 				}
 			}
-			
+
 			function displayAddOnProps(){
 				for(x = 1; x<addOnProps.length; x++){
 					if(addOnProps[x].val)//if this addOnProperty exists, add to row
 						rows += buildRow("addOnProperties", addOnProps[x].name, addOnProps[x].val);
 				}
-				
+
 				if(elementData.src)
 					rows += buildRow("addOnProperties", "src", elementData.src);
 			}
-			
+
 			function displayAriaHiddenOnly(){
 				rows += buildRow("addOnProperties", "aria-hidden", "true");
 			}
-			
+
 			function displaySubtreeComponents(){
 				if(elementData.components.subtree)
 					loopThroughSubtrees(elementData.components);
-				
+
 				function loopThroughSubtrees(components){
 					for(var x=0; x<components.subtree.length; x++){
 						var rowspan = 0;
@@ -971,13 +974,13 @@ function AndiBar(){
 
 								if(rowspan > 1) //start new row
 									subtreeComponents += "<tr>";
-								
-								subtreeComponents += "<td><span class='ANDI508-display-"+component+"'>" + 
-									formatComponentName(component) + ":</span> " + 
+
+								subtreeComponents += "<td><span class='ANDI508-display-"+component+"'>" +
+									formatComponentName(component) + ":</span> " +
 									subtree[component] + "</td></tr>";
 							}
 						}
-						
+
 						//Add the <th>
 						if(subtreeComponents){
 							rows += "<tr><th rowspan="+rowspan+"><span class='ANDI508-display-id'>child</span>";
@@ -988,7 +991,7 @@ function AndiBar(){
 							rows += "</th>" + subtreeComponents;
 						}
 					}
-					
+
 				}
 			}
 
@@ -999,7 +1002,7 @@ function AndiBar(){
 			}
 		}
 	};
-	
+
 	//This function will focus on an element if it is inspectable according to this module
 	this.focusIsOnInspectableElement = function(){
 		//Is there is an active element on the page? (was ANDI was relaunched?)
@@ -1008,13 +1011,13 @@ function AndiBar(){
 			//Yes. "re-inspect" the active element
 			andiFocuser.focusOn($(activeElement));
 			return true;
-		} 
+		}
 		else{
 			$("#ANDI508").focus();
 			return false; //module logic should show startUpSummary
 		}
 	};
-	
+
 	//This function will show the startUpSummary with the text provided and conditionally show the pageAnalysis.
 	//It will also hide the activeElementResults
 	this.showStartUpSummary = function(summary, showPageAnalysis){
@@ -1025,12 +1028,12 @@ function AndiBar(){
 		$("#ANDI508-elementDetails").hide();
 		$("#ANDI508-startUpSummary").html("<p>"+summary+"</p>").css("display","inline-block");
 	};
-	
+
 	//This function updates the resultsSummary
 	this.updateResultsSummary = function(summary){
 		$("#ANDI508-resultsSummary-heading").html(summary);
 	};
-	
+
 	//These functions show/hide the elementControls
 	this.showElementControls = function(){
 		$("#ANDI508-elementControls button").css("display","inline-block");
@@ -1038,7 +1041,7 @@ function AndiBar(){
 	this.hideElementControls = function(){
 		$("#ANDI508-elementControls button").hide();
 	};
-	
+
 	//These functions show/hide the anmiated loading image
 	this.showModuleLoading = function(){
 		document.getElementById("ANDI508-body").style.display = "none";
@@ -1050,7 +1053,7 @@ function AndiBar(){
 			document.getElementById("ANDI508-body").style.display = "block";
 		},1);
 	};
-	
+
 	//This function adds the functionality to any moduleActionGroup
 	this.initializeModuleActionGroups = function(){
 		$("#ANDI508-module-actions button.ANDI508-moduleActionGroup-toggler").each(function(){
@@ -1089,7 +1092,7 @@ function AndiBar(){
 				})
 				//Add icon
 				.append(" <img src='"+icons_url+"dropdown.png' role='presentation' />");
-			
+
 			$(this).next()
 				//Menu container
 				.attr("role","application")
@@ -1158,7 +1161,7 @@ function AndiResetter(){
 			$("html.ANDI508-testPage, body.ANDI508-testPage").removeClass("ANDI508-testPage");
 		}
 	};
-	
+
 	//This function is called between module launches.
 	this.softReset = function(testPage){
 		if(testPage){
@@ -1167,14 +1170,14 @@ function AndiResetter(){
 			$("#ANDI508-alerts-list").html("");
 			$("#ANDI508-module-actions").html("");
 			andiBar.showElementControls();
-			
+
 			//Loop through every ANDI508-element to clean up stuff
 			$(testPage).find(".ANDI508-element").each(function(){
 
 				//Module specific cleanup for this element
 				if(AndiModule.cleanup !== undefined)
 					AndiModule.cleanup(testPage, this);
-					
+
 				//Global cleanup
 				$(this)
 					.removeClass("ANDI508-element ANDI508-element-danger ANDI508-highlight")
@@ -1183,20 +1186,20 @@ function AndiResetter(){
 					.off("focus",AndiModule.focusability)
 					.off("mouseenter",AndiModule.hoverability);
 			});
-			
+
 			//Module specific cleanup for all elements
 			if(AndiModule.cleanup !== undefined)
 				AndiModule.cleanup(testPage);
-			
+
 			andiLaser.cleanupLaserTargets(testPage);
-			
+
 			//Remove any custom click logic from prev next buttons (will be reapplied later)
 			$("#ANDI508-button-prevElement").off("click");
 			$("#ANDI508-button-nextElement").off("click");
-			
+
 			//Remove all overlays
 			andiOverlay.removeAllOverlays();
-			
+
 			//remove module class from test page
 			$(testPage).removeClass();
 		}
@@ -1208,7 +1211,7 @@ function AndiResetter(){
 		var testPage = document.getElementById("ANDI508-testPage");
 		//Calculate remaining height for testPage
 		setTimeout(function(){
-			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; 
+			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 			var andiHeight = $("#ANDI508").outerHeight(true);
 			var testPageHeight = (windowHeight - andiHeight) + "px";
 			var testPagePaddingLeftRight = parseInt($(testPage).css("padding-left")) + parseInt($(testPage).css("padding-right"));
@@ -1234,7 +1237,7 @@ function AndiResetter(){
 				andiSettings.hideSettingsList();
 		}, AndiSettings.andiAnimationSpeed+50);
 	};
-	
+
 	//This function will adjust the top distance of all elements on the test page that have css fixed positions.
 	//This allows ANDI to not overlap with test page if using fixed positions.
 	this.storeTestPageFixedPositionDistances = function(element){
@@ -1251,7 +1254,7 @@ function AndiResetter(){
 			$(this).removeAttr("data-andi508-origfixedtopbot").css("top",top).css("bottom",bottom);
 		});
 	};
-	
+
 	//This will automatically call resizeHeights when the browser window is resized by the user.
 	this.resizeHeightsOnWindowResize = function(){
 		$(window).resize(andiResetter.resizeHeights);
@@ -1266,7 +1269,7 @@ function AndiHotkeyList(){
 		this.sp = sp;		//spelling
 		this.code = code;	//keyCode (optional)
 	}
-	
+
 	//Set the hotkeys/accesskeys
 	this.key_jump = new AndiHotkey("`","grave",192);
 	this.key_prev = new AndiHotkey(",","comma");
@@ -1284,15 +1287,15 @@ function AndiHotkeyList(){
 		$("#ANDI508-hotkeyList").slideUp(AndiSettings.andiAnimationSpeed);
 		$("#ANDI508-button-keys").attr("aria-expanded","false").children("img").attr("src",icons_url+"keys-off.png");
 	};
-	
+
 	//This function builds ANDI's hotkey list html
 	this.buildHotkeyList = function(){
 
 		var isMac = navigator.platform.toLowerCase().indexOf('mac') >= 0;
 		var isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
-		
+
 		var hotkeyTrigger = (isMac) ? "ctrl+alt+" : (isFirefox) ? "shift+alt+" : "alt+";
-		
+
 		var hotkeyList = "<div id='ANDI508-hotkeyList'>"+
 			"<h3><a rel='help' href='"+ help_url + "howtouse.html#Hotkeys' target='_blank'>Hotkeys:</a></h3>"+
 			"<span class='ANDI508-code' aria-hidden='true'>&nbsp;"+hotkeyTrigger+"</span>"+
@@ -1303,18 +1306,18 @@ function AndiHotkeyList(){
 			insertHotkeyListItem("Active Element", andiHotkeyList.key_active.key, andiHotkeyList.key_active.sp)+
 			insertHotkeyListItem("ANDI Output", andiHotkeyList.key_output.key, andiHotkeyList.key_output.sp)+
 			insertHotkeyListItem("Section Jump", andiHotkeyList.key_jump.key, andiHotkeyList.key_jump.sp);
-			
+
 		hotkeyList += "</ul><h3><a rel='help' href='"+ help_url + "howtouse.html#HoverLock' target='_blank'>Hover Lock:</a></h3><ul aria-label='Hover lock is a feature for mouse users.'><li>&nbsp;&nbsp;&nbsp;hold shift</li></ul></div>";
-		
+
 		$("#ANDI508-button-keys").after(hotkeyList);
-		
+
 		$("#ANDI508-hotkeyList").keydown(function(e){
 			if(e.keyCode === 27){//esc
 				andiHotkeyList.hideHotkeysList();
 				$("#ANDI508-button-keys").focus();
 			}
 		});
-		
+
 		//This function will insert a hotkey list item.
 		function insertHotkeyListItem(purpose,key,key_sp){
 			return "<li><span class='ANDI508-screenReaderOnly'>"+hotkeyTrigger+key_sp+" </span><span class='ANDI508-code' aria-hidden='true'>"+key+"</span>&nbsp;"+purpose+"</li>";
@@ -1326,7 +1329,7 @@ function AndiHotkeyList(){
 function AndiSettings(){
 
 	//This function will save ANDI settings
-	this.saveANDIsettings = function(){ 
+	this.saveANDIsettings = function(){
 		//If this browser has HTML5 local storage capabilities
 		if(typeof(Storage) !== "undefined"){
 			try{
@@ -1346,7 +1349,7 @@ function AndiSettings(){
 		buildSettingsList();
 		addSettingListNavigation();
 		addSettingsButtonLogic();
-		
+
 		//If this browser has HTML5 local storage capabilities
 		if(typeof(Storage) !== "undefined"){
 			try{
@@ -1377,7 +1380,7 @@ function AndiSettings(){
 			}catch(err){console.error(err);}
 		}
 	};
-	
+
 	//This function will toggle the state of mini mode
 	//	state: true or false
 	this.minimode = function(state){
@@ -1393,7 +1396,7 @@ function AndiSettings(){
 		}
 		andiResetter.resizeHeights(true);
 	};
-	
+
 	//This function will toggle the state of linearize
 	//	state: true or false
 	this.linearize = function(state){
@@ -1416,13 +1419,13 @@ function AndiSettings(){
 						$(this).addClass("ANDI508-linearized ANDI508-linearized-position");
 					}
 				}
-				
+
 				//check float property
 				css_float = $(this).css("float");
 				if(css_float === "left" || css_float === "right"){
 					$(this).addClass("ANDI508-linearized ANDI508-linearized-float");
 				}
-				
+
 			});
 		}
 		else{//linearize off
@@ -1431,7 +1434,7 @@ function AndiSettings(){
 		}
 		andiResetter.resizeHeights(true);
 	};
-	
+
 	//These functions show/hide the settings list
 	this.showSettingsList = function(){
 		$("#ANDI508-settingsList").slideDown(AndiSettings.andiAnimationSpeed).find("a").first().focus();
@@ -1443,7 +1446,7 @@ function AndiSettings(){
 			$("#ANDI508-button-settings").attr("aria-expanded","false").children("img").first().attr("src",icons_url+"settings-off.png");
 		},5);
 	};
-	
+
 	//This function builds the settings list
 	function buildSettingsList(){
 		var settingsList = "<div id='ANDI508-settingsList' role='application'>"+
@@ -1454,7 +1457,7 @@ function AndiSettings(){
 			"</div>";
 		$("#ANDI508-button-settings").after(settingsList);
 	}
-	
+
 	//This function adds the click logic to the settings buttons
 	function addSettingsButtonLogic(){
 		//Highlights Button
@@ -1474,7 +1477,7 @@ function AndiSettings(){
 			andiResetter.resizeHeights(true);
 			return false;
 		});
-		
+
 		//Define the linearize
 		$("#ANDI508-button-linearize").click(function(){
 			if($(this).attr("aria-checked") === "false")
@@ -1484,7 +1487,7 @@ function AndiSettings(){
 			andiSettings.saveANDIsettings();
 			return false;
 		});
-		
+
 		//Mini Mode Button
 		$("#ANDI508-button-minimode").click(function(){
 			if($("#ANDI508-body").hasClass("ANDI508-minimode"))
@@ -1495,7 +1498,7 @@ function AndiSettings(){
 			return false;
 		});
 	}
-	
+
 	function addSettingListNavigation(){
 		$("#ANDI508-settingsList").keydown(function(e){
 			switch(e.keyCode){
@@ -1515,7 +1518,7 @@ function AndiSettings(){
 			}
 		});
 	}
-	
+
 	//These functions handle the on-off state of a settings toggle
 	this.setting_on = function(button){
 		$(button).attr("aria-checked","true").children("img").first().attr("src",icons_url+"checked-on.png");
@@ -1549,7 +1552,7 @@ function AndiFocuser(){
 		}
 		else if(!$(element).attr("tabindex") && ((browserSupports.isIE && $(element).is("summary")) || !$(element).is(":focusable"))){
 			//"Flash" the tabindex
-			
+
 			//img with usemap cannot be given focus (browser moves focus to the <area>)
 			//so temporarily remove the usemap attr, reapply after focus
 			var useMapVal;
@@ -1557,12 +1560,12 @@ function AndiFocuser(){
 				useMapVal = $(element).attr("usemap");
 				$(element).removeAttr("usemap");
 			}
-			
+
 			$(element)
 				.attr("tabindex","-1")
 				.focus()
 				.removeAttr("tabindex");
-				
+
 			if(useMapVal) //Add usemap back on
 				$(element).attr("usemap",useMapVal);
 		}
@@ -1574,7 +1577,7 @@ function AndiFocuser(){
 //This function adds the capability to draw a line to visually connect the elements on the screen.
 //It works by showing an svg #ANDI508-laser-container that contains a line tag.
 //The coordinates of the line tag are updated to draw the line.
-//NOTE: The svg has a high z-index to keep it on top of the test page, therefore, 
+//NOTE: The svg has a high z-index to keep it on top of the test page, therefore,
 //it must be hidden at the right time so that the page can be interacted with.
 function AndiLaser(){
 	//Draws a laser. Pass in an object containing properties top and left, AKA the result of jQuery offset().
@@ -1622,7 +1625,7 @@ function AndiLaser(){
 			$(triggerObject).on("mouseleave",andiLaser.eraseLaser);
 		}
 	};
-	//This function creates a laserAimer HTML object 
+	//This function creates a laserAimer HTML object
 	//which will store the relatedLaserIndex of the object to point the laser at
 	this.createLaserTarget = function(targetElement, referencedText){
 		if(browserSupports.svg && referencedText !== ""){
@@ -1639,12 +1642,12 @@ function AndiLaser(){
 		else
 			return referencedText;
 	};
-	
+
 	//This function will remove all laser targets
 	this.cleanupLaserTargets = function(testPage){
 		$(testPage).find(".ANDI508-relatedLaserTarget").removeClass("ANDI508-relatedLaserTarget").removeAttr("data-andi508-relatedlaserindex");
 	};
-	
+
 	//This function will createLaserTrigger for each data-andi508-relatedlaserindex in the td cell of the accessibility components table
 	//It is used for (aria-labelledby, label, aria-describedby)
 	this.createReferencedComponentLaserTriggers = function(){
@@ -1658,29 +1661,29 @@ function AndiLaser(){
 
 //This class is used to perform common utilities such as regular expressions and string alertations.
 function AndiUtility(){
-	
+
 	//cache the regex for performance gains
 	this.greaterthan_regex = />/g;
 	this.lessthanthan_regex = /</g;
 	this.ampersand_regex = /&/g;
 	this.whitespace_regex = /\s+/g;
-	
-	//This ultility function takes a string and converts &, < and > into &amp;, &lt; and &gt; so that when the 
+
+	//This ultility function takes a string and converts &, < and > into &amp;, &lt; and &gt; so that when the
 	//string is displayed on screen, the browser doesn't try to parse the string into html tags.
 	this.formatForHtml = function(string){
 		if(string !== undefined)
 			return string.replace(this.ampersand_regex, "&amp;").replace(this.greaterthan_regex, "&gt;").replace(this.lessthanthan_regex, "&lt;");
 	};
-	
+
 	this.condenseWhitespace = function(string){
 		if(string !== undefined)
 			return string.replace(this.whitespace_regex, " ");
 	};
-	
+
 	this.stripHTML = function(string){
 		return $("<b>"+string+"</b>").text();
 	};
-	
+
 	this.getVisibleInnerText = function(element, root){
 		var innerText = "";
 		var exclusions = ".ANDI508-overlay,script,noscript,iframe";
@@ -1688,7 +1691,7 @@ function AndiUtility(){
 		if(!$(element).is(exclusions) && element.childNodes){
 			//Loop through this element's child nodes
 			lookForPseudoContent("before",element);
-			
+
 			for(var z=0; z<element.childNodes.length; z++){
 				node = element.childNodes[z];
 				if(node.nodeType === 1){//element node
@@ -1704,11 +1707,11 @@ function AndiUtility(){
 					innerText += andiUtility.condenseWhitespace(node.nodeValue);
 				}
 			}
-			
+
 			lookForPseudoContent("after",element);
 		}
 		return innerText;
-		
+
 		//This function is essentially StepE of the TAC
 		function isEmbeddedControl(node){
 			var component;
@@ -1745,7 +1748,7 @@ function AndiUtility(){
 			}
 			return false;
 		}
-		
+
 		//This function checks for pseudo element content and adds to the innerText
 		function lookForPseudoContent(pseudo, element, data){
 			var pseudoObject = andiUtility.getPseudoContent(pseudo, element);
@@ -1754,7 +1757,7 @@ function AndiUtility(){
 			}
 		}
 	};
-	
+
 	//This function checks for pseudo element content
 	//Return: Array [displayText, contentLiteral]
 	this.getPseudoContent = function(pseudo, element){
@@ -1769,22 +1772,22 @@ function AndiUtility(){
 			}
 		}
 		return undefined;
-		
+
 		function hasReadableCharacters(content){
 			var unicode, c;
-				
+
 			//replaces \a with a space
 			content = content.replace(/\\a /," ");
-			
+
 			content = stripContentKeywords(content);
-			
+
 			for(var i=0; i<content.length; i++){
 				unicode = content.charCodeAt(i);
-				
+
 				c = content.charAt(i);
 				if( //if unicode is not in a private use range
 					(unicode < 57344) ||
-					!(	
+					!(
 						(unicode >= 57344 && unicode <= 63743) ||
 						(unicode >= 983040 && unicode <= 1048573) ||
 						(unicode >= 1048576 && unicode <= 1114109)
@@ -1793,23 +1796,23 @@ function AndiUtility(){
 					displayText += c;
 				}
 			}
-			
+
 			//strip double quotes
 			//TODO: do it more "carefully"
 			var regex_everydoublequote = /"/g;
 			displayText = displayText.replace(regex_everydoublequote,'');
-			
+
 			return displayText;
 		}
-		
+
 		//This function removes CSS content keywords for display purposes
 		function stripContentKeywords(c){
 			//gets common content keywords and their values between parens and the parens
 			var regex_keywords = /(url\()(.*)(\))|(counter\()(.*)(\))|(counters\()(.*)(\))/;
-			
+
 			//removes common content keywords and their values between parens and the parens
 			c = c.replace(regex_keywords,'');
-			
+
 			return c;
 		}
 	};
@@ -1825,7 +1828,7 @@ function AndiUtility(){
 		var blockElements = ["address","article","aside","blockquote","br","caption","dd","div","dl","dt","fieldset",
 			"figcaption","figure","footer","h1","h2","h3","h4","h5","h6","hr","header","legend",
 			"li","main","nav","ol","output","p","pre","section","table","td","tfoot","th","tr","ul"];
-			
+
 		for(var prop in blockStyles){
 			if(blockStyles.hasOwnProperty(prop)){
 				var values = blockStyles[prop];
@@ -1846,7 +1849,7 @@ function AndiUtility(){
 		}
 		return false;
 	};
-	
+
 	//this function does a trim, strips html, and removes the refid
 	this.normalizeOutput = function(text){
 		var regex_idRef = /<span class='ANDI508-display-id'>#(.*?)<\/span>/;
@@ -1860,17 +1863,17 @@ function AndiUtility(){
 
 //This class handles overlay creation and removal
 function AndiOverlay(){
-	
+
 	//This function will create an overlay html element
 	this.createOverlay = function(purposeClass, innerText, title, tabindex){
 		if(!tabindex)
 			tabindex = 0;
-		
+
 		var overlay = document.createElement("span");
-		
+
 		if(title)
 			$(overlay).attr("title",title);
-		
+
 		$(overlay)
 			.attr("tabindex",tabindex)
 			.addClass("ANDI508-overlay "+purposeClass)
@@ -1886,7 +1889,7 @@ function AndiOverlay(){
 	this.removeAllOverlays = function(){
 		$("#ANDI508-testPage span.ANDI508-overlay").remove();
 	};
-	
+
 	//This function will overlay duplicate ids
 	this.overlay_duplicateIds = function(){
 		var btn = $("#ANDI508-alertButton-duplicateIdOverlay");
@@ -1920,7 +1923,7 @@ function AndiOverlay(){
 			andiOverlay.removeOverlay("ANDI508-overlay-duplicateId");
 		}
 	};
-	
+
 	//This function will overlay disabled elements
 	this.overlay_disabledElements = function(alsoAriaDisabled){
 		var btn = $("#ANDI508-alertButton-disabledElementsOverlay");
@@ -1947,11 +1950,11 @@ function AndiOverlay(){
 			andiOverlay.removeOverlay("ANDI508-overlay-disabledElement");
 		}
 	};
-	
+
 	//This function will insert an overlay onto the page
 	//Set alwaysBefore to true to ensure the overlay won't be prepended, but will be placed before the element
 	this.insertAssociatedOverlay = function(element, overlayObject, alwaysBefore){
-		
+
 		if(element.nodeType === 3){//this is a text node, not an element
 			//using parentNode because parentElement doesn't work on text nodes in IE
 			element.parentNode.insertBefore(overlayObject,element);
@@ -1973,7 +1976,7 @@ function AndiOverlay(){
 				$(element).before(overlayObject);
 			}
 		}
-		
+
 		//Attach association highlighting events.
 		$(overlayObject)
 			.on("mouseover",function(){
@@ -1986,7 +1989,7 @@ function AndiOverlay(){
 				$(element).removeClass("ANDI508-overlay-associated");
 			});
 	};
-	
+
 	//This function will overlay the title attributes.
 	this.overlayTitleAttributes = function(){
 		var title = "";
@@ -1997,7 +2000,7 @@ function AndiOverlay(){
 			title = ""; //reset
 		});
 	};
-	
+
 	//These functions handle the on-off state of a find/highlight button
 	this.overlayButton_on = function(icon, button){
 		$(button)
@@ -2021,39 +2024,39 @@ function AndiOverlay(){
 //Should be re-instantiated for each element to be inspected
 //If a child is passed in, it will grab the accessibility components from the child instead.
 function AndiData(element, skipTAC){
-	
+
 	andiAlerter.reset();
-	
+
 	testPageData.andiElementIndex++;
-	
+
 	AndiData.data = {
 		andiElementIndex: testPageData.andiElementIndex,
 		components: {} //will store the accessible components as they are gathered
 		};
-	
+
 	AndiData.grab_semantics(element, AndiData.data);
-	
+
 	if(!skipTAC){
 		//do the text alternative computation
 		AndiData.textAlternativeComputation(element);
 		AndiData.grab_coreProperties(element);
 	}
-	
+
 	$(element)
 		.addClass("ANDI508-element")
 		.attr("data-andi508-index",AndiData.data.andiElementIndex)
 		.on("focus",AndiModule.focusability)
 		.on("mouseenter",AndiModule.hoverability);
-		
+
 	return AndiData.data;
 }
-	
+
 AndiData.grab_coreProperties = function(element){
-	
+
 	grab_tabindex();
 	grab_accesskey();
 	grab_imageSrc();
-	
+
 	function grab_tabindex(){
 		AndiData.data.isTabbable = true; //assume true (prove to be false)
 		var tabindex = $.trim($(element).attr("tabindex"));
@@ -2086,7 +2089,7 @@ AndiData.grab_coreProperties = function(element){
 			AndiData.data.isTabbable = false;
 		}
 	}
-	
+
 	function grab_accesskey(){
 		var accesskey = $(element).attr("accesskey");
 		if(accesskey && accesskey !== " "){ //accesskey is not the space character
@@ -2094,7 +2097,7 @@ AndiData.grab_coreProperties = function(element){
 			AndiData.data.accesskey = accesskey;
 		}
 	}
-	
+
 	function grab_imageSrc(){
 		var imageSrc;
 		if($(element).is("area")){
@@ -2106,7 +2109,7 @@ AndiData.grab_coreProperties = function(element){
 			imageSrc = $(element).attr("src");
 		else if($(element).is("svg"))
 			imageSrc = ($(element).find("image").first().attr("src"));
-		
+
 		if(imageSrc){
 			imageSrc = imageSrc.split("/").pop(); //get the filename and extension only
 			AndiData.data.src = imageSrc;
@@ -2118,7 +2121,7 @@ AndiData.grab_coreProperties = function(element){
 // Grab Semantics://
 //================//
 AndiData.grab_semantics = function(element, data){
-	
+
 	grab_tagName();
 	grab_role();
 
@@ -2128,7 +2131,7 @@ AndiData.grab_semantics = function(element, data){
 			tagNameText += "[type="+$(element).prop("type").toLowerCase()+"]"; //add the type within brackets
 		data.tagNameText = tagNameText;
 	}
-	
+
 	function grab_role(){
 		var role = $.trim($(element).attr("role")).toLowerCase();
 		if(role)
@@ -2151,7 +2154,7 @@ AndiData.textAlternativeComputation = function(root){
 	//check against this list to prevent infinite loops
 	var nodesTraversed;
 	var isCalcAccDesc = false;
-	
+
 	//This function recursively travels up the anscestor tree looking for aria-hidden=true.
 	//Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
 	//TODO: This is expensive
@@ -2171,7 +2174,7 @@ AndiData.textAlternativeComputation = function(root){
 			//determine if components that could also be describers where used in the name
 			checkIfUsedInName(["value","caption","title"]);
 		}
-		
+
 		function checkIfUsedInName(list){
 			for(var u=0; u<list.length; u++){
 				if(AndiData.data.components[list[u]]){
@@ -2192,9 +2195,9 @@ AndiData.textAlternativeComputation = function(root){
 			AndiData.data.accGroup = $.trim(result);
 		}
 	}
-	
+
 	if(!isAriaHidden){
-	
+
 		//Calculate Accessible Name
 		nodesTraversed = [];
 		calcAccName(stepB(root, AndiData.data.components));
@@ -2204,14 +2207,14 @@ AndiData.textAlternativeComputation = function(root){
 			calcAccName(stepF(root, AndiData.data.components));
 		calcAccName(stepI(root, AndiData.data.components));
 		calcAccName(stepJ(root, AndiData.data.components));
-		
+
 		//Calculate Accessible Description
 		isCalcAccDesc = true;
 		nodesTraversed = [];
 		calcAccDesc(stepB(root, AndiData.data.components));
 		calcAccDesc(stepD(root, AndiData.data.components));
 		calcAccDesc(stepI(root, AndiData.data.components));
-		
+
 		//Calculate Element Grouping
 		nodesTraversed = [];
 		checkIfGroupFound(stepZ(root, AndiData.data));
@@ -2220,7 +2223,7 @@ AndiData.textAlternativeComputation = function(root){
 	else{
 		AndiData.data.isAriaHidden = true;
 	}
-	
+
 	//stepB: aria-labelledby or aria-describedby
 	//Params:	isProcessRefTraversal - keeps track of whether the calculation is already doing a reference traversal to prevent infinite looping
 	function stepB(element, data, isProcessRefTraversal){
@@ -2229,7 +2232,7 @@ AndiData.textAlternativeComputation = function(root){
 			var componentType = (isCalcAccDesc) ? "ariaDescribedby" : "ariaLabelledby";
 			var attribute = (isCalcAccDesc) ? "aria-describedby" : "aria-labelledby";
 			var component = $(element).attr(attribute);
-			
+
 			if(component !== undefined){
 				if(!isEmptyComponent(component, componentType, element)){
 					var idsArray = component.split(" ");
@@ -2237,27 +2240,27 @@ AndiData.textAlternativeComputation = function(root){
 					var missingReferences = [];
 					var firstRefInstances = []; //stores refIds that have been found for the first time
 					var duplicateRefInstances = []; //will store any duplicate refIds (prevents alert being thown multiple times for same id)
-					
+
 					for(var x=0; x<idsArray.length; x++){ //for each id in the array the array
 						if(idsArray[x] !== ""){
 							if(firstRefInstances.indexOf(idsArray[x]) === -1){
 								//id has not been referenced yet
 								firstRefInstances.push(idsArray[x]);
 								refElement = document.getElementById(idsArray[x]);
-							
+
 								if(refElement){
 									if($(refElement).is("legend")) //is directly referencing a legend
 										andiAlerter.throwAlert(alert_006B, [attribute]);
-									
+
 									if(!hasNodeBeenTraversed(refElement)){
 										andiCheck.areThereAnyDuplicateIds(attribute, idsArray[x]);
-											
+
 										//Don't call stepB again to avoid infinite loops (spec explicitely defines this)
 										if(element != refElement && $(refElement).attr(attribute)){//reference contains another reference
 											andiAlerter.throwAlert(alert_006C, [attribute, attribute]);
 											AndiData.addComp(data, componentType, [(AndiCheck.emptyString+" "), refElement, idsArray[x]]);
 										}
-										
+
 										var refData = {}; //will be discarded
 										if(calcRefName(stepC(refElement, refData))); //aria-label
 										else if(calcRefName(stepD(refElement, refData))); //native markup
@@ -2266,16 +2269,16 @@ AndiData.textAlternativeComputation = function(root){
 										else if(calcRefName(stepI(refElement, refData))); //title attribute
 										else if(calcRefName(stepJ(refElement, refData))); //placeholder
 									}
-									else{//Referenced Element has already been traversed. 
+									else{//Referenced Element has already been traversed.
 										andiAlerter.throwAlert(alert_006E, [attribute, idsArray[x]]);
 										var refData = {}; //will be discarded
 										var alreadyTraversedText = (
-											stepC(refElement, refData) || 
-											stepD(refElement, refData) || 
+											stepC(refElement, refData) ||
+											stepD(refElement, refData) ||
 											//stepE(refElement, refData) ||
-											stepF(refElement, refData, true, true) || 
+											stepF(refElement, refData, true, true) ||
 											stepI(refElement, refData) ||
-											stepJ(refElement, refData) 
+											stepJ(refElement, refData)
 											);
 										AndiData.addComp(data, componentType, [alreadyTraversedText, refElement, idsArray[x]]);
 									}
@@ -2293,18 +2296,18 @@ AndiData.textAlternativeComputation = function(root){
 							}
 						}
 					}//end for loop
-					
+
 					if(idsArray.length === missingReferences.length){//none of the id references return anything useful
 						addEmptyComponent(componentType, data[componentType][0]); //add empty component
 						delete data[componentType]; //remove from component list
 					}
-					
+
 					andiCheck.areThereMissingReferences(attribute, missingReferences);
 				}
 			}
 		}
 		return accumulatedText;
-		
+
 		function calcRefName(result){
 			if(result){
 				accumulatedText += AndiData.addComp(data, componentType, [(result + " "), refElement, refElement.id]);
@@ -2313,7 +2316,7 @@ AndiData.textAlternativeComputation = function(root){
 			return false;
 		}
 	}
-	
+
 	//stepC: aria-label
 	function stepC(element, data){
 		var accumulatedText = "";
@@ -2325,14 +2328,14 @@ AndiData.textAlternativeComputation = function(root){
 		}
 		return accumulatedText;
 	}
-	
+
 	//stepD: native markup
 	//isRecursion is used to prevent an input from grabbing its label twice
 	function stepD(element, data, isRecursion){
 		var accumulatedText = "";
 		var component;
 		var role = $(element).attr("role");
-		
+
 		if(!isCalcAccDesc){
 			component = $(element).attr("alt");
 			if(component !== undefined){
@@ -2351,7 +2354,7 @@ AndiData.textAlternativeComputation = function(root){
 				}
 			}
 		}
-		
+
 		if($(element).is("input[type=image],input[type=button],input[type=submit],input[type=reset]")){
 			//value (can be namer or describer)
 			if(!data.value){
@@ -2390,7 +2393,7 @@ AndiData.textAlternativeComputation = function(root){
 					accumulatedText += data.caption;
 				}
 			}
-			
+
 			//summary
 			if(!isCalcAccDesc){
 				component = $(element).attr("summary");
@@ -2430,7 +2433,7 @@ AndiData.textAlternativeComputation = function(root){
 					if(component !== undefined){
 						accumulatedText += AndiData.addComp(data, "svgTitle", component);
 					}
-					
+
 					component = $(element).find("desc").first().text();
 					if(component !== undefined){
 						if(data.svgTitle)
@@ -2443,7 +2446,7 @@ AndiData.textAlternativeComputation = function(root){
 
 		return accumulatedText;
 	}
-	
+
 	//stepE: embedded control
 	function stepE(element, data){
 		var accumulatedText = "";
@@ -2451,7 +2454,7 @@ AndiData.textAlternativeComputation = function(root){
 			accumulatedText += $(element).val();
 		}
 		else if($(element).is("select")){
-			var selectedOption = $(element).find("option:selected").first(); 
+			var selectedOption = $(element).find("option:selected").first();
 			if(selectedOption)
 				accumulatedText += andiUtility.getVisibleInnerText(selectedOption[0], root);
 		}
@@ -2460,17 +2463,17 @@ AndiData.textAlternativeComputation = function(root){
 		}
 		return accumulatedText;
 	}
-	
+
 	//stepF: name from content
 	function stepF(element, data, isNameFromContent, isProcessRefTraversal){
 		var accumulatedText = "";
 
 		var exclusions = ".ANDI508-overlay,script,noscript,iframe";
-		
+
 		var node, beforePseudo, afterPseudo;
 		var nameFromContent_roles = "[role=button],[role=cell],[role=checkbox],[role=columnheader],[role=gridcell],[role=heading],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[role=radio],[role=row],[role=rowgroup],[role=rowheader],[role=switch],[role=tab],[role=tooltip],[role=tree],[role=treeitem]";
 		var nameFromContent_tags = "label,button,a,th,td,h1,h2,h3,h4,h5,h6";
-		
+
 		if(!data) //create data object if not passed
 			data = {};
 
@@ -2479,7 +2482,7 @@ AndiData.textAlternativeComputation = function(root){
 
 		//get CSS ::before content
 		lookForPseudoContent("before", element, data);
-		
+
 		//Loop through this element's child nodes
 		for(var z=0; z<element.childNodes.length; z++){
 			node = element.childNodes[z];
@@ -2499,7 +2502,7 @@ AndiData.textAlternativeComputation = function(root){
 						if(isNameFromContent || $(node).isSemantically(nameFromContent_roles, nameFromContent_tags)){
 							//Recurse through subtree
 							subtreeData = {};
-							
+
 							if(!isProcessRefTraversal && calcSubtreeName( stepB(node, subtreeData) ) ); //aria-labelledby
 							else if(calcSubtreeName( stepC(node, subtreeData) ) ); //aria-label
 							else if(calcSubtreeName( stepD(node, subtreeData, true) ) ); //native markup
@@ -2507,7 +2510,7 @@ AndiData.textAlternativeComputation = function(root){
 							else if(root != node && calcSubtreeName( stepF(node, subtreeData, true, isProcessRefTraversal), true) ); //name from content
 							else if(calcSubtreeName( stepI(node, subtreeData, true) ) ); //title attribute
 							else if(calcSubtreeName( stepJ(node, subtreeData) ) ); //placeholder
-							
+
 							pushSubtreeData(data, subtreeData, node);
 						}
 						else{//not a name from content element
@@ -2524,12 +2527,12 @@ AndiData.textAlternativeComputation = function(root){
 				}
 			}
 		}
-		
+
 		//get CSS ::after content
 		lookForPseudoContent("after", element, data);
-		
+
 		return accumulatedText;
-		
+
 		function calcSubtreeName(result, checkForBlockLevelElement){
 			if(result)
 				accumulatedText += result;
@@ -2537,7 +2540,7 @@ AndiData.textAlternativeComputation = function(root){
 				accumulatedText += " "; //add extra space after block elements
 			return !!result;
 		}
-		
+
 		function pushSubtreeData(data, subtreeData, node){
 			if(!$.isEmptyObject(subtreeData)){
 				AndiData.grab_semantics(node, subtreeData);
@@ -2546,7 +2549,7 @@ AndiData.textAlternativeComputation = function(root){
 				data.subtree.push(subtreeData);
 			}
 		}
-		
+
 		//This function checks for pseudo element content and accumulates text and adds a component to the data object
 		function lookForPseudoContent(pseudo, element, data){
 			var pseudoObject = andiUtility.getPseudoContent(pseudo, element);
@@ -2556,7 +2559,7 @@ AndiData.textAlternativeComputation = function(root){
 			}
 		}
 	}
-	
+
 	//stepG: text node
 	function stepG(textNode, data){
 		var accumulatedText = "";
@@ -2568,11 +2571,11 @@ AndiData.textAlternativeComputation = function(root){
 		}
 		return accumulatedText;
 	}
-	
+
 	//stepI: title attribute
 	function stepI(element, data, isCheckRolePresentation){
 		var accumulatedText = "";
-		
+
 		if(!data.title){
 			component = $(element).attr("title");
 			if(component !== undefined){
@@ -2586,7 +2589,7 @@ AndiData.textAlternativeComputation = function(root){
 			accumulateText(data.title);
 		}
 		return accumulatedText;
-		
+
 		//This function will check for role=presentation|none which should only occur on stepD
 		function accumulateText(text){
 			if(isCheckRolePresentation){
@@ -2597,11 +2600,11 @@ AndiData.textAlternativeComputation = function(root){
 			accumulatedText += text;
 		}
 	}
-	
+
 	//stepJ - placeholder
 	function stepJ(element, data){
 		var accumulatedText = "";
-		
+
 		if(!isCalcAccDesc){
 			if($(element).is("textarea") || ( $(element).is("input") && $(element).is("[type=text],[type=password],[type=search],[type=tel],[type=email],[type=url]") ) ){
 				component = $(element).attr("placeholder");
@@ -2610,14 +2613,14 @@ AndiData.textAlternativeComputation = function(root){
 				}
 			}
 		}
-		
+
 		return accumulatedText;
 	}
-	
+
 	//stepZ: //grouping
 	function stepZ(element, data){
 		var groupingText = "";
-		
+
 		//role=radiogroup
 		if(TestPageData.page_using_role_radiogroup && $(element).isSemantically("[role=radio]","input[type=radio]")){
 			getGroupingText($(element).closest("[role=radiogroup],[role=group]"));
@@ -2647,54 +2650,54 @@ AndiData.textAlternativeComputation = function(root){
 				groupingText += AndiData.addComp(data.components, "legend", component);
 			}
 		}
-		
+
 		return groupingText;
-		
+
 		function getGroupingText(groupingElement){
 			if(groupingElement){
 				component = getNameforGroupingElement(groupingElement);
 				groupingText += addComp_grouping(data, component, groupingElement);
 			}
-			
+
 			function getNameforGroupingElement(groupingElement){
 				var accumulatedText = "";
 				var discard = {};
-				
+
 				isCalcAccDesc = false;
 				if(calcGroupingName(stepB(groupingElement, discard)));
 				else if(calcGroupingName(stepC(groupingElement, discard)));
-				
+
 				return accumulatedText;
-				
+
 				function calcGroupingName(result){
 					if(result)
 						accumulatedText += result;
 					return !!result;
 				}
 			}
-			
+
 			function addComp_grouping(data, component, groupingElement){
 				var displayText = "";
-		
+
 				if($.trim(component) !== "")
 					displayText = "<span class='ANDI508-display-grouping'>" + component + "</span>";
-				
+
 				if(displayText){
 					if(!data.grouping) //create grouping object
 						data.grouping = {};
-						
+
 					if(!data.grouping.role) //store grouping role
 						data.grouping.role = $(groupingElement).attr("role");
-					
+
 					data.grouping.text = displayText;
 				}
 				return displayText;
 			}
 		}
 	}
-	
+
 	//Support Functions
-	
+
 	function isEmptyComponent(component, componentType, element){
 		if($.trim(component) == ""){
 			if(element == root)//only record empty components for the root
@@ -2703,13 +2706,13 @@ AndiData.textAlternativeComputation = function(root){
 		}
 		return false;
 	}
-	
+
 	function addEmptyComponent(componentType, component){
 		if(!AndiData.data.empty)
 			AndiData.data.empty = {};
 		AndiData.data.empty[componentType] = component;
 	}
-	
+
 	function hasNodeBeenTraversed(node){
 		if(nodesTraversed.indexOf(node) === -1){
 			nodesTraversed.push(node);
@@ -2717,17 +2720,17 @@ AndiData.textAlternativeComputation = function(root){
 		}
 		return true; //has been traversed
 	}
-	
+
 	function grab_label(element){
 		var labelElement;
-		
+
 		//check if label is being used on page
 		var accumulatedText = grab_labelNested(element);
 		if(accumulatedText === undefined)
 			accumulatedText = grab_labelFor(element);
-		
+
 		return (accumulatedText !== undefined) ? [accumulatedText, labelElement] : undefined;
-		
+
 		//This function attempts to grab the nested label if it exists
 		function grab_labelNested(element){
 			var labelText;
@@ -2746,7 +2749,7 @@ AndiData.textAlternativeComputation = function(root){
 			}
 			return labelText;
 		}
-		
+
 		//This function attempts to grab the label with a [for] value that matches the element's id
 		function grab_labelFor(element){
 			var labelText;
@@ -2764,7 +2767,7 @@ AndiData.textAlternativeComputation = function(root){
 				if(labelFor){//label with matching [for] was found
 					labelElement = labelFor;
 					labelText = andiUtility.getVisibleInnerText(labelFor[0], element);
-					
+
 					//Check if this is referencing an element with a duplicate id
 					andiCheck.areThereAnyDuplicateIds("label[for]", element.id);
 				}
@@ -2772,7 +2775,7 @@ AndiData.textAlternativeComputation = function(root){
 			return labelText;
 		}
 	}
-	
+
 	function grab_legend(element){
 		var legendText;
 		var fieldset = ($(element).is("fieldset")) ? $(element) : $(element).closest("fieldset");
@@ -2785,7 +2788,7 @@ AndiData.textAlternativeComputation = function(root){
 		}
 		return (legendText !== undefined) ? [legendText, legend] : undefined;
 	}
-	
+
 	function grab_figcaption(element){
 		var figcaptionText;
 		var figcaption = $(element).children("figcaption").first();
@@ -2794,7 +2797,7 @@ AndiData.textAlternativeComputation = function(root){
 		}
 		return (figcaptionText !== undefined) ? [figcaptionText, figcaption] : undefined;
 	}
-	
+
 	function grab_caption(element){
 		var captionText;
 		var caption = $(element).children("caption").first();
@@ -2826,7 +2829,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 					if(text)
 						prop.out = text += " selected";
 				}
-				displayAsId(prop); 
+				displayAsId(prop);
 			}
 		}
 		pushProp();
@@ -2903,7 +2906,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 	}
 
 	//===Get properties filtered by role/tag name
-	
+
 	if($(element).is("input")){
 		//checked
 		if(hasRole("","input[type=checkbox],input[type=radio]")){
@@ -2915,7 +2918,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			pushProp();
 		}
 	}
-	
+
 	//expanded/collapsed
 	var expandedInOutput = false;
 	if(!browserSupports.isIE && $(element).is("summary")){
@@ -2930,13 +2933,13 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			prop.out = (prop.val === "true") ? "expanded" : "collapsed";
 		pushProp();
 	}
-	
+
 	//heading level
 	if(hasRole("heading","h1,h2,h3,h4,h5,h6")){
 		var headingLevel = "2"; //default to 2 (defined in spec)
 		if($(element).is("[role=heading]")){
 			var ariaLevel = $(element).attr("aria-level");
-			
+
 			if(parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel)
 				headingLevel = ariaLevel;
 		}
@@ -2946,7 +2949,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		prop = {name:"", val:"", out:"heading level " + headingLevel};
 		pushProp();
 	}
-	
+
 	//multiple
 	if($(element).is("select,input[type=file]")){
 		if(hasProp("multiple")){
@@ -2954,7 +2957,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			pushProp();
 		}
 	}
-	
+
 	//readonly
 	var readonlyInOutput = false;
 	if($(element).is("input:not([type=radio],[type=checkbox]),textarea")){
@@ -2968,10 +2971,10 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		if(!readonlyInOutput && prop.val === "true" && hasRole("checkbox,combobox,grid,gridcell,listbox,radio,radiogroup,slider,spinbutton,textbox,columnheader,menuitemcheckbox,menuitemradio,rowheader,searchbox,switch,treegrid","input:not([type=submit],[type=button],[type=image],[type=reset]),select,textarea")){
 			readonlyInOutput = true;
 			prop.out = "readonly";
-		}	
+		}
 		pushProp();
 	}
-	
+
 	//required
 	var requiredInOutput = false;
 	if($(element).is("input:not([type=submit],[type=button],[type=image],[type=reset]),textarea,select")){
@@ -2988,7 +2991,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			prop.out = (!requiredInOutput && prop.val === "true") ? "required" : "";
 		pushProp();
 	}
-	
+
 	//radio button index
 	if(hasRole("radio,menuitemradio","input[type=radio]")){
 		prop = {name:"", val:""};
@@ -3012,12 +3015,12 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 				radioCount++;
 				if($(this).is(element)) //check if the radio button is this one
 					radioIndex = radioCount; //set the index
-			});				
+			});
 			prop.out = radioIndex + " of " + radioCount;
 		}
 		pushProp();
 	}
-	
+
 	//sort
 	if(hasRole("columnheader,rowheader","th")){
 		if(hasProp("aria-sort")){
@@ -3039,13 +3042,13 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			}
 		}
 	}
-	
+
 	if(hasRole("range,scrollbar,separator,slider,spinbutton")){
 		if(hasProp("aria-valuemax"))
 			pushProp();
 		if(hasProp("aria-valuemin"))
 			pushProp();
-		
+
 		var valuetextInOutput = false;
 		if(hasRole("range,separator")){
 			if(hasProp("aria-valuetext")){
@@ -3060,7 +3063,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			pushProp();
 		}
 	}
-	
+
 	//===Get properties already in AndiData
 	if(elementData.accesskey){
 		prop = {
@@ -3074,7 +3077,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		prop = {name:"tabindex", val:elementData.tabindex};
 		pushProp();
 	}
-	
+
 	//===Get properties added by the module
 	if(extraProps){
 		for(var p=0; p<extraProps.length; p++){
@@ -3089,7 +3092,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			}
 		}
 	}
-		
+
 	//This function determines if the element has a role or tagname
 	function hasRole(roles, tagNames){
 		if(roles.length > 0)
@@ -3112,26 +3115,26 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			addOnProps[0] += prop.out + ", ";
 		addOnProps.push(prop);
 	}
-	
+
 	function displayAsId(prop){
 		prop.val = "<span class='ANDI508-display-id'>#"+prop.val.replace(andiUtility.whitespace_regex," #")+"</span>";
 	}
-	
+
 	if(addOnProps[0] !== "")//Slice off last two characters: the comma and space: ", "
 		addOnProps[0] = addOnProps[0].slice(0, -2);
-	
+
 	return addOnProps; //returns an array
 };
 AndiData.attachDataToElement = function(element){
 	//Store elementData onto the html element's data-andi508 attribute
-	
+
 	//TODO: add alerts directly to data object instead of copying here.
 	AndiData.data.dangers = andiAlerter.dangers;
 	AndiData.data.warnings = andiAlerter.warnings;
 	AndiData.data.cautions = andiAlerter.cautions;
-	
+
 	$(element).data("andi508", AndiData.data);
-	
+
 	//Attach danger class
 	if(AndiData.data.dangers.length > 0)
 		$(element).addClass("ANDI508-element-danger");
@@ -3152,17 +3155,17 @@ AndiData.addComp = function(data, componentType, component, hasNodebeenTraversed
 	else{//component is an array [text, refElement, id]
 		if($.trim(component[0]) !== "" || component[2]){ //add the text
 			displayText = "<span class='ANDI508-display-"+componentType+"'>";
-			
+
 			if(component[2]) //add the referenced id
 				displayText += "<span class='ANDI508-display-id'>#" + component[2] + "</span>";
-			
+
 			if(component[1]) //ref element laser
 				displayText += andiLaser.createLaserTarget(component[1], andiUtility.formatForHtml(andiUtility.stripHTML(component[0])));
-		
+
 			displayText += "</span>";
 		}
 	}
-	
+
 	if(displayText){
 		if(componentType === "ariaLabelledby" || componentType === "ariaDescribedby"){
 			if(data[componentType])
@@ -3196,7 +3199,7 @@ function AndiCheck(){
 		this.areThereAnyTroublesomeJavascriptEvents(element);
 		this.clickableAreaCheck(element, andiData);
 	};
-	
+
 	//This function is used to check for alerts related to non-focusable elements
 	this.commonNonFocusableElementChecks = function(andiData, element, isElementMustHaveName){
 		this.hasThisElementBeenHiddenFromScreenReader(element, andiData);
@@ -3205,9 +3208,9 @@ function AndiCheck(){
 		this.areThereComponentsThatShouldntBeCombined(andiData);
 		this.areThereAnyMisspelledAria(element);
 	};
-	
+
 	//==Test Page Checks==//
-	
+
 	//This function will count the number of visible fieldset/figure/table tags and compare to the number of legend/figcaption/caption tags
 	//If there are more parents than children, it will generate an alert with the message and the counts.
 	//Note: The function does not test whether the children are actually contained within the parents, it's strictly concerned with the counts.
@@ -3215,7 +3218,7 @@ function AndiCheck(){
 	//It will also set the booleans page_using_fieldset, page_using_figure to true if found, which will be used elsewhere for performance enhancements
 	this.areThereMoreExclusiveChildrenThanParents = function(){
 		var children, parents;
-		
+
 		//legend/fieldset
 		parents = $(TestPageData.allVisibleElements).filter("fieldset").length*1; //*1 ensures that the var will be a number
 		children = $(TestPageData.allVisibleElements).filter("legend").length*1; //*1 ensures that the var will be a number
@@ -3237,13 +3240,13 @@ function AndiCheck(){
 			if(children > parents) andiAlerter.throwAlert(alert_0076,[children, parents],0);
 		}
 	};
-	
+
 	//This function checks to see if there is only one page <title> tag within the head
 	//If none, empty, or more than one, it will generate an alert.
 	//It also looks at document.title
 	this.isThereExactlyOnePageTitle = function(){
 		var pageTitleCount = $("head title").length;
-		if(document.title === ""){ //check document.title because could have been set by javascript 
+		if(document.title === ""){ //check document.title because could have been set by javascript
 			if(pageTitleCount === 0)
 				andiAlerter.throwAlert(alert_0072,alert_0072.message,0);
 			else if(pageTitleCount === 1 && $.trim($("head title").text()) === "")
@@ -3252,9 +3255,9 @@ function AndiCheck(){
 		else if(pageTitleCount > 1)
 			andiAlerter.throwAlert(alert_0073,alert_0073.message,0);
 	};
-	
+
 	//==Element Checks==//
-	
+
 	//This function resets the accessibleComponentsTable
 	//returns true if components were found that should appear in the accessibleComponentsTable
 	this.wereComponentsFound = function(isTabbable, accessibleComponentsTableBody){
@@ -3262,7 +3265,7 @@ function AndiCheck(){
 		var total = $(accessibleComponentsTableBody).find("tr").length;
 		//Display total
 		$("#ANDI508-accessibleComponentsTotal").html(total);
-		
+
 		if(total === 0){//No components. Display message in table
 			var alertLevel = "danger"; //tabbable elements with no components, default to red
 			if(!isTabbable)
@@ -3278,7 +3281,7 @@ function AndiCheck(){
 		if(!elementData.isAriaHidden){ //element is not aria-hidden=true and not contained by aria-hidden=true
 			var tagNameText = elementData.tagNameText;
 			if(!elementData.accName){
-				
+
 				var message;
 				if(tagNameText === "iframe"){
 					if(elementData.tabindex)
@@ -3347,15 +3350,14 @@ function AndiCheck(){
 						}
 					}
 				}
-				
-				if(message){
-					andiAlerter.throwAlert(alert_0001,message);
-				}
-				
+
 				if(elementData.components.ariaDescribedby)
 					//element has no name but has ariaDescribedby
 					andiAlerter.throwAlert(alert_0021);
-					
+				else if(message){
+					andiAlerter.throwAlert(alert_0001,message);
+				}
+
 				if(elementData.components.legend)
 					//element has no name but has legend
 					andiAlerter.throwAlert(alert_0022);
@@ -3405,7 +3407,7 @@ function AndiCheck(){
 			}
 		}
 	};
-	
+
 	//This function goes through the LabelFor array and checks if is pointing to valid form element
 	this.areLabelForValid = function(){
 		if(testPageData.page_using_label){
@@ -3433,7 +3435,7 @@ function AndiCheck(){
 		if(events !== "")
 			andiAlerter.throwAlert(alert_0112,[$.trim(events)]);
 	};
-	
+
 	//This function will check the clickable area of the element.
 	this.clickableAreaCheck = function(element, andiData){
 		if(!andiData.components.label && $(element).is("input[type=checkbox],input[type=radio]")){
@@ -3455,14 +3457,14 @@ function AndiCheck(){
 	this.areThereAnyMisspelledAria = function(element){
 		if($(element).is("[aria-role]"))
 			andiAlerter.throwAlert(alert_0032);
-		
+
 		if($(element).is("[aria-labeledby]"))
 			andiAlerter.throwAlert(alert_0031);
 	};
-	
+
 	//This function will throw alert_0260 or alert_0261
 	//if the element has aria-hidden=true or is a child of an element with aria-hidden=true
-	//NOTE: role=presentation/none are not factored in here 
+	//NOTE: role=presentation/none are not factored in here
 	//      because browsers automatically ignore them if the element is focusable
 	this.hasThisElementBeenHiddenFromScreenReader = function(element, elementData, isDangerous){
 		if(elementData.isAriaHidden){
@@ -3472,7 +3474,7 @@ function AndiCheck(){
 				andiAlerter.throwAlert(alert_0261); //warning level alert
 		}
 	};
-	
+
 	//This function will increment the testPageData.disabledElementsCount
 	//Returns true if the element is disabled
 	this.isThisElementDisabled = function(element){
@@ -3485,13 +3487,13 @@ function AndiCheck(){
 		}
 		return false;
 	};
-	
+
 	//This function will throw alert_0250 if there are disabled elements
 	this.areThereDisabledElements = function(type){
 		if(testPageData.disabledElementsCount > 0)
 			andiAlerter.throwAlert(alert_0250,[testPageData.disabledElementsCount, type],0);
 	};
-	
+
 	//This function will throw an alert if the canvas has no focusable children
 	this.lookForCanvasFallback = function(element){
 		if($(element).is("canvas")){
@@ -3502,7 +3504,7 @@ function AndiCheck(){
 		}
 	};
 
-	//This function will scan for deprecated HTML relating to accessibility associated with the element 
+	//This function will scan for deprecated HTML relating to accessibility associated with the element
 	this.detectDeprecatedHTML = function(element){
 		if(document.doctype !== null && document.doctype.name == "html" && !document.doctype.publicId && !document.doctype.systemId){
 			var message;
@@ -3515,7 +3517,7 @@ function AndiCheck(){
 				message = ["attribute [name] in &lt;a&gt;, use [id] instead"];
 			else if($(element).is("td") && $(element).attr("scope"))
 				message = ["attribute [scope] on &lt;td&gt;, in HTML5 [scope] only valid on &lt;th&gt;"];
-			
+
 			if(message){
 				if($(element).hasClass("ANDI508-element"))
 					andiAlerter.throwAlert(alert_0078,message);
@@ -3524,9 +3526,9 @@ function AndiCheck(){
 			}
 		}
 	};
-	
+
 	//==Component Quality Checks==//
-	
+
 	//this function will throw an alert if there are missingReferences
 	this.areThereMissingReferences = function(attribute, missingReferences){
 		//Check if any ids were not found
@@ -3537,13 +3539,13 @@ function AndiCheck(){
 			andiAlerter.throwAlert(alert_0065, [attribute, missingReferences]);
 		}
 	};
-	
+
 	//This function will throw alert_0101
 	this.areThereComponentsThatShouldntBeCombined = function(data){
 		if(data.components.ariaLabel && data.components.ariaLabelledby)
 			andiAlerter.throwAlert(alert_0101,["[aria-label] with [aria-labelledby]"]);
 	};
-	
+
 	//This function checks the character length of the componentText.
 	//If it exceeds the number defined in the variable characterLimiter, it will throw an alert.
 	//If the limit was exceeded, it will insert a scissors unicode
@@ -3558,7 +3560,7 @@ function AndiCheck(){
 			return insertCharacterLimitMark(componentText);
 		}
 		return componentText;
-		
+
 		//This function inserts a pipe character into the componentText at the characterLimiter position
 		//The color of the pipe is the color of a warning
 		function insertCharacterLimitMark(componentText){//inject scissors unicode
@@ -3584,14 +3586,14 @@ function AndiAlerter(){
 				this[alertObject.level+"s"].push(messageWithHelpLink(alertObject, message));
 			}
 			this.addToAlertsList(alertObject, message, index);
-			
+
 			//Add the Alert Button to the alertButtons array (to be displayed later)
-			
+
 			if(alertObject.alertButton && alertButtons.indexOf(alertObject) < 0)
 				alertButtons.push(alertObject);
 		}
 	};
-		
+
 	//This function will add an alert another element's alert object.
 	//It is used to add an alert to a related (different) element than the element being currently analyzed.
 	//For example: non-unique link text: since the second instance triggers the alert, use this method to add the alert to the first instance
@@ -3604,7 +3606,7 @@ function AndiAlerter(){
 		$("#ANDI508-testPage [data-andi508-index="+index+"]").data("andi508")[alertObject.level+"s"].push(messageWithHelpLink(alertObject, message));
 		this.addToAlertsList(alertObject, message, index);
 	};
-	
+
 	//This private function will add an icon to the message
 	//	alertObject:	the alert object
 	//	customMessage: 	(optional) message of the alert. if string, use the string. If array, get values from array
@@ -3618,7 +3620,7 @@ function AndiAlerter(){
 		else
 			message += alertObject.message; //use default alert message
 		return message;
-		
+
 		//This function will fill in the parameters of the alert message with the string in the array
 		function getParams(alertObject, paramArray){
 			var m = alertObject.message.split("%%%");
@@ -3629,7 +3631,7 @@ function AndiAlerter(){
 			return message;
 		}
 	}
-	
+
 	//This private function will add a help link to the alert message
 	function messageWithHelpLink(alertObject, message){
 		return "<a href='"+ help_url + "alerts.html" + alertObject.info +"' target='_blank' "+
@@ -3637,11 +3639,11 @@ function AndiAlerter(){
 			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
 			message+"</a> ";
 	}
-	
+
 	//This function is not meant to be used directly.
 	//It will add a list item into the Alerts list.
 	//It can place a link which when followed, will move focus to the field relating to the alert.
-	//	alertObject:	the alert object	
+	//	alertObject:	the alert object
 	//  message:		text of the alert message
 	//  elementIndex:	element to focus on when link is clicked. expects a number. pass zero 0 if alert is not relating to one particular element
  	this.addToAlertsList = function(alertObject, message, elementIndex){
@@ -3659,11 +3661,11 @@ function AndiAlerter(){
 			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
 			message+"</a></li>";
 		}
-		
+
 		var alertGroup = AndiAlerter.alertGroups[alertObject.group];
-		
+
 		//Adds the alert into its group
-		//Assign the alert level to the group	
+		//Assign the alert level to the group
 		if(alertObject.level === "danger"){
 			alertGroup.dangers.push(listItemHtml);
 			alertGroup.level = "danger";
@@ -3680,7 +3682,7 @@ function AndiAlerter(){
 		}
 		testPageData.numberOfAccessibilityAlertsFound++;
 	};
-	
+
 	//This function will update the ANDI508-alerts-list.
 	this.updateAlertList = function(){
 		if(testPageData.numberOfAccessibilityAlertsFound > 0){
@@ -3690,7 +3692,7 @@ function AndiAlerter(){
 		}
 		else//No accessibility alerts.
 			$("#ANDI508-alerts-list").html("").hide();
-		
+
 		//This function sorts the alert groups into their levels
 		function sortAlertGroups(){
 			var dangers = [];
@@ -3708,7 +3710,7 @@ function AndiAlerter(){
 			}
 			return {dangers:dangers, warnings:warnings, cautions:cautions};
 		}
-		
+
 		//This function builds the html for all alert groups
 		function buildAlertGroupsHtml(alertGroups){
 			$("#ANDI508-alerts-list").append(
@@ -3720,9 +3722,9 @@ function AndiAlerter(){
 				buildAlertLevelList("cautions")+
 				"</div>"
 			).show();
-			
+
 			addAlertListFunctionality();
-			
+
 			function buildAlertLevelList(level){
 				var html = "";
 				if(alertGroups[level].length > 0){
@@ -3732,7 +3734,7 @@ function AndiAlerter(){
 					html += "</ul>";
 				}
 				return html;
-				
+
 				//This function build the html for a single alert group
 				function getAlertsForAlertGroup(group){
 					var totalAlerts = parseInt(group.dangers.length + group.warnings.length + group.cautions.length);
@@ -3750,7 +3752,7 @@ function AndiAlerter(){
 					html += "</ol></li>";
 				}
 			}
-			
+
 			//This function defines the functionality of the Alert List
 			//It adds key navigation: down, up, left, right, enter, asterisk, home, end,
 			//Also adds mouse clickability
@@ -3758,7 +3760,7 @@ function AndiAlerter(){
 				//This private variable will keep track of the alert links for keyboard navigation purposes
 				var alertLinksTabbableArray;
 				updateAlertLinksTabbableArray();
-				
+
 				$("#ANDI508-alerts-container a").each(function(){
 					//add keyboard functionality
 					$(this)
@@ -3800,7 +3802,7 @@ function AndiAlerter(){
 							break;
 						}
 					});
-					
+
 					//Add mouse click method to alertGroupTogglers
 					if($(this).hasClass("ANDI508-alertGroup-toggler")){
 						$(this).click(function(){
@@ -3852,13 +3854,13 @@ function AndiAlerter(){
 				}
 			}
 		}
-		
+
 		//This function will show the alert buttons that were added to the alertButtons array
 		function showAlertButtons(){
 			for(var x=0; x<alertButtons.length; x++){
 				$("#ANDI508-alertGroup_"+alertButtons[x].group).children("a").first().after(
 					"<button id='"+alertButtons[x].alertButton.id+
-					"' aria-pressed='false'>"+alertButtons[x].alertButton.label + 
+					"' aria-pressed='false'>"+alertButtons[x].alertButton.label +
 					alertButtons[x].alertButton.overlayIcon+"</button>"
 					);
 				$("#"+alertButtons[x].alertButton.id).bind("click",alertButtons[x].alertButton.clickLogic);
@@ -3866,8 +3868,8 @@ function AndiAlerter(){
 			alertButtons = [];//clear the alertButtons array
 		}
 	};
-	
-	//This fucntion returns a new instance of an Alert Groups Array. 
+
+	//This fucntion returns a new instance of an Alert Groups Array.
 	//Messages are categorized into these major groups.
 	this.createAlertGroups = function(){
 		return [
@@ -3900,14 +3902,14 @@ function AndiAlerter(){
 		new AlertGroup("Aria-Hidden Alerts")
 		];
 	};
-	
+
 	//Keeps track of alert buttons that need to be added.
 	var alertButtons = [];
-	
+
 	this.dangers = [];
 	this.warnings = [];
 	this.cautions = [];
-	
+
 	//This function resets the alert data associated with a single element
 	this.reset = function(){
 		this.dangers = [];
@@ -3939,30 +3941,30 @@ TestPageData.allElements = undefined;
 function TestPageData(){
 	//Creates the alert groups
 	AndiAlerter.alertGroups = andiAlerter.createAlertGroups();
-	
+
 	TestPageData.allElements = $("#ANDI508-testPage *");
-	
+
 	//all the visible elements or elements within a canvas on the test page
 	TestPageData.allVisibleElements = $(TestPageData.allElements).filter(":shown,canvas *");
-	
+
 	//all the ids of elements on the page for duplicate comparisons
 	this.allIds = $(TestPageData.allElements).filter("[id]");
-	
+
 	//all the fors of visible elements on the page for duplicate comparisons
 	this.allFors = "";
-		
+
 	//Keeps track of the number of focusable elements ANDI has found, used to assign unique indexes.
 	//the first element's index will start at 1.
 	//When ANDI is done analyzing the page, this number will equal the total number of elements found.
 	this.andiElementIndex = 0;
-	
+
 	this.relatedLaserIndex = 0;
 
 	//Keeps track of the number of accessibility alerts found.
 	this.numberOfAccessibilityAlertsFound = 0;
-	
+
 	this.pageAlerts = [];
-		
+
 	//Keeps track of the number of disabled elements
 	this.disabledElementsCount = 0;
 
@@ -3975,7 +3977,7 @@ function TestPageData(){
 	this.page_using_role_combobox = false;
 	this.page_using_role_listbox = false;
 	this.page_using_role_menu  = false;
-	
+
 	//Get all fors on the page and store for later comparison
 	//Determine if labels are being used on the page
 	this.page_using_label = false;
@@ -3984,21 +3986,21 @@ function TestPageData(){
 		//get all 'for's on the page and store for later comparison
 		this.allFors = $(TestPageData.allVisibleElements).filter("label[for]");
 	}
-	
+
 	if($(TestPageData.allVisibleElements).filter("table").first().length)
 		TestPageData.page_using_table = true;
-	
+
 	//This function should be called by the first module that is launched
 	//It should be placed in a loop that looks at every visible element on the page.
 	this.firstLaunchedModulePrep = function(element, elementData){
-		
+
 		//Force Test Page to convert any css fixed positions to absolute.
 		//Allows ANDI to be only fixed element at top of page.
 		andiResetter.storeTestPageFixedPositionDistances(element);
-		
+
 		//get role from elementData if possible
 		var role = (elementData) ? elementData.role : $(element).attr("role");
-		
+
 		//Determine if role=group is being used
 		if(!TestPageData.page_using_role_group && role === "group")
 			TestPageData.page_using_role_group = true;
@@ -4010,7 +4012,7 @@ function TestPageData(){
 			TestPageData.page_using_role_listbox = true;
 		if(!TestPageData.page_using_role_menu && role === "menu" || role === "menubar")
 			TestPageData.page_using_role_menu = true;
-		
+
 		//Determine if role=table/grid is being used
 		if(!TestPageData.page_using_table && (role === "table" || role === "grid"))
 			TestPageData.page_using_table = true;
@@ -4023,7 +4025,7 @@ TestPageData.page_using_caption = false;
 //==============//
 // jQuery Load: //
 //==============//
-//This function will check to see if the page being tested already has jquery installed. 
+//This function will check to see if the page being tested already has jquery installed.
 //If not, it downloads the appropriate version from the jquery download source.
 //It will also determine if an old IE version is being used
 var jqueryPreferredVersion = "3.3.1"; //The preferred (latest) version of jQuery we want
