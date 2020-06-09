@@ -88,8 +88,16 @@
 	<section tabindex="0" aria-labelledby="lby-install" id="install">
 	<h2 id="lby-install">Installation Instructions</h2>
 	<div class='details'>
+
+		<div style="font-size:1.7rem; font-weight:bold; margin: 1rem 0 1rem 2rem;">
+		<a onclick='alert("To install ANDI, drag and drop this link into your favorites/bookmark bar.");return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a>
+		<img src="images/install.png" role="presentation" alt="" class="noshadow" style="height: 1.5rem;" />
+		</div>
 		<p>
-		Drag and Drop this link: <a onclick='alert("Drag and Drop the link to install ANDI");return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> into your browser's favorites/bookmark bar. 
+		To install, drag and drop this link into your favorites/bookmark bar.
+		</p>
+		<p>
+		ANDI can be installed on any desktop browser.
 		<img alt="runs on Chrome" src="images/browser-chrome.gif" width="20" class="noshadow" />
 		<img alt="runs on Firefox" src="images/browser-firefox.gif" width="20" class="noshadow" />
 		<img alt="runs on Edge Chromium" src="images/browser-edge-chromium.png" width="20" class="noshadow" />
@@ -99,11 +107,11 @@
 		<br />
 		<button id="detailedInstallInstructions-button" class="expandButton" aria-expanded="false">Get Detailed Instructions</button>
 		</p>
-		
+
 	</div>
 	</section>
 
-	<div id="detailedInstallInstructions" class="hideOnLoad">
+	<div id="detailedInstallInstructions" class="hideOnLoad" style="margin-left: 4%;">
 	<hr />
 	<section>
 	<div class="details">
@@ -115,8 +123,8 @@
 		<div class='example'>
 			<ol>
 				<li>Ensure that Chrome's Bookmarks Bar is visible (Ctrl + Shift + B)</li>
-				<li>Now drag and drop this link: 
-				<a onclick='return false;' href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> to the Bookmarks Bar</li>
+				<li>Now drag and drop this link:
+					<a onclick='return false;' href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> to the Bookmarks Bar</li>
 				<li><span class="brand">ANDI</span> is now installed to Chrome and ready to be launched</li>
 			</ol>
 		</div>
@@ -203,7 +211,7 @@
 		<div class='example'>
 			<ol>
 				<li>Ensure that Safari's Favorites Bar is visible (Command + Shift + B)</li>
-				<li>Drag and drop this link: 
+				<li>Drag and drop this link:
 				<a onclick='return false;' href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> to the Favorites Bar</li>
 				<li><span class="brand">ANDI</span> is now installed to Safari and ready to be launched</li>
 			</ol>
@@ -219,7 +227,7 @@
 	<h2 id="lby-LaunchANDI">Launch ANDI</h2>
 	<div class='details'>
 		<p>
-		Launch <span class="brand">ANDI</span> by clicking on the favorite/bookmark labelled "<span class="brand">ANDI</span>" that was added to the 
+		Launch <span class="brand">ANDI</span> by clicking on the favorite/bookmark labelled "<span class="brand">ANDI</span>" that was added to the
 		Favorites/Bookmarks Bar in the browser's toolbar. <span class="brand">ANDI</span> will analyze the
 		test page and appear on the page.
 		</p>
@@ -240,7 +248,7 @@
 		<p>
 		<span class="brand">ANDI</span> is like having an accessibility expert at your side, helping you make your web pages more accessible.
 		Use it during development or testing.
-		Whether your knowledge of accessibility is vast or you're just getting started, 
+		Whether your knowledge of accessibility is vast or you're just getting started,
 		you, your product, your end users will benefit from the guidance ANDI provides.
 		</p>
 	</div>
@@ -282,7 +290,7 @@
 		</p>
 
 		<p id='hostYourOwn' tabindex="-1">
-		If your organization wishes to host a local instance of 
+		If your organization wishes to host a local instance of
 		<span class="brand">ANDI</span>, refer to this guide:
 		<button id="customConfig-button" class="expandButton" aria-expanded="false">View the Customization Instructions</button>
 		</p>
