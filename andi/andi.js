@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.1.1";
+var andiVersionNumber = "27.1.2";
 
 //==============//
 // ANDI CONFIG: //
@@ -2340,7 +2340,7 @@ AndiData.textAlternativeComputation = function(root){
 			component = $(element).attr("alt");
 			if(component !== undefined){
 				//TODO: what about svg <image>
-				if( $(element).is("img,input[type=image]") && ( !role || role === "img" ) ){
+				if( $(element).is("img,input[type=image],area") && ( !role || role === "img" ) ){
 					if(!isEmptyComponent(component, "alt", element)){
 						accumulatedText += AndiData.addComp(data, "alt", component, hasNodeBeenTraversed(element));
 					}
