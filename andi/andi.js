@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.1.2";
+var andiVersionNumber = "27.1.3";
 
 //==============//
 // ANDI CONFIG: //
@@ -3050,7 +3050,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 			pushProp();
 
 		var valuetextInOutput = false;
-		if(hasRole("range,separator")){
+		if(hasRole("range,separator,slider")){
 			if(hasProp("aria-valuetext")){
 				valuetextInOutput = true;
 				prop.out = prop.val;
