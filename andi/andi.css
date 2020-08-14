@@ -1,5 +1,5 @@
 /*=====ANDI CSS=====*/
-/*Version 5.0.4 */
+/*Version 5.0.5 */
 /*This is the main CSS file for ANDI*/
 /*It is important to keep the specificity high to override any test page's own CSS*/
 
@@ -354,7 +354,7 @@ body.ANDI508-testPage
 
 /*startUpSummary*/
 #ANDI508 #ANDI508-startUpSummary p
-	{margin-bottom:0.7em;}
+	{margin-bottom:0.7em; height: 10em;}
 
 /*elementName*/
 #ANDI508 #ANDI508-elementNameLink,
@@ -541,7 +541,7 @@ body.ANDI508-testPage
 #ANDI508-body.ANDI508-minimode #ANDI508-activeElementInspection
 	{width:100% !important; max-width:100%; margin-left:0;}
 #ANDI508-body.ANDI508-minimode #ANDI508-startUpSummary p
-	{margin-bottom:0;}
+	{margin-bottom:0; height:auto}
 #ANDI508-body.ANDI508-minimode #ANDI508-pageAnalysis,
 #ANDI508-body.ANDI508-minimode #ANDI508-elementControls br,
 #ANDI508-body.ANDI508-minimode .ANDI508-heading
