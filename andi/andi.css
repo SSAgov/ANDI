@@ -1,5 +1,5 @@
 /*=====ANDI CSS=====*/
-/*Version 5.0.5 */
+/*Version 5.0.6 */
 /*This is the main CSS file for ANDI*/
 /*It is important to keep the specificity high to override any test page's own CSS*/
 
@@ -96,7 +96,7 @@ body.ANDI508-testPage
 	 background:transparent !important; color:white !important; appearance:normal; text-transform:none; opacity:1 !important;
 	 margin:0; padding:0; border:none; border-radius:0; left:0; top:0; vertical-align:baseline; float:none; outline:0 !important;
 	 width:auto; height:auto; min-width:0; max-width:none; min-height:0; max-height:none; overflow:visible; transform:none;
-	 box-shadow:none; text-decoration:none !important; content:none; clear:none; box-sizing:content-box; text-shadow:none;}
+	 box-shadow:none; text-decoration:none !important; content:none; clear:none; box-sizing:content-box; text-shadow:none; position:static}
 #ANDI508 *::before,
 #ANDI508 *:before,
 #ANDI508 *::after,
@@ -234,7 +234,7 @@ body.ANDI508-testPage
 	{color:gray !important; font-size:8pt;}
 #ANDI508 #ANDI508-module-actions button
 	{border:1px solid black !important; display:inline !important; padding:2px 2.5px !important; font-size:9pt !important;
-	box-shadow:none !important; background:none !important; cursor:pointer !important; white-space:nowrap !important; position:static;
+	box-shadow:none !important; background:none !important; cursor:pointer !important; white-space:nowrap !important;
 	border-radius:7px; margin-right:7px; font-family:tahoma; color:#e6e6e6 !important; line-height:1 !important; background:black !important;}
 #ANDI508 #ANDI508-module-actions button:hover,
 #ANDI508 #ANDI508-module-actions button:focus
