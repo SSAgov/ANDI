@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.1.3";
+var andiVersionNumber = "27.1.4";
 
 //==============//
 // ANDI CONFIG: //
@@ -830,7 +830,7 @@ function AndiBar(){
 					if(elementData.accDesc && matchingTest(elementData.accName, elementData.accDesc))
 						outputText += " " + elementData.accDesc;
 				}
-				else{ //no accessible name, provide accessible description
+				else if(elementData.accDesc){ //no accessible name, provide accessible description
 					outputText += " " + elementData.accDesc;
 				}
 
