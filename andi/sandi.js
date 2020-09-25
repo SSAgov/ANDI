@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var sANDIVersionNumber = "4.1.2";
+var sANDIVersionNumber = "4.1.3";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -218,7 +218,7 @@ sANDI.isFakeHeading = function(element){
 };
 
 //Initialize outline
-sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Structure Outline:</h3><div class='ANDI508-scrollable'>";
+sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
 
 //This function will display the heading list (headings outline)
 //It should only be called on heading elements
@@ -437,7 +437,7 @@ sANDI.results = function(){
 				}
 				sANDI.outline += "</div>";
 
-				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"view outline</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"view headings list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
 				//Define outline button
 				$("#ANDI508-viewOutline-button").click(function(){
@@ -449,7 +449,7 @@ sANDI.results = function(){
 						}
 						$(this)
 							.addClass("ANDI508-viewOtherResults-button-expanded")
-							.html(listIcon+"view outline")
+							.html(listIcon+"view headings list")
 							.attr("aria-expanded","false")
 							.removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
 					}
@@ -459,7 +459,7 @@ sANDI.results = function(){
 
 						andiSettings.minimode(false);
 						$(this)
-							.html(listIcon+"hide outline")
+							.html(listIcon+"hide headings list")
 							.attr("aria-expanded","true")
 							.addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
 							.find("img").attr("src",icons_url+"list-on.png");
