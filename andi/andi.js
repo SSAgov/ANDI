@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.2.0";
+var andiVersionNumber = "27.2.1";
 
 //==============//
 // ANDI CONFIG: //
@@ -441,6 +441,9 @@ var alert_0124 = new Alert("warning","12","If &lt;canvas&gt; element is interact
 var alert_0125 = new Alert("warning","12","Element with [role=%%%] not in the keyboard tab order.","#role_tab_order");
 var alert_0126 = new Alert("danger","12","Image defined as decorative is in the keyboard tab order.","#decorative_image_tab_order");
 var alert_0127 = new Alert("caution","12","&lt;canvas&gt; element has focusable fallback content; Test for keyboard equivalency to mouse functionality.","#canvas_has_focusable_fallback");
+var alert_0128 = new Alert("warning","12","&lt;a&gt; element has no [href], [id], or [tabindex]; This might be a link that only works with a mouse.","#anchor_purpose_unclear");
+var alert_0129 = new Alert("caution","12","&lt;a&gt; element has no [href], or [tabindex]; This might be a link that only works with a mouse.","#anchor_purpose_unclear");
+var alert_012A = new Alert("caution","12","This &lt;a&gt; element is the target of another link; When link is followed, target may not receive visual indication of focus.","#is_anchor_target_no_focus");
 
 var alert_0132 = new Alert("caution","13","Empty header cell.","#empty_header_cell");
 var alert_0133 = new Alert("caution","13","Live region has no innerText content.","#live_region_empty");
@@ -453,9 +456,6 @@ var alert_0161 = new Alert("warning","16","Ambiguous Link: same name/description
 var alert_0162 = new Alert("caution","16","Ambiguous Link: same name/description as another link but different href.","#ambiguous_link");//caution level thrown for internal links
 var alert_0163 = new Alert("caution","16","Link text is vague and does not identify its purpose.","#vague_link");
 var alert_0164 = new Alert("warning","16","Link has click event but is not keyboard accessible.","#link_click_no_keyboard_access");
-var alert_0165 = new Alert("warning","16","Possible inaccessible link: &lt;a&gt; element has no [href], [id], or [tabindex].","#anchor_purpose_unclear");
-var alert_0166 = new Alert("caution","16","Possible inaccessible link: &lt;a&gt; element has no [href], or [tabindex].","#anchor_purpose_unclear");
-var alert_0167 = new Alert("caution","16","This &lt;a&gt; element is an anchor target; If clicking performs a function, it's not keyboard accessible.","#is_anchor_target");
 var alert_0168 = new Alert("warning","16","&lt;a&gt; without [href] may not be recognized as a link; add [role=link] or [href].","#not_recognized_as_link");
 
 var alert_0171 = new Alert("danger","17","&lt;marquee&gt; element found, do not use.","#marquee_found");
@@ -1180,7 +1180,7 @@ function AndiResetter(){
 
 				//Global cleanup
 				$(this)
-					.removeClass("ANDI508-element ANDI508-element-danger ANDI508-highlight")
+					.removeClass("ANDI508-element ANDI508-element-danger ANDI508-highlight ANDI508-exclude-from-inspection")
 					.removeData("ANDI508")
 					.removeAttr("data-andi508-index")
 					.off("focus",AndiModule.focusability)
@@ -3885,7 +3885,7 @@ function AndiAlerter(){
 		new AlertGroup("Misuses of Label Tag"),
 		new AlertGroup("Unreliable Component Combinations"),		//10
 		new AlertGroup("JavaScript Event Cautions"),
-		new AlertGroup("Tab Order Alerts"),
+		new AlertGroup("Keyboard Access Alerts"),
 		new AlertGroup("Empty Components Found"),
 		new AlertGroup("Unused Components"),
 		new AlertGroup("Excessive Text"),							//15

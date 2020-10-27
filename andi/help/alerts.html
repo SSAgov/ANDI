@@ -126,7 +126,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<ul>
 		<li class='caution'><a href="#javascript_event_caution">JavaScript Event Found</a></li>
 	</ul>
-	<h3 tabindex="0">Tab Order Alerts</h3>
+	<h3 tabindex="0">Keyboard Access Alerts</h3>
 	<ul>
 		<li class='danger'><a href="#decorative_image_tab_order">Decorative Image In Tab Order</a></li>
 		<li class='warning'><a href="#role_tab_order">Element with Role Not In Tab Order</a></li>
@@ -136,6 +136,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='caution'><a href="#disabled_elements">Disabled Elements Found</a></li>
 		<li class='warning'><a href="#canvas_not_keyboard_accessible">Canvas No Focusable Fallback</a></li>
 		<li class='caution'><a href="#canvas_has_focusable_fallback">Canvas Has Focusable Fallback</a></li>
+		<li class='caution'><a href="#anchor_purpose_unclear">Possible Mouse-only Link</a></li>
+		<li class='caution'><a href="#is_anchor_target_no_focus">Is an Anchor Target not focusable</a></li>
 	</ul>
 	<h3 tabindex="0">Empty Components Found</h3>
 	<ul>
@@ -156,8 +158,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='warning'><a href="#link_click_no_keyboard_access">Link Click But No Keyboard Access</a></li>
 		<li class='warning'><a href="#not_recognized_as_link">Not Recognized As Link</a></li>
 		<li class='caution'><a href="#vague_link">Vague Link Text</a></li>
-		<li class='caution'><a href="#anchor_purpose_unclear">Possible Inaccessible Link</a></li>
-		<li class='caution'><a href="#is_anchor_target">Is an Anchor Target</a></li>
 	</ul>
 	<h3 tabindex="0">Graphics Alerts</h3>
 	<ul>
@@ -2181,6 +2181,115 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-anchor_purpose_unclear" id='anchor_purpose_unclear'>
+	
+	<h2 id="lby-anchor_purpose_unclear">Alert: Possible Mouse-only Link</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> &lt;a&gt; element has no [href], [id], or [tabindex]; This might be a link that only works with a mouse.</li>
+	</ul>
+	<br />
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> &lt;a&gt; element has no [href], or [tabindex]; This might be a link that only works with a mouse.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element is not in the tab order (no <code>href</code> or <code>tabindex</code>) yet the <code>&lt;a&gt;</code> tag was used.
+	This is an indication that it might function as a link that may only be available to mouse users.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	This element might be missing some important components 
+	which would allow it to be accessible 
+	to users who use the keyboard to navigate.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	Some manual testing and investigating is needed.
+	<div class="example">
+		<ul>
+			<li>
+			First, determine if there is a keyboard access issue with this element: 
+			Use a mouse to click on the element and observe.
+			Any functionality that occurs using a mouse, 
+			should be able to be performed using only a keyboard.
+			</li>
+			<li>
+			If nothing happens when the element is clicked with the mouse, then there is no issue - disregard this alert.
+			It's possible that this <code>&lt;a&gt;</code> element is not a link but instead an anchor target for another link.
+			</li>
+			<li>
+			Otherwise, if clicking/hovering with a mouse triggers some functionality, 
+			then this element does function as a link and there may be a keyboard access issue:
+			Try to navigate to and activate the link using the keyboard.
+			If it's impossible to use the link only with a keyboard, then there is an accessibility issue.
+			Read on for solutions.
+			</li>
+		</ul>	
+	</div>
+	</p>
+	<p>
+	The most common (classic) way to create a link is to use the <code>&lt;a&gt;</code> tag and include an <code>href</code> 
+	that points to the link's destination page.
+	Sometimes developers will make a conscious choice to use the <code>&lt;a&gt;</code> tag but
+	prefer not to use an <code>href</code> to handle the link's activation logic
+	and instead use JavaScript to do some processing before redirecting the user.
+	When an <code>href</code> is not present on an <code>&lt;a&gt;</code> element
+	but the <code>&lt;a&gt;</code> element does function like a link, 
+	<code>role="link"</code> should be applied
+	so that a screen reader knows that the element is, indeed, a link.
+	Or, if the element behaves more like a button (performing actions), 
+	rather than a link (redirecting), 
+	<code>role="button"</code> can be a better idea. 
+	Or better still, just use <code>&lt;button&gt;</code>.
+	</p>
+	<p>
+	Furthermore, to ensure that the link is in the tab order, 
+	an <code>href</code> or <code>tabindex="0"</code> should be applied. 
+	If the link has a negative <code>tabindex</code>, then some manual testing is necessary to
+	ensure that the link is keyboard accessible.
+	</p>
+	<p>
+	Finally, once the link is recognized by the screen reader as a link, and can be navigated to, 
+	ensure that the link can be operated using the keyboard by pressing the "enter" key.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-is_anchor_target_no_focus" id='is_anchor_target_no_focus'>
+	
+	<h2 id="lby-is_anchor_target_no_focus">Alert: Is Anchor Target No Focus</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> This &lt;a&gt; element is the target of another link; When link is followed, target may not receive visual indication of focus.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This <code>&lt;a&gt;</code> element is the target of another link's <code>href</code>.
+	The element does not have a <code>tabindex</code>.
+	</p>
+
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Because this <code>&lt;a&gt;</code> element does not have a <code>tabindex</code> it is not focusable, 
+	therefore, there will be no visual indication of focus when the link is followed.
+	After following the link, sighted users may not be able to track where focus has been placed.
+	</p>
+
+	<h3>What should be done?</h3>
+	<p>
+	To ensure that the anchor target displays a visual indication of focus when it receives focus
+	add a <code>tabindex</code> attribute to the <code>&lt;a&gt;</code> target element.
+	In addition, ensure that the browser's default focus ring 
+	or enhanced focus styling is in place for the element.
+	</p>
+	</div>
+	</section>
 </div>
 <div class="division">
 	<!--==========================-->
@@ -2460,94 +2569,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	anchor target, in which case, disregard this alert.
 	</p>
 	
-	</div>
-	</section>
-	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-anchor_purpose_unclear" id='anchor_purpose_unclear'>
-	
-	<h2 id="lby-anchor_purpose_unclear">Alert: Possible Inaccessible Link</h2>
-	<div class='details'>
-	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Possible inaccessible link: &lt;a&gt; element has no [href], [id], or [tabindex].</li>
-	</ul>
-	<br />
-	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Possible inaccessible link: &lt;a&gt; element has no [href], or [tabindex].</li>
-	</ul>
-	<br />
-	<h3>Why did ANDI alert this?</h3>
-	<p>
-	The use of the <code>&lt;a&gt;</code> tag for this element is unclear.
-	This <code>&lt;a&gt;</code> element is not in the tab order (no <code>href</code> or <code>tabindex</code>).
-	It might have no <code>id</code> or deprecated <code>name</code> attribute (which would indicate that it is an anchor target).
-	And ANDI could not detect a javascript click event.
-	</p>
-
-	<h3>Why is this an accessibility concern?</h3>
-	<p>
-	This element is missing some important components 
-	which would allow it to be accessible 
-	to users who use the keyboard to navigate.
-	</p>
-
-	<h3>What should be done?</h3>
-	<p>
-	This element is suspect to accessibility issues.
-	Use a mouse to click on the link and observe any functionality.
-	Any functionality should be able to be performed using only a keyboard.
-	</p>
-	<p>
-	Generally, links using the <code>&lt;a&gt;</code> tag should have an <code>href</code>
-	or <code>tabindex="0"</code> and <code>role="link"</code>.
-	</p>
-	<p>
-	If this <code>&lt;a&gt;</code> element is being used as a anchor target for another link
-	or control, use the <code>id</code> attribute.
-	</p>
-	<p>
-	Use <span class="brand">ANDI</span> to test the Output of the link or anchor target.
-	Close <span class="brand">ANDI</span> and ensure that the element is focusable
-	and there is a visual indication when the element receives focus.
-	</p>
-	<p>
-	If this element does not function as a link or anchor target,
-	do not use the <code>&lt;a&gt;</code> tag for this element; use a different tag name.
-	</p>
-	</div>
-	</section>
-	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-is_anchor_target" id='is_anchor_target'>
-	
-	<h2 id="lby-is_anchor_target">Alert: Is Anchor Target</h2>
-	<div class='details'>
-	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> This &lt;a&gt; element is an anchor target; If clicking performs a function, it's not keyboard accessible.</li>
-	</ul>
-	<br />
-	<h3>Why did ANDI alert this?</h3>
-	<p>
-	This <code>&lt;a&gt;</code> element is the target of another link's <code>href</code>
-	and the element does not have an <code>href</code> or <code>tabindex</code>.
-	</p>
-
-	<h3>Why is this an accessibility concern?</h3>
-	<p>
-	This would only be an accessibility concern if 
-	clicking this link performs a function.
-	</p>
-
-	<h3>What should be done?</h3>
-	<p>
-	Close <span class="brand">ANDI</span> and use a mouse to
-	click on the element. Observe whether it performs a function.
-	Using only a keyboard, try to access the element and perform the function.
-	</p>
-	<p>
-	If clicking does not perform a function,
-	there are no keyboard accessibility issues with the element.
-	Otherwise, to make the link keyboard accessible 
-	add an <code>href</code> or <code>tabindex="0"</code> and <code>role="link"</code>.
-	</p>
 	</div>
 	</section>
 </div>

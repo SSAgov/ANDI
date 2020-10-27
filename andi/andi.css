@@ -1,5 +1,5 @@
 /*=====ANDI CSS=====*/
-/*Version 5.0.6 */
+/*Version 5.0.7 */
 /*This is the main CSS file for ANDI*/
 /*It is important to keep the specificity high to override any test page's own CSS*/
 
@@ -26,7 +26,7 @@ body.ANDI508-testPage
 	@keyframes pulse_danger{
 		50%{outline-color:#ef7200 !important;}
 	}
-#ANDI508-testPage .ANDI508-highlight.ANDI508-element-active.ANDI508-element
+#ANDI508-testPage .ANDI508-highlight.ANDI508-element-active.ANDI508-element, #ANDI508-testPage .ANDI508-exclude-from-inspection.ANDI508-element-active.ANDI508-element
 	{outline:4px solid deeppink !important; animation:pulse_active 3s linear infinite !important;}
 	/*animation for active highlight: pulses an outward pink glow*/
 	@keyframes pulse_active{

@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "8.0.5";
+var landiVersionNumber = "8.1.0";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
@@ -100,7 +100,7 @@ lANDI.analyze = function(){
 	//Loop through every visible element and run tests
 	$(TestPageData.allVisibleElements).each(function(){
 		//ANALYZE LINKS
-		if($(this).isSemantically("[role=link]","a,area")){
+		if($(this).isSemantically("[role=link]","a[href],a[tabindex],area")){
 			if(!andiCheck.isThisElementDisabled(this)){
 
 				lANDI.links.count++;
@@ -167,14 +167,22 @@ lANDI.analyze = function(){
 								//link as no role and no href, suggest using role=link or href
 								andiAlerter.throwAlert(alert_0168);
 							}
+							
+							andiCheck.commonFocusableElementChecks(andiData,$(this));
 						}
 					}
-
-					andiCheck.commonFocusableElementChecks(andiData,$(this));
 
 					AndiData.attachDataToElement(this);
 				}
 			}
+		}
+		//Analyze elements that might be links
+		else if(AndiModule.activeActionButtons.linksMode && $(this).is("a")){
+			andiData = new AndiData(this);
+			isLinkKeyboardAccessible(undefined, this);
+			AndiData.attachDataToElement(this);
+			//Don't allow element to appear in next/prev flow or hover. Also remove highlight.
+			$(this).addClass("ANDI508-exclude-from-inspection").removeClass("ANDI508-highlight");
 		}
 		//ANALYZE BUTTONS
 		else if($(this).isSemantically("[role=button]","button,:button,:submit,:reset,:image")){
@@ -246,7 +254,7 @@ lANDI.analyze = function(){
 			}
 			//No click event could be detected
 			else if(!id && !name){//Link doesn't have id or name
-				andiAlerter.throwAlert(alert_0165);
+				andiAlerter.throwAlert(alert_0128);
 			}
 			else{//Link has id or name
 				//Determine if the link is an anchor for another link
@@ -265,7 +273,7 @@ lANDI.analyze = function(){
 				});
 				if(!isDefinitelyAnAnchor){
 					if(element.onclick === null && $._data(element, "events").click === undefined)
-						andiAlerter.throwAlert(alert_0166);
+						andiAlerter.throwAlert(alert_0129);
 					else //Link is clickable but not keyboard accessible
 						andiAlerter.throwAlert(alert_0164);
 				}
@@ -273,7 +281,7 @@ lANDI.analyze = function(){
 					andiAlerter.throwAlert(alert_007B, [name]);
 				}
 				else{
-					andiAlerter.throwAlert(alert_0167);
+					andiAlerter.throwAlert(alert_012A); //definitely an anchor, but not focusable
 				}
 			}
 			return false; //not keyboard accessible
