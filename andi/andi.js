@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.1.5";
+var andiVersionNumber = "27.2.0";
 
 //==============//
 // ANDI CONFIG: //
@@ -187,7 +187,8 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 
 	//Set Default Module function logic
 	AndiModule.hoverability = function(event){
-		if(!event.shiftKey) //check for holding shift key
+		//check for holding shift key or if element is excluded from inspection for some reason
+		if(!event.shiftKey && !$(this).hasClass("ANDI508-exclude-from-inspection")) 
 			AndiModule.inspect(this);
 	};
 	AndiModule.focusability = function(){
@@ -202,18 +203,17 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	$("#ANDI508-button-prevElement").off("click").click(function(){
 		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
 		if(isNaN(index)) //no active element yet
-			andiFocuser.focusByIndex(1); //first element
+			index = 2; //begin at first element (this number will be subtracted in the loop)
 		else if(index == 1)
-			andiFocuser.focusByIndex(testPageData.andiElementIndex); //loop back to last
-		else{
-			//Find the previous element with data-andi508-index
-			//This will skip over elements that may have been hidden or removed from the DOM
-			for(var x=index, prev; x>0; x--){
-				prev = $("#ANDI508-testPage [data-andi508-index='"+(x - 1)+"']");
-				if($(prev).length && $(prev).is(":visible")){
-					andiFocuser.focusByIndex(x - 1);
-					break;
-				}
+			index = testPageData.andiElementIndex + 1; //loop back to last element
+
+		//Find the previous element with data-andi508-index
+		//Skips over elements that have become hidden, removed from DOM, or excluded from inspection for some reason
+		for(var x=index, prev; x>0; x--){
+			prev = $("#ANDI508-testPage [data-andi508-index='"+(x - 1)+"']");
+			if($(prev).length && $(prev).is(":visible") && !$(prev).hasClass("ANDI508-exclude-from-inspection")){
+				andiFocuser.focusByIndex(x - 1);
+				break;
 			}
 		}
 	});
@@ -222,17 +222,17 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	//Instantiating a module will reset any overrides
 	$("#ANDI508-button-nextElement").off("click").click(function(){
 		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
-		if(index == testPageData.andiElementIndex || isNaN(index))
-			andiFocuser.focusByIndex(1); //loop back to first
-		else{
-			//Find the next element with data-andi508-index
-			//This will skip over elements that may have been hidden or removed from the DOM
-			for(var x=index, next; x<testPageData.andiElementIndex; x++){
-				next = $("#ANDI508-testPage [data-andi508-index='"+(x + 1)+"']");
-				if($(next).length && $(next).is(":visible")){
-					andiFocuser.focusByIndex(x + 1);
-					break;
-				}
+			
+		if(index == testPageData.andiElementIndex || isNaN(index)) //if active is last or not established yet	
+			index = 0; //begin at first element
+
+		//Find the next element with data-andi508-index
+		//Skips over elements that have become hidden, removed from DOM, or excluded from inspection for some reason
+		for(var x=index, next; x<testPageData.andiElementIndex; x++){
+			next = $("#ANDI508-testPage [data-andi508-index='"+(x + 1)+"']");
+			if($(next).length && $(next).is(":visible") && !$(next).hasClass("ANDI508-exclude-from-inspection")){
+				andiFocuser.focusByIndex(x + 1);
+				break;
 			}
 		}
 	});
