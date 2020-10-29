@@ -1,4 +1,20 @@
 $(document).ready(function(){
+	
+	//Manipulate screen to show all or only one alert
+	if(window.location.search){
+		//slice off the question mark
+		var id_to_show = window.location.search.slice(1);
+		
+		//hide all sections
+		$("section").hide();
+		
+		//show only the section whose id matches the search parameter
+		$("#"+id_to_show).show().focus();
+	}
+	else{
+		//Show everything
+	}
+		
 	$("#tableOfContentsControl").click(function(){
 		if($("#tableOfContents").is(":visible")){
 			$(this)

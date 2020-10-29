@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.2.1";
+var andiVersionNumber = "27.3.0";
 
 //==============//
 // ANDI CONFIG: //
@@ -357,146 +357,146 @@ function Alert(level, group, message, info, alertButton){
 	this.alertButton = alertButton; //(optional) an alert button object
 }
 //Define Alerts used by all modules
-var alert_0001 = new Alert("danger","0"," has no accessible name, associated &lt;label&gt;, or [title].","#no_name");
-var alert_0002 = new Alert("danger","0"," has no accessible name, innerText, or [title].","#no_name");
-var alert_0003 = new Alert("danger","0"," has no accessible name, [alt], or [title].","#no_name");
-var alert_0004 = new Alert("danger","0","Table has no accessible name, &lt;caption&gt;, or [title].","#no_name");
-var alert_0005 = new Alert("danger","0","Figure has no accessible name, &lt;figcaption&gt;, or [title].","#no_name");
-var alert_0007 = new Alert("danger","0","Iframe has no accessible name or [title].","#no_name");
-var alert_0008 = new Alert("danger","0"," has no accessible name.","#no_name");
-var alert_0009 = new Alert("warning","0","Iframe has no accessible name or [title].","#no_name");
+var alert_0001 = new Alert("danger","0"," has no accessible name, associated &lt;label&gt;, or [title].","no_name");
+var alert_0002 = new Alert("danger","0"," has no accessible name, innerText, or [title].","no_name");
+var alert_0003 = new Alert("danger","0"," has no accessible name, [alt], or [title].","no_name");
+var alert_0004 = new Alert("danger","0","Table has no accessible name, &lt;caption&gt;, or [title].","no_name");
+var alert_0005 = new Alert("danger","0","Figure has no accessible name, &lt;figcaption&gt;, or [title].","no_name");
+var alert_0007 = new Alert("danger","0","Iframe has no accessible name or [title].","no_name");
+var alert_0008 = new Alert("danger","0"," has no accessible name.","no_name");
+var alert_0009 = new Alert("warning","0","Iframe has no accessible name or [title].","no_name");
 
-var alert_0011 = new Alert("danger","1","%%%; element ids should be unique.","#dup_id",
+var alert_0011 = new Alert("danger","1","%%%; element ids should be unique.","dup_id",
 							new AlertButton("show ids", "ANDI508-alertButton-duplicateIdOverlay", function(){andiOverlay.overlay_duplicateIds();}, overlayIcon));
-var alert_0012 = new Alert("danger","1","More than one &lt;label[for=%%%]&gt; associates with this element [id=%%%].","#dup_for");
+var alert_0012 = new Alert("danger","1","More than one &lt;label[for=%%%]&gt; associates with this element [id=%%%].","dup_for");
 
-var alert_0021 = new Alert("warning","2","[aria-describedby] should be used in combination with a component that provides an accessible name.","#dby_alone");
-var alert_0022 = new Alert("danger","2","&lt;legend&gt; should be used in combination with a component that provides an accessible name.","#legend_alone");
+var alert_0021 = new Alert("warning","2","[aria-describedby] should be used in combination with a component that provides an accessible name.","dby_alone");
+var alert_0022 = new Alert("danger","2","&lt;legend&gt; should be used in combination with a component that provides an accessible name.","legend_alone");
 
-var alert_0031 = new Alert("danger","3","[aria-labeledby] is mispelled, use [aria-labelledby].","#misspell");
-var alert_0032 = new Alert("danger","3","[aria-role] not a valid attribute, use [role] instead.","#aria_role");
+var alert_0031 = new Alert("danger","3","[aria-labeledby] is mispelled, use [aria-labelledby].","misspell");
+var alert_0032 = new Alert("danger","3","[aria-role] not a valid attribute, use [role] instead.","aria_role");
 
-var alert_0041 = new Alert("warning","4","Presentation table has data table markup (%%%); Is this a data table?","#pres_table_not_have");
-var alert_0043 = new Alert("caution","4","Table has more than %%% levels of [scope=%%%].","#too_many_scope_levels");
-var alert_0045 = new Alert("danger","4","[headers] attribute only valid on &lt;th&gt; or &lt;td&gt;.","#headers_only_for_th_td");
-var alert_0046 = new Alert("danger","4","Table has no &lt;th&gt; cells.","#table_has_no_th");
-var alert_0047 = new Alert("warning","4","Scope association needed at intersection of &lt;th&gt;.","#no_scope_at_intersection");
-var alert_0048 = new Alert("caution","4","Table has no [scope] associations.","#table_has_no_scope");
-var alert_0049 = new Alert("danger","4","Table using both [scope] and [headers], may cause screen reader issues.","#table_mixing_scope_and_headers");
-var alert_004A = new Alert("danger","4","Table has no [headers/id] associations.","#table_has_no_headers");
-var alert_004B = new Alert("danger","4","Table has no [scope] but does have [headers], switch to 'headers/id mode'.","#switch_table_analysis_mode");
-var alert_004C = new Alert("danger","4","Table has no [headers/id] but does have [scope], switch to 'scope mode'.","#switch_table_analysis_mode");
-var alert_004E = new Alert("danger","4","Table has no &lt;th&gt; or &lt;td&gt; cells.","#table_has_no_th_or_td");
-var alert_004F = new Alert("danger","4","ARIA %%% has no %%% cells.","#aria_table_grid_structure");
-var alert_004G = new Alert("danger","4","ARIA %%% has no [role=columnheader] or [role=rowheader] cells.","#aria_table_grid_structure");
-var alert_004H = new Alert("danger","4","ARIA %%% has no [role=row] rows.","#aria_table_grid_structure");
-var alert_004I = new Alert("warning","4","&lt;table&gt; with [role=%%%] is not recognized as a data table.","#table_nontypical_role");
-var alert_004J = new Alert("warning","4","&lt;table[role=%%%]&gt; has %%% &lt;th&gt; cells missing columnheader or rowheader role.","#header_missing_role");
-var alert_004K = new Alert("warning","4","&lt;table[role=%%%]&gt; has %%% cells not contained by [role=row].","#cells_not_contained_by_row_role");
+var alert_0041 = new Alert("warning","4","Presentation table has data table markup (%%%); Is this a data table?","pres_table_not_have");
+var alert_0043 = new Alert("caution","4","Table has more than %%% levels of [scope=%%%].","too_many_scope_levels");
+var alert_0045 = new Alert("danger","4","[headers] attribute only valid on &lt;th&gt; or &lt;td&gt;.","headers_only_for_th_td");
+var alert_0046 = new Alert("danger","4","Table has no &lt;th&gt; cells.","table_has_no_th");
+var alert_0047 = new Alert("warning","4","Scope association needed at intersection of &lt;th&gt;.","no_scope_at_intersection");
+var alert_0048 = new Alert("caution","4","Table has no [scope] associations.","table_has_no_scope");
+var alert_0049 = new Alert("danger","4","Table using both [scope] and [headers], may cause screen reader issues.","table_mixing_scope_and_headers");
+var alert_004A = new Alert("danger","4","Table has no [headers/id] associations.","table_has_no_headers");
+var alert_004B = new Alert("danger","4","Table has no [scope] but does have [headers], switch to 'headers/id mode'.","switch_table_analysis_mode");
+var alert_004C = new Alert("danger","4","Table has no [headers/id] but does have [scope], switch to 'scope mode'.","switch_table_analysis_mode");
+var alert_004E = new Alert("danger","4","Table has no &lt;th&gt; or &lt;td&gt; cells.","table_has_no_th_or_td");
+var alert_004F = new Alert("danger","4","ARIA %%% has no %%% cells.","aria_table_grid_structure");
+var alert_004G = new Alert("danger","4","ARIA %%% has no [role=columnheader] or [role=rowheader] cells.","aria_table_grid_structure");
+var alert_004H = new Alert("danger","4","ARIA %%% has no [role=row] rows.","aria_table_grid_structure");
+var alert_004I = new Alert("warning","4","&lt;table&gt; with [role=%%%] is not recognized as a data table.","table_nontypical_role");
+var alert_004J = new Alert("warning","4","&lt;table[role=%%%]&gt; has %%% &lt;th&gt; cells missing columnheader or rowheader role.","header_missing_role");
+var alert_004K = new Alert("warning","4","&lt;table[role=%%%]&gt; has %%% cells not contained by [role=row].","cells_not_contained_by_row_role");
 
-var alert_0052 = new Alert("danger","5","[accessKey] value \"%%%\" has more than one character.","#accesskey_more_one");
-var alert_0054 = new Alert("danger","5","Duplicate [accessKey=%%%] found on button.","#accesskey_duplicate");
-var alert_0055 = new Alert("caution","5","Duplicate [accessKey=%%%] found.","#accesskey_duplicate");
-var alert_0056 = new Alert("danger","5","Duplicate [accessKey=%%%] found on link.","#accesskey_duplicate");
+var alert_0052 = new Alert("danger","5","[accessKey] value \"%%%\" has more than one character.","accesskey_more_one");
+var alert_0054 = new Alert("danger","5","Duplicate [accessKey=%%%] found on button.","accesskey_duplicate");
+var alert_0055 = new Alert("caution","5","Duplicate [accessKey=%%%] found.","accesskey_duplicate");
+var alert_0056 = new Alert("danger","5","Duplicate [accessKey=%%%] found on link.","accesskey_duplicate");
 
-var alert_0062 = new Alert("danger","6","[headers] attribute is referencing an element [id=%%%] external to its own table.","#headers_ref_external");
-var alert_0063 = new Alert("warning","6","Element referenced by [%%%] with [id=%%%] not found.","#ref_id_not_found");
-var alert_0065 = new Alert("danger","6","Improper use of [%%%] possible: Referenced ids \"%%%\" not found.","#improper_ref_id_usage");
-var alert_0066 = new Alert("danger","6","Element referenced by [headers] attribute with [id=%%%] is not a &lt;th&gt;.","#headers_ref_not_th");
-var alert_0067 = new Alert("warning","6","[headers] attribute is referencing a &lt;td&gt; with [id=%%%].","#headers_ref_is_td");
-var alert_0068 = new Alert("warning","6","Element\'s [headers] references provide no association text.","#headers_refs_no_text");
-var alert_0069 = new Alert("warning","6","In-page anchor target with [id=%%%] not found.","#anchor_target_not_found");
-var alert_006A = new Alert("danger","6","&lt;img&gt; referenced by image map %%% not found.","#image_map_ref_not_found");
-var alert_006B = new Alert("warning","6","[%%%] is referencing a legend which may cause speech verbosity.","#ref_legend");
-var alert_006C = new Alert("warning","6","[%%%] reference contains another [%%%] reference which won't be used for this Output.","#ref_has_ref");
-var alert_006D = new Alert("warning","6","[%%%] is directly referencing [id=%%%] multiple times which may cause speech verbosity.","#ref_is_duplicate");
-var alert_006E = new Alert("warning","6","[%%%] is directly and indirectly referencing [id=%%%] which may cause speech verbosity.","#ref_is_direct_and_indirect");
-var alert_006F = new Alert("warning","6","Element nested in &lt;label&gt; but label[for=%%%] does not match element [id=%%%].","#nested_label_for_no_match");
+var alert_0062 = new Alert("danger","6","[headers] attribute is referencing an element [id=%%%] external to its own table.","headers_ref_external");
+var alert_0063 = new Alert("warning","6","Element referenced by [%%%] with [id=%%%] not found.","ref_id_not_found");
+var alert_0065 = new Alert("danger","6","Improper use of [%%%] possible: Referenced ids \"%%%\" not found.","improper_ref_id_usage");
+var alert_0066 = new Alert("danger","6","Element referenced by [headers] attribute with [id=%%%] is not a &lt;th&gt;.","headers_ref_not_th");
+var alert_0067 = new Alert("warning","6","[headers] attribute is referencing a &lt;td&gt; with [id=%%%].","headers_ref_is_td");
+var alert_0068 = new Alert("warning","6","Element\'s [headers] references provide no association text.","headers_refs_no_text");
+var alert_0069 = new Alert("warning","6","In-page anchor target with [id=%%%] not found.","anchor_target_not_found");
+var alert_006A = new Alert("danger","6","&lt;img&gt; referenced by image map %%% not found.","image_map_ref_not_found");
+var alert_006B = new Alert("warning","6","[%%%] is referencing a legend which may cause speech verbosity.","ref_legend");
+var alert_006C = new Alert("warning","6","[%%%] reference contains another [%%%] reference which won't be used for this Output.","ref_has_ref");
+var alert_006D = new Alert("warning","6","[%%%] is directly referencing [id=%%%] multiple times which may cause speech verbosity.","ref_is_duplicate");
+var alert_006E = new Alert("warning","6","[%%%] is directly and indirectly referencing [id=%%%] which may cause speech verbosity.","ref_is_direct_and_indirect");
+var alert_006F = new Alert("warning","6","Element nested in &lt;label&gt; but label[for=%%%] does not match element [id=%%%].","nested_label_for_no_match");
 
-var alert_0071 = new Alert("danger","7","Page &lt;title&gt; cannot be empty.","#page_title_empty");
-var alert_0072 = new Alert("danger","7","Page has no &lt;title&gt;.","#page_title_none");
-var alert_0073 = new Alert("warning","7","Page has more than one &lt;title&gt; tag.","#page_title_multiple");
-var alert_0074 = new Alert("danger","7","There are more legends (%%%) than fieldsets (%%%).","#too_many_legends");
-var alert_0075 = new Alert("danger","7","There are more figcaptions (%%%) than figures (%%%).","#too_many_figcaptions");
-var alert_0076 = new Alert("danger","7","There are more captions (%%%) than tables (%%%).","#too_many_captions");
-var alert_0077 = new Alert("danger","7","Tabindex value \"%%%\" is not a number.","#tabindex_not_number");
-var alert_0078 = new Alert("warning","7","Using HTML5, found deprecated %%%.","#deprecated_html");
-var alert_0079 = new Alert("danger","7","List item %%% is not contained by a list container %%%.","#li_no_container");
-var alert_007A = new Alert("danger","7","Description list item is not contained by a description list container &lt;dl&gt;.","#dd_dt_no_container");
-var alert_007B = new Alert("caution","7","This &lt;a&gt; element has [name=%%%] which is a deprecated way of making an anchor target; use [id].","#deprecated_html_a_name");
-var alert_007C = new Alert("warning","7","[scope=%%%] value is invalid; acceptable values are col, row, colgroup, or rowgroup.","#scope_value_invalid");
+var alert_0071 = new Alert("danger","7","Page &lt;title&gt; cannot be empty.","page_title_empty");
+var alert_0072 = new Alert("danger","7","Page has no &lt;title&gt;.","page_title_none");
+var alert_0073 = new Alert("warning","7","Page has more than one &lt;title&gt; tag.","page_title_multiple");
+var alert_0074 = new Alert("danger","7","There are more legends (%%%) than fieldsets (%%%).","too_many_legends");
+var alert_0075 = new Alert("danger","7","There are more figcaptions (%%%) than figures (%%%).","too_many_figcaptions");
+var alert_0076 = new Alert("danger","7","There are more captions (%%%) than tables (%%%).","too_many_captions");
+var alert_0077 = new Alert("danger","7","Tabindex value \"%%%\" is not a number.","tabindex_not_number");
+var alert_0078 = new Alert("warning","7","Using HTML5, found deprecated %%%.","deprecated_html");
+var alert_0079 = new Alert("danger","7","List item %%% is not contained by a list container %%%.","li_no_container");
+var alert_007A = new Alert("danger","7","Description list item is not contained by a description list container &lt;dl&gt;.","dd_dt_no_container");
+var alert_007B = new Alert("caution","7","This &lt;a&gt; element has [name=%%%] which is a deprecated way of making an anchor target; use [id].","deprecated_html_a_name");
+var alert_007C = new Alert("warning","7","[scope=%%%] value is invalid; acceptable values are col, row, colgroup, or rowgroup.","scope_value_invalid");
 
-var alert_0081 = new Alert("warning","8","[alt] attribute is meant for &lt;img&gt; elements.","#alt_only_for_images");
+var alert_0081 = new Alert("warning","8","[alt] attribute is meant for &lt;img&gt; elements.","alt_only_for_images");
 
-var alert_0091 = new Alert("warning","9","Explicit &lt;label[for]&gt; only works with form elements.","#explicit_label_for_forms");
+var alert_0091 = new Alert("warning","9","Explicit &lt;label[for]&gt; only works with form elements.","explicit_label_for_forms");
 
-var alert_0101 = new Alert("warning","10","Combining %%% may produce inconsistent screen reader results.","#unreliable_component_combine");
+var alert_0101 = new Alert("warning","10","Combining %%% may produce inconsistent screen reader results.","unreliable_component_combine");
 
-var alert_0112 = new Alert("caution","11","JavaScript event %%% may cause keyboard accessibility issues; investigate.","#javascript_event_caution");
+var alert_0112 = new Alert("caution","11","JavaScript event %%% may cause keyboard accessibility issues; investigate.","javascript_event_caution");
 
-var alert_0121 = new Alert("caution","12","Focusable element is not in keyboard tab order; should it be tabbable?","#not_in_tab_order");
-var alert_0122 = new Alert("caution","12","Focusable element is not in keyboard tab order and has no accessible name; should it be tabbable?","#not_in_tab_order_no_name");
-var alert_0123 = new Alert("warning","12","Iframe contents are not in keyboard tab order because iframe has negative tabindex.","#iframe_contents_not_in_tab_order");
-var alert_0124 = new Alert("warning","12","If &lt;canvas&gt; element is interactive with mouse, it's not keyboard accessible because there is no focusable fallback content.","#canvas_not_keyboard_accessible");
-var alert_0125 = new Alert("warning","12","Element with [role=%%%] not in the keyboard tab order.","#role_tab_order");
-var alert_0126 = new Alert("danger","12","Image defined as decorative is in the keyboard tab order.","#decorative_image_tab_order");
-var alert_0127 = new Alert("caution","12","&lt;canvas&gt; element has focusable fallback content; Test for keyboard equivalency to mouse functionality.","#canvas_has_focusable_fallback");
-var alert_0128 = new Alert("warning","12","&lt;a&gt; element has no [href], [id], or [tabindex]; This might be a link that only works with a mouse.","#anchor_purpose_unclear");
-var alert_0129 = new Alert("caution","12","&lt;a&gt; element has no [href], or [tabindex]; This might be a link that only works with a mouse.","#anchor_purpose_unclear");
-var alert_012A = new Alert("caution","12","This &lt;a&gt; element is the target of another link; When link is followed, target may not receive visual indication of focus.","#is_anchor_target_no_focus");
+var alert_0121 = new Alert("caution","12","Focusable element is not in keyboard tab order; should it be tabbable?","not_in_tab_order");
+var alert_0122 = new Alert("caution","12","Focusable element is not in keyboard tab order and has no accessible name; should it be tabbable?","not_in_tab_order_no_name");
+var alert_0123 = new Alert("warning","12","Iframe contents are not in keyboard tab order because iframe has negative tabindex.","iframe_contents_not_in_tab_order");
+var alert_0124 = new Alert("warning","12","If &lt;canvas&gt; element is interactive with mouse, it's not keyboard accessible because there is no focusable fallback content.","canvas_not_keyboard_accessible");
+var alert_0125 = new Alert("warning","12","Element with [role=%%%] not in the keyboard tab order.","role_tab_order");
+var alert_0126 = new Alert("danger","12","Image defined as decorative is in the keyboard tab order.","decorative_image_tab_order");
+var alert_0127 = new Alert("caution","12","&lt;canvas&gt; element has focusable fallback content; Test for keyboard equivalency to mouse functionality.","canvas_has_focusable_fallback");
+var alert_0128 = new Alert("warning","12","&lt;a&gt; element has no [href], [id], or [tabindex]; This might be a link that only works with a mouse.","anchor_purpose_unclear");
+var alert_0129 = new Alert("caution","12","&lt;a&gt; element has no [href], or [tabindex]; This might be a link that only works with a mouse.","anchor_purpose_unclear");
+var alert_012A = new Alert("caution","12","This &lt;a&gt; element is the target of another link; When link is followed, target may not receive visual indication of focus.","is_anchor_target_no_focus");
 
-var alert_0132 = new Alert("caution","13","Empty header cell.","#empty_header_cell");
-var alert_0133 = new Alert("caution","13","Live region has no innerText content.","#live_region_empty");
+var alert_0132 = new Alert("caution","13","Empty header cell.","empty_header_cell");
+var alert_0133 = new Alert("caution","13","Live region has no innerText content.","live_region_empty");
 
-var alert_0142 = new Alert("caution","14","Image is presentational; its [alt] will not be used in output.","#image_alt_not_used");
+var alert_0142 = new Alert("caution","14","Image is presentational; its [alt] will not be used in output.","image_alt_not_used");
 
-var alert_0151 = new Alert("warning","15","[%%%] attribute length exceeds "+AndiCheck.characterLimiter+" characters; consider condensing.","#character_length");
+var alert_0151 = new Alert("warning","15","[%%%] attribute length exceeds "+AndiCheck.characterLimiter+" characters; consider condensing.","character_length");
 
-var alert_0161 = new Alert("warning","16","Ambiguous Link: same name/description as another link but different href.","#ambiguous_link");
-var alert_0162 = new Alert("caution","16","Ambiguous Link: same name/description as another link but different href.","#ambiguous_link");//caution level thrown for internal links
-var alert_0163 = new Alert("caution","16","Link text is vague and does not identify its purpose.","#vague_link");
-var alert_0164 = new Alert("warning","16","Link has click event but is not keyboard accessible.","#link_click_no_keyboard_access");
-var alert_0168 = new Alert("warning","16","&lt;a&gt; without [href] may not be recognized as a link; add [role=link] or [href].","#not_recognized_as_link");
+var alert_0161 = new Alert("warning","16","Ambiguous Link: same name/description as another link but different href.","ambiguous_link");
+var alert_0162 = new Alert("caution","16","Ambiguous Link: same name/description as another link but different href.","ambiguous_link");//caution level thrown for internal links
+var alert_0163 = new Alert("caution","16","Link text is vague and does not identify its purpose.","vague_link");
+var alert_0164 = new Alert("warning","16","Link has click event but is not keyboard accessible.","link_click_no_keyboard_access");
+var alert_0168 = new Alert("warning","16","&lt;a&gt; without [href] may not be recognized as a link; add [role=link] or [href].","not_recognized_as_link");
 
-var alert_0171 = new Alert("danger","17","&lt;marquee&gt; element found, do not use.","#marquee_found");
-var alert_0172 = new Alert("danger","17","&lt;blink&gt; element found, do not use.","#blink_found");
-var alert_0173 = new Alert("danger","17","Server side image maps are not accessible.","#server_side_image_map");
-var alert_0174 = new Alert("caution","17","Redundant phrase in image [alt] text.","#image_alt_redundant_phrase");
-var alert_0175 = new Alert("warning","17","Image [alt] text contains file name.","#image_alt_contains_file_name");
-var alert_0176 = new Alert("danger","17","Image [alt] text is not descriptive.","#image_alt_not_descriptive");
-var alert_0177 = new Alert("caution","17","Ensure that background images are decorative.","#ensure_bg_images_decorative");
-var alert_0178 = new Alert("danger","17","&lt;area&gt; not contained in &lt;map&gt;.","#area_not_in_map");
+var alert_0171 = new Alert("danger","17","&lt;marquee&gt; element found, do not use.","marquee_found");
+var alert_0172 = new Alert("danger","17","&lt;blink&gt; element found, do not use.","blink_found");
+var alert_0173 = new Alert("danger","17","Server side image maps are not accessible.","server_side_image_map");
+var alert_0174 = new Alert("caution","17","Redundant phrase in image [alt] text.","image_alt_redundant_phrase");
+var alert_0175 = new Alert("warning","17","Image [alt] text contains file name.","image_alt_contains_file_name");
+var alert_0176 = new Alert("danger","17","Image [alt] text is not descriptive.","image_alt_not_descriptive");
+var alert_0177 = new Alert("caution","17","Ensure that background images are decorative.","ensure_bg_images_decorative");
+var alert_0178 = new Alert("danger","17","&lt;area&gt; not contained in &lt;map&gt;.","area_not_in_map");
 
-var alert_0180 = new Alert("warning","18","[aria-level] is not a greater-than-zero integar; level 2 will be assumed.","#arialevel_not_gt_zero_integar");
-var alert_0182 = new Alert("danger","18","Live Region contains a form element.","#live_region_form_element");
-var alert_0183 = new Alert("danger","18","[role=image] is invalid; Use [role=img].","#role_image_invalid");
-var alert_0184 = new Alert("danger","18","A live region can only be a container element.","#live_region_not_container");
-var alert_0185 = new Alert("danger","18","List item's container is not recognized as a list because it has [role=%%%].","#non_list_role");
+var alert_0180 = new Alert("warning","18","[aria-level] is not a greater-than-zero integar; level 2 will be assumed.","arialevel_not_gt_zero_integar");
+var alert_0182 = new Alert("danger","18","Live Region contains a form element.","live_region_form_element");
+var alert_0183 = new Alert("danger","18","[role=image] is invalid; Use [role=img].","role_image_invalid");
+var alert_0184 = new Alert("danger","18","A live region can only be a container element.","live_region_not_container");
+var alert_0185 = new Alert("danger","18","List item's container is not recognized as a list because it has [role=%%%].","non_list_role");
 
-var alert_0190 = new Alert("warning","19","Element visually conveys heading meaning but not using semantic heading markup.","#not_semantic_heading");
-var alert_0191 = new Alert("warning","19","Heading element level &lt;%%%&gt; conflicts with [aria-level=%%%].","#conflicting_heading_level");
-var alert_0192 = new Alert("caution","19","[role=heading] used without [aria-level]; level 2 will be assumed.","#role_heading_no_arialevel");
+var alert_0190 = new Alert("warning","19","Element visually conveys heading meaning but not using semantic heading markup.","not_semantic_heading");
+var alert_0191 = new Alert("warning","19","Heading element level &lt;%%%&gt; conflicts with [aria-level=%%%].","conflicting_heading_level");
+var alert_0192 = new Alert("caution","19","[role=heading] used without [aria-level]; level 2 will be assumed.","role_heading_no_arialevel");
 
-var alert_0200 = new Alert("warning","20","Non-unique button: same name/description as another button.","#non_unique_button");
+var alert_0200 = new Alert("warning","20","Non-unique button: same name/description as another button.","non_unique_button");
 
-var alert_0210 = new Alert("caution","21","An associated &lt;label&gt; containing text would increase the clickable area of this %%%.","#label_clickable_area");
+var alert_0210 = new Alert("caution","21","An associated &lt;label&gt; containing text would increase the clickable area of this %%%.","label_clickable_area");
 
-var alert_0220 = new Alert("warning","22","Content has been injected using CSS pseudo-elements ::before or ::after.","#pseudo_before_after");
+var alert_0220 = new Alert("warning","22","Content has been injected using CSS pseudo-elements ::before or ::after.","pseudo_before_after");
 
-var alert_0230 = new Alert("warning","23","Element has background-image; Perform manual contrast test.","#manual_contrast_test_bgimage");
-var alert_0231 = new Alert("caution","23","Page has images; If images contain meaningful text, perform manual contrast test.","#manual_contrast_test_img");
-var alert_0232 = new Alert("warning","23","Opacity less than 100%; Perform manual contrast test.","#manual_contrast_test_opacity");
-var alert_0233 = new Alert("caution","23","[role=grid] found; test navigation of design pattern.","#grid_navigation_test");
+var alert_0230 = new Alert("warning","23","Element has background-image; Perform manual contrast test.","manual_contrast_test_bgimage");
+var alert_0231 = new Alert("caution","23","Page has images; If images contain meaningful text, perform manual contrast test.","manual_contrast_test_img");
+var alert_0232 = new Alert("warning","23","Opacity less than 100%; Perform manual contrast test.","manual_contrast_test_opacity");
+var alert_0233 = new Alert("caution","23","[role=grid] found; test navigation of design pattern.","grid_navigation_test");
 
-var alert_0240 = new Alert("danger","24","Text does not meet %%%minimum %%% contrast ratio (%%%:1).","#min_contrast");
+var alert_0240 = new Alert("danger","24","Text does not meet %%%minimum %%% contrast ratio (%%%:1).","min_contrast");
 
-var alert_0250 = new Alert("warning","25","Page has %%% disabled %%%; Disabled elements are not in the keyboard tab order.","#disabled_elements",
+var alert_0250 = new Alert("warning","25","Page has %%% disabled %%%; Disabled elements are not in the keyboard tab order.","disabled_elements",
 	new AlertButton("show disabled", "ANDI508-alertButton-disabledElementsOverlay", function(){andiOverlay.overlay_disabledElements();}, overlayIcon));
-var alert_0251 = new Alert("caution","25","Page has %%% disabled elements; Disabled elements do not require sufficient contrast.","#disabled_contrast",
+var alert_0251 = new Alert("caution","25","Page has %%% disabled elements; Disabled elements do not require sufficient contrast.","disabled_contrast",
 	new AlertButton("show disabled", "ANDI508-alertButton-disabledElementsOverlay", function(){andiOverlay.overlay_disabledElements(true);}, overlayIcon));
 
-var alert_0260 = new Alert("danger","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","#ariahidden");
-var alert_0261 = new Alert("warning","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","#ariahidden");
+var alert_0260 = new Alert("danger","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","ariahidden");
+var alert_0261 = new Alert("warning","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","ariahidden");
 
 //==================//
 // DISPLAY HANDLING //
@@ -3634,9 +3634,9 @@ function AndiAlerter(){
 
 	//This private function will add a help link to the alert message
 	function messageWithHelpLink(alertObject, message){
-		return "<a href='"+ help_url + "alerts.html" + alertObject.info +"' target='_blank' "+
+		return "<a href='"+ help_url + "alerts.html?" + alertObject.info +"' target='_blank' "+
 			"aria-label='"+alertObject.level+": "+message+" Select to Open ANDI Help"+"'>"+
-			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
+			"<img alt='"+alertObject.level+"' title='Get more info about this' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
 			message+"</a> ";
 	}
 
