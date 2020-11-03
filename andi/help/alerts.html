@@ -69,6 +69,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='danger'><a href="?switch_table_analysis_mode">Switch Table Analysis Mode</a></li>
 		<li class='danger'><a href="?no_scope_at_intersection">No Scope at TH Intersection</a></li>
 		<li class='danger'><a href="?aria_table_grid_structure">ARIA Table/Grid Structure</a></li>
+		<li class='danger'><a href="?table_has_no_th_or_td">No TD or TD cells</a></li>
 		<li class='warning'><a href="?too_many_scope_levels">Too Many Scope Levels</a></li>
 		<li class='warning'><a href="?pres_table_not_have">Presentation Table Markup</a></li>
 		<li class='warning'><a href="?table_nontypical_role">Table with Nontypical Role</a></li>
@@ -94,6 +95,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='warning'><a href="?headers_refs_no_text">Headers References No Text</a></li>
 		<li class='warning'><a href="?headers_ref_is_td">Headers Reference is TD</a></li>
 		<li class='warning'><a href="?headers_ref_external">Headers Referencing External Element</a></li>
+		<li class='warning'><a href="?nested_label_for_no_match">Nested Label For Doesn't Match</a></li>
 	</ul>
 	<h3 tabindex="0">Invalid HTML Alerts</h3>
 	<ul>
@@ -133,7 +135,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='caution'><a href="?not_in_tab_order">Focusable Element Not In Tab Order</a></li>
 		<li class='caution'><a href="?not_in_tab_order_no_name">Element Not In Tab Order, No Name</a></li>
 		<li class='warning'><a href="?iframe_contents_not_in_tab_order">Iframe Contents Not In Tab Order</a></li>
-		<li class='caution'><a href="?disabled_elements">Disabled Elements Found</a></li>
 		<li class='warning'><a href="?canvas_not_keyboard_accessible">Canvas No Focusable Fallback</a></li>
 		<li class='caution'><a href="?canvas_has_focusable_fallback">Canvas Has Focusable Fallback</a></li>
 		<li class='caution'><a href="?anchor_purpose_unclear">Possible Mouse-only Link</a></li>
@@ -198,7 +199,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</ul>
 	<h3 tabindex="0">Manual Tests Needed</h3>
 	<ul>
-		<li class='warning'><a href="?manual_contrast_test_bgImage">Element Has Background Image</a></li>
+		<li class='warning'><a href="?manual_contrast_test_bgimage">Element Has Background Image</a></li>
 		<li class='caution'><a href="?manual_contrast_test_img">If Images Contain Text</a></li>
 		<li class='caution'><a href="?manual_contrast_test_opacity">Opacity less than 1</a></li>
 		<li class='caution'><a href="?grid_navigation_test">Test Role=Grid Navigation</a></li>
@@ -206,6 +207,11 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3 tabindex="0">Contrast Alerts</h3>
 	<ul>
 		<li class='danger'><a href="?min_contrast">Contrast ratio minimum requirement</a></li>
+	</ul>
+	<h3 tabindex="0">Disabled Element Alerts</h3>
+	<ul>
+		<li class='warning'><a href="?disabled_elements">Disabled Elements Found</a></li>
+		<li class='caution'><a href="?disabled_contrast">Disabled Elements Contrast</a></li>
 	</ul>
 	<h3 tabindex="0">Aria-hidden Alerts</h3>
 	<ul>
@@ -722,6 +728,38 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Correct the structure to abide by the standards for an 
 	<a href="http://www.w3.org/TR/wai-aria-practices-1.1/#table">ARIA table</a>, or 
 	<a href="http://www.w3.org/TR/wai-aria-practices-1.1/#grid">ARIA grid</a>.
+	</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-table_has_no_th_or_td" id='table_has_no_th_or_td'>
+	
+	<h2 id="lby-table_has_no_th_or_td">Alert: No TH or TD</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" />Table has no &lt;th&gt; or &lt;td&gt; cells.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This table has no <code>&lt;th&gt;</code> cells or <code>&lt;td&gt;</code> cells.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	If this table has no cells, is it really a data table?
+	Users with a vision disability who use a screen reader
+	may not understand how to navigate this table.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	If the <code>&lt;table&gt;</code> element is a data table, it should contain 
+	<code>&lt;th&gt;</code> and <code>&lt;td&gt;</code> element.
+	If the <code>&lt;table&gt;</code> element does not contain tabular data 
+	and is instead used for structural layout,
+	it should have <code>role="presentation"</code>.
+	If the <code>&lt;table&gt;</code> element is a placeholder container
+	for dynamically propagating table data 
+	(using javascript to dynamically inject the data), then ignore this alert.
 	</p>
 	</div>
 	</section>
@@ -1389,6 +1427,43 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-nested_label_for_no_match" id='nested_label_for_no_match'>
+	
+	<h2 id="lby-nested_label_for_no_match">Alert: Nested Label For Doesn't Match</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Element nested in &lt;label&gt; but label[for=%%%] does not match element [id=%%%].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element is nested within a <code>&lt;label&gt;</code> that has a <code>for</code> attribute
+	that does not match the element's <code>id</code>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	A screen reader may not announce the correct label for this element or another element, 
+	which may cause a user with a vision disability to enter information in the wrong place.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	A form element should be associated with its <code>&lt;label&gt;</code> 
+	explicitly (<code>for</code>/<code>id</code> match) and/or 
+	implicitly (nesting the element inside the label).
+	In this instance, the element is nested inside its <code>&lt;label&gt;</code>
+	which establishes a programmatic association,
+	however, the <code>label</code>'s <code>for</code> attribute does not match the 
+	<code>id</code> of the form element.
+	This mismatch may break the programmatic association, 
+	or cause an incorrect association with a different element.
+	</p>
+	<p>
+	Ensure that the <code>label</code>'s <code>for</code> attribute 
+	matches the <code>id</code> of the form element.
+	</p>
+	</div>
+	</section>
 </div>
 <div class="division">
 	<!--==========================-->
@@ -1703,6 +1778,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Note that <code>scope="column"</code> is invalid.
 	The <code>scope</code> attribute should be used with <code>&lt;th&gt;</code> elements only.
 	</p>
+	</div>
 	</section>
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-deprecated_html_a_name" id='deprecated_html_a_name'>
@@ -1728,6 +1804,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	Replace the <code>name</code> attribute on the anchor target with an <code>id</code> attribute.
 	</p>
+	</div>
 	</section>
 </div>
 <div class="division">
@@ -2039,42 +2116,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-disabled_elements" id='disabled_elements'>
-	<h2 id="lby-disabled_elements">Alert: Disabled Elements Found</h2>
-	<div class='details'>
-	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Page has %%% disabled elements invisible to a screen reader.</li>
-	</ul>
-	<br />
-	<h3>Why did ANDI alert this?</h3>
-	<p>
-	Disabled Elements (<code>disabled="disabled"</code>) were found on the page.
-	</p>
-	<h3>Why is this an accessibility concern?</h3>
-	<p>
-	Elements disabled using the <code>disabled</code> attribute are not in the tab order.
-	Therefore, a person who is visually impaired and using a keyboard to tab through the page
-	may not know that the field is disabled.
-	</p>
-	<h3>What should be done?</h3>
-	<p>
-	Provide an accessible alternative so that all users know which fields are disabled.
-	There are a number of ways to do so:
-	</p>
-		<div class="example">
-			<ul>
-			<li>Provide a text description on the page that fields are disabled.</li>
-			<li>For native textbox type elements use <code>readonly</code> attribute combined with CSS to make the element look disabled (grayed out).</li>
-			<li>Use <code>aria-disabled="true"</code>, prevent the element from functioning using JavaScript and modify CSS to make the element look disabled (grayed out).</li>
-			<li>Convert the value of the element into screen text and ensure that the element's label still appears on screen.</li>
-			<li>Rather than disabling buttons/links, allow the user to press the button/link as normal
-				and provide a message to the user saying that the function is not permitted for whatever reason.</li>
-			<li>Completely remove the element if it is not necessary.</li>
-			</ul>
-		</div>
-	</div>
-	</section>
-	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-canvas_not_keyboard_accessible" id='canvas_not_keyboard_accessible'>
 	<h2 id="lby-canvas_not_keyboard_accessible">Alert: Canvas No Focusable Fallback</h2>
 	<div class='details'>
@@ -2210,6 +2251,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>What should be done?</h3>
 	<p>
 	Some manual testing and investigating is needed.
+	</p>
 	<div class="example">
 		<ul>
 			<li>
@@ -2231,7 +2273,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 			</li>
 		</ul>	
 	</div>
-	</p>
 	<p>
 	The most common (classic) way to create a link is to use the <code>&lt;a&gt;</code> tag and include an <code>href</code> 
 	that points to the link's destination page.
@@ -3385,6 +3426,62 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 </div>
 
 <div class="division">
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-disabled_elements" id='disabled_elements'>
+	<h2 id="lby-disabled_elements">Alert: Disabled Elements Found</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Page has %%% disabled elements invisible to a screen reader.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	Disabled elements (<code>disabled="disabled"</code>) were found on the page.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Elements disabled using the <code>disabled</code> attribute are not in the tab order.
+	Therefore, a person who is visually impaired and using a keyboard to tab through the page
+	may not know that the field is disabled.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Provide an accessible alternative so that all users know which fields are disabled.
+	There are a number of ways to do so:
+	</p>
+		<div class="example">
+			<ul>
+			<li>Provide a text description on the page that fields are disabled.</li>
+			<li>For native textbox type elements use <code>readonly</code> attribute combined with CSS to make the element look disabled (grayed out).</li>
+			<li>Use <code>aria-disabled="true"</code>, prevent the element from functioning using JavaScript and modify CSS to make the element look disabled (grayed out).</li>
+			<li>Convert the value of the element into screen text and ensure that the element's label still appears on screen.</li>
+			<li>Rather than disabling buttons/links, allow the user to press the button/link as normal
+				and provide a message to the user saying that the function is not permitted for whatever reason.</li>
+			<li>Completely remove the element if it is not necessary.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-disabled_contrast" id='disabled_contrast'>
+	<h2 id="lby-disabled_contrast">Alert: Disabled Element Contrast</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Page has %%% disabled elements; Disabled elements do not require sufficient contrast.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	Disabled elements (<code>disabled="disabled"</code>) were found on the page.
+	Disabled elements are inactive user interface components 
+	and do not have color contrast requirements according to the
+	<a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">WCAG AA Contrast Ratio requirement</a>.
+	</p>
+	</div>
+	</section>
+</div>
+
+<div class="division">
 <!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-ariahidden" id='ariahidden'>
 	
@@ -3416,6 +3513,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	<code>aria-hidden="true"</code> is meant to be used in specific situations. 
 	It's okay to use <code>aria-hidden="true"</code> when:
+	</p>
 	<div class="example">
 		<ul>
 			<li>The element contains visual information that is decorative only (not meanigful), </li>
@@ -3423,7 +3521,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 			<li>The element is an interactive control that can only be controlled with a mouse and and there exists a keyboard accessible alternative to perform the functionality</li>
 		</ul>
 	</div>
-	</p>
 	<p>
 	It is rare that focusable elements should have <code>aria-hidden="true"</code>.
 	Most likely, if an element is focusable it 
