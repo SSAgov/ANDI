@@ -72,7 +72,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='danger'><a href="?table_has_no_th_or_td">No TD or TD cells</a></li>
 		<li class='warning'><a href="?too_many_scope_levels">Too Many Scope Levels</a></li>
 		<li class='warning'><a href="?pres_table_not_have">Presentation Table Markup</a></li>
-		<li class='warning'><a href="?table_nontypical_role">Table with Nontypical Role</a></li>
+		<li class='warning'><a href="?table_nontypical_role">Table with Non-typical Role</a></li>
 		<li class='warning'><a href="?header_missing_role">Table Header Missing Role</a></li>
 		<li class='warning'><a href="?cells_not_contained_by_row_role">Table Cells not Contained by Row</a></li>
 		<li class='caution'><a href="?table_has_no_scope">Table Has No Scope</a></li>
@@ -177,7 +177,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='danger'><a href="?live_region_not_container">Live Region not Container</a></li>
 		<li class='danger'><a href="?role_image_invalid">Role=image is Invalid</a></li>
 		<li class='danger'><a href="?non_list_role">List Container Has Non-List Role</a></li>
-		<li class='warning'><a href="?arialevel_not_gt_zero_integar">Aria-level not &gt;0 Integar</a></li>
+		<li class='warning'><a href="?arialevel_not_gt_zero_integar">Aria-level not &gt;0 Integer</a></li>
 	</ul>
 	<h3 tabindex="0">Button Alerts</h3>
 	<ul>
@@ -229,7 +229,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	When it finds such a condition, <span class="brand">ANDI</span> generates an Alert which helps a user pinpoint
 	potential accessibility issues.</p>
 	<p>
-	This help page explains the conditions which cause Alerts to appear, the reason why they appear,
+	This help page explains the conditions that cause Alerts to appear, the reason why they appear,
 	and how to fix or further investigate the issue.</p>
 	</div>
 
@@ -298,7 +298,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li>Images can use the <code>alt</code> attribute.</li>
 		<li>Tables can use the <code>&lt;caption&gt;</code> tag.</li>
 		<li>Figures can use the <code>&lt;figcaption&gt;</code> tag.</li>
-		<li>Container type elements <code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>, <code>&lt;li&gt;</code>, etc. can contain text which will provide a name.</li>
+		<li>Container type elements <code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>, <code>&lt;li&gt;</code>, etc. can contain text that will provide a name.</li>
 		<li>All elements can use the <code>title</code> attribute.</li>
 		</ul>
 	</div>
@@ -351,7 +351,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	Often, this is the result of a developer copying and pasting 
 	an element and forgetting to change the <code>id</code>.
-	It's possible that a developer may not know that ids 
+	It's possible that a developer may not know that <code>id</code>s 
 	<a href="http://www.w3.org/TR/2011/WD-html5-20110525/elements.html#the-id-attribute" target="w3c">must be unique according to W3C standards</a>.
 	</p>
 
@@ -448,15 +448,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-
-
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-misspell" id='misspell'>
 	
 	<h2 id="lby-misspell">Alert: Misspelled attribute</h2>
 	<div class='details'>
 	<ul class='message danger'>
-	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [aria-labeledby] is mispelled, use [aria-labelledby].</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [aria-labeledby] is misspelled, use [aria-labelledby].</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -759,7 +757,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	it should have <code>role="presentation"</code>.
 	If the <code>&lt;table&gt;</code> element is a placeholder container
 	for dynamically propagating table data 
-	(using javascript to dynamically inject the data), then ignore this alert.
+	(using JavaScript to dynamically inject the data), then ignore this alert.
 	</p>
 	</div>
 	</section>
@@ -852,7 +850,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-table_nontypical_role" id='table_nontypical_role'>
 	
-	<h2 id="lby-table_nontypical_role">Alert: Table with Nontypical Role.</h2>
+	<h2 id="lby-table_nontypical_role">Alert: Table with Non-typical Role.</h2>
 	<div class='details'>
 	<ul class='message warning'>
 	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" />&lt;table&gt; with [role=%%%] is not recognized as a data table.</li>
@@ -1355,7 +1353,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>Why did ANDI alert this?</h3>
 	<p>
 	This link's href points to the id of an element on the page that cannot be found.
-	NOTE: <span class="brand">ANDI</span> should not throw this alert if a javascript 
+	NOTE: <span class="brand">ANDI</span> should not throw this alert if a JavaScript 
 	"click event handler" is attached to this link.
 	</p>
 	
@@ -2053,7 +2051,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 
 	<h3>What should be done?</h3>
 	<p>
-	Some manual inpsection of the element is needed.
+	Some manual inspection of the element is needed.
 	Test for keyboard operability.
 	Ensure that the functionality of this element is not restricted to mouse users only.
 	If the element should be in the tab order, an easy way to do so is to change the tabindex value to zero (<code>tabindex="0"</code>).
@@ -2131,7 +2129,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	A <code>&lt;canvas&gt;</code> by default is not keyboard accessible.
 	When a <code>&lt;canvas&gt;</code> element is interactive,
-	javascript is used to control mouse click and hover events.
+	JavaScript is used to control mouse click and hover events.
 	Users who primarily rely on a keyboard for navigation cannot interact with 
 	a <code>&lt;canvas&gt;</code> element unless keyboard accessible elements 
 	and event handling are provided.
@@ -2139,7 +2137,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>What should be done?</h3>
 	<p>
 	Making a <code>&lt;canvas&gt;</code> fully accessible requires 
-	a high degree of javascript skill.
+	a high degree of JavaScript skill.
 	</p>
 	<p>
 	If the <code>&lt;canvas&gt;</code> is interactive using a mouse, then
@@ -2184,7 +2182,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	A <code>&lt;canvas&gt;</code> by default is not keyboard accessible.
 	When a <code>&lt;canvas&gt;</code> element is interactive,
-	javascript is used to control mouse click and hover events.
+	JavaScript is used to control mouse click and hover events.
 	Users who primarily rely on a keyboard for navigation cannot interact with 
 	a <code>&lt;canvas&gt;</code> element unless keyboard accessible elements 
 	and event handling are provided.
@@ -2387,7 +2385,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Screen readers do not monitor a live region's HTML attributes for changes.
 	For example, if the live region's <code>aria-label</code> value is dynamically changing,
 	a screen reader automatically speak the changes.
-	Ensure that dynamic content changes to the live region are occuring within
+	Ensure that dynamic content changes to the live region are occurring within
 	the innerHTML of the live region.
 	</p>
 	</div>
@@ -2539,7 +2537,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<br />
 	<h3>Why did ANDI alert this?</h3>
 	<p>
-	This link does not have an <code>href</code> or <code>tabindex</code> and a javascript click event was detected.
+	This link does not have an <code>href</code> or <code>tabindex</code> and a JavaScript click event was detected.
 	</p>
 
 	<h3>Why is this an accessibility concern?</h3>
@@ -2743,7 +2741,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<br />
 	<h3>Why did ANDI alert this?</h3>
 	<p>
-	<span class='brand'>ANDI</span> has found an an image map element, (<code>&lt;area&gt;</code>),
+	<span class='brand'>ANDI</span> has found an image map element, (<code>&lt;area&gt;</code>),
 	that is not contained within a <code>&lt;map&gt;</code> element.
 	</p>
 
@@ -2958,25 +2956,25 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-arialevel_not_gt_zero_integar" id='arialevel_not_gt_zero_integar'>
 	
-	<h2 id="lby-arialevel_not_gt_zero_integar">Alert: Aria-Level not Greater Than Zero Integar</h2>
+	<h2 id="lby-arialevel_not_gt_zero_integar">Alert: Aria-Level not Greater Than Zero Integer</h2>
 	<div class='details'>
 	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [aria-level] is not a greater-than-zero integar; level 2 will be assumed.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [aria-level] is not a greater-than-zero integer; level 2 will be assumed.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
 	<p>
-	The <code>aria-level</code> attribute is not greater than zero and/or is not an integar.
+	The <code>aria-level</code> attribute is not greater than zero and/or is not an integer.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	When the <code>aria-level</code> on a <code>role="heading"</code> element is not a greater than zero integar,
+	When the <code>aria-level</code> on a <code>role="heading"</code> element is not a greater than zero integer,
 	a screen reader will default the heading level to level 2.
 	</p>
 	<h3>What should be done?</h3>
 	<p>
 	Ensure that the <code>aria-level</code> value is valid
-	and is an appropriate level for it's location on the page.
+	and is an appropriate level for its location on the page.
 	</p>
 	</div>
 	</section>
@@ -3042,7 +3040,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	Headings (text that is concise, has a large font size or bold font weight)
 	provide a way to visually organize and categorize sections of a page.
-	Users of assitive technology are able to quickly navigate web pages when headings exist on a page.
+	Users of assistive technology are able to quickly navigate web pages when headings exist on a page.
 	However, headings must be coded properly using semantic heading tags 
 	(<code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>)
 	in order for users of AT to navigate.
@@ -3072,14 +3070,14 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	The intended heading level may not be communicated to users of assitive technology.
+	The intended heading level may not be communicated to users of assistive technology.
 	</p>
 	<h3>What should be done?</h3>
 	<p>
 	Always ensure that the heading level used is the proper 
 	heading level in relation to the content and other headings on the page.
 	When <code>role="heading"</code> is used, the 
-	<code>aria-level</code> will supercede the heading level from the tag name.
+	<code>aria-level</code> will supersede the heading level from the tag name.
 	Therefore, either:
 	</p>
 		<div class="example">
@@ -3097,7 +3095,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 				Doing so will resolve this alert.
 				</li>
 				<li>
-				Disregard this alert and know that the <code>aria-level</code> supercedes the tag name's heading level.
+				Disregard this alert and know that the <code>aria-level</code> supersedes the tag name's heading level.
 				</li>
 			</ul>
 		</div>
@@ -3497,7 +3495,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>Why did ANDI alert this?</h3>
 	<p>
 	This element has been hidden from a screen reader using <code>aria-hidden="true"</code>.
-	Note: The element may be contained by (an anscestor of) an element with <code>aria-hidden="true"</code>.
+	Note: The element may be contained by (an ancestor of) an element with <code>aria-hidden="true"</code>.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
@@ -3516,16 +3514,16 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	<div class="example">
 		<ul>
-			<li>The element contains visual information that is decorative only (not meanigful), </li>
+			<li>The element contains visual information that is decorative only (not meaningful), </li>
 			<li>The element contains meaningful visual information that is communicated to screen reader users elsewhere on the page, or</li>
-			<li>The element is an interactive control that can only be controlled with a mouse and and there exists a keyboard accessible alternative to perform the functionality</li>
+			<li>The element is an interactive control that can only be controlled with a mouse and there exists a keyboard accessible alternative to perform the functionality</li>
 		</ul>
 	</div>
 	<p>
 	It is rare that focusable elements should have <code>aria-hidden="true"</code>.
 	Most likely, if an element is focusable it 
 	should not have <code>aria-hidden="true"</code>
-	and should not have an anscestor element with <code>aria-hidden="true"</code>.
+	and should not have an ancestor element with <code>aria-hidden="true"</code>.
 	</p>
 	<p>
 	If the element should not be used by all users,
