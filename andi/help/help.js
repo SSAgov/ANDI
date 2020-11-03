@@ -5,15 +5,20 @@ $(document).ready(function(){
 		//slice off the question mark
 		var id_to_show = window.location.search.slice(1);
 		
-		//hide all sections
-		$("section").hide();
+		var element_to_show = $("#"+id_to_show);
 		
-		//show only the section whose id matches the search parameter
-		$("#"+id_to_show).show().focus();
+		//if element_to_show exists
+		if(!!$(element_to_show).html()){
+			
+			//hide all sections
+			$("section").hide();
+			
+			//show only the section whose id matches the search parameter
+			$(element_to_show).show().focus();
+		}
+		// else show everything
 	}
-	else{
-		//Show everything
-	}
+	// else show everything
 		
 	$("#tableOfContentsControl").click(function(){
 		if($("#tableOfContents").is(":visible")){
