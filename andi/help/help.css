@@ -59,7 +59,7 @@ header, nav{
 	background-color: #c12adc;
 }
 main.faq hr{
-	border-color:#c12adc;
+	border-color: #c12adc;
 }
 #navHeader a.howtouse:hover,
 #pageTitle.howtouse{
@@ -94,7 +94,7 @@ main.modules hr{
 	background-color: #dd3535;
 }
 main.alerts hr{
-	border-color:1px solid #ff6767;
+	border-color: #ff6767;
 }
 	
 main{
@@ -128,7 +128,7 @@ h2{
 #tableOfContentsControl,
 .expandButton
 {
-	font-size:0.7em;
+	font-size:1rem;
 	border:1px solid black;
 	border-radius:8px;
 	padding:7px;
@@ -403,7 +403,7 @@ div.division a:hover{
 
 main hr{
 	border-style:solid;
-	border-width:1.5px;
+	border-top:1px;
 	margin-left:0;
 	margin-right:0.5em;
 }

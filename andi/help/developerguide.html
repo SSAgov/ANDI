@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <title>ANDI - Accessible Web Development Guide</title>
-
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="DCTERMS:coderOffice" content="DCS" />
 <meta name="DCTERMS:coder" content="SSA" />
 <meta name="DCTERMS:contentOffice" content="DCS" />
@@ -23,7 +23,7 @@
 	<h1 class="toolName">ANDI</h1>
 	<a href='#skipnav' class='skipnav'>Skip to Content</a>
 	<nav id='navHeader'>
-		<a href="howtouse.html" class="howtouse">Guide</a>
+		<a href="howtouse.html" class="howtouse">Tutorial</a>
 		<a href="modules.html" class="modules">Modules</a>
 		<a href="alerts.html" class="alerts">Alerts</a>
 		<a href="faq.html" class="faq">FAQ</a>
@@ -34,8 +34,8 @@
 	<h2>Developer Tips</h2>
 	<p id='pageSummary'>
 	This page provides some helpful information about developing accessible websites and web applications.
-	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
 	</p>
+	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
 	</div>
 </header>
 <main class="developerguide" id="skipnav" tabindex="-1" aria-label="main content">
@@ -212,12 +212,10 @@
 	<h4>How To Use</h4>
 	<p>The value given to the <code>aria-label</code> attribute should contain the literal text that that will 
 	explicitly name an element. The text will not appear on the screen.</p>
-	<p>
-		<div class="example">
-		Example: 
-		<code>&lt;button aria-label='Close'&gt;X&lt;/button&gt;</code>
-		</div>
-	</p>
+	<div class="example">
+	Example: 
+	<code>&lt;button aria-label='Close'&gt;X&lt;/button&gt;</code>
+	</div>
 	<h4>Screen Reader Usage</h4>
 	<p>A screen reader will speak the literal text value of this attribute.
 	Screen readers give it a high precedence over other Namers.
@@ -263,12 +261,10 @@
 	If the image is purely decorative, does not require explanation, and does not gain focus,
 	then an empty string should be used for the value such as <code>alt=""</code>.
 	</p>
-	<p>
-		<div class="example">
-		Example: 
-		<code>&lt;img src='logo.png' alt='social security administration' /&gt;</code>
-		</div>
-	</p>
+	<div class="example">
+	Example: 
+	<code>&lt;img src='logo.png' alt='social security administration' /&gt;</code>
+	</div>
 	<h4>Screen Reader Usage</h4>
 	<p>
 	The <code>alt</code> attribute is used by screen readers to speak the content 
@@ -358,12 +354,10 @@
 	<code>&lt;input type="reset"&gt;</code>,
 	<code>&lt;input type="image"&gt;</code>.
 	</p>
-	<p>
-		<div class="example">
-		Example: 
-		<code>&lt;input type='submit' value='button' /&gt;</code>
-		</div>
-	</p>
+	<div class="example">
+	Example: 
+	<code>&lt;input type='submit' value='button' /&gt;</code>
+	</div>
 	<h4>Screen Reader Usage</h4>
 	<p>For input buttons a screen reader will speak the literal text value of this attribute.
 	</p>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" itemscope itemtype="https://schema.org/FAQPage">
 <head>
 <title>ANDI - Accessibility Test Tool - FAQ</title>
-
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta charset="UTF-8">
 <meta name="DCTERMS:coderOffice" content="DCS" />
@@ -23,7 +23,7 @@
 	<h1 class="toolName">ANDI</h1>
 	<a href='#skipnav' class='skipnav'>Skip to Content</a>
 	<nav id='navHeader'>
-		<a href="howtouse.html" class="howtouse">Guide</a>
+		<a href="howtouse.html" class="howtouse">Tutorial</a>
 		<a href="modules.html" class="modules">Modules</a>
 		<a href="alerts.html" class="alerts">Alerts</a>
 		<a href="faq.html" class="faq">FAQ</a>
@@ -33,9 +33,9 @@
 	<div id='pageTitle' class="faq">
 	<h2>Frequently Asked Questions</h2>
 	<p id='pageSummary'>
-	This page provides answers to common questions about ANDI and offers troubleshooting tips.
-	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
+	Here are some answers to common questions about ANDI.
 	</p>
+	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
 	</div>
 </header>
 <main class="faq" id="skipnav" tabindex="-1" aria-label="main content">
@@ -52,49 +52,56 @@
 	</ul>
 	<h3>Contact Development Team</h3>
 	<ul>
-		<li><a href="#contactUs">Contact Us</a></li>
+		<li><a href="#contactUs-bug">Found a Bug</a></li>
+		<li><a href="#contactUs-feature">Feature Request</a></li>
 	</ul>
 </nav>
 <div class="division">
 <h2>Troubleshooting</h2>
-	<section tabindex="-1" aria-labelledby="lby-disabledFavoritesBar" id='disabledFavoritesBar' >
+	<section tabindex="-1" aria-labelledby="lby-disabledFavoritesBar" id='disabledFavoritesBar' 
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-disabledFavoritesBar">Favorites/Bookmarks Bar has been disabled/hidden</summary>
-	<div class='details'>
-	<p>
-	If a web application has disabled the toolbar or favorites/bookmarks menu, and ANDI cannot be launched
-	because the favorites/bookmarks bar cannot be accessed, try one of these workarounds:
+	<summary id="lby-disabledFavoritesBar"
+		 itemprop="name">Why is my favorites/bookmarks bar hidden?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p>
+		If the browser toolbar or favorites/bookmarks menu is hidden, try this:
+		<span itemprop="text">Press F10, then select the bookmarks/favorites option to show bookmarks/favorites bar.</span>
+		<p>
+		If the favorites bar is disabled by the web application...
+		</p>
 		<div class="example">
 			<ol>
-				<li>Press F10</li>
-				<li>Using Firefox or Internet Explorer...
-					<ul style="font-size:12pt; margin:5px;">
+				<li>If using IE, press CTRL + N to open a new window at the current (hidden) url.</li>
+				<li>If that doesn't work, if using IE, get the current URL and paste into a new window:
+					<ul style="font-size:12pt; margin:1em;">
 						<li>Right click on the page or press Shift + F10</li>
-						<li>Firefox: Select "View Page Info"</li>
-						<li>IE: Select "Properties"</li>
+						<li>Select "Properties"</li>
 						<li>Click next to Address (URL), press CTRL + A to select the full url</li>
 						<li>CTRL + C to copy the url</li>
 						<li>Open a new browser window paste the url into the address field, press enter</li>
 					</ul>
 				</li>
-				<li>If using IE, press CTRL + N to open a new window at the current (hidden) url.</li>
-				<li>Ask the test page's development team to enable the toolbar during accessibility testing.</li>
+				<li>Otherwise, ask the web application's development team to enable the toolbar.</li>
 			</ol>
 		</div>
-	</p>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-wontLaunch" id='wontLaunch' >
+	<section tabindex="-1" aria-labelledby="lby-wontLaunch" id='wontLaunch'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-wontLaunch">Why won't ANDI launch on this page?</summary>
-	<div class='details'>
-	<p>
-	If after pressing the <span class="brand">ANDI</span> favelet button, <span class="brand">ANDI</span> does not launch after a few seconds,
-	it could be due to a few things:
-		<div class='example'>
+	<summary id="lby-wontLaunch"
+		itemprop="name">Why won't ANDI work on this page?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p>
+		If after pressing the <span class="brand">ANDI</span> favelet button, 
+		<span class="brand">ANDI</span> does not launch after a few seconds,
+		it could be due to a few things:
+		</p>
+		<div class='example' itemprop="text">
 			<ul>
 				<li>
 				It could be due to the page telling the browser to enforce a Content Security Policy directive.
@@ -160,25 +167,27 @@
 				</li>
 			</ul>
 		</div>
-	</p>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-cantInspect" id='cantInspect' >
+	<section tabindex="-1" aria-labelledby="lby-cantInspect" id='cantInspect' 
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-cantInspect">Why can't I inspect this element?</summary>
-	<div class='details'>
-	<p>
-	If <span class="brand">ANDI</span> has been launched and something is not "inspectable,"
-	it could be due to one of these reasons:
-		<div class='example'>
+	<summary id="lby-cantInspect"
+		itemprop="name">Why doesn't ANDI find an element?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p>
+		If <span class="brand">ANDI</span> has been launched and something is not "inspectable,"
+		it could be due to one of these reasons:
+		</p>
+		<div class='example' itemprop="text">
 			<ul>
 				<li>
-				The content of the page may have changed after <span class="brand">ANDI</span>
-				was first launched, and therefore <span class="brand">ANDI</span> is not
-				aware of the new content.
+				The page content may have changed after <span class="brand">ANDI</span>
+				was launched, therefore <span class="brand">ANDI</span> is not
+				aware of the changed content.
 				Try <a href="howtouse.html#Relaunch">refreshing</a> <span class="brand">ANDI</span>.
 				</li>
 				<li>
@@ -197,96 +206,111 @@
 				</li>
 			</ul>
 		</div>
-	</p>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-missingFeature-lasers" id='missingFeature-lasers' >
+	<section tabindex="-1" aria-labelledby="lby-missingFeature-lasers" id='missingFeature-lasers' 
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-missingFeature-lasers">Where are the lasers?</summary>
-	<div class='details'>
-	<p>
-	<span class="brand">ANDI</span>'s <a href="howtouse.html#Lasers">"lasers"</a> will not work in versions of Internet Explorer prior to 9 
-	(including compatibility modes) because <span class="brand">ANDI</span>'s "lasers" are built using SVG
-	(scalable vector graphics) which are not supported by older IE versions.
-	</p>
+	<summary id="lby-missingFeature-lasers"
+		itemprop="name">Where are ANDI's lasers?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p itemprop="text">
+		<span class="brand">ANDI</span>'s <a href="howtouse.html#Lasers">"lasers"</a> will not work in versions of Internet Explorer prior to 9 
+		(including compatibility modes) because <span class="brand">ANDI</span>'s "lasers" are built using SVG
+		(scalable vector graphics) which are not supported by older IE versions.
+		</p>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-missingFeature-cANDI" id='missingFeature-cANDI' >
+	<section tabindex="-1" aria-labelledby="lby-missingFeature-cANDI" id='missingFeature-cANDI'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-missingFeature-cANDI">Where is cANDI (color contrast)?</summary>
-	<div class='details'>
-	<p>
-	The <code>c</code><span class="brand">ANDI</span> module relies upon functionality
-	that is not available in versions of Internet Explorer prior to 9 
-	(including compatibility modes).
-	Testers will need to perform a <a href="modules.html#cANDI-manualContrastTest">manual contrast test</a> when 
-	<code>c</code><span class="brand">ANDI</span> is not available.
-	</p>
+	<summary id="lby-missingFeature-cANDI"
+		itemprop="name">Where is cANDI (ANDI color contrast)?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p itemprop="text">
+		The <code>c</code><span class="brand">ANDI</span> module relies upon functionality
+		that is not available in versions of Internet Explorer prior to 9 
+		(including compatibility modes).
+		Testers will need to perform a <a href="modules.html#cANDI-manualContrastTest">manual contrast test</a> when 
+		<code>c</code><span class="brand">ANDI</span> is not available.
+		</p>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-displayIssue-andiCovering" id='displayIssue-andiCovering' >
+	<section tabindex="-1" aria-labelledby="lby-displayIssue-andiCovering" id='displayIssue-andiCovering'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-displayIssue-andiCovering">Why is ANDI covering up the test page?</summary>
-	<div class='details'>
-	<p>
-	Since the <span class="brand">ANDI</span> Bar dynamically grows and shrinks depending on the amount
-	of data being displayed for a particular element, mouse hovering can cause the display to overlap 
-	with the Test Page.
-	</p>
-	<p>
-	If <span class="brand">ANDI</span> is continually blocking the view of the Test Page, 
-	use the next previous element buttons which will always keep ANDI out of the way.
-	You can also try <a href="howtouse.html#MiniMode">Mini Mode</a>.
-	</p>
-	<p>
-	If <span class="brand">ANDI</span> is still blocking the test page,
-	it is usually due to the responsive design of the test page reacting
-	to the space the <span class="brand">ANDI</span> Bar is filling.
-	Try maximizing the browser window, or switching to a larger resolution.
-	</p>
+	<summary id="lby-displayIssue-andiCovering"
+		itemprop="name">Why is ANDI covering up the test page?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<div itemprop="text">
+			<p>
+			Since <span class="brand">ANDI</span> dynamically adjusts to the 
+			data being displayed for a particular element, 
+			mouse hovering can sometimes cause the <span class="brand">ANDI</span> to overlap with the Test Page.
+			</p>
+			<p>
+			If <span class="brand">ANDI</span> is continually blocking the view of the Test Page, 
+			use the next previous element buttons which should always keep 
+			<span class="brand">ANDI</span> out of the way.
+			You can also try <a href="howtouse.html#MiniMode">Mini Mode</a>.
+			</p>
+			<p>
+			If <span class="brand">ANDI</span> is still blocking the test page,
+			it is usually due to the responsive design of the test page reacting
+			to the space that <span class="brand">ANDI</span> is filling.
+			Try maximizing the browser window, or switching to a larger resolution.
+			</p>
+		</div>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-displayIssue-pageLooksBad" id='displayIssue-pageLooksBad' >
+	<section tabindex="-1" aria-labelledby="lby-displayIssue-pageLooksBad" id='displayIssue-pageLooksBad'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-displayIssue-pageLooksBad">Launching ANDI makes the test page look different</summary>
-	<div class='details'>
-	<p>
-	If after launching <span class="brand">ANDI</span>, the page looks odd
-	or different, you may have to bear with it for your testing.
-	<span class="brand">ANDI</span> has to manipulate some CSS in order
-	allow itself to appear on the page - This can sometimes cause display
-	interference.
-	</p>
-	<p>
-	If elements become obscured to the point that you can't test the content
-	behind "floating" elements, you may have to engage ANDI's advanced 
-	setting, <a href="howtouse.html#LinearizePage">linearize page</a>.
-	</p>
+	<summary id="lby-displayIssue-pageLooksBad"
+		itemprop="name">ANDI makes the test page look different</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<div itemprop="text">
+			<p>
+			If after launching <span class="brand">ANDI</span>, the page looks odd
+			or different, you may have to bear with it for your testing.
+			<span class="brand">ANDI</span> has to manipulate some CSS in order
+			allow itself to appear on the page - This can sometimes cause display
+			interference.
+			</p>
+			<p>
+			If elements become obscured to the point that you can't test the content
+			behind "floating" elements, you may have to engage ANDI's advanced 
+			setting, <a href="howtouse.html#LinearizePage">linearize page</a>.
+			</p>
+		</div>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-differentOutput" id='differentOutput' >
+	<section tabindex="-1" aria-labelledby="lby-differentOutput" id='differentOutput'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-differentOutput">Why is ANDI's Output different from the screen reader's?</summary>
-	<div class='details'>
-	<p>
-	Yes, <span class="brand">ANDI</span>'s Output may occasionally be different from the screen reader's.
-	Here are some reasons why the Output may differ:
-	<div class='example'>
+	<summary id="lby-differentOutput"
+		itemprop="name">Why is ANDI's Output different from the screen reader's?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p>
+		<span class="brand">ANDI</span>'s Output may occasionally be different from the screen reader's.
+		Here are some reasons why the Output may differ:
+		</p>
+		<div class='example' itemprop="text">
 			<ul>
 				<li>
 				<span class="brand">ANDI</span> uses the DOM to calculate the Output, 
@@ -323,7 +347,6 @@
 				</li>
 			</ul>
 		</div>
-	</p>
 	</div>
 	</details>
 	</section>
@@ -331,15 +354,28 @@
 <div class="division">
 <h2>Contact ANDI's Development Team</h2>
 	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-contactUs" id='contactUs' >
-	<h3 id="lby-contactUs">I have an idea or issue!</h3>
-	<div class='details'>
-	<p>
-	If you have an idea for <span class="brand">ANDI</span>
-	or an issue with its behavior,
-	<a href="https://github.com/SSAgov/ANDI/issues">create an issue on the GitHub page</a>.
-	For issues, please provide a link to a page with the issue.
-	</p>
+	<section tabindex="0" aria-labelledby="lby-contactUs-bug" id='contactUs-bug'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+	<h3 id="lby-contactUs-bug" itemprop="name">Where do I file a bug?</h3>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p>
+		Uh oh! You found a bug in <span class="brand">ANDI</span>?
+		<span itemprop="text">Please <a href="https://github.com/SSAgov/ANDI/issues">create an issue on the GitHub page</a>.
+		Be sure to provide a link to a page with the issue, sample code, or embedded screenshots.</span>
+		</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section tabindex="0" aria-labelledby="lby-contactUs-feature" id='contactUs-feature'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+	<h3 id="lby-contactUs-feature" itemprop="name">I have an ANDI feature request!</h3>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p>
+		That's wonderful!
+		<span itemprop="text">If you have an idea for how to make <span class="brand">ANDI</span> better,
+		please <a href="https://github.com/SSAgov/ANDI/issues">create an issue on the GitHub page</a>
+		and explain away.</span>
+		</p>
 	</div>
 	</section>
 </div>
