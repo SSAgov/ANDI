@@ -40,15 +40,21 @@
 </header>
 <main class="faq" id="skipnav" tabindex="-1" aria-label="main content">
 <nav id='tableOfContents'>
+	<h3>Definitions</h3>
+	<ul>
+		<li><a href="#define-accessibleName">What is Accessible Name?</a></li>
+		<li><a href="#define-accessibleDescription">What is Accessible Description?</a></li>
+	</ul>
 	<h3>Troubleshooting</h3>
 	<ul>
 		<li><a href="#disabledFavoritesBar">Disabled Favorites/Bookmarks Bar</a></li>
-		<li><a href="#wontLaunch">Won't Launch</a></li>
-		<li><a href="#cantInspect">Can't Inspect Something</a></li>
-		<li><a href="#missingFeature-lasers">No Lasers</a></li>
-		<li><a href="#missingFeature-cANDI">Gimme cANDI</a></li>
-		<li><a href="#displayIssue">Display Issues</a></li>
-		<li><a href="#differentOutput">Different Output</a></li>
+		<li><a href="#wontLaunch">Why Won't ANDI Work?</a></li>
+		<li><a href="#cantInspect">Why Won't ANDI Find Something?</a></li>
+		<li><a href="#missingFeature-lasers">Where are the Lasers?</a></li>
+		<li><a href="#missingFeature-cANDI">Where is Color Contrast?</a></li>
+		<li><a href="#displayIssue">Why am I having Display Issues?</a></li>
+		<li><a href="#differentOutput">Why is ANDI's Output different?</a></li>
+		<li><a href="#mobileTesting">Can I use ANDI for Mobile Testing?</a></li>
 	</ul>
 	<h3>Contact Development Team</h3>
 	<ul>
@@ -56,6 +62,39 @@
 		<li><a href="#contactUs-feature">Feature Request</a></li>
 	</ul>
 </nav>
+<div class="division">
+<h2>Definitions</h2>
+	<!--==========================-->
+	<section aria-labelledby="lby-define-accessibleName" id='define-accessibleName'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+	<h3 id="lby-define-accessibleName" itemprop="name">What is Accessible Name?</h3>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p itemprop="text">
+		Accessible Name is the name of an HTML element 
+		which will be spoken by screen readers and used by Assistive Technologies.
+		The accessible name is the result of the accessible name computation based on 
+		the element's contents, HTML attributes, ARIA attributes, or programmatically associated elements.
+		<span class="brand">ANDI</span>, the accessibility test tool, calculates the accessible name
+		and includes it in the <span class="brand">ANDI</span> output.
+		</p>
+	</div>
+	</section>
+	<!--==========================-->
+	<section aria-labelledby="lby-define-accessibleDescription" id='define-accessibleDescription'
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+	<h3 id="lby-define-accessibleDescription" itemprop="name">What is Accessible Description?</h3>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p itemprop="text">
+		Accessible Description is additional text related to an 
+		HTML element which will be spoken by screen readers and used by Assistive Technologies.
+		The accessible description is the result of the accessible name computation based on 
+		the element's HTML attributes and ARIA attributes.
+		<span class="brand">ANDI</span>, the accessibility test tool, calculates the accessible description
+		and includes it in the <span class="brand">ANDI</span> output.
+		</p>
+	</div>
+	</section>
+</div>
 <div class="division">
 <h2>Troubleshooting</h2>
 	<section tabindex="-1" aria-labelledby="lby-disabledFavoritesBar" id='disabledFavoritesBar' 
@@ -101,15 +140,17 @@
 		<span class="brand">ANDI</span> does not launch after a few seconds,
 		it could be due to a few things:
 		</p>
-		<div class='example' itemprop="text">
+		<div class='example'>
 			<ul>
 				<li>
+				<span itemprop="text">
 				It could be due to the page telling the browser to enforce a Content Security Policy directive.
 				To determine if this is the issue, open the browser's Developer Tools (F12)
 				and attempt to launch <span class="brand">ANDI</span>.
 				If the Dev Tools console shows an error message that says
 				<i>"Refused to load the script...because it violates the following Content Security Policy directive"</i>
 				then this is the issue.
+				</span>
 				<br /><br />
 				To use <span class="brand">ANDI</span> on this test page, 
 				make a request to the page owner to add the <span class="brand">ANDI</span> script to the whitelist of approved scripts.
@@ -182,9 +223,9 @@
 		If <span class="brand">ANDI</span> has been launched and something is not "inspectable,"
 		it could be due to one of these reasons:
 		</p>
-		<div class='example' itemprop="text">
+		<div class='example'>
 			<ul>
-				<li>
+				<li itemprop="text">
 				The page content may have changed after <span class="brand">ANDI</span>
 				was launched, therefore <span class="brand">ANDI</span> is not
 				aware of the changed content.
@@ -251,13 +292,13 @@
 	<summary id="lby-displayIssue-andiCovering"
 		itemprop="name">Why is ANDI covering up the test page?</summary>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-		<div itemprop="text">
+		<div>
 			<p>
 			Since <span class="brand">ANDI</span> dynamically adjusts to the 
 			data being displayed for a particular element, 
 			mouse hovering can sometimes cause the <span class="brand">ANDI</span> to overlap with the Test Page.
 			</p>
-			<p>
+			<p itemprop="text">
 			If <span class="brand">ANDI</span> is continually blocking the view of the Test Page, 
 			use the next previous element buttons which should always keep 
 			<span class="brand">ANDI</span> out of the way.
@@ -279,7 +320,7 @@
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
 	<summary id="lby-displayIssue-pageLooksBad"
-		itemprop="name">ANDI makes the test page look different</summary>
+		itemprop="name">Why is ANDI making the test page look different?</summary>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 		<div itemprop="text">
 			<p>
@@ -310,39 +351,27 @@
 		<span class="brand">ANDI</span>'s Output may occasionally be different from the screen reader's.
 		Here are some reasons why the Output may differ:
 		</p>
-		<div class='example' itemprop="text">
+		<div class='example'>
 			<ul>
-				<li>
-				<span class="brand">ANDI</span> uses the DOM to calculate the Output, 
-				whereas screen readers rely heavily on the browser's 
-				<a href="http://www.w3.org/TR/core-aam-1.1/#intro_aapi">Accessibility API</a>
-				and also inject some of their own phrasings depending on the element type (button, link, etc).
-				Accessibility APIs, especially Internet Explorer's, have many known issues 
-				that cause a screen reader's speech to be incomplete or innacurate.
-				This means that even though certain tags and attributes are present
-				on a given element, the API may not inform the screen reader of their presence.
-				Since ANDI is not reliant on the browser's Accessibility API,
-				it may be more accurate technically.
+				<li itemprop="text">
+				<span class="brand">ANDI</span>, the accessibility test tool,
+				uses the DOM (Document Object Model) to calculate the Output
+				according to the <a href="https://w3c.github.io/accname/">Accesible Name Computation</a>. 
+				Whereas, screen readers rely on more layers than just the DOM.
+				Layers such as the browser's <a href="http://www.w3.org/TR/core-aam-1.1/#intro_aapi">Accessibility API</a>,
+				the accessibility tree, the DOM, their own "tutor text" phrasings.
 				</li>
 				<li>
 				Some screen reader software has guessing algorithms to assist its users.
-				For users of assistive technology, guessing is a good thing!
 				Guessing makes up for missing or improper accessibility coding.
 				However, screen readers should not be guessing when explicit accessibility coding is present.
-				Since <span class="brand">ANDI</span> is a test tool, it performs no guessing, 
-				and its Output is a direct result of any present programmatic associations.
-				</li>
-				<li>
-				ARIA Role attributes may be involved in the HTML structure, which causes screen readers to add 
-				additional, intentional verbiage.
-				<span class="brand">ANDI</span>'s Output is more closely tied to the direct
-				accessible name and accessible description of an element.
+				Since <span class="brand">ANDI</span> is a test tool, it doesn't guess.
+				Instead, its Output is a direct result of programmatic associations.
 				</li>
 				<li>
 				When humans write complex software (such as screen readers and accessibility test tools), 
-				bugs are a fact of life! Let's squash them!
-				If after some analysis you find that ANDI should be providing different Output,
-				please reach out to our development team
+				bugs happen. Let's squash them!
+				If you are think there is a bug the ANDI Output, please reach out to our development team
 				by <a href="https://github.com/SSAgov/ANDI/issues">creating a github issue</a>.
 				</li>
 			</ul>
@@ -354,7 +383,7 @@
 <div class="division">
 <h2>Contact ANDI's Development Team</h2>
 	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-contactUs-bug" id='contactUs-bug'
+	<section aria-labelledby="lby-contactUs-bug" id='contactUs-bug'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<h3 id="lby-contactUs-bug" itemprop="name">Where do I file a bug?</h3>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
@@ -366,7 +395,7 @@
 	</div>
 	</section>
 	<!--==========================-->
-	<section tabindex="0" aria-labelledby="lby-contactUs-feature" id='contactUs-feature'
+	<section aria-labelledby="lby-contactUs-feature" id='contactUs-feature'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<h3 id="lby-contactUs-feature" itemprop="name">I have an ANDI feature request!</h3>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">

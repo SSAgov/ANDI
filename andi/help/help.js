@@ -1,9 +1,16 @@
 $(document).ready(function(){
 	
 	//Manipulate screen to show all or only one alert
+	//Check for url parameter
 	if(window.location.search){
 		//slice off the question mark
 		var id_to_show = window.location.search.slice(1);
+		
+		//if this url parameter included the equals sign as the last character
+		if(id_to_show.charAt(id_to_show.length-1) === "="){
+			//trim off the equals sign
+			id_to_show = id_to_show.substr(0, id_to_show.length-1 );
+		}
 		
 		var element_to_show = $("#"+id_to_show);
 		

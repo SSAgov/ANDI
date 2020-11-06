@@ -201,7 +201,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<ul>
 		<li class='warning'><a href="?manual_contrast_test_bgimage">Element Has Background Image</a></li>
 		<li class='caution'><a href="?manual_contrast_test_img">If Images Contain Text</a></li>
-		<li class='caution'><a href="?manual_contrast_test_opacity">Opacity less than 1</a></li>
+		<li class='caution'><a href="?manual_contrast_test_opacity">Opacity less than 100%</a></li>
 		<li class='caution'><a href="?grid_navigation_test">Test Role=Grid Navigation</a></li>
 	</ul>
 	<h3 tabindex="0">Contrast Alerts</h3>
@@ -397,14 +397,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 </div>
 <div class="division">
 
-
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-dby_alone" id='dby_alone'>
 	
 	<h2 id="lby-dby_alone">Alert: ARIA-describedBy Alone</h2>
 	<div class='details'>
-	<ul class='message danger'>
-	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [aria-describedby] should be used in combination with a component that provides an accessible name.</li>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [aria-describedby] should be used in combination with a component that provides an accessible name.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -767,7 +766,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-too_many_scope_levels">Alert: Too Many Scope Levels.</h2>
 	<div class='details'>
 	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Table has more than %%% rows/cols using [scope].</li>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Table has more than %%% levels of [scope=%%%].</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -1028,10 +1027,11 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-accesskey_duplicate">Alert: Accesskey Duplicate</h2>
 	<div class='details'>
 	<ul class='message danger'>
-	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Duplicate [accessKey=%%%] found.
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Duplicate [accessKey=%%%] found on button.</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Duplicate [accessKey=%%%] found on link.</li>
 	</ul>
 	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Duplicate AccessKey found [value].</li>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Duplicate [accessKey=%%%] found.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -1812,7 +1812,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-alt_only_for_images">Alert: Alt Only For Images</h2>
 	<div class='details'>
 	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [alt] attribute is meant for &lt;img&gt;.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [alt] attribute is meant for &lt;img&gt; elements.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -1848,7 +1848,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<br />
 	<h3>Why did ANDI alert this?</h3>
 	<p>The <code>for</code> attribute of a <code>&lt;label&gt;</code> is pointing to the <code>id</code> of 
-	this element which is not a form element.</p>
+	this element which is not a form element. A form label must be associated with a control.</p>
 
 	<h3>Why is this an accessibility concern?</h3>
 	<p>Some screen readers will not announce an explicit label on non-form elements. Therefore, the associating
@@ -1871,7 +1871,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-unreliable_component_combine">Alert: Unreliable Component Combination</h2>
 	<div class='details'>
 	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Combining %%% produces inconsistent screen reader results.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Combining %%% may produce inconsistent screen reader results.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -2001,11 +2001,11 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	An individual that cannot use a mouse (a keyboard-only user) uses the tab key as the primary means of navigating a page.
+	An individual that does not use a mouse (whether by necessity or choice) uses the tab key as the primary means of navigating a page.
 	Keyboard-only users expect most interactive elements (links, buttons, form elements)
 	to be in the tab order since that is the standard behavior for these types of elements.
 	When an HTML element is defined as an interactive element using the <code>role</code> attribute,
-	additional handling often needs to be added to ensure that the interactive element is accessible to keyboard-only users.
+	additional handling often needs to be added to ensure that the interactive element is accessible to keyboard users.
 	</p>
 
 	<h3>What should be done?</h3>
@@ -2030,7 +2030,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-not_in_tab_order">Alert: Focusable Element Not In Tab Order</h2>
 	<div class='details'>
 	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element not in keyboard tab order; should it be tabbable?</li>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element is not in keyboard tab order; should it be tabbable?</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -2065,7 +2065,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-not_in_tab_order_no_name">Alert: Element Not In Tab Order, No Name</h2>
 	<div class='details'>
 	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element not in keyboard tab order and has no accessible name.</li>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Focusable element is not in keyboard tab order and has no accessible name; should it be tabbable?</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -2334,10 +2334,10 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-empty_header_cell" id='empty_header_cell'>
 	
-	<h2 id="lby-empty_header_cell">Alert: Empty &lt;th&gt; Cell.</h2>
+	<h2 id="lby-empty_header_cell">Alert: Empty Header Cell.</h2>
 	<div class='details'>
 	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Empty &lt;th&gt; cell.</li>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Empty header cell.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -2476,17 +2476,16 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>Why did ANDI alert this?</h3>
 	<p>
 	This link shares an identical accessible name and accessible description as another link on the page, but the
-	hrefs are different.
+	hrefs are different. Essentially, the links do not have descriptive text.
 	</p>
 
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
 	Ambiguous links are a potential problem for all users, not just users of assistive technologies (screen readers).
 	Because of this ambiguity (the name/description of the links are the same, but the destinations are different)
-	a user may to navigate to an unintended location.
+	a user may navigate to an unintended location.
 	</p>
 	<p>
-	
 	Moreover, screen reader users have the capability to bring up a list of links by which 
 	they can efficiently navigate.
 	If the links in such a list are not unique and "self-defining",
@@ -2686,7 +2685,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	Server side image maps cannot be navigated by screen reader users and keyboard-only users.
+	Server side image maps cannot be navigated by screen reader users and users who do not use a mouse.
 	</p>
 
 	<h3>What should be done?</h3>
@@ -3217,6 +3216,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>Why did ANDI alert this?</h3>
 	<p>
 	This element is "on top of" a background-image, therefore, the contrast ratio cannot be automatically determined.
+	The element background color could not be determined due to a background image.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
@@ -3235,6 +3235,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li>For Large Text (font-size of 18pt or font-size of 14pt and bold) a contrast ratio of at least 3:1</li>
 		<li>Otherwise a contrast ratio of at least 4.5:1</li>
 		<li>Logo or brand name text does not have to meet a contrast ratio requirement.</li>
+		<li>Inactive (disabled) user interface components have no contrast requirement.</li>
 		</ul>
 	</div>
 	</div>
@@ -3246,7 +3247,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-manual_contrast_test_img">Alert: If Images Contain Text</h2>
 	<div class='details'>
 	<ul class='message caution'>
-	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Page has images; If images contain text; Perform a manual contrast test. </li>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Page has images; If images contain meaningful text; Perform a manual contrast test. </li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -3279,10 +3280,10 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<!--==========================-->
 	<section tabindex="0" aria-labelledby="lby-manual_contrast_test_opacity" id='manual_contrast_test_opacity'>
 	
-	<h2 id="lby-manual_contrast_test_opacity">Alert: Element Has Background Image</h2>
+	<h2 id="lby-manual_contrast_test_opacity">Alert: Opacity Less Than 100%</h2>
 	<div class='details'>
 	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Opacity Less Than 100%; Perform a manual contrast test. </li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Opacity less than 100%; Perform manual contrast test. </li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -3391,14 +3392,15 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-min_contrast">Alert: Contrast ratio minimum requirement</h2>
 	<div class='details'>
 	<ul class='message danger'>
-	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Text does not meet minimum requirement 4.5:1.</li>
-	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Text does not meet large text minimum requirement 3:1. </li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Text does not meet minimum AA contrast ratio (4.5:1).</li>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Text does not meet large text minimum AA contrast ratio (3:1). </li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
 	<p>
-	This element does not provide enough contrast between the text and the background color.
-	In other words, the contrast ratio does not meet the minimum requirement. 
+	This element has very low contrast between foreground and background colors.
+	In other words, the background and foreground colors do not have a sufficient contrast ratio
+	based on minimum requirements.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
@@ -3429,7 +3431,9 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-disabled_elements">Alert: Disabled Elements Found</h2>
 	<div class='details'>
 	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Page has %%% disabled elements invisible to a screen reader.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Page has %%% disabled elements; Disabled elements are not in the keyboard tab order.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Page has %%% disabled buttons; Disabled elements are not in the keyboard tab order.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Page has %%% disabled links; Disabled elements are not in the keyboard tab order.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -3438,24 +3442,43 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	Elements disabled using the <code>disabled</code> attribute are not in the tab order.
+	Elements disabled using the <code>disabled</code> attribute are not in the tab order by default
+	and cannot be placed in the tab order.
 	Therefore, a person who is visually impaired and using a keyboard to tab through the page
-	may not know that the field is disabled.
+	may not know that the field is disabled (or even exists on the page).
 	</p>
 	<h3>What should be done?</h3>
 	<p>
-	Provide an accessible alternative so that all users know which fields are disabled.
-	There are a number of ways to do so:
+	Some would argue that disabling elements is a bad design practice in general.
+	Users may become confused or frustrated if they don't know why an element is disabled
+	or how they can make it become enabled.
+	</p>
+	<p>
+	The disabling of an element does not always equate to an accessibility issue.
+	However, an argument can be made that disabled elements violate some of the 
+	<a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/intro.html#introduction-fourprincs-head">Four Principles of Accessibility</a>.
+	Namely, is the content Perceivable? Is it Operable? Is it Understandable?
+	</p>
+	<p>
+	There may be an opportunity to improve upon the design to make it more accessible and usable by everyone.
+	Here are a few things to consider:
 	</p>
 		<div class="example">
 			<ul>
-			<li>Provide a text description on the page that fields are disabled.</li>
-			<li>For native textbox type elements use <code>readonly</code> attribute combined with CSS to make the element look disabled (grayed out).</li>
-			<li>Use <code>aria-disabled="true"</code>, prevent the element from functioning using JavaScript and modify CSS to make the element look disabled (grayed out).</li>
-			<li>Convert the value of the element into screen text and ensure that the element's label still appears on screen.</li>
-			<li>Rather than disabling buttons/links, allow the user to press the button/link as normal
-				and provide a message to the user saying that the function is not permitted for whatever reason.</li>
-			<li>Completely remove the element if it is not necessary.</li>
+			<li>Leave the elements disabled,
+				but provide a description somewhere on the page letting users know that fields are disabled and 
+				why they are disabled or how to enable them if it's not intuitive.</li>
+			<li>For native textbox elements, instead of using the <code>disabled</code> attribute,
+				use the <code>readonly</code> attribute combined with CSS 
+				to make the element look disabled (grayed out).</li>
+			<li>Instead of using the <code>disabled</code> attribute, keep the element in the tab order, 
+				use <code>aria-disabled="true"</code>, prevent the element from functioning using JavaScript, 
+				and modify CSS to make the element look disabled (grayed out).</li>
+			<li>Enable the element, and when the element is activated by the user, display a popup or 
+				notification letting the user know why the element cannot be used at this moment.</li>
+			<li>Convert the element into screen text or a meaningful image with alternative text.</li>
+			<li>Rather than display the element as disabled, 
+				remove the element entirely if it is not necessary to reduce user frustration with disabled elements.</li>
 			</ul>
 		</div>
 	</div>
