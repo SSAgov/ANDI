@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.3.0";
+var andiVersionNumber = "27.3.1";
 
 //==============//
 // ANDI CONFIG: //
@@ -3657,7 +3657,7 @@ function AndiAlerter(){
 		}
 		else{
 			//No, This alert is not specific to an indexed element. Insert message with link to help page.
-			listItemHtml += "href='"+ help_url + "alerts.html" + alertObject.info +"' target='_blank' aria-label='"+alertObject.level+": "+message+"'>"+
+			listItemHtml += "href='"+ help_url + "alerts.html?" + alertObject.info +"' target='_blank' aria-label='"+alertObject.level+": "+message+"'>"+
 			"<img alt='"+alertObject.level+"' role='presentation' src='"+icons_url+alertObject.level+".png' />"+
 			message+"</a></li>";
 		}
