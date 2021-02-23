@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" itemscope itemtype="https://schema.org/FAQPage">
 <head>
-<title>ANDI - Accessibility Test Tool - FAQ</title>
+<title>ANDI - Accessibility Testing Tool - FAQ</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +10,7 @@
 <meta name="DCTERMS:coder" content="SSA" />
 <meta name="DCTERMS:contentOffice" content="DCS" />
 <meta name="DCTERMS:contentOwner" content="SSA" />
-<meta name="description" content="ANDI 508 accessibility test tool Help FAQ" />
+<meta name="description" content="ANDI 508 accessibility testing tool Help FAQ" />
 
 <link href="help.css" rel="stylesheet" media="all" />
 <link href="print.css" rel="stylesheet" media="print" />
@@ -19,9 +19,9 @@
 
 </head>
 <body>
+<a href="#skipnav" class="skipnav">Skip to Content</a>
 <header>
 	<h1 class="toolName">ANDI</h1>
-	<a href='#skipnav' class='skipnav'>Skip to Content</a>
 	<nav id='navHeader'>
 		<a href="howtouse.html" class="howtouse">Tutorial</a>
 		<a href="modules.html" class="modules">Modules</a>
@@ -65,7 +65,7 @@
 <div class="division">
 <h2>Definitions</h2>
 	<!--==========================-->
-	<section aria-labelledby="lby-define-accessibleName" id='define-accessibleName'
+	<section tabindex="-1" aria-labelledby="lby-define-accessibleName" id='define-accessibleName'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<h3 id="lby-define-accessibleName" itemprop="name">What is Accessible Name?</h3>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
@@ -74,13 +74,13 @@
 		which will be spoken by screen readers and used by Assistive Technologies.
 		The accessible name is the result of the accessible name computation based on 
 		the element's contents, HTML attributes, ARIA attributes, or programmatically associated elements.
-		<span class="brand">ANDI</span>, the accessibility test tool, calculates the accessible name
+		<span class="brand">ANDI</span>, the accessibility testing tool, calculates the accessible name
 		and includes it in the <span class="brand">ANDI</span> output.
 		</p>
 	</div>
 	</section>
 	<!--==========================-->
-	<section aria-labelledby="lby-define-accessibleDescription" id='define-accessibleDescription'
+	<section tabindex="-1" aria-labelledby="lby-define-accessibleDescription" id='define-accessibleDescription'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<h3 id="lby-define-accessibleDescription" itemprop="name">What is Accessible Description?</h3>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
@@ -89,7 +89,7 @@
 		HTML element which will be spoken by screen readers and used by Assistive Technologies.
 		The accessible description is the result of the accessible name computation based on 
 		the element's HTML attributes and ARIA attributes.
-		<span class="brand">ANDI</span>, the accessibility test tool, calculates the accessible description
+		<span class="brand">ANDI</span>, the accessibility testing tool, calculates the accessible description
 		and includes it in the <span class="brand">ANDI</span> output.
 		</p>
 	</div>
@@ -190,7 +190,7 @@
 				There could be a JavaScript error occurring. Open the browser's Developer Tools (F12)
 				and attempt to launch <span class="brand">ANDI</span>. If the Dev Tools console shows a JavaScript error that relates 
 				to <span class="brand">ANDI</span>, then send a link to the test page to <span class="brand">ANDI</span>'s development team 
-				by <a href="https://github.com/SSAgov/ANDI/issues">creating an issue on the GitHub page</a>.
+				by <a href="https://github.com/SSAgov/ANDI/issues" target="_blank">creating an issue on the GitHub page</a>.
 				</li>
 				<li>
 				Your browser or organization could be preventing scripts (such as <span class="brand">ANDI</span>) from launching from a favorite/bookmark.
@@ -354,25 +354,25 @@
 		<div class='example'>
 			<ul>
 				<li itemprop="text">
-				<span class="brand">ANDI</span>, the accessibility test tool,
+				<span class="brand">ANDI</span>, the accessibility testing tool,
 				uses the DOM (Document Object Model) to calculate the Output
-				according to the <a href="https://w3c.github.io/accname/">Accesible Name Computation</a>. 
+				according to the <a href="https://w3c.github.io/accname/" target="_blank">Accesible Name Computation</a>. 
 				Whereas, screen readers rely on more layers than just the DOM.
-				Layers such as the browser's <a href="http://www.w3.org/TR/core-aam-1.1/#intro_aapi">Accessibility API</a>,
+				Layers such as the browser's <a href="http://www.w3.org/TR/core-aam-1.1/#intro_aapi" target="_blank">Accessibility API</a>,
 				the accessibility tree, the DOM, their own "tutor text" phrasings.
 				</li>
 				<li>
 				Some screen reader software has guessing algorithms to assist its users.
 				Guessing makes up for missing or improper accessibility coding.
 				However, screen readers should not be guessing when explicit accessibility coding is present.
-				Since <span class="brand">ANDI</span> is a test tool, it doesn't guess.
+				Since <span class="brand">ANDI</span> is an accessibility testing tool, it doesn't guess.
 				Instead, its Output is a direct result of programmatic associations.
 				</li>
 				<li>
-				When humans write complex software (such as screen readers and accessibility test tools), 
+				When humans write complex software (such as screen readers and accessibility testing tools), 
 				bugs happen. Let's squash them!
 				If you are think there is a bug the ANDI Output, please reach out to our development team
-				by <a href="https://github.com/SSAgov/ANDI/issues">creating a github issue</a>.
+				by <a href="https://github.com/SSAgov/ANDI/issues" target="_blank">creating a github issue</a>.
 				</li>
 			</ul>
 		</div>
@@ -383,26 +383,26 @@
 <div class="division">
 <h2>Contact ANDI's Development Team</h2>
 	<!--==========================-->
-	<section aria-labelledby="lby-contactUs-bug" id='contactUs-bug'
+	<section tabindex="-1" aria-labelledby="lby-contactUs-bug" id='contactUs-bug'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<h3 id="lby-contactUs-bug" itemprop="name">Where do I file a bug?</h3>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 		<p>
 		Uh oh! You found a bug in <span class="brand">ANDI</span>?
-		<span itemprop="text">Please <a href="https://github.com/SSAgov/ANDI/issues">create an issue on the GitHub page</a>.
+		<span itemprop="text">Please <a href="https://github.com/SSAgov/ANDI/issues" target="_blank">create an issue on the GitHub page</a>.
 		Be sure to provide a link to a page with the issue, sample code, or embedded screenshots.</span>
 		</p>
 	</div>
 	</section>
 	<!--==========================-->
-	<section aria-labelledby="lby-contactUs-feature" id='contactUs-feature'
+	<section tabindex="-1" aria-labelledby="lby-contactUs-feature" id='contactUs-feature'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<h3 id="lby-contactUs-feature" itemprop="name">I have an ANDI feature request!</h3>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 		<p>
 		That's wonderful!
 		<span itemprop="text">If you have an idea for how to make <span class="brand">ANDI</span> better,
-		please <a href="https://github.com/SSAgov/ANDI/issues">create an issue on the GitHub page</a>
+		please <a href="https://github.com/SSAgov/ANDI/issues" target="_blank">create an issue on the GitHub page</a>
 		and explain away.</span>
 		</p>
 	</div>

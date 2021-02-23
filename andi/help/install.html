@@ -5,13 +5,32 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta charset="UTF-8">
 
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+	"@context" : "http://schema.org",
+	"@type" : "WebApplication",
+	"name" : "ANDI",
+	"image" : "https://www.ssa.gov/accessibility/andi/help/images/andi-overview.png",
+	"author" : {
+		"@type" : "Organization",
+		"name" : "Social Security Administration"
+	},
+	"applicationCategory" : "Accessibility Testing Tool",
+	"featureList" : "acessibility testing, accessible name, accessible description, alternative text, tab order, color contrast, page structure, ARIA, screen reader",
+	"browserRequirements" : "Chrome, Safari, Edge Chromium, Firefox, Internet Explorer, Opera, Edge Legacy",
+	"operatingSystem" : "Windows, macOS",
+	"isAccessibleForFree" : "true"
+}
+</script>
+<!-- End JSON-LD Structured Data -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="DCTERMS:coderOffice" content="DCS" />
 <meta name="DCTERMS:coder" content="SSA" />
 <meta name="DCTERMS:contentOffice" content="DCS" />
 <meta name="DCTERMS:contentOwner" content="SSA" />
-<meta name="description" content="ANDI accessibility test tool. A free tool to test websites for accessibility." />
-<meta name="keywords" content="web accessibility test tool, section 508 compliance testing, accessibility checker" />
+<meta name="description" content="ANDI accessibility testing tool. A free tool to test websites for accessibility." />
+<meta name="keywords" content="web accessibility testing tool, section 508 compliance testing, accessibility checker" />
 <link href="help.css" rel="stylesheet" media="all" />
 <link href="print.css" rel="stylesheet" media="print" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
@@ -19,9 +38,9 @@
 
 </head>
 <body>
+<a href="#skipnav" class="skipnav">Skip to Content</a>
 <header>
 	<h1 class="toolName">ANDI</h1>
-	<a href='#skipnav' class='skipnav'>Skip to Content</a>
 	<nav id='navHeader'>
 		<a href="howtouse.html" class="howtouse">Tutorial</a>
 		<a href="modules.html" class="modules">Modules</a>
@@ -31,46 +50,45 @@
 		<a href="install.html" class="install">Install</a>
 	</nav>
 	<div id='pageTitle' class="install">
-	<h2>Installation</h2>
+	<h2>Accessibility Testing Tool</h2>
 	<p id='pageSummary'>
-	This page describes how to install <span class="brand">ANDI</span>,
+	How to install <span class="brand">ANDI</span>,
 	the accessibility and Section 508 compliance testing tool.
 	</p>
-	<button id='tableOfContentsControl' aria-controls='tableOfContents'>View Table of Contents</button>
 	</div>
 </header>
 <main class="install" id="skipnav" tabindex="-1" aria-label="main content">
-<nav id='tableOfContents'>
-	<h3>Installation Instructions</h3>
-	<ul>
-		<li><a href="#install">Chrome</a></li>
-		<li><a href="#install">Firefox</a></li>
-		<li><a href="#install">Internet Explorer</a></li>
-		<li><a href="#install">Edge</a></li>
-		<li><a href="#install">Safari</a></li>
-	</ul>
-	<h3>Using ANDI</h3>
-	<ul>
-		<li><a href="#LaunchANDI">Launch ANDI</a></li>
-		<li><a href="#usingANDI">Benefits of ANDI</a></li>
-	</ul>
-	<h3><a href="#ReleaseNotes">Updates</a></h3>
-	<h3><a href="#Uninstall">Uninstall</a></h3>
-	<h3><a href="#github">Open Source</a></h3>
-	<ul>
-		<li><a href="#github">ANDI on github</a></li>
-		<li><a href="#hostYourOwn">Host Your Own ANDI</a></li>
-	</ul>
-</nav>
-
+	<div class="division">
+	<section>
+	<h2>Get ANDI</h2>
+	<div class='details'>
+		<p>
+		<a id="installLink" draggable="true" aria-label="ANDI is accessible with a screen reader. To install ANDI without using a mouse, read the Installation Help" onclick='return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> 
+		<img id="point-left" src="images/icon-finger-left.png" width="30" class="noshadow animation-point-left" alt="" aria-hidden="true" />
+		<span>Drag to your bookmarks toolbar.</span>
+		</p>
+		<p>
+		Runs on all desktop browsers: 
+		<img alt="Runs on Chrome." src="images/browser-chrome.gif" width="20" class="noshadow" />
+		<img alt="Runs on Edge Chromium." src="images/browser-edge-chromium.png" width="20" class="noshadow" />
+		<img alt="Runs on Firefox." src="images/browser-firefox.gif" width="20" class="noshadow" />
+		<img alt="Runs on Safari." src="images/browser-safari.gif" width="20" class="noshadow" />
+		<img alt="Runs on Internet Explorer." src="images/browser-ie.gif" width="20" class="noshadow" />
+		<br />
+		<a href="#install" style="font-size:11pt;">Installation Help</a> |
+		<a href="#install" style="font-size:11pt;">How to Show Bookmarks Bar</a>
+		</p>
+	</div>
+	</section>
+</div>
 <div class="division">
-	<section tabindex="0">
+	<section>
 	<h2>Meet ANDI.</h2>
 	<div class='details'>
 		<p>
-			<span class="brand">ANDI</span> (Accessible Name &amp; Description Inspector) is a free tool to test websites for accessibility.
+			<span class="brand">ANDI</span> (Accessible Name &amp; Description Inspector) is a free accessibility testing tool.
 		</p>
-		<img alt="ANDI accessibility test tool automated scanner for 508 compliance, ADA, WCAG" src="images/andi-overview.png" class="fullwidth large" />
+		<img alt="ANDI accessibility testing tool automated scanner for 508 compliance, ADA, WCAG" src="images/accessibility-testing-tool.png" class="fullwidth large" />
 		<p>
 			<span class="brand">ANDI</span> is a "favelet" or "bookmarklet" that will:
 		</p>
@@ -85,137 +103,120 @@
 	</section>
 </div>
 <div class="division">
-	<section tabindex="0" aria-labelledby="lby-install" id="install">
-	<h2 id="lby-install">Installation Instructions</h2>
-	<div class='details'>
-		<p>
-		Drag and Drop this link: <a onclick='alert("Drag and Drop the link to install ANDI");return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> into your browser's favorites/bookmark bar. 
-		<img alt="Runs on Chrome." src="images/browser-chrome.gif" width="20" class="noshadow" />
-		<img alt="Runs on Firefox." src="images/browser-firefox.gif" width="20" class="noshadow" />
-		<img alt="Runs on Internet Explorer." src="images/browser-ie.gif" width="20" class="noshadow" />
-		<img alt="Runs on Edge." src="images/browser-edge.gif" width="20" class="noshadow" />
-		<img alt="Runs on Safari." src="images/browser-safari.gif" width="20" class="noshadow" />
-		<br />
-		<button id="detailedInstallInstructions-button" class="expandButton" aria-expanded="false">Get Detailed Instructions</button>
-		</p>
-		
-	</div>
-	</section>
-
-	<div id="detailedInstallInstructions" class="hideOnLoad">
-	<hr />
 	<section>
-	<div class="details">
-		<details>
-		<summary>
-		Chrome
-		<img alt="Chrome logo" src="images/browser-chrome.gif" width="20" class="noshadow" />
-		</summary>
-		<div class='example'>
-			<ol>
-				<li>Ensure that Chrome's Bookmarks Bar is visible (Ctrl + Shift + B)</li>
-				<li>Now drag and drop this link: 
-				<a onclick='return false;' href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> to the Bookmarks Bar</li>
-				<li><span class="brand">ANDI</span> is now installed to Chrome and ready to be launched</li>
-			</ol>
-		</div>
-		<p>Unfortunately, Chrome does not offer a <strong>simple</strong> keyboard accessible alternative to save a link as a bookmark.</p>
-		<hr />
-		</details>
-	</div>
-	</section>
+	<h2>Installation Help</h2>
+	<div id="detailedInstallInstructions">
 
-	<section>
-	<div class="details">
-		<details>
-		<summary>
-		Firefox
-		<img alt="Firefox logo" src="images/browser-firefox.gif" width="20" class="noshadow" />
-		</summary>
-		<div class='example'>
-			<ol>
-				<li>Ensure that Firefox's Bookmarks Toolbar is visible</li>
-				<li>Right click this link: <a onclick='return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a>
-					and select "Bookmark This Link". Add it to the Bookmarks Toolbar.
-					Alternatively, keyboard users running Windows can tab to this link: <a onclick='return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a>,
-					press ctrl+shift+F10 (which brings up a context menu) and select "Bookmark This Link". Add it to the Bookmarks Toolbar</li>
-				<li><span class="brand">ANDI</span> is now installed to Firefox and ready to be launched</li>
-			</ol>
+		<div class="details">
+			<p>
+			Select your browser below for details.
+			</p>
+			
+			<details>
+			<summary>
+			Chrome
+			<img alt="Chrome logo" src="images/browser-chrome.gif" width="20" class="noshadow" />
+			</summary>
+			<p>To show the Bookmarks Bar in Chrome, press Ctrl + Shift + B.</p>
+			<p>To Install ANDI on Chrome using the keyboard:</p>
+			<div class='example'>
+				<ol>
+					<li>Press Ctrl + Shift + O to bring up Bookmark Manager.</li>
+					<li>Select the "Organize" button menu.</li>
+					<li>Select "Add New Bookmark".</li>
+					<li>Name the bookmark "ANDI".</li>
+					<li>Copy and paste the ANDI JavaScript URL:
+						<br />
+						<textarea readonly aria-label="ANDI JavaScript URL" style="width:90%" onfocus="this.select();">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());</textarea>
+					</li>
+					<li>Press Save.</li>
+				</ol>
+			</div>
+			<hr />
+			</details>
 		</div>
-		<hr />
-		</details>
-	</div>
-	</section>
 
-	<section>
-	<div class="details">
-		<details>
-		<summary>
-		Internet Explorer
-		<img alt="IE logo" src="images/browser-ie.gif" width="20" class="noshadow" />
-		</summary>
-		<div class='example'>
-			<ol>
-				<li>Ensure that IE's Favorites Bar is visible</li>
-				<li>Right click this link: <a onclick='return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a>
-					and select "Add to favorites bar".
-					Alternatively, keyboard users running Windows can tab to this link: <a onclick='return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a>,
-					press ctrl+shift+F10 (which brings up a context menu) and select "Add to favorites bar"</li>
-				<li><span class="brand">ANDI</span> is now installed to IE and ready to be launched</li>
-			</ol>
+		<div class="details">
+			<details>
+			<summary>
+			Edge
+			<img alt="Edge logo" src="images/browser-edge-chromium.png" width="20" class="noshadow" />
+			</summary>
+			<p>To show the Favorites Bar in Edge (Chromium), press Ctrl + Shift + B.</p>
+			<p>To Install ANDI on Edge (Chromium) using the keyboard:</p>
+			<div class='example'>
+				<ol>
+					<li>Press Ctrl + Shift + O to bring up Bookmark Manager.</li>
+					<li>Select the "Organize" button menu.</li>
+					<li>Select "Add New Bookmark".</li>
+					<li>Name the bookmark "ANDI".</li>
+					<li>Copy and paste the ANDI JavaScript URL:
+						<br />
+						<textarea readonly aria-label="ANDI JavaScript URL" style="width:90%" onfocus="this.select();">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());</textarea>
+					</li>
+					<li>Press Save.</li>
+				</ol>
+			</div>
+			<hr />
+			</details>
 		</div>
-		<hr />
-		</details>
-	</div>
-	</section>
 
-	<section>
-	<div class="details">
-		<details>
-		<summary>
-		Edge
-		<img alt="Edge logo" src="images/browser-edge.gif" width="20" class="noshadow" />
-		</summary>
-		<p>
-		The version of Edge you have may not allow the direct installation of favelets (such as ANDI).
-		As a workaround...
-		</p>
-		<div class='example'>
-			<ol>
-				<li>Install ANDI to Chrome or Firefox</li>
-				<li>Use Edge to import favorites from Chrome or Firefox</li>
-				<li>Once imported, ANDI can be moved into Edge's Favorites Bar for quick launching</li>
-			</ol>
+		<div class="details">
+			<details>
+			<summary>
+			Firefox
+			<img alt="Firefox logo" src="images/browser-firefox.gif" width="20" class="noshadow" />
+			</summary>
+			<p>To show the Bookmarks Bar in Firefox, Press (Alt + V), select Toolbars, then "Bookmarks Toolbar".</p>
+			<p>To Install ANDI on Firefox using the keyboard:</p>
+			<div class='example'>
+				<ol>
+					<li>
+					Right click this link Ctrl + Shift + F10: 
+					<a onclick='return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a>
+					</li>
+					<li>Select "Bookmark This Link"</li>
+				</ol>
+			</div>
+			<hr />
+			</details>
 		</div>
-		<hr />
-		</details>
-	</div>
-	</section>
 
-	<section>
-	<div class="details">
-		<details>
-		<summary>
-		Safari
-		<img alt="Safari logo" src="images/browser-safari.gif" width="20" class="noshadow" />
-		</summary>
-		<div class='example'>
-			<ol>
-				<li>Ensure that Safari's Favorites Bar is visible (Command + Shift + B)</li>
-				<li>Drag and drop this link: 
-				<a onclick='return false;' href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a> to the Favorites Bar</li>
-				<li><span class="brand">ANDI</span> is now installed to Safari and ready to be launched</li>
-			</ol>
+		<div class="details">
+			<details>
+			<summary>
+			Internet Explorer
+			<img alt="IE logo" src="images/browser-ie.gif" width="20" class="noshadow" />
+			</summary>
+			<p>To show the Favorites Bar in Internet Explorer, Press Alt + V, select Toolbars, then "Favorites Bar".</p>
+			<p>To Install ANDI on Internet Explorer using the keyboard:</p>
+			<div class='example'>
+				<ol>
+					<li>Right click this link Ctrl + Shift + F10:
+					<a onclick='return false;' rel="bookmark" href="javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','https://www.ssa.gov/accessibility/andi/andi.js');document.body.appendChild(andiScript)})());">ANDI</a>
+					<li>Select "Add to favorites bar"</li>
+				</ol>
+			</div>
+			<hr />
+			</details>
 		</div>
-		<p>Unfortunately, Safari does not offer a <strong>simple</strong> keyboard accessible alternative to save a link as a favorite.</p>
-		</details>
-	</div>
-	</section>
+
+		<div class="details">
+			<details>
+			<summary>
+			Safari
+			<img alt="Safari logo" src="images/browser-safari.gif" width="20" class="noshadow" />
+			</summary>
+			<p>To show the Favorites Bar in Safari, Press Command + Shift + B.</p>
+			<p>Unfortunately, Safari does not offer a simple keyboard accessible alternative to set a JavaScript favelet link as a favorite.</p>
+			</details>
+		</div>
+
 	</div>
 </div>
 <div class="division">
-	<section tabindex="0" aria-labelledby="lby-LaunchANDI" id='LaunchANDI'>
-	<h2 id="lby-LaunchANDI">Launch ANDI</h2>
+	<section>
+	<h2>Launch ANDI</h2>
 	<div class='details'>
 		<p>
 		Launch <span class="brand">ANDI</span> by clicking on the favorite/bookmark labelled "<span class="brand">ANDI</span>" that was added to the 
@@ -223,8 +224,8 @@
 		test page and appear on the page.
 		</p>
 		<video autoplay controls loop muted aria-label="ANDI being launched">
-			<source src="videos/andi-accessibility-test-tool.mp4" type="video/mp4" />
-			<img alt="ANDI accessibility test tool automated scan of web page" src="images/andi-accessibility-test-tool.png" class="fullwidth large" />
+			<source src="videos/accessibility-testing-tool.mp4" type="video/mp4" />
+			<img alt="ANDI accessibility testing tool automated scan of web page" src="images/andi-launchAndi.png" class="fullwidth large" />
 		</video>
 		<p>
 		For thorough documentation of all features, visit: <a href="howtouse.html">ANDI's User Guide</a>.
@@ -233,8 +234,8 @@
 		</p>
 	</div>
 	</section>
-	<section tabindex="0" aria-labelledby="lby-usingANDI" id='usingANDI'>
-	<h2 id="lby-usingANDI">Benefits Of ANDI</h2>
+	<section tabindex="-1" aria-labelledby="lby-usingANDI" id='usingANDI'>
+	<h2 id="lby-usingANDI">Benefits of ANDI</h2>
 	<div class='details'>
 		<p>
 		<span class="brand">ANDI</span> is like having an expert at your side, 
@@ -244,28 +245,28 @@
 		</p>
 		<p>
 		Whether you're an accessibility expert or you're new to Section 508 compliance, ADA compliance, 
-		or <a href="https://www.w3.org/WAI/standards-guidelines/wcag/">WCAG standards</a>, you should definitely check out <span class="brand">ANDI</span>.
+		or <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank">WCAG standards</a>, you should definitely check out <span class="brand">ANDI</span>.
 		</p>
 	</div>
 	</section>
 </div>
 <div class="division">
-	<section tabindex="0" aria-labelledby="lby-ReleaseNotes" id='ReleaseNotes'>
-	<h2 id="lby-ReleaseNotes">Updates</h2>
+	<section>
+	<h2>Updates</h2>
 	<div class='details'>
 		<p>
-		<span class="brand">ANDI</span> updates itself automatically; There is no need to reinstall or upgrade.
+		No need to reinstall or upgrade. <span class="brand">ANDI</span> updates itself automatically.
 		</p>
 		<p>
-		View <a href="https://github.com/SSAgov/ANDI"><span class="brand">ANDI</span> on github</a> to see version history.
+		View <a href="https://github.com/SSAgov/ANDI" target="_blank"><span class="brand">ANDI</span> on GitHub</a> to see version history.
 		</p>
 	</div>
 	</section>
 </div>
 
 <div class="division">
-	<section tabindex="0" aria-labelledby="lby-Uninstall" id='Uninstall'>
-	<h2 id="lby-Uninstall">How To Uninstall</h2>
+	<section>
+	<h2>How To Uninstall</h2>
 	<div class='details'>
 		<p>
 		To uninstall <span class="brand">ANDI</span> simply delete the favorite/bookmark that was created in installation.
@@ -275,18 +276,18 @@
 </div>
 
 <div class="division">
-	<section tabindex="0" aria-labelledby="lby-github" id='github'>
-	<h2 id="lby-github">Open Source on github</h2>
+	<section>
+	<h2>Open Source on GitHub</h2>
 	<div class='details'>
 		<p>
 		<span class="brand">ANDI</span> is an open source project created by the
 		Accessible Solutions Branch of the Social Security Administration.
-		The source code is available for contribution on <a href="https://github.com/SSAgov/ANDI" target="_blank">github</a>.
+		The source code is available for contribution on <a href="https://github.com/SSAgov/ANDI" target="_blank">GitHub</a>.
 		</p>
 
 		<p id='hostYourOwn' tabindex="-1">
 		If your organization wishes to host a local instance of 
-		<span class="brand">ANDI</span>, the accessibility test tool, refer to this guide:
+		<span class="brand">ANDI</span>, the accessibility testing tool, refer to this guide:
 		<button id="customConfig-button" class="expandButton" aria-expanded="false">View the Customization Instructions</button>
 		</p>
 		<div id="customConfig" class="hideOnLoad">
@@ -294,7 +295,7 @@
 			<h3>How to Host Your Own ANDI</h3>
 			<div class="example">
 			<ol>
-				<li><a href="https://github.com/SSAgov/ANDI">Download the ANDI's source code from GitHub</a>.</li>
+				<li><a href="https://github.com/SSAgov/ANDI" target="_blank">Download ANDI's source code from GitHub</a>.</li>
 				<li>In the andi.js file:
 					<ul style="margin-left:5%;">
 					<li>modify the <code>host_url</code> to point to your custom location.</li>
@@ -302,7 +303,7 @@
 					</ul>
 				</li>
 				<li>Modify the favelet's launch script to point to your host:
-					<textarea readonly aria-label='favelet launch script' style="width:90%">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','[ALTERNATE_HOST]/andi.js');document.body.appendChild(andiScript)})());</textarea>
+					<textarea readonly aria-label="favelet launch script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','[ALTERNATE_HOST]/andi.js');document.body.appendChild(andiScript)})());</textarea>
 				</li>
 			</ol>
 			</div>
