@@ -47,14 +47,14 @@
 	</ul>
 	<h3>Troubleshooting</h3>
 	<ul>
-		<li><a href="#disabledFavoritesBar">Disabled Favorites/Bookmarks Bar</a></li>
+		<li><a href="#disabledFavoritesBar">Why is my favorites/bookmarks bar hidden?</a></li>
 		<li><a href="#wontLaunch">Why Won't ANDI Work?</a></li>
 		<li><a href="#cantInspect">Why Won't ANDI Find Something?</a></li>
-		<li><a href="#missingFeature-lasers">Where are the Lasers?</a></li>
-		<li><a href="#missingFeature-cANDI">Where is Color Contrast?</a></li>
-		<li><a href="#displayIssue">Why am I having Display Issues?</a></li>
-		<li><a href="#differentOutput">Why is ANDI's Output different?</a></li>
 		<li><a href="#mobileTesting">Can I use ANDI for Mobile Testing?</a></li>
+		<li><a href="#differentOutput">Why is ANDI's Output different?</a></li>
+		<li><a href="#displayIssue">Why am I having Display Issues?</a></li>
+		<li><a href="#missingFeature-cANDI">Where is Color Contrast?</a></li>
+		<li><a href="#missingFeature-lasers">Where are the Lasers?</a></li>
 	</ul>
 	<h3>Contact Development Team</h3>
 	<ul>
@@ -217,7 +217,7 @@
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
 	<summary id="lby-cantInspect"
-		itemprop="name">Why doesn't ANDI find an element?</summary>
+		itemprop="name">Why won't ANDI find an element?</summary>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 		<p>
 		If <span class="brand">ANDI</span> has been launched and something is not "inspectable,"
@@ -252,35 +252,64 @@
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-missingFeature-lasers" id='missingFeature-lasers' 
+	<section tabindex="-1" aria-labelledby="lby-mobileTesting" id='mobileTesting' 
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-missingFeature-lasers"
-		itemprop="name">Where are ANDI's lasers?</summary>
+	<summary id="lby-mobileTesting"
+		itemprop="name">Can I use ANDI for mobile accessibility testing?</summary>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-		<p itemprop="text">
-		<span class="brand">ANDI</span>'s <a href="howtouse.html#Lasers">"lasers"</a> will not work in versions of Internet Explorer prior to 9 
-		(including compatibility modes) because <span class="brand">ANDI</span>'s "lasers" are built using SVG
-		(scalable vector graphics) which are not supported by older IE versions.
+		<p>
+		<span class="brand">ANDI</span> does not run on mobile browsers.
+		However, <span class="brand">ANDI</span> can be used test accessibility
+		on small screen sizes.
+		</p>
+		<p>
+		Mobile testing can be simulated in a desktop browser using developer tools (F12)
+		with the Toggle Device Toolbar feature (Ctrl + Shift + M).
+		This feature will adjust the screen resolution to that of a mobile or tablet device.
+		Once this mode is engaged, <span class="brand">ANDI</span> can be used to test accessibility
+		on smaller screen sizes.
 		</p>
 	</div>
 	</details>
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-missingFeature-cANDI" id='missingFeature-cANDI'
+	<section tabindex="-1" aria-labelledby="lby-differentOutput" id='differentOutput'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-missingFeature-cANDI"
-		itemprop="name">Where is cANDI (ANDI color contrast)?</summary>
+	<summary id="lby-differentOutput"
+		itemprop="name">Why is ANDI's Output different from the screen reader's?</summary>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-		<p itemprop="text">
-		The <code>c</code><span class="brand">ANDI</span> module relies upon functionality
-		that is not available in versions of Internet Explorer prior to 9 
-		(including compatibility modes).
-		Testers will need to perform a <a href="modules.html#cANDI-manualContrastTest">manual contrast test</a> when 
-		<code>c</code><span class="brand">ANDI</span> is not available.
+		<p>
+		<span class="brand">ANDI</span>'s Output may occasionally be different from a screen reader's output.
+		Here are some reasons why the Output may differ:
 		</p>
+		<div class='example'>
+			<ul>
+				<li itemprop="text">
+				<span class="brand">ANDI</span>, the accessibility testing tool,
+				uses the DOM (Document Object Model) to calculate the Output
+				according to the <a href="https://w3c.github.io/accname/" target="_blank">Accesible Name Computation</a>. 
+				Whereas, screen readers rely on more layers than just the DOM.
+				Layers such as the browser's <a href="http://www.w3.org/TR/core-aam-1.1/#intro_aapi" target="_blank">Accessibility API</a>,
+				the accessibility tree, the DOM, their own "tutor text" phrasings.
+				</li>
+				<li>
+				Some screen reader software has guessing algorithms to assist its users.
+				Guessing makes up for missing or improper accessibility coding.
+				However, screen readers should not be guessing when explicit accessibility coding is present.
+				Since <span class="brand">ANDI</span> is an accessibility testing tool, it doesn't guess.
+				Instead, its Output is a direct result of programmatic associations.
+				</li>
+				<li>
+				When humans write complex software (such as screen readers and accessibility testing tools), 
+				bugs happen. Let's squash them!
+				If you are think there is a bug the ANDI Output, please reach out to our development team
+				by <a href="https://github.com/SSAgov/ANDI/issues" target="_blank">creating a github issue</a>.
+				</li>
+			</ul>
+		</div>
 	</div>
 	</details>
 	</section>
@@ -296,7 +325,7 @@
 			<p>
 			Since <span class="brand">ANDI</span> dynamically adjusts to the 
 			data being displayed for a particular element, 
-			mouse hovering can sometimes cause the <span class="brand">ANDI</span> to overlap with the Test Page.
+			mouse hovering can sometimes cause <span class="brand">ANDI</span> to overlap with the Test Page.
 			</p>
 			<p itemprop="text">
 			If <span class="brand">ANDI</span> is continually blocking the view of the Test Page, 
@@ -341,41 +370,35 @@
 	</section>
 	<hr />
 	<!--==========================-->
-	<section tabindex="-1" aria-labelledby="lby-differentOutput" id='differentOutput'
+	<section tabindex="-1" aria-labelledby="lby-missingFeature-cANDI" id='missingFeature-cANDI'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
-	<summary id="lby-differentOutput"
-		itemprop="name">Why is ANDI's Output different from the screen reader's?</summary>
+	<summary id="lby-missingFeature-cANDI"
+		itemprop="name">Where is cANDI (ANDI color contrast)?</summary>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-		<p>
-		<span class="brand">ANDI</span>'s Output may occasionally be different from the screen reader's.
-		Here are some reasons why the Output may differ:
+		<p itemprop="text">
+		The <code>c</code><span class="brand">ANDI</span> module relies upon functionality
+		that is not available in versions of Internet Explorer prior to 9 
+		(including compatibility modes).
+		Testers will need to perform a <a href="modules.html#cANDI-manualContrastTest">manual contrast test</a> when 
+		<code>c</code><span class="brand">ANDI</span> is not available.
 		</p>
-		<div class='example'>
-			<ul>
-				<li itemprop="text">
-				<span class="brand">ANDI</span>, the accessibility testing tool,
-				uses the DOM (Document Object Model) to calculate the Output
-				according to the <a href="https://w3c.github.io/accname/" target="_blank">Accesible Name Computation</a>. 
-				Whereas, screen readers rely on more layers than just the DOM.
-				Layers such as the browser's <a href="http://www.w3.org/TR/core-aam-1.1/#intro_aapi" target="_blank">Accessibility API</a>,
-				the accessibility tree, the DOM, their own "tutor text" phrasings.
-				</li>
-				<li>
-				Some screen reader software has guessing algorithms to assist its users.
-				Guessing makes up for missing or improper accessibility coding.
-				However, screen readers should not be guessing when explicit accessibility coding is present.
-				Since <span class="brand">ANDI</span> is an accessibility testing tool, it doesn't guess.
-				Instead, its Output is a direct result of programmatic associations.
-				</li>
-				<li>
-				When humans write complex software (such as screen readers and accessibility testing tools), 
-				bugs happen. Let's squash them!
-				If you are think there is a bug the ANDI Output, please reach out to our development team
-				by <a href="https://github.com/SSAgov/ANDI/issues" target="_blank">creating a github issue</a>.
-				</li>
-			</ul>
-		</div>
+	</div>
+	</details>
+	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-missingFeature-lasers" id='missingFeature-lasers' 
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+	<details>
+	<summary id="lby-missingFeature-lasers"
+		itemprop="name">Where are ANDI's lasers?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p itemprop="text">
+		<span class="brand">ANDI</span>'s <a href="howtouse.html#Lasers">"lasers"</a> will not work in versions of Internet Explorer prior to 9 
+		(including compatibility modes) because <span class="brand">ANDI</span>'s "lasers" are built using SVG
+		(scalable vector graphics) which are not supported by older IE versions.
+		</p>
 	</div>
 	</details>
 	</section>
