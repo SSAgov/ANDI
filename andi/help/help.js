@@ -17,11 +17,12 @@ $(document).ready(function(){
 		//if element_to_show exists
 		if(!!$(element_to_show).html()){
 			
-			//hide all sections
-			$("section").hide();
+			//hide all
+			$("main div.division").hide();
 			
 			//show only the section whose id matches the search parameter
-			$(element_to_show).show().focus();
+			$(element_to_show).parent().show();
+			$(element_to_show).focus();
 		}
 		// else show everything
 	}

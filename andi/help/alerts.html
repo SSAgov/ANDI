@@ -234,22 +234,26 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 
 	<h2>What are the Alert levels?</h2>
-	<div class='details'>
+
 	<p>Alerts are categorized into three priority levels:</p>
-		<div class="example">
-			<span class="message danger" style="padding:5px">1. <img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Danger Alerts: Red Alerts containing a triangle icon with an "x" signify the highest alert level</span><br />
-			Danger Alerts provide notification that accessibility defects are highly likely. 
-			These should be corrected to improve the page's accessibility.
-		</div>
-		<div class="example">
-			<span class="message warning" style="padding:5px">2. <img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Warning Alerts: Orange Alerts containing a triangle icon with an "!" signify a moderate alert level</span><br />
-			Warning Alerts signal that screen reader inconsistencies are likely or information on the page
-			may not be communicated consistently to all users.
-		</div>
-		<div class="example">
-			<span class="message caution" style="padding:5px">3. <img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Caution Alerts: Yellow Alerts containing a triangle icon with a "?" signify the lowest alert level</span><br />
-			Caution Alerts signal that accessibility issues could exist but need further investigation.
-		</div>
+	<div class="example">
+		<ul>
+		<li>
+		Danger Alerts provide notification that accessibility defects are highly likely. 
+		These should be corrected to improve the page's accessibility.
+		<span class="message danger" style="padding:5px">1. <img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> Danger Alerts: Red Alerts containing a triangle icon with an "x" signify the highest alert level</span><br />
+		
+		</li>
+		<li>
+		Warning Alerts signal that screen reader inconsistencies are likely or information on the page
+		may not be communicated consistently to all users.
+		<span class="message warning" style="padding:5px">2. <img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> Warning Alerts: Orange Alerts containing a triangle icon with an "!" signify a moderate alert level</span><br />
+		</li>
+		<li>
+		Caution Alerts signal that accessibility issues could exist but need further investigation.
+		<span class="message caution" style="padding:5px">3. <img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Caution Alerts: Yellow Alerts containing a triangle icon with a "?" signify the lowest alert level</span><br />
+		</li>
+		</ul>
 	</div>
 
 	<h2>Does an Alert mean there is definitely a problem?</h2>
@@ -262,10 +266,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 </div>
-
 <div class="division">
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-no_name" id='no_name'>
 	
 	<h2 id="lby-no_name">Alert: No Accessible Name</h2>
@@ -303,13 +304,12 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		</ul>
 	</div>
 	</div>
-	<a href="developerguide.html#Namers">more info about accessible name</a>
+	<div class="moreinfo">
+		<a href="developerguide.html#Namers">more info about accessible name</a>
+	</div>
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-dup_id" id='dup_id'>
 	
 	<h2 id="lby-dup_id">Alert: Duplicate ID</h2>
@@ -359,7 +359,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>The value of each <code>id</code> on the page should be made unique.</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-dup_for" id='dup_for'>
 	
 	<h2 id="lby-dup_for">Alert: Duplicate For</h2>
@@ -391,13 +392,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	If the concatenation of the text of multiple labels is the intention, then use the 
 	<code>aria-labelledby</code> attribute whose value is a space delimited list of ids which point to the ids of the labels.
 	</p>
-	<a href="developerguide.html#label">more info about label</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#label">more info about label</a>
 	</div>
 	</section>
 </div>
 <div class="division">
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-dby_alone" id='dby_alone'>
 	
 	<h2 id="lby-dby_alone">Alert: ARIA-describedBy Alone</h2>
@@ -418,10 +419,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>One option is to simply use <code>aria-labelledby</code> instead of <code>aria-describedby</code>.
 	Another option is to provide an accessible name along with the <code>aria-describedby</code> by adding an
 	 <code>aria-labelledby</code>, <code>aria-label</code>, or other element-specific "Namer".</p>
-	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-legend_alone" id='legend_alone'>
 	
 	<h2 id="lby-legend_alone">Alert: Legend Alone</h2>
@@ -442,12 +446,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>If a <code>&lt;legend&gt;</code> tag is being used to describe a group of form elements, 
 	the best practice to name each individual form element is to add a <code>&lt;label&gt;</code> tag associated with 
 	the form element (<code>&lt;label for="id"&gt;</code>) or contain the form element within a label.</p>
-	<a href="developerguide.html#legend">more info about legend</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#legend">more info about legend</a>
 	</div>
 	</section>
 </div>
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-misspell" id='misspell'>
 	
 	<h2 id="lby-misspell">Alert: Misspelled attribute</h2>
@@ -481,7 +486,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		</div>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-aria_role" id='aria_role'>
 	
 	<h2 id="lby-aria_role">Alert: ARIA-Role Not Valid</h2>
@@ -504,9 +510,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-scope_invalid" id='scope_invalid'>
 	
 	<h2 id="lby-scope_invalid">Alert: Scope Value Invalid.</h2>
@@ -533,7 +536,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-headers_only_for_th_td" id='headers_only_for_th_td'>
 	
 	<h2 id="lby-headers_only_for_th_td">Alert: Headers Only for TH, TD.</h2>
@@ -561,7 +565,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<code>&lt;th&gt;</code>.</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-table_has_no_th" id='table_has_no_th'>
 	
 	<h2 id="lby-table_has_no_th">Alert: Table Has No TH.</h2>
@@ -590,7 +595,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-table_mixing_scope_and_headers" id='table_mixing_scope_and_headers'>
 	
 	<h2 id="lby-table_mixing_scope_and_headers">Alert: Table Mixing Scope and Headers.</h2>
@@ -617,7 +623,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-table_has_no_headers" id='table_has_no_headers'>
 	
 	<h2 id="lby-table_has_no_headers">Alert: Table Has No Headers/ID.</h2>
@@ -648,7 +655,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-switch_table_analysis_mode" id='switch_table_analysis_mode'>
 	
 	<h2 id="lby-switch_table_analysis_mode">Alert: Switch Table Analysis Mode.</h2>
@@ -671,7 +679,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-no_scope_at_intersection" id='no_scope_at_intersection'>
 	
 	<h2 id="lby-no_scope_at_intersection">Alert: No Scope at TH Intersection.</h2>
@@ -697,7 +706,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-aria_table_grid_structure" id='aria_table_grid_structure'>
 	
 	<h2 id="lby-aria_table_grid_structure">Alert: ARIA Table/Grid Structure Issue.</h2>
@@ -728,7 +738,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-table_has_no_th_or_td" id='table_has_no_th_or_td'>
 	
 	<h2 id="lby-table_has_no_th_or_td">Alert: No TH or TD</h2>
@@ -760,7 +771,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-too_many_scope_levels" id='too_many_scope_levels'>
 	
 	<h2 id="lby-too_many_scope_levels">Alert: Too Many Scope Levels.</h2>
@@ -813,7 +825,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-pres_table_not_have" id='pres_table_not_have'>
 	
 	<h2 id="lby-pres_table_not_have">Alert: Presentation Table Markup.</h2>
@@ -846,7 +859,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		</div>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-table_nontypical_role" id='table_nontypical_role'>
 	
 	<h2 id="lby-table_nontypical_role">Alert: Table with Non-typical Role.</h2>
@@ -889,7 +903,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-header_missing_role" id='header_missing_role'>
 	
 	<h2 id="lby-header_missing_role">Alert: Table Header Missing Role.</h2>
@@ -924,7 +939,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-cells_not_contained_by_row_role" id='cells_not_contained_by_row_role'>
 	
 	<h2 id="lby-cells_not_contained_by_row_role">Alert: Table Cells not Contained by Row.</h2>
@@ -965,8 +981,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
-	
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-table_has_no_scope" id='table_has_no_scope'>
 	
 	<h2 id="lby-table_has_no_scope">Alert: Table Has No Scope.</h2>
@@ -998,9 +1014,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-accesskey_more_one" id='accesskey_more_one'>
 	
 	<h2 id="lby-accesskey_more_one">Alert: Accesskey Multiple Values</h2>
@@ -1018,10 +1031,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 
 	<h3>What should be done?</h3>
 	<p>Set the <code>accesskey</code> value to use only one character.</p>
-	<a href="developerguide.html#accesskey">more info about accesskey</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#accesskey">more info about accesskey</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-accesskey_duplicate" id='accesskey_duplicate'>
 	
 	<h2 id="lby-accesskey_duplicate">Alert: Accesskey Duplicate</h2>
@@ -1049,12 +1065,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	As a best practice, make each <code>accesskey</code> unique.
 	If multiple buttons or links share the same function, put the accesskey on only one.
 	</p>
-	<a href="developerguide.html#accesskey">more info about accesskey</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#accesskey">more info about accesskey</a>
 	</div>
 	</section>
 </div>
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-ref_id_not_found" id='ref_id_not_found'>
 	
 	<h2 id="lby-ref_id_not_found">Alert: ARIA Reference ID Not Found</h2>
@@ -1113,11 +1130,14 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 			<li>BAD: <code>aria-labelledby="id1, id2, id3"</code></li>
 		</ul>
 		</div>
-	<a href="developerguide.html#aria-labelledby">more info about aria-labelledby</a> |
-	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#aria-labelledby">more info about aria-labelledby</a> |
+		<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-improper_ref_id_usage" id='improper_ref_id_usage'>
 	
 	<h2 id="lby-improper_ref_id_usage">Alert: Improper Reference Attribute Possible</h2>
@@ -1150,12 +1170,15 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>Ensure that the attribute is being used properly: 
 	A list of <code>id</code> references only and not literal text.
 	</p>
-	<a href="developerguide.html#aria-labelledby">more info about aria-labelledby</a> |
-	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a> |
-	<a href="developerguide.html#dataTableCellAssociations">more info about data table cell associations</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#aria-labelledby">more info about aria-labelledby</a> |
+		<a href="developerguide.html#aria-describedby">more info about aria-describedby</a> |
+		<a href="developerguide.html#dataTableCellAssociations">more info about data table cell associations</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-headers_ref_not_th" id='headers_ref_not_th'>
 	
 	<h2 id="lby-headers_ref_not_th">Alert: Headers Reference Not TH</h2>
@@ -1181,7 +1204,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-image_map_ref_not_found" id='image_map_ref_not_found'>
 	
 	<h2 id="lby-image_map_ref_not_found">Alert: Image map reference not found</h2>
@@ -1205,7 +1229,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-ref_legend" id='ref_legend'>
 	<h2 id="lby-ref_legend">Alert: ARIA referencing legend</h2>
 	<div class='details'>
@@ -1231,7 +1256,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-ref_has_ref" id='ref_has_ref'>
 	<h2 id="lby-ref_has_ref">Alert: ARIA referencing an ARIA reference</h2>
 	<div class='details'>
@@ -1260,7 +1286,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-ref_is_duplicate" id='ref_is_duplicate'>
 	<h2 id="lby-ref_is_duplicate">Alert: ARIA referencing id multiple times</h2>
 	<div class='details'>
@@ -1286,7 +1313,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-ref_is_direct_and_indirect" id='ref_is_direct_and_indirect'>
 	<h2 id="lby-ref_is_direct_and_indirect">Alert: ARIA reference direct and indirect</h2>
 	<div class='details'>
@@ -1311,7 +1339,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-headers_refs_no_text" id='headers_refs_no_text'>
 	
 	<h2 id="lby-headers_refs_no_text">Alert: Headers References No Text</h2>
@@ -1341,7 +1370,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-anchor_target_not_found" id='anchor_target_not_found'>
 	
 	<h2 id="lby-anchor_target_not_found">Alert: Anchor Target Not Found</h2>
@@ -1370,7 +1400,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-headers_ref_is_td" id='headers_ref_is_td'>
 	
 	<h2 id="lby-headers_ref_is_td">Alert: Headers Reference is TD</h2>
@@ -1398,7 +1429,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-headers_ref_external" id='headers_ref_external'>
 	
 	<h2 id="lby-headers_ref_external">Alert: Headers Referencing External Element</h2>
@@ -1425,7 +1457,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-nested_label_for_no_match" id='nested_label_for_no_match'>
 	
 	<h2 id="lby-nested_label_for_no_match">Alert: Nested Label For Doesn't Match</h2>
@@ -1464,7 +1497,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-page_title_empty" id='page_title_empty'>
 	
 	<h2 id="lby-page_title_empty">Alert: Page Title Empty</h2>
@@ -1484,7 +1516,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>Add text contents to the <code>&lt;title&gt;</code> tag in the page's <code>&lt;head&gt;</code>.</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-page_title_none" id='page_title_none'>
 	
 	<h2 id="lby-page_title_none">Alert: No Page Title</h2>
@@ -1504,7 +1537,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>Add a <code>&lt;title&gt;</code> tag in the page's <code>&lt;head&gt;</code>.</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-page_title_multiple" id='page_title_multiple'>
 	
 	<h2 id="lby-page_title_multiple">Alert: Multiple Page Titles</h2>
@@ -1531,7 +1565,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-too_many_legends" id='too_many_legends'>
 	
 	<h2 id="lby-too_many_legends">Alert: More Legends Than Fieldsets</h2>
@@ -1559,10 +1594,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>Ensure that this page's <code>&lt;legend&gt;</code> tags are contained within a 
 	<code>&lt;fieldset&gt;</code> and are at a 1:1 ratio. Remember that a <code>&lt;legend&gt;</code> only describes a group of
 	form elements; each form element must have an explicit label to provide an accessible name.</p>
-	<a href="developerguide.html#legend">more info about legend</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#legend">more info about legend</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-too_many_figcaptions" id='too_many_figcaptions'>
 	
 	<h2 id="lby-too_many_figcaptions">Alert: More Figcaptions Than Figures</h2>
@@ -1592,10 +1630,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	and by default does not name or describe other elements contained within the figure. If an element within the figure 
 	should be named or described by the <code>&lt;figcaption&gt;</code>, point an <code>aria-labelledby</code> or 
 	<code>aria-describedby</code> at the <code>&lt;figcaption&gt;</code>.</p>
-	<a href="developerguide.html#figcaption">more info about figcaption</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#figcaption">more info about figcaption</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-too_many_captions" id='too_many_captions'>
 	
 	<h2 id="lby-too_many_captions">Alert: More Captions Than Tables</h2>
@@ -1622,10 +1663,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>What should be done?</h3>
 	<p>Ensure that each of this page's <code>&lt;caption&gt;</code> tags are contained within a 
 	<code>&lt;table&gt;</code> and are at a 1:1 ratio.</p>
-	<a href="developerguide.html#caption">more info about caption</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#caption">more info about caption</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-tabindex_not_number" id='tabindex_not_number'>
 	
 	<h2 id="lby-tabindex_not_number">Alert: Tabindex Not A Number</h2>
@@ -1647,10 +1691,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Remember that only positive values allow for keyboard focus using the tab key. Negative values are meant for programmatically
 	controlling focus with JavaScript.
 	</p>
-	<a href="developerguide.html#tabindex">more info about tabindex</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#tabindex">more info about tabindex</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-li_no_container" id='li_no_container'>
 	
 	<h2 id="lby-li_no_container">Alert: List Item No Container</h2>
@@ -1675,7 +1722,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-dd_dt_no_container" id='dd_dt_no_container'>
 	
 	<h2 id="lby-dd_dt_no_container">Alert: Description List Item No Container</h2>
@@ -1701,7 +1749,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-deprecated_html" id='deprecated_html'>
 	<h2 id="lby-deprecated_html">Alert: Deprecated Attribute</h2>
 	<div class='details'>
@@ -1742,7 +1791,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		</div>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-scope_value_invalid" id='scope_value_invalid'>
 	<h2 id="lby-scope_value_invalid">Alert: Scope Value Invalid</h2>
 	<div class='details'>
@@ -1778,7 +1828,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-deprecated_html_a_name" id='deprecated_html_a_name'>
 	<h2 id="lby-deprecated_html_a_name">Alert: Name Attribute Deprecated on &lt;a&gt;</h2>
 	<div class='details'>
@@ -1806,7 +1857,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-alt_only_for_images" id='alt_only_for_images'>
 	
 	<h2 id="lby-alt_only_for_images">Alert: Alt Only For Images</h2>
@@ -1828,16 +1878,15 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Instead use the global attribute
 	<code>aria-label</code> to provide an accessible name or 
 	<code>title</code> to provide an accessible description.</p>
-	<a href="developerguide.html#alt">more info about alt</a> |
-	<a href="developerguide.html#aria-label">more info about aria-label</a> |
-	<a href="developerguide.html#title">more info about title</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#alt">more info about alt</a> |
+		<a href="developerguide.html#aria-label">more info about aria-label</a> |
+		<a href="developerguide.html#title">more info about title</a>
 	</div>
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-explicit_label_for_forms" id='explicit_label_for_forms'>
 	
 	<h2 id="lby-explicit_label_for_forms">Alert: Explicit &lt;label&gt; For Form Elements</h2>
@@ -1858,14 +1907,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<p>
 	This element does not derive its accessible name from <code>&lt;label&gt;</code>.
 	Consider using <code>aria-label</code> or <code>aria-labelledby</code> on the element.</p>
-	<a href="developerguide.html#label">more info about label</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#label">more info about label</a>
 	</div>
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-unreliable_component_combine" id='unreliable_component_combine'>
 	
 	<h2 id="lby-unreliable_component_combine">Alert: Unreliable Component Combination</h2>
@@ -1911,13 +1959,14 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 			<li><code>title</code></li>
 			</ul>
 		</div>
-	<a href="developerguide.html#Namers">more info about Namers</a> |
-	<a href="developerguide.html#Describers">more info about Describers</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#Namers">more info about Namers</a> |
+		<a href="developerguide.html#Describers">more info about Describers</a>
 	</div>
 	</section>
 </div>
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-javascript_event_caution" id='javascript_event_caution'>
 	
 	<h2 id="lby-javascript_event_caution">Alert: JavaScript Event Found</h2>
@@ -1983,7 +2032,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-role_tab_order" id='role_tab_order'>
 	<h2 id="lby-role_tab_order">Alert: Element with Role Not In Tab Order</h2>
 	<div class='details'>
@@ -2025,7 +2075,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-not_in_tab_order" id='not_in_tab_order'>
 	<h2 id="lby-not_in_tab_order">Alert: Focusable Element Not In Tab Order</h2>
 	<div class='details'>
@@ -2056,10 +2107,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Ensure that the functionality of this element is not restricted to mouse users only.
 	If the element should be in the tab order, an easy way to do so is to change the tabindex value to zero (<code>tabindex="0"</code>).
 	</p>
-	<a href="developerguide.html#tabindex">more info about tabindex</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#tabindex">more info about tabindex</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-not_in_tab_order_no_name" id='not_in_tab_order_no_name'>
 	
 	<h2 id="lby-not_in_tab_order_no_name">Alert: Element Not In Tab Order, No Name</h2>
@@ -2078,11 +2132,14 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>What should be done?</h3>
 	<p>Ensure that not being able to tab to the element is acceptable and related functionality is not 
 	restricted to mouse use only. Also ensure that when focus is shifted to the element, a proper accessible name is provided.</p>
-	<a href="developerguide.html#tabindex">more info about tabindex</a> |
-	<a href="developerguide.html#Namers">more info about accessible name</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#tabindex">more info about tabindex</a> |
+		<a href="developerguide.html#Namers">more info about accessible name</a>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-iframe_contents_not_in_tab_order" id='iframe_contents_not_in_tab_order'>
 	
 	<h2 id="lby-iframe_contents_not_in_tab_order">Alert: Iframe Contents Not In Tab Order</h2>
@@ -2113,7 +2170,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-canvas_not_keyboard_accessible" id='canvas_not_keyboard_accessible'>
 	<h2 id="lby-canvas_not_keyboard_accessible">Alert: Canvas No Focusable Fallback</h2>
 	<div class='details'>
@@ -2165,7 +2223,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-canvas_has_focusable_fallback" id='canvas_has_focusable_fallback'>
 	<h2 id="lby-canvas_has_focusable_fallback">Alert: Canvas Has Focusable Fallback</h2>
 	<div class='details'>
@@ -2220,7 +2279,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-anchor_purpose_unclear" id='anchor_purpose_unclear'>
 	
 	<h2 id="lby-anchor_purpose_unclear">Alert: Possible Mouse-only Link</h2>
@@ -2298,7 +2358,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-is_anchor_target_no_focus" id='is_anchor_target_no_focus'>
 	
 	<h2 id="lby-is_anchor_target_no_focus">Alert: Is Anchor Target No Focus</h2>
@@ -2331,7 +2392,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-empty_header_cell" id='empty_header_cell'>
 	
 	<h2 id="lby-empty_header_cell">Alert: Empty Header Cell.</h2>
@@ -2358,7 +2418,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-live_region_empty" id='live_region_empty'>
 	
 	<h2 id="lby-live_region_empty">Alert: Empty Live Region.</h2>
@@ -2392,9 +2453,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-image_alt_not_used" id='image_alt_not_used'>
 	
 	<h2 id="lby-image_alt_not_used">Alert: Image Alt Not Used</h2>
@@ -2423,9 +2481,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-character_length" id='character_length'>
 	
 	<h2 id="lby-character_length">Alert: Attribute Length Exceeds Character Limit</h2>
@@ -2457,14 +2512,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	screen reader user a way to make a selection to hear more information about
 	an element.
 	</p>
-	<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
+	</div>
+	<div class="moreinfo">
+		<a href="developerguide.html#aria-describedby">more info about aria-describedby</a>
 	</div>
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-ambiguous_link" id='ambiguous_link'>
 	
 	<h2 id="lby-ambiguous_link">Alert: Ambiguous Link</h2>
@@ -2494,12 +2548,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 			
 	<h3>What should be done?</h3>
 	<p>
-	If the hrefs are different, the accessible name and accessible description of each link should be uniquely identified.
-	Note that, if the hrefs are identical, the link names/descriptions can be the same or different.
+	If the <code>href</code>s are different, the accessible name and accessible description of each link should be uniquely identified.
+	Note that, if the <code>href</code>s are identical, the link names/descriptions can be the same or different.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-vague_link" id='vague_link'>
 	
 	<h2 id="lby-vague_link">Alert: Vague Link Text</h2>
@@ -2525,7 +2580,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-link_click_no_keyboard_access" id='link_click_no_keyboard_access'>
 	
 	<h2 id="lby-link_click_no_keyboard_access">Alert: Link Click But No Keyboard Access</h2>
@@ -2567,7 +2623,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-not_recognized_as_link" id='not_recognized_as_link'>
 	
 	<h2 id="lby-not_recognized_as_link">Alert: Not Recognized As Link</h2>
@@ -2611,9 +2668,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-marquee_found" id='marquee_found'>
 	
 	<h2 id="lby-marquee_found">Alert: Marquee Found</h2>
@@ -2643,7 +2697,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-blink_found" id='blink_found'>
 	
 	<h2 id="lby-blink_found">Alert: Blink Found</h2>
@@ -2671,7 +2726,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-server_side_image_map" id='server_side_image_map'>
 	
 	<h2 id="lby-server_side_image_map">Alert: Server Side Image Map</h2>
@@ -2697,7 +2753,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-image_alt_not_descriptive" id='image_alt_not_descriptive'>
 	
 	<h2 id="lby-image_alt_not_descriptive">Alert: Image Alt Not Descriptive</h2>
@@ -2731,7 +2788,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-area_not_in_map" id='area_not_in_map'>
 	
 	<h2 id="lby-area_not_in_map">Alert: Area Not In Map</h2>
@@ -2752,7 +2810,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-image_alt_contains_file_name" id='image_alt_contains_file_name'>
 	
 	<h2 id="lby-image_alt_contains_file_name">Alert: Image Alt File Name</h2>
@@ -2784,7 +2843,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-image_alt_redundant_phrase" id='image_alt_redundant_phrase'>
 	
 	<h2 id="lby-image_alt_redundant_phrase">Alert: Image Alt Redundant Phrase</h2>
@@ -2811,7 +2871,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-ensure_bg_images_decorative" id='ensure_bg_images_decorative'>
 	
 	<h2 id="lby-ensure_bg_images_decorative">Alert: Ensure Background Images Are Decorative</h2>
@@ -2842,7 +2903,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 </div>
 <div class="division">
 
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-live_region_form_element" id='live_region_form_element'>
 	<h2 id="lby-live_region_form_element">Alert: Live Region Form Element</h2>
 	<div class='details'>
@@ -2873,7 +2933,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-live_region_not_container" id='live_region_not_container'>
 	<h2 id="lby-live_region_not_container">Alert: Live Region Not Container</h2>
 	<div class='details'>
@@ -2902,7 +2963,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-role_image_invalid" id='role_image_invalid'>
 	<h2 id="lby-role_image_invalid">Alert: Role=Image is Invalid</h2>
 	<div class='details'>
@@ -2926,7 +2988,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-non_list_role" id='non_list_role'>
 	<h2 id="lby-non_list_role">Alert: List Container Has Non-List Role</h2>
 	<div class='details'>
@@ -2954,7 +3017,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-arialevel_not_gt_zero_integar" id='arialevel_not_gt_zero_integar'>
 	
 	<h2 id="lby-arialevel_not_gt_zero_integar">Alert: Aria-Level not Greater Than Zero Integer</h2>
@@ -2981,10 +3045,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 	
 </div>
-
 <div class="division">
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-non_unique_button" id='non_unique_button'>
 	
 	<h2 id="lby-non_unique_button">Alert: Non-Unique Button</h2>
@@ -3022,9 +3083,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</section>
 </div>
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-not_semantic_heading" id='not_semantic_heading'>
 	
 	<h2 id="lby-not_semantic_heading">Alert: Not Using Semantic Heading Markup</h2>
@@ -3053,8 +3111,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-conflicting_heading_level" id='conflicting_heading_level'>
 	
 	<h2 id="lby-conflicting_heading_level">Alert: Conflicting Heading Level</h2>
@@ -3105,8 +3163,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	</div>
 	</section>
-
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-role_heading_no_arialevel" id='role_heading_no_arialevel'>
 	
 	<h2 id="lby-role_heading_no_arialevel">Alert: Heading Role No Aria-Level</h2>
@@ -3133,11 +3191,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 </div>
-
 <div class="division">
-
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-label_clickable_area" id='label_clickable_area'>
 	
 	<h2 id="lby-label_clickable_area">Alert: Label Would Increase Clickable Area</h2>
@@ -3165,10 +3219,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 </div>
-
 <div class="division">
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-pseudo_before_after" id='pseudo_before_after'>
 	
 	<h2 id="lby-pseudo_before_after">Alert: Content injected using CSS</h2>
@@ -3204,9 +3255,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 </div>
-
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-manual_contrast_test_bgimage" id='manual_contrast_test_bgimage'>
 	
 	<h2 id="lby-manual_contrast_test_bgimage">Alert: Element Has Background Image</h2>
@@ -3242,8 +3291,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</div>
 	</section>
-
-
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-manual_contrast_test_img" id='manual_contrast_test_img'>
 	
 	<h2 id="lby-manual_contrast_test_img">Alert: If Images Contain Text</h2>
@@ -3278,8 +3327,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</div>
 	</section>
-	
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-manual_contrast_test_opacity" id='manual_contrast_test_opacity'>
 	
 	<h2 id="lby-manual_contrast_test_opacity">Alert: Opacity Less Than 100%</h2>
@@ -3323,7 +3372,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-grid_navigation_test" id='grid_navigation_test'>
 	
 	<h2 id="lby-grid_navigation_test">Alert: Test Role=Grid Navigation</h2>
@@ -3385,10 +3435,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 </div>
-
 <div class="division">
-
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-min_contrast" id='min_contrast'>
 	
 	<h2 id="lby-min_contrast">Alert: Contrast ratio minimum requirement</h2>
@@ -3426,9 +3473,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 </div>
-
 <div class="division">
-	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-disabled_elements" id='disabled_elements'>
 	<h2 id="lby-disabled_elements">Alert: Disabled Elements Found</h2>
 	<div class='details'>
@@ -3485,7 +3530,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		</div>
 	</div>
 	</section>
-	<!--==========================-->
+</div>
+<div class="division">
 	<section tabindex="-1" aria-labelledby="lby-disabled_contrast" id='disabled_contrast'>
 	<h2 id="lby-disabled_contrast">Alert: Disabled Element Contrast</h2>
 	<div class='details'>
@@ -3503,9 +3549,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</div>
 	</section>
 </div>
-
 <div class="division">
-<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-ariahidden" id='ariahidden'>
 	
 	<h2 id="lby-ariahidden">Alert: Element has Aria-hidden</h2>
