@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.3.1";
+var andiVersionNumber = "27.3.2";
 
 //==============//
 // ANDI CONFIG: //
@@ -943,7 +943,7 @@ function AndiBar(){
 			}
 
 			function displayAddOnProps(){
-				for(x = 1; x<addOnProps.length; x++){
+				for(var x=1; x<addOnProps.length; x++){
 					if(addOnProps[x].val)//if this addOnProperty exists, add to row
 						rows += buildRow("addOnProperties", addOnProps[x].name, addOnProps[x].val);
 				}
@@ -3372,7 +3372,7 @@ function AndiCheck(){
 		if(id && testPageData.allIds.length > 1){
 			var idMatchesFound = 0;
 			//loop through allIds and compare
-			for (x=0; x<testPageData.allIds.length; x++){
+			for (var x=0; x<testPageData.allIds.length; x++){
 				if(id === testPageData.allIds[x].id){
 					idMatchesFound++;
 					if(idMatchesFound === 2) break; //duplicate found so stop searching, for performance
