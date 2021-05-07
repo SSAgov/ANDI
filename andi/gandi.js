@@ -238,34 +238,25 @@ function init_module() {
 
 		//Create Image contained by html (number of image links and image buttons)
 		var resultsDetails = "";
-		
+
 		resultsDetails += gANDI.images.inlineCount + " inline images, ";
 		resultsDetails += gANDI.images.imageLinkCount + " image links, ";
 		resultsDetails += gANDI.images.imageButtonCount + " image buttons, ";
 		resultsDetails += gANDI.images.fontIconCount + " font icons, ";
 		resultsDetails += gANDI.images.backgroundCount + " background-images.";
-		//resultsDetails = resultsDetails.slice(0, -2);//Slice off last two characters: the comma and space: ", "
 
 		$("#ANDI508-additionalPageResults").append("<p tabindex='0'>" + resultsDetails + "</p>");
 
 		//Add Module Mode Buttons
 		var moduleActionButtons = "";
-		if (gANDI.images.inlineCount > 0) {
-			moduleActionButtons += "<button id='ANDI508-fadeInlineImages-button' aria-label='Hide " + gANDI.images.inlineCount + " Inline Images' aria-pressed='false'>hide " + gANDI.images.inlineCount + " inline</button>";
-			if (gANDI.images.decorativeCount > 0)
-				moduleActionButtons += "<button id='ANDI508-highlightDecorativeImages-button' aria-label='Highlight " + gANDI.images.decorativeCount + " Decorative Inline Images' aria-pressed='false'>" + gANDI.images.decorativeCount + " decorative inline" + findIcon + "</button>";
-		}
-		if (gANDI.images.backgroundCount > 0) {
-			if (gANDI.images.inlineCount > 0)
-				moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
-			moduleActionButtons += "<button id='ANDI508-removeBackgroundImages-button' aria-label='Hide " + gANDI.images.backgroundCount + " Background Images' aria-pressed='false'>hide " + gANDI.images.backgroundCount + " background</button>";
-			moduleActionButtons += "<button id='ANDI508-highlightBackgroundImages-button' aria-label='Highlight " + gANDI.images.backgroundCount + " Background Images' aria-pressed='false'>find " + gANDI.images.backgroundCount + " background" + findIcon + "</button>";
-		}
-		if (gANDI.images.fontIconCount > 0) {
-			if (gANDI.images.inlineCount > 0 || gANDI.images.backgroundCount > 0)
-				moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
-			moduleActionButtons += "<button id='ANDI508-highlightFontIcons-button' aria-label='Find " + gANDI.images.fontIconCount + " Font Icons' aria-pressed='false'>" + gANDI.images.fontIconCount + " font icons</button>";
-		}
+
+		moduleActionButtons += "<button id='ANDI508-fadeInlineImages-button' aria-label='Hide " + gANDI.images.inlineCount + " Inline Images' aria-pressed='false'>hide " + gANDI.images.inlineCount + " inline</button>";
+		moduleActionButtons += "<button id='ANDI508-highlightDecorativeImages-button' aria-label='Highlight " + gANDI.images.decorativeCount + " Decorative Inline Images' aria-pressed='false'>" + gANDI.images.decorativeCount + " decorative inline" + findIcon + "</button>";
+		moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
+		moduleActionButtons += "<button id='ANDI508-removeBackgroundImages-button' aria-label='Hide " + gANDI.images.backgroundCount + " Background Images' aria-pressed='false'>hide " + gANDI.images.backgroundCount + " background</button>";
+		moduleActionButtons += "<button id='ANDI508-highlightBackgroundImages-button' aria-label='Highlight " + gANDI.images.backgroundCount + " Background Images' aria-pressed='false'>find " + gANDI.images.backgroundCount + " background" + findIcon + "</button>";
+		moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
+		moduleActionButtons += "<button id='ANDI508-highlightFontIcons-button' aria-label='Find " + gANDI.images.fontIconCount + " Font Icons' aria-pressed='false'>" + gANDI.images.fontIconCount + " font icons</button>";
 
 		$("#ANDI508-module-actions").html(moduleActionButtons);
 
@@ -351,14 +342,10 @@ function init_module() {
 		});
 
 		var startupSummaryText = "";
-		if ((gANDI.images.inlineCount + gANDI.images.fontIconCount) > 0) {
-			andiBar.showElementControls();
-			if (!andiBar.focusIsOnInspectableElement())
-				startupSummaryText += "Discover accessibility markup for inline <span class='ANDI508-module-name-g'>graphics/images</span> by hovering over the highlighted elements or pressing the next/previous element buttons. ";
-		}
-		else {
-			andiBar.hideElementControls();
-		}
+		andiBar.showElementControls();
+		if (!andiBar.focusIsOnInspectableElement())
+			startupSummaryText += "Discover accessibility markup for inline <span class='ANDI508-module-name-g'>graphics/images</span> by hovering over the highlighted elements or pressing the next/previous element buttons. ";
+
 		startupSummaryText += "Ensure that every meaningful/non-decorative image has a text equivalent.";
 		andiBar.showStartUpSummary(startupSummaryText, true);
 

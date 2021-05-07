@@ -90,7 +90,6 @@ function init_module() {
 
 	//This function will analyze the test page for link related markup relating to accessibility
 	lANDI.analyze = function () {
-
 		lANDI.links = new Links();
 		lANDI.buttons = new Buttons();
 
