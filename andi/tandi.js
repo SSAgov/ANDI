@@ -38,8 +38,6 @@ function init_module() {
 			$(element).removeClass("tANDI508-highlight").removeAttr("data-tandi508-rowindex data-tandi508-colindex data-tandi508-rowgroupindex data-tandi508-colgroupindex");
 		else {
 			$(testPage).find("tr[data-tandi508-colgroupsegment]").removeAttr("data-tandi508-colgroupsegment");
-			$("#ANDI508-prevTable-button").remove();
-			$("#ANDI508-nextTable-button").remove();
 		}
 	};
 
