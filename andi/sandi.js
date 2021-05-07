@@ -509,6 +509,9 @@ function init_module() {
 						listCounts += delimiter + listRoleCount + " role=list";
 						listTypesUsed += delimiter + "[role=list]";
 					}
+
+					$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
 					$("#ANDI508-additionalPageResults").html(listCounts);
 
 					if (!andiBar.focusIsOnInspectableElement()) {
@@ -528,6 +531,9 @@ function init_module() {
 					.attr("aria-selected", "true")
 					.addClass("ANDI508-module-action-active");
 				//No outline for landmarks mode
+
+				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
 				if (landmarksArray.length > 0) {
 					andiBar.updateResultsSummary("Landmarks: " + landmarksArray.length);
 					if (!andiBar.focusIsOnInspectableElement()) {
@@ -547,6 +553,9 @@ function init_module() {
 					.attr("aria-selected", "true")
 					.addClass("ANDI508-module-action-active");
 				//No outline for liveRegions mode
+
+				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view live regions list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
 				if (liveRegionsArray.length > 0) {
 					andiBar.updateResultsSummary("Live Regions: " + liveRegionsArray.length);
 					if (!andiBar.focusIsOnInspectableElement()) {
