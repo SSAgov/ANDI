@@ -132,119 +132,115 @@ function init_module() {
 				tANDI.tables.tableCount++;
 			});
 
-			//If the page has tables
-			if (tANDI.tables.tableCount > 0) {
+			var moduleActionButtons = "";
 
-				var moduleActionButtons = "";
+			//Scope Mode / Headers/ID Mode buttons
+			moduleActionButtons += "<button id='ANDI508-scopeMode-button' aria-pressed='";
+			moduleActionButtons += (AndiModule.activeActionButtons.scopeMode) ? "true' class='ANDI508-module-action-active'" : "false'";
+			moduleActionButtons += ">scope mode</button><button id='ANDI508-headersIdMode-button' aria-pressed='";
+			moduleActionButtons += (!AndiModule.activeActionButtons.scopeMode) ? "true' class='ANDI508-module-action-active'" : "false'";
+			moduleActionButtons += ">headers/id mode</button>";
 
-				//Scope Mode / Headers/ID Mode buttons
-				moduleActionButtons += "<button id='ANDI508-scopeMode-button' aria-pressed='";
-				moduleActionButtons += (AndiModule.activeActionButtons.scopeMode) ? "true' class='ANDI508-module-action-active'" : "false'";
-				moduleActionButtons += ">scope mode</button><button id='ANDI508-headersIdMode-button' aria-pressed='";
-				moduleActionButtons += (!AndiModule.activeActionButtons.scopeMode) ? "true' class='ANDI508-module-action-active'" : "false'";
-				moduleActionButtons += ">headers/id mode</button>";
+			//Markup Overlay Button
+			moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-markup-button' aria-label='Markup Overlay' aria-pressed='false'>markup" + overlayIcon + "</button>";
 
-				//Markup Overlay Button
-				moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-markup-button' aria-label='Markup Overlay' aria-pressed='false'>markup" + overlayIcon + "</button>";
+			$("#ANDI508-module-actions").html(moduleActionButtons);
 
-				$("#ANDI508-module-actions").html(moduleActionButtons);
+			if (!activeElementFound)
+				activeTableIndex = 0;//Analyze first table
+			analyzeTable(tANDI.tables.list[activeTableIndex]);
 
-				if (!activeElementFound)
-					activeTableIndex = 0;//Analyze first table
-				analyzeTable(tANDI.tables.list[activeTableIndex]);
+			//Add "prev table" and "next table" buttons
+			$("#ANDI508-elementControls").append(
+				"<button id='ANDI508-prevTable-button' aria-label='Previous Table' title='Analyze Previous Table'><img src='" + icons_url + "prev-table.png' alt='' /></button> " +
+				"<button id='ANDI508-nextTable-button' aria-label='Next Table' title='Analyze Next Table'><img src='" + icons_url + "next-table.png' alt='' /></button>"
+			);
 
-				//Add "prev table" and "next table" buttons
-				$("#ANDI508-elementControls").append(
-					"<button id='ANDI508-prevTable-button' aria-label='Previous Table' title='Analyze Previous Table'><img src='" + icons_url + "prev-table.png' alt='' /></button> " +
-					"<button id='ANDI508-nextTable-button' aria-label='Next Table' title='Analyze Next Table'><img src='" + icons_url + "next-table.png' alt='' /></button>"
-				);
+			//Define scopeMode button functionality
+			$("#ANDI508-scopeMode-button").click(function () {
+				andiResetter.softReset($("#ANDI508-testPage"));
+				AndiModule.activeActionButtons.scopeMode = true;
+				AndiModule.activeActionButtons.modeButtonsVisible = true;
+				AndiModule.launchModule("t");
+				andiResetter.resizeHeights();
+				return false;
+			});
 
-				//Define scopeMode button functionality
-				$("#ANDI508-scopeMode-button").click(function () {
-					andiResetter.softReset($("#ANDI508-testPage"));
-					AndiModule.activeActionButtons.scopeMode = true;
-					AndiModule.activeActionButtons.modeButtonsVisible = true;
-					AndiModule.launchModule("t");
+			//Define headersIdMode button functionality
+			$("#ANDI508-headersIdMode-button").click(function () {
+				andiResetter.softReset($("#ANDI508-testPage"));
+				AndiModule.activeActionButtons.scopeMode = false;
+				AndiModule.activeActionButtons.modeButtonsVisible = true;
+				AndiModule.launchModule("t");
+				andiResetter.resizeHeights();
+				return false;
+			});
+
+			//Define markup button functionality
+			$("#ANDI508-markup-button").click(function () {
+				if ($(this).attr("aria-pressed") == "false") {
+					andiOverlay.overlayButton_on("overlay", $(this));
+					andiOverlay.overlayTableMarkup();
+					AndiModule.activeActionButtons.markup = true;
+				}
+				else {
+					andiOverlay.overlayButton_off("overlay", $(this));
+					andiOverlay.removeOverlay("ANDI508-overlay-tableMarkup");
+					AndiModule.activeActionButtons.markup = false;
+				}
+				andiResetter.resizeHeights();
+				return false;
+			});
+
+			//Define prevTable button functionality
+			$("#ANDI508-prevTable-button")
+				.click(function () {
+					if (activeTableIndex < 0)
+						//focus on first table
+						activeTableIndex = 0;
+					else if (activeTableIndex === 0)
+						activeTableIndex = tANDI.tables.list.length - 1;
+					else
+						activeTableIndex--;
+					tANDI.reset();
+					analyzeTable(tANDI.tables.list[activeTableIndex]);
+					tANDI.results();
+					andiFocuser.focusByIndex(1);
+					tANDI.redoMarkup();
+					tANDI.viewList_highlightSelectedTable(activeTableIndex, true);
 					andiResetter.resizeHeights();
 					return false;
+				})
+				.mousedown(function () {
+					$(this).addClass("ANDI508-module-action-active");
+				})
+				.mouseup(function () {
+					$(this).removeClass("ANDI508-module-action-active");
 				});
 
-				//Define headersIdMode button functionality
-				$("#ANDI508-headersIdMode-button").click(function () {
-					andiResetter.softReset($("#ANDI508-testPage"));
-					AndiModule.activeActionButtons.scopeMode = false;
-					AndiModule.activeActionButtons.modeButtonsVisible = true;
-					AndiModule.launchModule("t");
+			//Define nextTable button functionality
+			$("#ANDI508-nextTable-button")
+				.click(function () {
+					if (activeTableIndex == tANDI.tables.list.length - 1)
+						activeTableIndex = 0;
+					else
+						activeTableIndex++;
+
+					tANDI.reset();
+					analyzeTable(tANDI.tables.list[activeTableIndex]);
+					tANDI.results();
+					andiFocuser.focusByIndex(1);
+					tANDI.redoMarkup();
+					tANDI.viewList_highlightSelectedTable(activeTableIndex, true);
 					andiResetter.resizeHeights();
 					return false;
+				})
+				.mousedown(function () {
+					$(this).addClass("ANDI508-module-action-active");
+				})
+				.mouseup(function () {
+					$(this).removeClass("ANDI508-module-action-active");
 				});
-
-				//Define markup button functionality
-				$("#ANDI508-markup-button").click(function () {
-					if ($(this).attr("aria-pressed") == "false") {
-						andiOverlay.overlayButton_on("overlay", $(this));
-						andiOverlay.overlayTableMarkup();
-						AndiModule.activeActionButtons.markup = true;
-					}
-					else {
-						andiOverlay.overlayButton_off("overlay", $(this));
-						andiOverlay.removeOverlay("ANDI508-overlay-tableMarkup");
-						AndiModule.activeActionButtons.markup = false;
-					}
-					andiResetter.resizeHeights();
-					return false;
-				});
-
-				//Define prevTable button functionality
-				$("#ANDI508-prevTable-button")
-					.click(function () {
-						if (activeTableIndex < 0)
-							//focus on first table
-							activeTableIndex = 0;
-						else if (activeTableIndex === 0)
-							activeTableIndex = tANDI.tables.list.length - 1;
-						else
-							activeTableIndex--;
-						tANDI.reset();
-						analyzeTable(tANDI.tables.list[activeTableIndex]);
-						tANDI.results();
-						andiFocuser.focusByIndex(1);
-						tANDI.redoMarkup();
-						tANDI.viewList_highlightSelectedTable(activeTableIndex, true);
-						andiResetter.resizeHeights();
-						return false;
-					})
-					.mousedown(function () {
-						$(this).addClass("ANDI508-module-action-active");
-					})
-					.mouseup(function () {
-						$(this).removeClass("ANDI508-module-action-active");
-					});
-
-				//Define nextTable button functionality
-				$("#ANDI508-nextTable-button")
-					.click(function () {
-						if (activeTableIndex == tANDI.tables.list.length - 1)
-							activeTableIndex = 0;
-						else
-							activeTableIndex++;
-
-						tANDI.reset();
-						analyzeTable(tANDI.tables.list[activeTableIndex]);
-						tANDI.results();
-						andiFocuser.focusByIndex(1);
-						tANDI.redoMarkup();
-						tANDI.viewList_highlightSelectedTable(activeTableIndex, true);
-						andiResetter.resizeHeights();
-						return false;
-					})
-					.mousedown(function () {
-						$(this).addClass("ANDI508-module-action-active");
-					})
-					.mouseup(function () {
-						$(this).removeClass("ANDI508-module-action-active");
-					});
-			}
 		}
 	};
 
