@@ -3,7 +3,6 @@
 //Created By Social Security Administration //
 //==========================================//
 function init_module() {
-
 	var gandiVersionNumber = "6.0.2";
 
 	//TODO: add <video>
