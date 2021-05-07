@@ -28,13 +28,8 @@ function init_module() {
 		this.decorativeCount = 0;  //images explicetly declared as decorative
 		this.fontIconCount = 0;    //font icons
 		this.imageLinkCount = 0;   //images contained in links
-		this.imageButtonCount = 0;
+		this.imageButtonCount = 0; //images contained in buttons
 	}
-
-	//Stores the total number of image types found
-	var totals = {
-		imageButton: 0	//images contained in buttons
-	};
 
 	AndiModule.initActiveActionButtons({
 		fadeInlineImages: false,
