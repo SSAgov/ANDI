@@ -8,7 +8,7 @@ var andiVersionNumber = "27.3.4";
 // ANDI CONFIG: //
 //==============//
 //URLs
-var host_url = "https://ollie-iterators.github.io/ANDI/andi";
+var host_url = "https://ollie-iterators.github.io/ANDI/andi/";
 var help_url = host_url + "help/";
 var icons_url = host_url + "icons/";
 
