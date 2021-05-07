@@ -19,6 +19,14 @@ function init_module() {
 	function Lists() {
 		this.list = [];
 		this.count = 0;
+		this.olCount = 0;
+		this.ulCount = 0;
+		this.liCount = 0;
+		this.dlCount = 0;
+		this.ddCount = 0;
+		this.dtCount = 0;
+		this.listRoleCount = 0;
+		this.listItemRoleCount = 0;
 	}
 
 	//This object class is used to keep track of the landmarks on the page
@@ -31,14 +39,6 @@ function init_module() {
 	function LiveRegions() {
 		this.list = [];
 		this.count = 0;
-		this.olCount = 0;
-		this.ulCount = 0;
-		this.liCount = 0;
-		this.dlCount = 0;
-		this.ddCount = 0;
-		this.dtCount = 0;
-		this.listRoleCount = 0;
-		this.listItemRoleCount = 0;
 	}
 
 	var structureExists = false;
@@ -102,14 +102,15 @@ function init_module() {
 				structureExists = true;
 
 				if ($(this).isSemantically("[role=list]", "ol,ul,dl")) {
-					if ($(this).is("ul"))
-						sANDI.lists.ulCount++;
-					else if ($(this).is("ol"))
-						sANDI.lists.olCount++;
-					else if ($(this).is("dl"))
-						sANDI.lists.dlCount++;
-					else
-						sANDI.lists.listRoleCount++;
+					if ($(this).is("ul")) {
+						sANDI.lists.ulCount += 1;
+					} else if ($(this).is("ol")) {
+						sANDI.lists.olCount += 1;
+					} else if ($(this).is("dl")) {
+						sANDI.lists.dlCount += 1;
+					} else {
+						sANDI.lists.listRoleCount += 1;
+					}
 					sANDI.lists.count++;
 				}
 
