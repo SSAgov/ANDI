@@ -976,25 +976,16 @@ function init_module() {
 					AndiData.attachDataToElement(cell);
 				});
 
-				if (tableHasHeaders) {
-					//[headers] exist, show mode selection buttons
-					if (AndiModule.activeActionButtons.modeButtonsVisible && $("#ANDI508-scopeMode-button").attr("aria-pressed") === "true") {
-						tANDI.showModeButtons("scope");
-						AndiModule.activeActionButtons.scopeMode = true;
-					}
-					else {
-						tANDI.showModeButtons("headersId");
-						AndiModule.activeActionButtons.scopeMode = false;
-					}
+				if (AndiModule.activeActionButtons.modeButtonsVisible && $("#ANDI508-scopeMode-button").attr("aria-pressed") === "true") {
+					tANDI.showModeButtons("scope");
+					AndiModule.activeActionButtons.scopeMode = true;
 				}
 				else {
-					//No [headers], force scopeMode
-					tANDI.hideModeButtons();
-					AndiModule.activeActionButtons.scopeMode = true;
+					tANDI.showModeButtons("headersId");
+					AndiModule.activeActionButtons.scopeMode = false;
 				}
 
 				//FOR THE DATA TABLE...
-
 				//This is a little hack to force the table to go first in the index
 				var lastIndex = testPageData.andiElementIndex; //remember the last index
 				testPageData.andiElementIndex = 0; //setting this to 0 allows the element to be created at index 1, which places it before the cells
