@@ -158,7 +158,7 @@ gANDI.analyze = function(){
 		//Check for common font icon classes
 		if( !$(this).is("[role=img],img") &&
 			(
-			$(this).hasClass("fa") || //font awesome
+			$(this).hasClass("fa fab fas fal fad") || //font awesome
 			$(this).hasClass("glyphicon") || //glyphicon
 			$(this).hasClass("material-icons") || //google material icons
 			$(this).is("[data-icon]") ||//common usage of the data-* attribute for icons
@@ -172,6 +172,15 @@ gANDI.analyze = function(){
 			}
 			totals.fontIcon++;
 			$(this).addClass("gANDI508-fontIcon");
+			//Throw alert
+			if(andiData.accName && !andiData.isTabbable){
+				//has accessible name. Needs role=img if meaningful image.
+				andiAlerter.throwAlert(alert_0179);
+			}
+			else{
+				//no accessible name. Is it meaningful?
+				//andiAlerter.throwAlert(alert_017A);
+			}
 		}
 	});
 	

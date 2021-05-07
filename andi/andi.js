@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.3.3";
+var andiVersionNumber = "27.3.4";
 
 //==============//
 // ANDI CONFIG: //
@@ -188,7 +188,7 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	//Set Default Module function logic
 	AndiModule.hoverability = function(event){
 		//check for holding shift key or if element is excluded from inspection for some reason
-		if(!event.shiftKey && !$(this).hasClass("ANDI508-exclude-from-inspection")) 
+		if(!event.shiftKey && !$(this).hasClass("ANDI508-exclude-from-inspection"))
 			AndiModule.inspect(this);
 	};
 	AndiModule.focusability = function(){
@@ -222,8 +222,8 @@ function AndiModule(moduleVersionNumber, moduleLetter){
 	//Instantiating a module will reset any overrides
 	$("#ANDI508-button-nextElement").off("click").click(function(){
 		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
-			
-		if(index == testPageData.andiElementIndex || isNaN(index)) //if active is last or not established yet	
+
+		if(index == testPageData.andiElementIndex || isNaN(index)) //if active is last or not established yet
 			index = 0; //begin at first element
 
 		//Find the next element with data-andi508-index
@@ -466,6 +466,8 @@ var alert_0175 = new Alert("warning","17","Image [alt] text contains file name."
 var alert_0176 = new Alert("danger","17","Image [alt] text is not descriptive.","image_alt_not_descriptive");
 var alert_0177 = new Alert("caution","17","Ensure that background images are decorative.","ensure_bg_images_decorative");
 var alert_0178 = new Alert("danger","17","&lt;area&gt; not contained in &lt;map&gt;.","area_not_in_map");
+var alert_0179 = new Alert("caution","17","Screen reader will not recognize this font icon as an image; Add an appropriate role such as [role=img].","");
+var alert_017A = new Alert("caution","17","Font Icon. Is this a meaningful image?","");
 
 var alert_0180 = new Alert("warning","18","[aria-level] is not a greater-than-zero integar; level 2 will be assumed.","arialevel_not_gt_zero_integar");
 var alert_0182 = new Alert("danger","18","Live Region contains a form element.","live_region_form_element");
