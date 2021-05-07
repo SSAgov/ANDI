@@ -31,10 +31,11 @@ function init_module() {
 		$("#ANDI508-testPage .ANDI508-element").each(function () {
 			//Build iFrame List
 			iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + $(this).attr('data-andi508-index') + "'>";
-			if ($(this).attr("src"))
+			if ($(this).attr("src")) {
 				iframesSelectionLinks += $(this).attr("src");
-			else
+			} else {
 				iframesSelectionLinks += "No src";
+			}
 			iframesSelectionLinks += "</a></li>";
 		});
 		//iframes contain body content
@@ -53,8 +54,7 @@ function init_module() {
 
 		//Define outline button
 		$("#ANDI508-viewIframeList-button").click(function () {
-			if ($(this).attr("aria-expanded") === "true") {
-				//hide iframe list, show alert list
+			if ($(this).attr("aria-expanded") === "true") { //hide iframe list, show alert list
 				$("#iANDI508-iframeList-container").slideUp(AndiSettings.andiAnimationSpeed);
 				if (testPageData.numberOfAccessibilityAlertsFound > 0) {
 					$("#ANDI508-alerts-list").show();
@@ -64,9 +64,7 @@ function init_module() {
 					.html(listIcon + "view iframe list")
 					.attr("aria-expanded", "false")
 					.removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
-			}
-			else {
-				//show iframe list, hide alert list
+			} else { //show iframe list, hide alert list
 				$("#ANDI508-alerts-list").hide();
 
 				andiSettings.minimode(false);
@@ -89,8 +87,9 @@ function init_module() {
 			andiLaser.createLaserTrigger($(this), $(relatedElement));
 			$(this)
 				.hover(function () {
-					if (!event.shiftKey)
+					if (!event.shiftKey) {
 						AndiModule.inspect(relatedElement[0]);
+					}
 				})
 				.focus(function () {
 					AndiModule.inspect(relatedElement[0]);
@@ -98,7 +97,6 @@ function init_module() {
 		});
 
 		andiBar.showStartUpSummary("To test the contents of <span class='ANDI508-module-name-i'>iframes</span>, each must be viewed independently.<br />Inspect an iframe, press the \"test in new tab\" button, then launch ANDI.", true);
-
 
 		andiAlerter.updateAlertList();
 
@@ -111,9 +109,7 @@ function init_module() {
 		andiBar.prepareActiveElementInspection(element);
 
 		var elementData = $(element).data("andi508");
-		var addOnProps = AndiData.getAddOnProps(element, elementData,
-			["src"]
-		);
+		var addOnProps = AndiData.getAddOnProps(element, elementData, ["src"]);
 
 		andiBar.displayOutput(elementData, element, addOnProps);
 		andiBar.displayTable(elementData, element, addOnProps);
@@ -133,8 +129,7 @@ function init_module() {
 		if (url) {
 			iframeWindow = window.open(url, "_blank"); //opens user preference, usually new tab
 			iframeWindow.focus();
-		}
-		else {
+		} else {
 			alert("This iframe has no [src] and cannot be opened independently. ANDI cannot be used to test the contents of this iframe.");
 		}
 	};
