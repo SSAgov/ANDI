@@ -1,5 +1,6 @@
 # Things that can be done on andi.js
   - work on removing functions that have one line of code within them
+  - Make all module buttons visible even if the have no content
 
 # Things that can be changed
   - Make a table for each module and subsection in ANDI
