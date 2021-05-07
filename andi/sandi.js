@@ -486,6 +486,9 @@ function init_module() {
 					.attr("aria-selected", "true")
 					.addClass("ANDI508-module-action-active");
 				//No outline for lists mode
+
+				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
 				if (listsArray.length > 0) {
 					andiBar.updateResultsSummary("List Elements: " + listsArray.length);
 					var listCounts = "";
@@ -509,8 +512,6 @@ function init_module() {
 						listCounts += delimiter + listRoleCount + " role=list";
 						listTypesUsed += delimiter + "[role=list]";
 					}
-
-					$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
 					$("#ANDI508-additionalPageResults").html(listCounts);
 
