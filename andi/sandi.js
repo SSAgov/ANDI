@@ -469,54 +469,47 @@ function init_module() {
 
 				andiBar.updateResultsSummary("Headings: " + sANDI.headers.list.length);
 
-				if (sANDI.headers.list.length > 0) {
-					//Build Outline
-					for (var x = 0; x < sANDI.headers.list.length; x++) {
-						sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
-					}
-					sANDI.outline += "</div>";
-
-					$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
-
-					//Define outline button
-					$("#ANDI508-viewOutline-button").click(function () {
-						if ($(this).attr("aria-expanded") === "true") {
-							//hide Outline, show alert list
-							$("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-							if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-								$("#ANDI508-alerts-list").show();
-							}
-							$(this)
-								.addClass("ANDI508-viewOtherResults-button-expanded")
-								.html(listIcon + "view headings list")
-								.attr("aria-expanded", "false")
-								.removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
-						}
-						else {
-							//show Outline, hide alert list
-							$("#ANDI508-alerts-list").hide();
-
-							andiSettings.minimode(false);
-							$(this)
-								.html(listIcon + "hide headings list")
-								.attr("aria-expanded", "true")
-								.addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
-								.find("img").attr("src", icons_url + "list-on.png");
-							$("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
-						}
-						andiResetter.resizeHeights();
-						return false;
-					});
-
-					if (!andiBar.focusIsOnInspectableElement()) {
-						andiBar.showElementControls();
-						andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.", true);
-					}
+				//Build Outline
+				for (var x = 0; x < sANDI.headers.list.length; x++) {
+					sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
 				}
-				else {
-					//No Headings
-					andiBar.hideElementControls();
-					andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>headings</span>.");
+				sANDI.outline += "</div>";
+
+				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
+				//Define outline button
+				$("#ANDI508-viewOutline-button").click(function () {
+					if ($(this).attr("aria-expanded") === "true") {
+						//hide Outline, show alert list
+						$("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
+						if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+							$("#ANDI508-alerts-list").show();
+						}
+						$(this)
+							.addClass("ANDI508-viewOtherResults-button-expanded")
+							.html(listIcon + "view headings list")
+							.attr("aria-expanded", "false")
+							.removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
+					}
+					else {
+						//show Outline, hide alert list
+						$("#ANDI508-alerts-list").hide();
+
+						andiSettings.minimode(false);
+						$(this)
+							.html(listIcon + "hide headings list")
+							.attr("aria-expanded", "true")
+							.addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
+							.find("img").attr("src", icons_url + "list-on.png");
+						$("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
+					}
+					andiResetter.resizeHeights();
+					return false;
+				});
+
+				if (!andiBar.focusIsOnInspectableElement()) {
+					andiBar.showElementControls();
+					andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.", true);
 				}
 			}
 			//LISTS
@@ -528,48 +521,41 @@ function init_module() {
 
 				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
-				if (sANDI.lists.list.length > 0) {
-					andiBar.updateResultsSummary("List Elements: " + sANDI.lists.list.length);
-					var listCounts = "";
-					var delimiter = ", ";
-					var listTypesUsed = "";
+				andiBar.updateResultsSummary("List Elements: " + sANDI.lists.list.length);
+				var listCounts = "";
+				var delimiter = ", ";
+				var listTypesUsed = "";
 
-					listCounts += sANDI.lists.olCount + " ordered list (ol)";
-					listTypesUsed += "ol";
+				listCounts += sANDI.lists.olCount + " ordered list (ol)";
+				listTypesUsed += "ol";
 
-					listCounts += delimiter + sANDI.lists.ulCount + " unordered list (ul)";
-					listTypesUsed += delimiter + "ul";
+				listCounts += delimiter + sANDI.lists.ulCount + " unordered list (ul)";
+				listTypesUsed += delimiter + "ul";
 
-					listCounts += delimiter + sANDI.lists.liCount + " list item (li)";
-					listTypesUsed += delimiter + "li";
+				listCounts += delimiter + sANDI.lists.liCount + " list item (li)";
+				listTypesUsed += delimiter + "li";
 
-					listCounts += delimiter + sANDI.lists.dlCount + " description list (dl)";
-					listTypesUsed += delimiter + "dl";
+				listCounts += delimiter + sANDI.lists.dlCount + " description list (dl)";
+				listTypesUsed += delimiter + "dl";
 
-					listCounts += delimiter + sANDI.lists.ddCount + " description details (dd)";
-					listTypesUsed += delimiter + "dd";
+				listCounts += delimiter + sANDI.lists.ddCount + " description details (dd)";
+				listTypesUsed += delimiter + "dd";
 
-					listCounts += delimiter + sANDI.lists.dtCount + " description term (dd)";
-					listTypesUsed += delimiter + "dt";
+				listCounts += delimiter + sANDI.lists.dtCount + " description term (dd)";
+				listTypesUsed += delimiter + "dt";
 
-					listCounts += delimiter + sANDI.lists.listRoleCount + " role=list";
-					listTypesUsed += delimiter + "[role=list]";
+				listCounts += delimiter + sANDI.lists.listRoleCount + " role=list";
+				listTypesUsed += delimiter + "[role=list]";
 
-					listCounts += delimiter + sANDI.lists.listItemRoleCount + " role=listitem";
-					listTypesUsed += delimiter + "[role=listitem]";
+				listCounts += delimiter + sANDI.lists.listItemRoleCount + " role=listitem";
+				listTypesUsed += delimiter + "[role=listitem]";
 
-					if (!andiBar.focusIsOnInspectableElement()) {
-						andiBar.showElementControls();
-						showStartUpSummaryText = "List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied."
-						showStartUpSummaryText += " ";
-						showStartUpSummaryText += listCounts;
-						andiBar.showStartUpSummary(showStartUpSummaryText, true);
-					}
-				}
-				else {
-					//No Lists
-					andiBar.hideElementControls();
-					andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>lists</span>.");
+				if (!andiBar.focusIsOnInspectableElement()) {
+					andiBar.showElementControls();
+					showStartUpSummaryText = "List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied."
+					showStartUpSummaryText += " ";
+					showStartUpSummaryText += listCounts;
+					andiBar.showStartUpSummary(showStartUpSummaryText, true);
 				}
 			}
 			//LANDMARKS
@@ -581,17 +567,10 @@ function init_module() {
 
 				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
-				if (sANDI.landmarks.list.length > 0) {
-					andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
-					if (!andiBar.focusIsOnInspectableElement()) {
-						andiBar.showElementControls();
-						andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.", true);
-					}
-				}
-				else {
-					//No Landmarks
-					andiBar.hideElementControls();
-					andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>landmarks</span>.");
+				andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
+				if (!andiBar.focusIsOnInspectableElement()) {
+					andiBar.showElementControls();
+					andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.", true);
 				}
 			}
 			//LIVE REGIONS
