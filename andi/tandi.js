@@ -10,6 +10,14 @@ function init_module() {
 	//create tANDI instance
 	var tANDI = new AndiModule(tandiVersionNumber, "t");
 
+	//This object class is used to keep track of the tables on the page
+	function Tables() {
+		this.list = [];                   //Stores all tables in an array
+		this.tableCount = 0;              //The total number of tables
+		this.presentationTablesCount = 0; //The total number of presentation tables
+		this.dataTablesCount = 0;         //The total number of data tables (tables that aren't presentation tables)
+	}
+
 	//a scope at this depth level triggers an alert
 	tANDI.scopeLevelLimit = 4;
 
@@ -43,7 +51,7 @@ function init_module() {
 			andiFocuser.focusByIndex(testPageData.andiElementIndex); //first element
 		}
 		else if (index == 1) {
-			if (tableCountTotal <= 1)
+			if (tANDI.tables.tableCount <= 1)
 				//If there is only 1 table, loop back to last cell
 				andiFocuser.focusByIndex(testPageData.andiElementIndex);
 			else {
@@ -62,7 +70,7 @@ function init_module() {
 	$("#ANDI508-button-nextElement").off("click").click(function () {
 		var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
 		if (index == testPageData.andiElementIndex || isNaN(index)) {
-			if (tableCountTotal <= 1)
+			if (tANDI.tables.tableCount <= 1)
 				//If there is only 1 table, loop back to first cell
 				andiFocuser.focusByIndex(1);
 			else
@@ -75,10 +83,6 @@ function init_module() {
 	});
 
 	//These variables are for the page
-	var tableCountTotal = 0;			//The total number of tables
-	var presentationTablesCount = 0;	//The total number of presentation tables
-	var dataTablesCount = 0;			//The total number of data tables (tables that aren't presentation tables)
-	var tableArray = [];				//Stores all tables in an array
 	var activeTableIndex = -1;			//The array index of the active table
 
 	//These variables are for the current table being analyzed (the active table)
@@ -95,39 +99,41 @@ function init_module() {
 
 	//This function will analyze the test page for table related markup relating to accessibility
 	tANDI.analyze = function () {
+		tANDI.tables = new Tables();
+
 		if (TestPageData.page_using_table) {
 			//Loop through each visible table
 			var activeElementFound = false;
 			$(TestPageData.allElements).filter("table,[role=table],[role=grid],[role=treegrid]").each(function () {
 				//Store this table in the array
-				tableArray.push($(this));
+				tANDI.tables.list.push($(this));
 
 				//Is this a presentation table?
 				if ($(this).is("[role=presentation],[role=none]")) {
 					//It's a presentation table
-					presentationTablesCount++;
+					tANDI.tables.presentationTablesCount++;
 				}
 				else if ($(this).isSemantically("[role=table],[role=grid],[role=treegrid]", "table")) {
 					//It's a data table
-					dataTablesCount++;
+					tANDI.tables.dataTablesCount++;
 				}
 				else {
 					//It table with a non-typical role
-					presentationTablesCount++;
+					tANDI.tables.presentationTablesCount++;
 				}
 
 				//Determine if this is a refresh of tANDI (there is an active element)
 				if (!activeElementFound &&
 					($(this).hasClass("ANDI508-element-active") || $(this).find("th.ANDI508-element-active,td.ANDI508-element-active").first().length)) {
-					activeTableIndex = tableCountTotal;//set this index to this table
+					activeTableIndex = tANDI.tables.tableCount;//set this index to this table
 					activeElementFound = true;
 				}
 
-				tableCountTotal++;
+				tANDI.tables.tableCount++;
 			});
 
 			//If the page has tables
-			if (tableCountTotal > 0) {
+			if (tANDI.tables.tableCount > 0) {
 
 				var moduleActionButtons = "";
 
@@ -145,16 +151,13 @@ function init_module() {
 
 				if (!activeElementFound)
 					activeTableIndex = 0;//Analyze first table
-				analyzeTable(tableArray[activeTableIndex]);
+				analyzeTable(tANDI.tables.list[activeTableIndex]);
 
-				//If there are more than one table and prevTable/nextTable buttons haven't yet been added
-				if (tableCountTotal > 1 && $("#ANDI508-prevTable-button").length === 0) {
-					//Add "prev table" and "next table" buttons
-					$("#ANDI508-elementControls").append(
-						"<button id='ANDI508-prevTable-button' aria-label='Previous Table' title='Analyze Previous Table'><img src='" + icons_url + "prev-table.png' alt='' /></button> " +
-						"<button id='ANDI508-nextTable-button' aria-label='Next Table' title='Analyze Next Table'><img src='" + icons_url + "next-table.png' alt='' /></button>"
-					);
-				}
+				//Add "prev table" and "next table" buttons
+				$("#ANDI508-elementControls").append(
+					"<button id='ANDI508-prevTable-button' aria-label='Previous Table' title='Analyze Previous Table'><img src='" + icons_url + "prev-table.png' alt='' /></button> " +
+					"<button id='ANDI508-nextTable-button' aria-label='Next Table' title='Analyze Next Table'><img src='" + icons_url + "next-table.png' alt='' /></button>"
+				);
 
 				//Define scopeMode button functionality
 				$("#ANDI508-scopeMode-button").click(function () {
@@ -199,11 +202,11 @@ function init_module() {
 							//focus on first table
 							activeTableIndex = 0;
 						else if (activeTableIndex === 0)
-							activeTableIndex = tableArray.length - 1;
+							activeTableIndex = tANDI.tables.list.length - 1;
 						else
 							activeTableIndex--;
 						tANDI.reset();
-						analyzeTable(tableArray[activeTableIndex]);
+						analyzeTable(tANDI.tables.list[activeTableIndex]);
 						tANDI.results();
 						andiFocuser.focusByIndex(1);
 						tANDI.redoMarkup();
@@ -221,13 +224,13 @@ function init_module() {
 				//Define nextTable button functionality
 				$("#ANDI508-nextTable-button")
 					.click(function () {
-						if (activeTableIndex == tableArray.length - 1)
+						if (activeTableIndex == tANDI.tables.list.length - 1)
 							activeTableIndex = 0;
 						else
 							activeTableIndex++;
 
 						tANDI.reset();
-						analyzeTable(tableArray[activeTableIndex]);
+						analyzeTable(tANDI.tables.list[activeTableIndex]);
 						tANDI.results();
 						andiFocuser.focusByIndex(1);
 						tANDI.redoMarkup();
@@ -249,52 +252,36 @@ function init_module() {
 	tANDI.results = function () {
 
 		//Update Results Summary text depending on the active table type (data or presentation)
-		andiBar.updateResultsSummary("Tables: " + tableCountTotal + " (data tables: " + dataTablesCount + ", presentation tables: " + presentationTablesCount + ")");
+		andiBar.updateResultsSummary("Tables: " + tANDI.tables.tableCount + " (data tables: " + tANDI.tables.dataTablesCount + ", presentation tables: " + tANDI.tables.presentationTablesCount + ")");
 
-		if (tableCountTotal > 0) {
-			if (!tANDI.viewList_buttonAppended) {
-				$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewTableList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view table list</button>");
+		if (!tANDI.viewList_buttonAppended) {
+			$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewTableList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view table list</button>");
 
-				//viewTableList Button
-				$("#ANDI508-viewTableList-button").click(function () {
-					if (!tANDI.viewList_tableReady) {
-						tANDI.viewList_buildTable();
-						tANDI.viewList_attachEvents();
-						tANDI.viewList_tableReady = true;
-					}
-					tANDI.viewList_toggle(this);
-					andiResetter.resizeHeights();
-					return false;
-				});
+			//viewTableList Button
+			$("#ANDI508-viewTableList-button").click(function () {
+				if (!tANDI.viewList_tableReady) {
+					tANDI.viewList_buildTable();
+					tANDI.viewList_attachEvents();
+					tANDI.viewList_tableReady = true;
+				}
+				tANDI.viewList_toggle(this);
+				andiResetter.resizeHeights();
+				return false;
+			});
 
-				tANDI.viewList_buttonAppended = true;
-			}
+			tANDI.viewList_buttonAppended = true;
 		}
 
-		if (dataTablesCount > 0) {
-			andiBar.showElementControls();
-			if (!andiBar.focusIsOnInspectableElement()) {
-				var startupMessage = "Discover accessibility markup for <span class='ANDI508-module-name-t'>tables</span> by tabbing to or hovering over the table cells. " +
-					"Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every data table cell. ";
-				if (dataTablesCount + presentationTablesCount > 1)
-					startupMessage += "Tables should be tested one at a time - Press the next table button <img src='" + icons_url + "next-table.png' style='width:12px' alt='' /> to cycle through the tables.";
-				andiBar.showStartUpSummary(startupMessage, true);
-			}
-			else
-				$("#ANDI508-pageAnalysis").show();
+		andiBar.showElementControls();
+		if (!andiBar.focusIsOnInspectableElement()) {
+			var startupMessage = "Discover accessibility markup for <span class='ANDI508-module-name-t'>tables</span> by tabbing to or hovering over the table cells. " +
+				"Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every data table cell. ";
+			startupMessage += "Tables should be tested one at a time - Press the next table button <img src='" + icons_url + "next-table.png' style='width:12px' alt='' /> to cycle through the tables.";
+			andiBar.showStartUpSummary(startupMessage, true);
 		}
-		else if (presentationTablesCount > 0) {
-			andiBar.showElementControls();
-			if (!andiBar.focusIsOnInspectableElement())
-				andiBar.showStartUpSummary("Only <span class='ANDI508-module-name-t'>presentation tables</span> were found on this page, no data tables.", true);
-			else
-				$("#ANDI508-pageAnalysis").show();
-		}
-		else {
-			//No Tables Found
-			andiBar.hideElementControls();
-			andiBar.showStartUpSummary("No <span class='ANDI508-module-name-t'>tables</span> were found on this page.");
-		}
+		else
+			$("#ANDI508-pageAnalysis").show();
+
 		andiAlerter.updateAlertList();
 		if (!AndiModule.activeActionButtons.viewTableList && testPageData.numberOfAccessibilityAlertsFound > 0)
 			$("#ANDI508-alerts-list").show();
@@ -1369,13 +1356,13 @@ function init_module() {
 
 		//Build table body
 		var tableName;
-		for (var x = 0; x < tableArray.length; x++) {
+		for (var x = 0; x < tANDI.tables.list.length; x++) {
 			appendHTML += "<tr";
 			//Highlight the select table
-			if ($(tableArray[x]).hasClass("ANDI508-element"))
+			if ($(tANDI.tables.list[x]).hasClass("ANDI508-element"))
 				appendHTML += " class='ANDI508-table-row-inspecting' aria-selected='true'";
 
-			tableName = preCalculateTableName(tableArray[x]);
+			tableName = preCalculateTableName(tANDI.tables.list[x]);
 
 			appendHTML += "><th scope='role'>" + parseInt(x + 1) + "</th><td>" +
 				"<a href='javascript:void(0)' data-andi508-relatedtable='" + x + "'>" +
@@ -1473,13 +1460,13 @@ function init_module() {
 	tANDI.viewList_attachEvents = function () {
 		//Add focus click to each link (output) in the table
 		$("#ANDI508-viewList-table td a").each(function () {
-			andiLaser.createLaserTrigger($(this), $(tableArray[$(this).attr("data-andi508-relatedtable")]));
+			andiLaser.createLaserTrigger($(this), $(tANDI.tables.list[$(this).attr("data-andi508-relatedtable")]));
 		})
 			.click(function () {//Jump to this table
 				//Make this link appear selected
 				tANDI.reset();
 				activeTableIndex = $(this).attr("data-andi508-relatedtable");
-				analyzeTable(tableArray[activeTableIndex]);
+				analyzeTable(tANDI.tables.list[activeTableIndex]);
 				tANDI.results();
 				andiFocuser.focusByIndex(1);
 				tANDI.redoMarkup();
@@ -1490,7 +1477,7 @@ function init_module() {
 	};
 
 	//This function highlights the active table in the table list
-	//index: refers to the index of the table in the tableArray
+	//index: refers to the index of the table in the tANDI.tables.list
 	tANDI.viewList_highlightSelectedTable = function (index, scrollIntoView) {
 		if (tANDI.viewList_tableReady) {
 			var activeTableFound = false;
