@@ -1,0 +1,7 @@
+# Things that can be done on andi.js
+  - work on removing functions that have one line of code within them
+
+# Things that can be changed
+  - Make a table for each module and subsection in ANDI
+    - Wait to simplify after tables have been added to other areas
+  - Make a function like (function Links() for all module areas)
