@@ -1,5 +1,9 @@
 # Things that can be done on andi.js
   - work on removing functions that have one line of code within them
+  - functions can be removed if they are not being used
+    - List of removed functions with reason
+      - disableModuleButton: Removed because I want all module buttons visible even if there is no content
+                             for the module. That means it is not being used
   - Make all module buttons visible even if the have no content
 
 # Things that can be changed
