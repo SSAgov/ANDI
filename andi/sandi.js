@@ -15,6 +15,12 @@ function init_module() {
 		this.count = 0;
 	}
 
+	//This object class is used to keep track of the lists on the page
+	function Lists() {
+		this.list = [];
+		this.count = 0;
+	}
+
 	//This object class is used to keep track of the landmarks on the page
 	function Landmarks() {
 		this.list = [];
@@ -25,15 +31,17 @@ function init_module() {
 	function LiveRegions() {
 		this.list = [];
 		this.count = 0;
+		this.olCount = 0;
+		this.ulCount = 0;
+		this.liCount = 0;
+		this.dlCount = 0;
+		this.ddCount = 0;
+		this.dtCount = 0;
+		this.listRoleCount = 0;
+		this.listItemRoleCount = 0;
 	}
 
 	var structureExists = false;
-	var listsArray = [];
-	var listsCount = 0;
-	var olCount = 0;
-	var ulCount = 0;
-	var dlCount = 0;
-	var listRoleCount = 0;
 	var langAttributesCount = 0;
 	var roleAttributesCount = 0;
 
@@ -50,6 +58,7 @@ function init_module() {
 	//This function will analyze the test page for graphics/image related markup relating to accessibility
 	sANDI.analyze = function () {
 		sANDI.headers = new Headers();
+		sANDI.lists = new Lists();
 		sANDI.landmarks = new Landmarks();
 		sANDI.liveRegions = new LiveRegions();
 
@@ -89,19 +98,19 @@ function init_module() {
 			}
 			else if ($(this).isSemantically("[role=listitem],[role=list]", "ol,ul,li,dl,dd,dt")) {
 				//Add to the headings array
-				listsArray.push($(this));
+				sANDI.lists.list.push($(this));
 				structureExists = true;
 
 				if ($(this).isSemantically("[role=list]", "ol,ul,dl")) {
 					if ($(this).is("ul"))
-						ulCount++;
+						sANDI.lists.ulCount++;
 					else if ($(this).is("ol"))
-						olCount++;
+						sANDI.lists.olCount++;
 					else if ($(this).is("dl"))
-						dlCount++;
+						sANDI.lists.dlCount++;
 					else
-						listRoleCount++;
-					listsCount++;
+						sANDI.lists.listRoleCount++;
+					sANDI.lists.count++;
 				}
 
 				if (AndiModule.activeActionButtons.lists) {
@@ -109,10 +118,12 @@ function init_module() {
 
 					//Is the listitem contained by an appropriate list container?
 					if ($(this).is("[role=listitem]")) {
+						sANDI.lists.listItemRoleCount += 1;
 						if (!$(this).closest("[role=list]").length)
 							andiAlerter.throwAlert(alert_0079, ["[role=listitem]", "[role=list]"]);
 					}
 					else if ($(this).is("li")) {
+						sANDI.lists.liCount += 1;
 						var listContainer = $(this).closest("ol,ul");
 						if (!$(listContainer).length) {
 							andiAlerter.throwAlert(alert_0079, ["&lt;li&gt;", "&lt;ol&gt; or &lt;ul&gt;"]);
@@ -124,6 +135,11 @@ function init_module() {
 						}
 					}
 					else if ($(this).is("dd,dt") && !$(this).closest("dl").length) {//Is the dl,dt contained by a dl?
+						if ($(this).is("dd")) {
+							sANDI.lists.ddCount += 1;
+						} else if ($(this).is("dt")) {
+							sANDI.lists.dtCount += 1;
+						}
 						andiAlerter.throwAlert(alert_007A);
 					}
 
@@ -287,11 +303,12 @@ function init_module() {
 	};
 
 	//This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
+	var showStartUpSummaryText = "";
 	sANDI.results = function () {
 
 		var moduleActionButtons = "";
 		moduleActionButtons += "<button id='ANDI508-headings-button' class='sANDI508-mode' aria-label='" + sANDI.headers.list.length + " Headings'>" + sANDI.headers.list.length + " headings</button>";
-		moduleActionButtons += "<button id='ANDI508-lists-button' class='sANDI508-mode' aria-label='" + listsCount + " Lists'>" + listsCount + " lists</button>";
+		moduleActionButtons += "<button id='ANDI508-lists-button' class='sANDI508-mode' aria-label='" + sANDI.lists.count + " Lists'>" + sANDI.lists.count + " lists</button>";
 		moduleActionButtons += "<button id='ANDI508-landmarks-button' class='sANDI508-mode' aria-label='" + sANDI.landmarks.list.length + " Landmarks'>" + sANDI.landmarks.list.length + " landmarks</button>";
 		moduleActionButtons += "<button id='ANDI508-liveRegions-button' class='sANDI508-mode' aria-label='" + sANDI.liveRegions.list.length + " Live Regions'>" + sANDI.liveRegions.list.length + " live regions</button>";
 
@@ -510,35 +527,42 @@ function init_module() {
 
 				$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
-				if (listsArray.length > 0) {
-					andiBar.updateResultsSummary("List Elements: " + listsArray.length);
+				if (sANDI.lists.list.length > 0) {
+					andiBar.updateResultsSummary("List Elements: " + sANDI.lists.list.length);
 					var listCounts = "";
-					var delimiter = "";
+					var delimiter = ", ";
 					var listTypesUsed = "";
-					if (olCount > 0) {
-						listCounts += olCount + " ordered list (ol)";
-						listTypesUsed += "ol";
-						delimiter = ", ";
-					}
-					if (ulCount > 0) {
-						listCounts += delimiter + ulCount + " unordered list (ul)";
-						listTypesUsed += delimiter + "ul";
-						delimiter = ", ";
-					}
-					if (dlCount > 0) {
-						listCounts += delimiter + dlCount + " description list (dl)";
-						listTypesUsed += delimiter + "dl";
-					}
-					if (listRoleCount > 0) {
-						listCounts += delimiter + listRoleCount + " role=list";
-						listTypesUsed += delimiter + "[role=list]";
-					}
 
-					$("#ANDI508-additionalPageResults").html(listCounts);
+					listCounts += sANDI.lists.olCount + " ordered list (ol)";
+					listTypesUsed += "ol";
+
+					listCounts += delimiter + sANDI.lists.ulCount + " unordered list (ul)";
+					listTypesUsed += delimiter + "ul";
+
+					listCounts += delimiter + sANDI.lists.liCount + " list item (li)";
+					listTypesUsed += delimiter + "li";
+
+					listCounts += delimiter + sANDI.lists.dlCount + " description list (dl)";
+					listTypesUsed += delimiter + "dl";
+
+					listCounts += delimiter + sANDI.lists.ddCount + " description details (dd)";
+					listTypesUsed += delimiter + "dd";
+
+					listCounts += delimiter + sANDI.lists.dtCount + " description term (dd)";
+					listTypesUsed += delimiter + "dt";
+
+					listCounts += delimiter + sANDI.lists.listRoleCount + " role=list";
+					listTypesUsed += delimiter + "[role=list]";
+
+					listCounts += delimiter + sANDI.lists.listItemRoleCount + " role=listitem";
+					listTypesUsed += delimiter + "[role=listitem]";
 
 					if (!andiBar.focusIsOnInspectableElement()) {
 						andiBar.showElementControls();
-						andiBar.showStartUpSummary("List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied.", true);
+						showStartUpSummaryText = "List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied."
+						showStartUpSummaryText += " ";
+						showStartUpSummaryText += listCounts;
+						andiBar.showStartUpSummary(showStartUpSummaryText, true);
 					}
 				}
 				else {
