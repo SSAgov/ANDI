@@ -935,7 +935,6 @@ function init_module() {
 					}
 
 					//FOR EACH CELL...
-
 					//Determine if cell has a child element (link, form element, img)
 					child = $(cell).find("a,button,input,select,textarea,img").first();
 

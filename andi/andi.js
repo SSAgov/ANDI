@@ -83,8 +83,7 @@ function launchAndi() {
 			if (confirm("ANDI has detected aria-hidden=true on the <html> or <body> elements which would render this page invisible to a screen reader.\n\nPress OK to remove the aria-hidden=true from the <html> and <body> elements to continue.")) {
 				$("html").removeAttr("aria-hidden");
 				$("body").removeAttr("aria-hidden");
-			}
-			else {
+			} else {
 				alert("ANDI will not continue while aria-hidden=true is on <html> or <body> elements.");
 				return; //Stops ANDI
 			}
@@ -153,8 +152,7 @@ function AndiModule(moduleVersionNumber, moduleLetter) {
 	if (moduleLetter == "f") {
 		$(moduleName).html("&nbsp;"); //do not display default module letter
 		document.getElementById("ANDI508-toolName-link").setAttribute("aria-label", "andi " + andiVersionNumber); //using setAttribute because jquery .attr("aria-label") is not recognized by ie7
-	}
-	else {
+	} else {
 		$(moduleName).html(moduleLetter);
 		document.getElementById("ANDI508-toolName-link").setAttribute("aria-label", moduleLetter + "andi " + moduleVersionNumber); //using setAttribute because jquery .attr("aria-label") is not recognized by ie7
 		//Append module's css file. The version number is added to the href string (?v=) so that when the module is updated, the css file is reloaded and not pulled from browser cache
