@@ -1269,7 +1269,6 @@ function init_module() {
 			AndiModule.activeActionButtons.scopeMode = true;
 
 			//FOR THE DATA TABLE...
-
 			//This is a little hack to force the table to go first in the index
 			var lastIndex = testPageData.andiElementIndex; //remember the last index
 			testPageData.andiElementIndex = 0; //setting this to 0 allows the element to be created at index 1, which places it before the cells
