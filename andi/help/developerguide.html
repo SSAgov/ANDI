@@ -42,8 +42,8 @@
 <nav id='tableOfContents'>
 	<h3><a href="#NamingAndDescribing">Naming and Describing</a></h3>
 	<ul>
-		<li><a href="#Namers">Namers Definition</a></li>
-		<li><a href="#Describers">Describers Definition</a></li>
+		<li><a href="#Namers">Accessible Name Definition</a></li>
+		<li><a href="#Describers">Accessible Description Definition</a></li>
 	</ul>
 	<h3>Namers</h3>
 	<ul>
@@ -54,7 +54,7 @@
 		<li><a href="#value">[value]</a></li>
 		<li><a href="#caption">&lt;caption&gt;</a></li>
 		<li><a href="#innerHTML">innerHTML</a></li>
-	</ul>	
+	</ul>
 	<h3>Describers</h3>
 	<ul>
 		<li><a href="#aria-describedby">[aria-describedby]</a></li>
@@ -80,13 +80,13 @@
 	<p>
 	All interactive elements on a web page must have explicitly defined text to distinguish
 	the element, or else the screen reader software
-	will not know what to speak, 
+	will not know what to speak,
 	thus the element will not be accessible
 	to screen reader users. This distinguishing text is called the <b>accessible name</b> of the element.
 	</p>
 	<p>
 	In addition to the required accessible name, interactive elements may be given
-	text that further describes the element or provides more information. 
+	text that further describes the element or provides more information.
 	This supporting description text is called the <b>accessible description</b> of the element.
 	</p>
 	</div>
@@ -95,7 +95,7 @@
 	<hr />
 	<section tabindex="-1" aria-labelledby="lby-Namers" id='Namers' >
 	<details>
-	<summary id="lby-Namers">Namers</summary>
+	<summary id="lby-Namers">Accessible Name</summary>
 	<div class='details'>
 	<p>
 	Web authors must take additional steps to ensure that the accessible name of each
@@ -127,10 +127,10 @@
 	<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-Describers" id='Describers' >
 	<details>
-	<summary id="lby-Describers">Describers</summary>
+	<summary id="lby-Describers">Accessible Description</summary>
 	<div class='details'>
 	<p>
-	In addition to a required accessible name, 
+	In addition to a required accessible name,
 	web authors may add additional support text to further describe interactive elements.
 	There are several components that can be used to provide an accessible description.
 	</p>
@@ -138,7 +138,6 @@
 		<div class="example">
 		<ul>
 		<li><code>aria-describedby</code></li>
-		<li><code>legend</code> (form elements &amp; only with label)</li>
 		<li><code>title</code></li>
 		</ul>
 		</div>
@@ -154,6 +153,49 @@
 	</div>
 	</details>
 	</section>
+	<hr />
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-Grouping" id='Grouping' >
+	<details>
+	<summary id="lby-Grouping">Grouping</summary>
+	<div class='details'>
+	<p>
+	When form elements have a common label that groups them together visually,
+	screen reader users benefit when the elements are contained by a grouping element and the grouping element is given an accessible name.
+	</p>
+	<p>
+	Using native HTML, the <code>fieldset</code> tag functions as the container, and the <code>legend</code> names the group. <a href="#legend">More info about Fieldset/Legend here.</a>
+	</p>
+		<div class="example">
+			<code>
+				&lt;fieldset&gt;<br />
+				&nbsp;&nbsp;&lt;legend&gt;Billing Address&lt;/legend&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;label&gt; Street: &lt;input&gt; &lt;/label&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;label&gt; State: &lt;input&gt; &lt;/label&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;label&gt; Zip: &lt;input&gt; &lt;/label&gt;<br />
+				&lt;/fieldset&gt;<br />
+			</code>
+		</div>
+	<p>
+	Using ARIA, the container should have <code>role=group</code> and the <code>role=group</code> element should be given an accessible name using <code>aria-labelledby</code> or <code>aria-label</code>.
+	</p>
+		<div class="example">
+			<code>
+				&lt;div role="group" aria-labelledby="id1"&gt;<br />
+				&nbsp;&nbsp;&lt;strong id="id1"&gt;Billing Address&lt;/strong&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;label&gt; Street: &lt;input&gt; &lt;/label&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;label&gt; State: &lt;input&gt; &lt;/label&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;label&gt; Zip: &lt;input&gt; &lt;/label&gt;<br />
+				&lt;/div&gt;<br />
+			</code>
+		</div>
+	<p>
+	For a screen reader user, a benefit of grouping is this: The first time the user focuses on an item in the group, the group name is announced once.
+	If the user navigates to other items within the group, the group name is not announced again. This reduces verbosity compared to if the group name was announced for
+	every element within the group.
+	</p>
+	</details>
+	</section>
 </div>
 
 <div class="division">
@@ -166,9 +208,9 @@
 	references other elements to provide an accessible name.</p>
 	<h4>How To Use</h4>
 	<p>
-	The <code>aria-labelledby</code> attribute establishes an association between 
+	The <code>aria-labelledby</code> attribute establishes an association between
 	an element and the text that provides the accessible name.
-	It indicates the ids of other elements 
+	It indicates the ids of other elements
 	which contain the naming text. The benefit of the <code>aria-labelledby</code>
 	attribute is that it can reference multiple elements in a specific order.
 	</p>
@@ -191,7 +233,7 @@
 	</p>
 	<p>
 	The <code>aria-labelledby</code> attribute
-	is a powerful Namer since it can be used to reference several elements which contain text 
+	is a powerful Namer since it can be used to reference several elements which contain text
 	that can contribute	to an accessible name. Screen readers give it a high precedence over other Namers.
 	</p>
 	<h4>Improper Use</h4>
@@ -210,10 +252,10 @@
 	<div class='details'>
 	<p>The global attribute <code>aria-label</code> provides an accessible name.</p>
 	<h4>How To Use</h4>
-	<p>The value given to the <code>aria-label</code> attribute should contain the literal text that that will 
+	<p>The value given to the <code>aria-label</code> attribute should contain the literal text that that will
 	explicitly name an element. The text will not appear on the screen.</p>
 	<div class="example">
-	Example: 
+	Example:
 	<code>&lt;button aria-label='Close'&gt;X&lt;/button&gt;</code>
 	</div>
 	<h4>Screen Reader Usage</h4>
@@ -232,7 +274,7 @@
 	When focus moves to the button, the screen reader would read "Andy Warhol's Can of Soup button".
 	In the example, the image and the innerHTML "soup" provides information about the button to a sighted user.
 	The text in the <code>aria-label</code> "Andy Warhol's Can of Soup" would not appear on screen,
-	but would be read by the screen reader. 
+	but would be read by the screen reader.
 	</p>
 	<h4>Improper Use</h4>
 	<p>
@@ -248,26 +290,26 @@
 	<details>
 	<summary id="lby-alt">[alt]</summary>
 	<div class='details'>
-	<p>The <code>alt</code> attribute is the HTML attribute used to specify alternative text (alt text) 
+	<p>The <code>alt</code> attribute is the HTML attribute used to specify alternative text (alt text)
 	that is to be displayed when the image to which it is applied cannot be rendered.
 	The <code>alt</code> attribute is a required attribute of the <code>&lt;img&gt;</code>, <code>&lt;area&gt;</code>, and <code>&lt;input[type=image]&gt;</code> tags.
 	When applied to images, the <code>alt</code> attribute provides an accessible name.
 	</p>
 	<h4>How To Use</h4>
 	<p>
-	The <code>alt</code> attribute should only be placed on <code>&lt;img&gt;</code>, <code>&lt;area&gt;</code>, 
+	The <code>alt</code> attribute should only be placed on <code>&lt;img&gt;</code>, <code>&lt;area&gt;</code>,
 	and <code>&lt;input[type=image]&gt;</code> tags.
 	The text of the <code>alt</code> should concisely describe the image.
 	If the image is purely decorative, does not require explanation, and does not gain focus,
 	then an empty string should be used for the value such as <code>alt=""</code>.
 	</p>
 	<div class="example">
-	Example: 
+	Example:
 	<code>&lt;img src='logo.png' alt='social security administration' /&gt;</code>
 	</div>
 	<h4>Screen Reader Usage</h4>
 	<p>
-	The <code>alt</code> attribute is used by screen readers to speak the content 
+	The <code>alt</code> attribute is used by screen readers to speak the content
 	of images to a person who cannot see the image because of a disablity.
 	If the <code>alt</code> has been intentionally set to empty string <code>alt=""</code>,
 	then the screen reader will ignore the image.
@@ -282,7 +324,7 @@
 	<details>
 	<summary id="lby-label">&lt;label&gt;</summary>
 	<div class='details'>
-	<p>The <code>&lt;label&gt;</code> tag, when properly associated, 
+	<p>The <code>&lt;label&gt;</code> tag, when properly associated,
 	provides an accessible name for a form element.
 	In addition, clicking on a label that is properly associated will move focus to the form element with which it associates.
 	</p>
@@ -294,14 +336,14 @@
 	</p>
 	<h5>Label/For with Matching Id - explicit association</h5>
 		<div class="example">
-		Adding a <code>for</code> attribute to the label, which references the <code>id</code> of the form element. 
+		Adding a <code>for</code> attribute to the label, which references the <code>id</code> of the form element.
 		Example:<br />
 		<code>&lt;label for='someId'&gt; Enter Text: &lt;/label&gt;<br />
 		&lt;input type='text' id='someId' /&gt;</code>
 		</div>
 	<h5>Nested Label (Label as a container) - implicit association</h5>
 		<div class="example">
-		Using the label as a container which contains the form element. 
+		Using the label as a container which contains the form element.
 		Example:<br />
 		<code>&lt;label&gt; Enter Text: <br />
 		&lt;input type='text' /&gt;<br />
@@ -343,19 +385,19 @@
 	<details>
 	<summary id="lby-value">[value]</summary>
 	<div class='details'>
-	<p>The <code>value</code> property 
+	<p>The <code>value</code> property
 	provides an accessible name for an <code>&lt;input&gt;</code> button.
 	The text of the <code>value</code> will also visually appear on the button.</p>
 	<h4>How To Use</h4>
-	<p>The text of the <code>value</code> attribute should contain the literal text that will 
-	explicitly name an <code>&lt;input&gt;</code> button element: 
+	<p>The text of the <code>value</code> attribute should contain the literal text that will
+	explicitly name an <code>&lt;input&gt;</code> button element:
 	<code>&lt;input type="submit"&gt;</code>,
 	<code>&lt;input type="button"&gt;</code>,
 	<code>&lt;input type="reset"&gt;</code>,
 	<code>&lt;input type="image"&gt;</code>.
 	</p>
 	<div class="example">
-	Example: 
+	Example:
 	<code>&lt;input type='submit' value='button' /&gt;</code>
 	</div>
 	<h4>Screen Reader Usage</h4>
@@ -371,7 +413,7 @@
 	<details>
 	<summary id="lby-caption">&lt;caption&gt;</summary>
 	<div class='details'>
-	<p>Introduced in HTML5, 
+	<p>Introduced in HTML5,
 	the <code>&lt;caption&gt;</code> tag provides an accessible name for a <code>&lt;table&gt;</code>.
 	</p>
 	<h4>How To Use</h4>
@@ -400,13 +442,13 @@
 		<p>
 		Adding screen text to an element is perhaps the best way to add an accessible name,
 		since every type of user will be able to read the exact same text.
-		For elements that cannot contain innerHTML such as 
+		For elements that cannot contain innerHTML such as
 		<code>&lt;img&gt;</code> or
 		<code>&lt;input&gt;</code>
 		additional components are needed to be accessible.
 		</p>
 		<p>
-		For basic HTML tags such as 
+		For basic HTML tags such as
 		<code>&lt;p&gt;</code>,
 		<code>&lt;div&gt;</code>,
 		<code>&lt;li&gt;</code>
@@ -444,7 +486,7 @@
 	and the accessible description will be "Clicking on this button will send an email to Andy Cooper".
 	</p>
 	<p>
-	This attribute is very similar to <code>aria-labelledby</code> which defines the essence of the element, 
+	This attribute is very similar to <code>aria-labelledby</code> which defines the essence of the element,
 	while <code>aria-describedby</code> provides a description or more information that the user might need
 	pertaining to the element.
 	</p>
@@ -469,24 +511,17 @@
 	<details>
 	<summary id="lby-legend">&lt;legend&gt;</summary>
 	<div class='details'>
-	<p>Within a <code>&lt;fieldset&gt;</code>, the <code>&lt;legend&gt;</code> tag 
+	<p>Within a <code>&lt;fieldset&gt;</code>, the <code>&lt;legend&gt;</code> tag
 	associates a group of form elements.</p>
-	<h4>Screen Reader Usage</h4>
-	<p>
-	For form elements, excluding buttons, a screen reader will read the legend first 
-	and then the accessible name.
-	When <code>&lt;legend&gt;</code> is used with non-form elements and buttons,
-	screen reader output is inconsistent, and therefore such combinations are discouraged.
-	</p>
 	<h4>How To Use</h4>
 	<p>
-	The <code>&lt;legend&gt;</code> tag is strictly meant to be used in this specific scenario:
+	The <code>&lt;legend&gt;</code> tag works best in this scenario:
 	</p>
 		<div class="example">
 		<ol>
 			<li>Within a <code>&lt;fieldset&gt;</code></li>
 			<li>The first child of the <code>&lt;fieldset&gt;</code></li>
-			<li>Describing a form element group</li>
+			<li>Naming a form element group</li>
 			<li>Each form element must have an associating <code>&lt;label&gt;</code> tag and be contained in the <code>&lt;fieldset&gt;</code></li>
 			<li>The <code>&lt;legend&gt;</code> text will be spoken before the <code>&lt;label&gt;</code> text.</li>
 			<li>Do not use with buttons (place buttons outside the <code>&lt;fieldset&gt;</code>)</li>
@@ -508,24 +543,20 @@
 		</code>
 		</div>
 	<p>
-	When used this way, each <code>&lt;label&gt;</code> provides the distinctive name 
+	When used this way, each <code>&lt;label&gt;</code> provides the distinctive name
 	for its associating form element,
-	and the <code>&lt;legend&gt;</code> describes the grouping relationship of the 
+	and the <code>&lt;legend&gt;</code> names the group relationship of the
 	elements within the <code>&lt;fieldset&gt;</code>.
 	</p>
 	<h4>Improper Use</h4>
 	<p>
 	Combining <code>&lt;legend&gt;</code> with any other accessibility components and outside of
-	the recommended scenario described above will 
-	cause screen reader inconsistencies or accessibility issues.
-	Furthermore, the <code>&lt;legend&gt;</code> tag should not be used alone without <code>&lt;label&gt;</code>.
+	the recommended scenario described above will
+	cause screen reader inconsistencies or accessibility issues depending on the browser and screen reader version.
 	</p>
 	<h4>Legend Alternative</h4>
 	<p>
-	If a form element group needs more information than labels with a legend can provide, 
-	remove the <code>&lt;legend&gt;</code> tag 
-	and use <code>aria-labelledby</code> or <code>aria-label</code>.
-	Another alternative is <code>role=radiogroup</code> or  <code>role=group</code>.
+	An alternative to <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> is <code>role=group</code>.
 	</p>
 	</div>
 	</details>
@@ -541,11 +572,11 @@
 	It will also generate a "tooltip" when a mouse user hovers over the element.
 	</p>
 	<h4>How To Use</h4>
-	<p>The value given to the <code>title</code> attribute contains the literal text that that will 
-	explicitly describe an element. 
-	The length of the value is limited to 512 total characters in Internet Explorer 
+	<p>The value given to the <code>title</code> attribute contains the literal text that that will
+	explicitly describe an element.
+	The length of the value is limited to 512 total characters in Internet Explorer
 	<a href="https://msdn.microsoft.com/en-us/library/ms534683(v=vs.85).aspx" target="_blank" aria-label='Source: IE limits the title to 512 character'>(source)</a>.
-	Depending on the browser, the tooltip generated by the title attribute may not be able to 
+	Depending on the browser, the tooltip generated by the title attribute may not be able to
 	be triggered (seen) without using a mouse.
 	Also, the <code>title</code> does not appear on touch screen devices (think mobile).
 	Therefore, <code>title</code> should not be the only means of conveying important information.
@@ -590,7 +621,7 @@
 	<details>
 	<summary id="lby-accesskey">[accesskey]</summary>
 	<div class='details'>
-	<p>The global attribute <code>accesskey</code> 
+	<p>The global attribute <code>accesskey</code>
 	provides the ability to hit a key combination and shift focus or "click" a button.
 	This is sometimes called a "hotkey" or "quick key".
 	</p>
@@ -603,11 +634,11 @@
 	When adding an <code>accesskey</code> to an element, ensure that the element is focusable (natively or has a tabindex).
 	</p>
 	<p>Also ensure that the accesskey does not interfere with other accesskeys on the page.
-	As a best practice, accesskeys should be unique. 
+	As a best practice, accesskeys should be unique.
 	Accesskeys on buttons and links should be unique since the moment the accesskey is pressed, the button or link is selected.
 	Contrarily, some browsers allow duplicate accesskeys to be used to jump around to several focusable sections of a page.
-	However, as a best practice, 
-	section jumping behavior based on repeated presses of one key command 
+	However, as a best practice,
+	section jumping behavior based on repeated presses of one key command
 	should be implemented using javascript keypress event handling.
 	</p>
 	<p>
@@ -633,13 +664,13 @@
 		The cells of data tables must have additional markup to indicate the correct associations between table header cells
 		and table data cells. Simply declaring a cell a &lt;th&gt; does not always automatically imply the correct association.
 		Table cell associations can be programatically identifed by using one of two methods,
-		the <a href="developerguide.html#ScopeMethod">Scope Method</a> or 
+		the <a href="developerguide.html#ScopeMethod">Scope Method</a> or
 		<a href="developerguide.html#HeadersIdMethod">Headers/id Method</a>.
 		The method chosen is often dictated by the design/structure of the table.
 		Moreover, only one association method should be used at a time per table for the sake of simplicity and maintainability.
 		</p>
 		<h4>Scope Method</h4>
-		<div class="example">To use the Scope Method, the <code>scope</code> attribute should be assigned to 
+		<div class="example">To use the Scope Method, the <code>scope</code> attribute should be assigned to
 			each table header <code>&lt;th&gt;</code> that forms a column header or row header. Example:<br />
 			<code>
 			&lt;table&gt;<br />
@@ -699,13 +730,13 @@
 		</div>
 		<h4>Which Table Cell Association Method should be used?</h4>
 		<p>
-		Since only one method should be used at a time, 
+		Since only one method should be used at a time,
 		deciding between the Scope Method and the Headers/id Method method mostly depends on the design/structure of the table.
 		</p>
 		<p>
 		Most tables can use the Scope Method, even in some "complex" designs.
 		If text alignment, font size, color or other style adjustments
-		are being used to differentiate table headers within the same column or row, 
+		are being used to differentiate table headers within the same column or row,
 		the Headers/id Method should be used.
 		</p>
 		<p>

@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.3.2";
+var andiVersionNumber = "27.3.3";
 
 //==============//
 // ANDI CONFIG: //
@@ -357,14 +357,14 @@ function Alert(level, group, message, info, alertButton){
 	this.alertButton = alertButton; //(optional) an alert button object
 }
 //Define Alerts used by all modules
-var alert_0001 = new Alert("danger","0"," has no accessible name, associated &lt;label&gt;, or [title].","no_name");
-var alert_0002 = new Alert("danger","0"," has no accessible name, innerText, or [title].","no_name");
-var alert_0003 = new Alert("danger","0"," has no accessible name, [alt], or [title].","no_name");
-var alert_0004 = new Alert("danger","0","Table has no accessible name, &lt;caption&gt;, or [title].","no_name");
-var alert_0005 = new Alert("danger","0","Figure has no accessible name, &lt;figcaption&gt;, or [title].","no_name");
-var alert_0007 = new Alert("danger","0","Iframe has no accessible name or [title].","no_name");
-var alert_0008 = new Alert("danger","0"," has no accessible name.","no_name");
-var alert_0009 = new Alert("warning","0","Iframe has no accessible name or [title].","no_name");
+var alert_0001 = new Alert("danger","0"," has no accessible name, associated &lt;label&gt;, or [title].","no_name_form_element");
+var alert_0002 = new Alert("danger","0"," has no accessible name, innerText, or [title].","no_name_generic");
+var alert_0003 = new Alert("danger","0"," has no accessible name, [alt], or [title].","no_name_image");
+var alert_0004 = new Alert("danger","0","Table has no accessible name, &lt;caption&gt;, or [title].","no_name_table");
+var alert_0005 = new Alert("danger","0","Figure has no accessible name, &lt;figcaption&gt;, or [title].","no_name_figure");
+var alert_0007 = new Alert("danger","0","Iframe has no accessible name or [title].","no_name_iframe");
+var alert_0008 = new Alert("danger","0"," has no accessible name.","no_name_generic");
+var alert_0009 = new Alert("warning","0","Iframe has no accessible name or [title].","no_name_iframe");
 
 var alert_0011 = new Alert("danger","1","%%%; element ids should be unique.","dup_id",
 							new AlertButton("show ids", "ANDI508-alertButton-duplicateIdOverlay", function(){andiOverlay.overlay_duplicateIds();}, overlayIcon));
