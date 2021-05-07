@@ -100,6 +100,8 @@ function init_module() {
 
 		andiBar.updateResultsSummary("Elements Containing Text: " + elementsContainingTextCount);
 
+		$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view color contrast list</button>");
+
 		if (imgCount > 0)
 			andiAlerter.throwAlert(alert_0231, alert_0231.message, 0);
 

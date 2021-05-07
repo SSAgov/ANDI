@@ -264,6 +264,8 @@ function init_module() {
 
 		andiBar.updateResultsSummary("Hidden Elements: " + hiddenElements);
 
+		$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view hidden content list</button>");
+
 		//Are There Hidden Elements?
 		if (hiddenElements > 0 || elementsWithCssInjectedContent > 0) {
 			//Yes, Hidden Elements were found

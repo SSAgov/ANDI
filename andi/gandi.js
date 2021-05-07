@@ -234,6 +234,8 @@ function init_module() {
 
 		andiBar.updateResultsSummary("Images Found: " + imagesCount);
 
+		$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view images list</button>");
+
 		//Are There Images?
 		if (imagesCount > 0) {
 			//Yes, images were found

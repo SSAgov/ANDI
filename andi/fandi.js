@@ -110,6 +110,8 @@ function init_module() {
 
 		andiBar.updateResultsSummary("Focusable Elements Found: " + testPageData.andiElementIndex);
 
+		$("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view focusable items list</button>");
+
 		//Are There Focusable Elements?
 		if (testPageData.andiElementIndex > 0) {
 			//Yes, Focusable Elements were found
