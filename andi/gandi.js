@@ -11,6 +11,7 @@ function init_module() {
     var gANDI = new AndiModule(gandiVersionNumber, "g");
 
     gANDI.viewList_tableReady = false;
+    gANDI.index = 0;
 
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
@@ -73,7 +74,6 @@ function init_module() {
             }
 
             if (isImageContainedByInteractiveWidget || $(this).is("[role=img],[role=image],img,input[type=image],svg,canvas,area,marquee,blink")) {
-
                 if (isImageContainedByInteractiveWidget) {
                     //Check if parent already has been evaluated (when more than one image is in a link)
                     if (!$(closestWidgetParent).hasClass("ANDI508-element")) {
@@ -85,7 +85,7 @@ function init_module() {
                 } else { //not contained by interactive widget
                     andiData = new AndiData(this);
                 }
-                gANDI.images.list.push(new Link(this, andiData.andiElementIndex));
+                gANDI.images.list.push(new Link(this, gANDI.index));
                 //Check for conditions based on semantics
                 if ($(this).is("marquee")) {
                     gANDI.images.inlineCount++;
@@ -150,7 +150,7 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).css("background-image").includes("url(")) {
-                gANDI.images.list.push(new Link(this, andiData.andiElementIndex));
+                gANDI.images.list.push(new Link(this, gANDI.index));
                 gANDI.images.backgroundCount++;
                 $(this).addClass("gANDI508-background");
             }
@@ -166,6 +166,7 @@ function init_module() {
                     andiData = new AndiData(this);
                     AndiData.attachDataToElement(this);
                 }
+                gANDI.images.list.push(new Link(this, gANDI.index));
                 gANDI.images.fontIconCount++;
                 $(this).addClass("gANDI508-fontIcon");
                 //Throw alert
@@ -176,6 +177,7 @@ function init_module() {
                     //andiAlerter.throwAlert(alert_017A);
                 }
             }
+            gANDI.index += 1;
         });
         if (gANDI.images.backgroundCount > 0) { //Page has background images
             andiAlerter.throwAlert(alert_0177, alert_0177.message, 0);
@@ -379,15 +381,15 @@ function init_module() {
 
             tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
                 "<th scope='row'>" + gANDI.images.list[x].index + "</th>" +
-                "<td class='ANDI508-alert-column'>" + gANDI.images.list[x].alerts + "</td>" +
-                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + gANDI.images.list[x].index + "'>" + gANDI.images.list[x].nameDescription + "</a></td>" +
-                "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
+                "<td class='ANDI508-alert-column'></td>" +
+                //"<td class='ANDI508-alert-column'>" + gANDI.images.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + gANDI.images.list[x].index + "'>" + gANDI.images.list[x].element + "</a></td>"
                 "</tr>";
         }
 
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-            "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +;
+            "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 

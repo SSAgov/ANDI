@@ -212,7 +212,7 @@ function init_module() {
     };
 
     //This function builds the table for the view list
-    lANDI.viewList_buildTable = function (mode) {
+    fANDI.viewList_buildTable = function (mode) {
         var tableHTML = "";
         var rowClasses, tabsHTML, prevNextButtons;
         var appendHTML = "<div id='lANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='lANDI508-viewList-tabs'>";
@@ -224,67 +224,67 @@ function init_module() {
         if (mode === "links") {
             //BUILD LINKS LIST TABLE
             var displayHref, targetText;
-            for (var x = 0; x < lANDI.links.list.length; x++) {
+            for (var x = 0; x < fANDI.links.list.length; x++) {
                 //get target text if internal link
                 displayHref = "";
                 targetText = "";
-                if (lANDI.links.list[x].href) {//if has an href
-                    if (!lANDI.isScriptedLink(lANDI.links.list[x])) {
-                        if (lANDI.links.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
+                if (fANDI.links.list[x].href) {//if has an href
+                    if (!fANDI.isScriptedLink(fANDI.links.list[x])) {
+                        if (fANDI.links.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
                             targetText = "target='_landi'";
-                        displayHref = "<a href='" + lANDI.links.list[x].href + "' " + targetText + ">" + lANDI.links.list[x].href + "</a>";
+                        displayHref = "<a href='" + fANDI.links.list[x].href + "' " + targetText + ">" + fANDI.links.list[x].href + "</a>";
                     } else { //href contains javascript
-                        displayHref = lANDI.links.list[x].href;
+                        displayHref = fANDI.links.list[x].href;
                     }
                 }
 
                 //determine if there is an alert
                 rowClasses = "";
                 var nextTabButton = "";
-                if (lANDI.links.list[x].alerts.includes("Alert"))
+                if (fANDI.links.list[x].alerts.includes("Alert"))
                     rowClasses += "ANDI508-table-row-alert ";
 
-                if (lANDI.links.list[x].linkPurpose == "i") {
+                if (fANDI.links.list[x].linkPurpose == "i") {
                     rowClasses += "lANDI508-listLinks-internal ";
-                    var id = lANDI.links.list[x].href;
+                    var id = fANDI.links.list[x].href;
                     if (id.charAt(0) === "#")
                         id = id.substring(1, id.length);
                     nextTabButton = " <button class='lANDI508-nextTab' data-andi508-relatedid='" +
                         id + "' title='focus on the element after id=" +
                         id + "'>next tab</button>";
-                } else if (lANDI.links.list[x].linkPurpose == "e") {
+                } else if (fANDI.links.list[x].linkPurpose == "e") {
                     rowClasses += "lANDI508-listLinks-external ";
                 }
 
                 tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + lANDI.links.list[x].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + lANDI.links.list[x].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + lANDI.links.list[x].index + "'>" + lANDI.links.list[x].nameDescription + "</a></td>" +
+                    "<th scope='row'>" + fANDI.links.list[x].index + "</th>" +
+                    "<td class='ANDI508-alert-column'>" + fANDI.links.list[x].alerts + "</td>" +
+                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.links.list[x].index + "'>" + fANDI.links.list[x].nameDescription + "</a></td>" +
                     "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
                     "</tr>";
             }
 
-            tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + lANDI.links.list.length + ")</button>";
-            tabsHTML += "<button id='lANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='lANDI508-internalLink'>skip links (" + lANDI.links.internalCount + ")</button>";
-            tabsHTML += "<button id='lANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='lANDI508-externalLink'>external links (" + lANDI.links.externalCount + ")</button>";
+            tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + fANDI.links.list.length + ")</button>";
+            tabsHTML += "<button id='lANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='lANDI508-internalLink'>skip links (" + fANDI.links.internalCount + ")</button>";
+            tabsHTML += "<button id='lANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='lANDI508-externalLink'>external links (" + fANDI.links.externalCount + ")</button>";
 
             appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
         } else { //BUILD BUTTON LIST TABLE
-            for (var b = 0; b < lANDI.buttons.list.length; b++) {
+            for (var b = 0; b < fANDI.buttons.list.length; b++) {
                 //determine if there is an alert
                 rowClasses = "";
-                if (lANDI.buttons.list[b].alerts.includes("Alert")) {
+                if (fANDI.buttons.list[b].alerts.includes("Alert")) {
                     rowClasses += "ANDI508-table-row-alert ";
                 }
 
                 tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + lANDI.buttons.list[b].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + lANDI.buttons.list[b].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + lANDI.buttons.list[b].index + "'>" + lANDI.buttons.list[b].nameDescription + "</a></td>" +
-                    "<td>" + lANDI.buttons.list[b].accesskey + "</td>" +
+                    "<th scope='row'>" + fANDI.buttons.list[b].index + "</th>" +
+                    "<td class='ANDI508-alert-column'>" + fANDI.buttons.list[b].alerts + "</td>" +
+                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.buttons.list[b].index + "'>" + fANDI.buttons.list[b].nameDescription + "</a></td>" +
+                    "<td>" + fANDI.buttons.list[b].accesskey + "</td>" +
                     "</tr>";
             }
 
