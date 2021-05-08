@@ -24,9 +24,9 @@ $(document).ready(function(){
 			$(element_to_show).parent().show();
 			$(element_to_show).focus();
 		}
-		// else show everything
+		//otherwise show everything
 	}
-	// else show everything
+	//otherwise show everything
 		
 	$("#tableOfContentsControl").click(function(){
 		if($("#tableOfContents").is(":visible")){
