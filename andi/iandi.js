@@ -56,9 +56,7 @@ function init_module() {
         $("#ANDI508-viewIframeList-button").click(function () {
             if ($(this).attr("aria-expanded") === "true") { //hide iframe list, show alert list
                 $("#iANDI508-iframeList-container").slideUp(AndiSettings.andiAnimationSpeed);
-                if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-                    $("#ANDI508-alerts-list").show();
-                }
+                $("#ANDI508-alerts-list").show();
                 $(this)
                     .addClass("ANDI508-viewOtherResults-button-expanded")
                     .html(listIcon + "view iframe list")
