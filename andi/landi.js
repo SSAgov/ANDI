@@ -88,6 +88,8 @@ function init_module() {
     });
 
     lANDI.viewList_tableReady = false;
+    // TODO: Replace andiData.andiElementIndex with lANDI.index and check it works before adding it to other modules
+    lANDI.index = 0;
 
     //This function will analyze the test page for link related markup relating to accessibility
     lANDI.analyze = function () {
