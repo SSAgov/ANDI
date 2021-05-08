@@ -33,8 +33,7 @@ function init_module() {
         $(TestPageData.allElements).filter("*:not(option)").each(function () {
             if ($(this).is("img[src],input:image[src],svg,canvas")) {
                 imgCount++;
-            }
-            else {
+            } else {
                 if (hasTextExcludingChildren(this)) {
                     if (!hasAdditionalHidingTechniques(this)) {
                         //Element is not hidden and contains text.
@@ -53,9 +52,9 @@ function init_module() {
                             cANDI.processResult($(this));
 
                             AndiData.attachDataToElement(this);
-                        }
-                        else
+                        } else {
                             testPageData.disabledElementsCount++;
+                        }
                     }
                 }
             }
@@ -87,8 +86,7 @@ function init_module() {
                         return true; //one of the immediate children has text
                     }
                 }
-            }
-            else if ($(element).is("input:not([type=radio],[type=checkbox])")) {//element has no child nodes but still can contain text
+            } else if ($(element).is("input:not([type=radio],[type=checkbox])")) { //element has no child nodes but still can contain text
                 return true;
             }
             return false;
@@ -142,8 +140,7 @@ function init_module() {
                 cANDI.playground_open();
                 $("#cANDI508-contrastPlayground").slideDown(AndiSettings.andiAnimationSpeed).focus();
                 AndiModule.activeActionButtons.contrastPlayground = true;
-            }
-            else {
+            } else {
                 //hide Contrast Playground, show alert list
                 $("#cANDI508-contrastPlayground").slideUp(AndiSettings.andiAnimationSpeed);
                 if (testPageData.numberOfAccessibilityAlertsFound > 0)
@@ -202,8 +199,7 @@ function init_module() {
                 $(this).attr("aria-pressed", "true").addClass("ANDI508-module-action-active");
                 $("#ANDI508-testPage").addClass("cANDI508-grayscale");
                 AndiModule.activeActionButtons.grayscale = true;
-            }
-            else {
+            } else {
                 $(this).attr("aria-pressed", "false").removeClass("ANDI508-module-action-active");
                 $("#ANDI508-testPage").removeClass("cANDI508-grayscale");
                 AndiModule.activeActionButtons.grayscale = false;
@@ -219,9 +215,7 @@ function init_module() {
             }
             if (testPageData.disabledElementsCount > 0)
                 andiAlerter.throwAlert(alert_0251, [testPageData.disabledElementsCount], 0);
-        }
-        else {
-            //No text containing elements were found
+        } else { //No text containing elements were found
             andiBar.hideElementControls();
             andiBar.showStartUpSummary("No elements containing text were found on this page.");
         }
@@ -313,8 +307,7 @@ function init_module() {
                 if (color.rgba[l] < 255)
                     color.rgba[l]++;
             }
-        }
-        else { //darker
+        } else { //darker
             for (var d = 0; d < 3; d++) {
                 if (color.rgba[d] > 0)
                     color.rgba[d]--;
@@ -344,7 +337,7 @@ function init_module() {
         cANDI.playground_calc();
 
         //This function will get the colors from the active element
-        //If the color grab is successful, it returns true. Else (doesn't contain a color) returns false.
+        //If the color grab is successful, it returns true. Otherwise (doesn't contain a color) returns false.
         function getColorFromActive(fgBg) {
             var element = $("#cANDI508-" + fgBg);
             if ($("#ANDI508-additionalElementDetails").html() && $(element).children().length === 0) {
@@ -352,8 +345,9 @@ function init_module() {
                 $("#cANDI508-playground-" + fgBg).val(hexColor);
                 $("#cANDI508-playground-colorSelector-" + fgBg).attr("style", "background-color:" + hexColor + " !important");
                 return true;
+            } else {
+                return false;
             }
-            else return false;
         }
     };
 
@@ -368,15 +362,16 @@ function init_module() {
         $("#cANDI508-playground-ratio").removeClass("cANDI508-invalid").html(ratio);
 
         //Hide or Show Suggestion Buttons
-        if (ratio < wcagLevel.largeTextReqRatio)
+        if (ratio < wcagLevel.largeTextReqRatio) {
             $("#cANDI508-playground-suggest-large").css("visibility", "visible");
-        else
+        } else {
             $("#cANDI508-playground-suggest-large").css("visibility", "hidden");
-
-        if (ratio < wcagLevel.smallTextReqRatio)
+        }
+        if (ratio < wcagLevel.smallTextReqRatio) {
             $("#cANDI508-playground-suggest-small").css("visibility", "visible");
-        else
+        } else {
             $("#cANDI508-playground-suggest-small").css("visibility", "hidden");
+        }
     };
 
     //This function checks the colors entered into the playground and determines if they are valid
@@ -394,8 +389,7 @@ function init_module() {
                 //Set this element's color selector box
                 $(colorSelectorBox).attr("style", "background-color:" + value + " !important; background-image:none;");
                 $(this).removeAttr("aria-invalid");
-            }
-            else {
+            } else {
                 $(this).attr("aria-invalid", "true");
                 $(colorSelectorBox).attr("style", "background:black url(" + icons_url + "invalid.png) no-repeat top !important; background-size:1.3em !important");
                 valid = false;
@@ -404,8 +398,7 @@ function init_module() {
 
         if (valid) {
             return true;
-        }
-        else {
+        } else {
             //Cannot calculate the contrast ratio
             $("#cANDI508-playground-ratio").addClass("cANDI508-invalid").html("?");
             $("#cANDI508-playground-suggest-large").css("visibility", "hidden");
@@ -431,8 +424,7 @@ function init_module() {
             if (cANDI.suggestForegroundChange(cANDI_data, suggestedFgColor, suggestedBgColor)) {
                 //Suggest Foreground Color
                 displayColorValue("#cANDI508-playground-fg", suggestedFgColor);
-            }
-            else {
+            } else {
                 //Suggest Background Color
                 displayColorValue("#cANDI508-playground-bg", suggestedBgColor);
             }
@@ -494,17 +486,15 @@ function init_module() {
             //Set minReq (minimum requirement)
             cANDI_data.minReq = ratio_small;
 
-            if (cANDI_data.size >= 24)
+            if (cANDI_data.size >= 24) {
                 cANDI_data.minReq = ratio_large;
-            else if (cANDI_data.size >= 18.66 && cANDI_data.weight >= 700) //700 is where bold begins, 18.66 is approx equal to 14pt
+            } else if (cANDI_data.size >= 18.66 && cANDI_data.weight >= 700) { //700 is where bold begins, 18.66 is approx equal to 14pt
                 cANDI_data.minReq = ratio_large;
-
-            if (cANDI_data.bgImage === "none" && !cANDI_data.opacity) {
-                //No, Display PASS/FAIL Result and Requirement Ratio
+            }
+            if (cANDI_data.bgImage === "none" && !cANDI_data.opacity) { //No, Display PASS/FAIL Result and Requirement Ratio
                 if (cANDI_data.ratio >= cANDI_data.minReq) {
                     cANDI_data.result = "PASS";
-                }
-                else {
+                } else {
                     cANDI_data.result = "FAIL";
                 }
             }
@@ -520,17 +510,16 @@ function init_module() {
 
             if ($(element).css("background-image") !== "none") {
                 return element;
-            }
-            else {
+            } else {
                 //Store this background color
                 var thisBgColor = new Color($(element).css("background-color"));
 
                 //Overlay the accumulated bgColor with the the previous background color that was semi-transparent
-                if (recursion)
+                if (recursion) {
                     bgColor = bgColor.overlayOn(thisBgColor);
-                else
+                } else {
                     bgColor = thisBgColor;
-
+                }
                 if ($(element).is("html")) {
                     //transparent or semi-transparent
                     if (thisBgColor.alpha < 1) {
@@ -538,8 +527,7 @@ function init_module() {
                         if (thisBgColor.alpha > 0)
                             semiTransparency = true;
                     }
-                }
-                else if (thisBgColor.alpha < 1) {
+                } else if (thisBgColor.alpha < 1) {
                     //Look at parent element
                     if (thisBgColor.alpha > 0)
                         semiTransparency = true;
@@ -562,19 +550,18 @@ function init_module() {
         if (cANDI_data.result === "FAIL") {
             //Text does not meet minimum contrast ratio
             var minReq = $(element).data("candi508").minReq;
-            if (minReq === wcagLevel.largeTextReqRatio)
+            if (minReq === wcagLevel.largeTextReqRatio) {
                 andiAlerter.throwAlert(alert_0240, ["large text ", wcagLevel.level, minReq]);
-            else
+            } else {
                 andiAlerter.throwAlert(alert_0240, [" ", wcagLevel.level, minReq]);
-        }
-        else if (!cANDI_data.result) {
-            //Opacity Less Than 1
-            if ($(element).data("candi508").opacity)
+            }
+        } else if (!cANDI_data.result) { //Opacity Less Than 1
+            if ($(element).data("candi508").opacity) {
                 andiAlerter.throwAlert(alert_0232);
-
-            //Has Background Image
-            if ($(element).data("candi508").bgImage !== "none")
+            }
+            if ($(element).data("candi508").bgImage !== "none") { //Has Background Image
                 andiAlerter.throwAlert(alert_0230);
+            }
         }
     };
 
@@ -594,19 +581,16 @@ function init_module() {
                 //Suggest Foreground Color
                 suggestedColor = suggestedFgColor;
                 suggestedColorHtml += "Text&nbsp;Color";
-            }
-            else {
+            } else {
                 //Suggest Background Color
                 suggestedColor = suggestedBgColor;
                 suggestedColorHtml += "Background";
             }
-
             suggestedColor = rgbToHex(suggestedColor);
 
             suggestedColorHtml += ":</th><td><div class='cANDI508-colorSelector' style='background-color:" + suggestedColor + " !important;'></div>";
             suggestedColorHtml += "<span id='cANDI508-suggested'>" + suggestedColor + "</span></td></tr>";
-        }
-        else {
+        } else {
             suggestedColorHtml += "Color:</th>" +
                 "<td><a href='" + help_url + "modules.html#cANDI-style' target='_ANDIhelp' class='cANDI508-suggestionNotPossible'>" +
                 "Semi-transparency present; cannot provide specific suggestion." +
@@ -624,8 +608,7 @@ function init_module() {
         if (fgbg == "fg") {
             contrastingColor = cANDI_data.bgColor;
             suggestedColor = cANDI_data.fgColor.clone();
-        }
-        else {
+        } else {
             contrastingColor = cANDI_data.fgColor;
             suggestedColor = cANDI_data.bgColor.clone();
         }
@@ -647,8 +630,7 @@ function init_module() {
                     break;
                 }
             }
-        }
-        else {
+        } else {
             //Original Color is closer to white
             //Suggest darker foreground color
             for (var y = 0; y < 256; y++) {
@@ -670,11 +652,11 @@ function init_module() {
     //This function returns true if the suggested foreground color is closer to the actual foreground color.
     //Returns false if the suggested background color is closer to the actual background color 
     cANDI.suggestForegroundChange = function (cANDI_data, suggestedFgColor, suggestedBgColor) {
-        if (getColorDifferenceValue(cANDI_data.fgColor, suggestedFgColor) <= getColorDifferenceValue(cANDI_data.bgColor, suggestedBgColor))
+        if (getColorDifferenceValue(cANDI_data.fgColor, suggestedFgColor) <= getColorDifferenceValue(cANDI_data.bgColor, suggestedBgColor)) {
             return true;
-        else
+        } else {
             return false;
-
+        }
         //This function compares two colors and returns a "color difference value" that can be used in comparisons.
         //Formula: The Color Difference Value = abs(r1 - r2) + abs(g1 - g2) + abs(b1 - b2)
         function getColorDifferenceValue(color1, color2) {
@@ -726,35 +708,28 @@ function init_module() {
             //Display Resylt
             if (cANDI_data.result === "PASS") {
                 $("#cANDI508-result").html("PASS").addClass("cANDI508-pass");
-            }
-            else { //FAIL
+            } else { //FAIL
                 $("#cANDI508-result").html("FAIL").addClass("cANDI508-fail");
 
                 if (!cANDI_data.semiTransparency) {
                     //There is no transparency involved, therefore, a suggestion can be made.
                     //Suggest a color that meets the contrast ratio minimum:
                     $("#cANDI508-table-style tbody").append(cANDI.getSuggestedColorHTML(cANDI_data));
-                }
-                else {
-                    //Cannot suggest color due to semi-transparency
+                } else { //Cannot suggest color due to semi-transparency
                     $("#cANDI508-table-style tbody").append(cANDI.getSuggestedColorHTML());
                 }
             }
-        }
-        else {
-            //MANUAL TEST NEEDED - Cannot determine pass or fail status
-
+        } else { //MANUAL TEST NEEDED - Cannot determine pass or fail status
             //Remove Background Color Selector Box
             $("#cANDI508-colorSelector-background").remove();
 
             //Insert the reason:
-            if (cANDI_data.bgImage != "none")
+            if (cANDI_data.bgImage != "none") {
                 $("#cANDI508-bg").html("<span class='cANDI508-attention'>has background image</span>");
-            else if (cANDI_data.opacity) {
+            } else if (cANDI_data.opacity) {
                 $("#cANDI508-bg").closest("tr").remove();
                 $("#cANDI508-fg").closest("tr").remove();
             }
-
             $("#cANDI508-result").html("MANUAL TEST NEEDED").addClass("cANDI508-manual");
         }
 
@@ -777,10 +752,11 @@ function init_module() {
     function displayColorValue(id, rgbaColor) {
         var hexColor = rgbToHex(rgbaColor);
         //Change color display value of this element
-        if ($(id).is("input"))
+        if ($(id).is("input")) {
             $(id).val(hexColor);
-        else
+        } else {
             $(id).html(hexColor);
+        }
         //Change color on the colorSelector
         $(id).prev().attr("style", "background-color:" + hexColor + " !important");
     }
@@ -821,15 +797,13 @@ function init_module() {
         var _ = self.Color = function (rgba) {
             if (rgba === 'transparent') {
                 rgba = [0, 0, 0, 0];
-            }
-            else if (typeof rgba === 'string') {
+            } else if (typeof rgba === 'string') {
                 var rgbaString = rgba;
                 rgba = rgbaString.match(/rgba?\(([\d.]+), ([\d.]+), ([\d.]+)(?:, ([\d.]+))?\)/);
 
                 if (rgba) {
                     rgba.shift();
-                }
-                else {
+                } else {
                     throw new Error('Invalid string: ' + rgbaString);
                 }
             }
@@ -905,11 +879,11 @@ function init_module() {
 
                 for (var i = 0; i < 3; i++) {
                     //Modified code (Mod 2): (divide by the overlaid alpha if not zero) (Formula: https://en.wikipedia.org/wiki/Alpha_compositing#Alpha_blending)
-                    if (overlaid.rgba[3] !== 0)
+                    if (overlaid.rgba[3] !== 0) {
                         overlaid.rgba[i] = (overlaid.rgba[i] * alpha + color.rgba[i] * color.rgba[3] * (1 - alpha)) / overlaid.rgba[3];
-                    else
-                        //Modified code (Mod 2) End
+                    } else { //Modified code (Mod 2) End
                         overlaid.rgba[i] = overlaid.rgba[i] * alpha + color.rgba[i] * color.rgba[3] * (1 - alpha);
+                    }
                 }
 
                 //Original code (Mod 1):
@@ -970,8 +944,7 @@ function init_module() {
                 var min = 1;
                 if (onBlack.luminance > color.luminance) {
                     min = contrastOnBlack;
-                }
-                else if (onWhite.luminance < color.luminance) {
+                } else if (onWhite.luminance < color.luminance) {
                     min = contrastOnWhite;
                 }
 

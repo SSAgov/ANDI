@@ -1496,10 +1496,11 @@ function AndiSettings() {
         $("#ANDI508-settingsList").keydown(function (e) {
             switch (e.keyCode) {
                 case 40: //down
-                    if ($("#ANDI508-settingsList").is(":focus"))
+                    if ($("#ANDI508-settingsList").is(":focus")) {
                         $(this).children("button").first().focus();//focus on first button
-                    else
+                    } else {
                         $(":focus").next().focus();//focus on next button
+                    }
                     break;
                 case 38: //up
                     $(":focus").prev().focus();//focus on prev button
@@ -1531,10 +1532,11 @@ function AndiFocuser() {
     this.addFocusClick = function (element) {
         $(element).click(function () {
             var index = $(element).attr("data-andi508-relatedindex");
-            if (index) //Add focus on click
+            if (index) { //Add focus on click
                 andiFocuser.focusByIndex(index);
-            else if (confirm("This alert does not refer to an inspectable element.\nPress OK to open ANDI Help for this alert in a new window.") === true)
+            } else if (confirm("This alert does not refer to an inspectable element.\nPress OK to open ANDI Help for this alert in a new window.") === true) {
                 window.open($(element).attr("href"), $(element).attr("target"), 'width=1010,height=768,scrollbars=yes,resizable=yes').focus();
+            }
             return false;
         });
     };
@@ -1542,10 +1544,8 @@ function AndiFocuser() {
     this.focusOn = function (element) {
         if (!element.length) {
             alert("Element removed from DOM. Refresh ANDI.");
-        }
-        else if (!$(element).attr("tabindex") && ((browserSupports.isIE && $(element).is("summary")) || !$(element).is(":focusable"))) {
+        } else if (!$(element).attr("tabindex") && ((browserSupports.isIE && $(element).is("summary")) || !$(element).is(":focusable"))) {
             //"Flash" the tabindex
-
             //img with usemap cannot be given focus (browser moves focus to the <area>)
             //so temporarily remove the usemap attr, reapply after focus
             var useMapVal;
@@ -1559,11 +1559,12 @@ function AndiFocuser() {
                 .focus()
                 .removeAttr("tabindex");
 
-            if (useMapVal) //Add usemap back on
+            if (useMapVal) { //Add usemap back on
                 $(element).attr("usemap", useMapVal);
-        }
-        else
+            }
+        } else {
             $(element).focus();
+        }
     };
 }
 
@@ -1601,9 +1602,9 @@ function AndiLaser() {
                     var elementCoords = $("[data-andi508-index=" + relatedIndex + "]").offset();
                     andiLaser.drawLaser(alertCoords, elementCoords, $("[data-andi508-index=" + relatedIndex + "]"));
                 }
-            }
-            else
+            } else {
                 andiLaser.eraseLaser();
+            }
         }
     };
     //This function attaches hover/mouseover and mouseleave events to the triggerObject
@@ -1627,13 +1628,13 @@ function AndiLaser() {
                 //increment relatedLaserIndex and store onto targetElement
                 relatedLaserIndex = testPageData.relatedLaserIndex++;
                 $(targetElement).addClass("ANDI508-relatedLaserTarget").attr("data-andi508-relatedlaserindex", relatedLaserIndex);
-            }
-            else //get relatedLaserIndex from targetElement
+            } else { //get relatedLaserIndex from targetElement
                 relatedLaserIndex = $(targetElement).attr("data-andi508-relatedlaserindex");
+            }
             return "<span class='ANDI508-laserAimer' data-andi508-relatedlaserindex='" + relatedLaserIndex + "'>" + referencedText + "</span>";
-        }
-        else
+        } else {
             return referencedText;
+        }
     };
 
     //This function will remove all laser targets
@@ -1695,8 +1696,7 @@ function AndiUtility() {
                         if (andiUtility.isBlockElement(node))
                             innerText += " ";
                     }
-                }
-                else if (node.nodeType === 3) {//text node
+                } else if (node.nodeType === 3) { //text node
                     innerText += andiUtility.condenseWhitespace(node.nodeValue);
                 }
             }
@@ -1711,27 +1711,23 @@ function AndiUtility() {
             if ($(node).is("input[type=text]")) { //get value
                 innerText += $(node).val();
                 return true;
-            }
-            else if ($(node).is("[role=combobox],[role=listbox]")) { //get chosen option
+            } else if ($(node).is("[role=combobox],[role=listbox]")) { //get chosen option
                 component = $(node).find("[role=option][aria-selected=true]").first().text();
                 if (component && $.trim(component) !== "") {
                     innerText += component;
                 }
                 return true;
-            }
-            else if ($(node).is("select")) { //get chosen option
+            } else if ($(node).is("select")) { //get chosen option
                 component = $(node).find("option:selected").first().text();
                 if (component && $.trim(component) !== "") {
                     innerText += component;
                 }
                 return true;
-            }
-            else if ($(node).is("[role=progressbar],[role=scrollbar],[role=slider],[role=spinbutton]")) {
+            } else if ($(node).is("[role=progressbar],[role=scrollbar],[role=slider],[role=spinbutton]")) {
                 component = $(node).attr("aria-valuetext");
                 if (component && $.trim(component) !== "") {
                     innerText += component;
-                }
-                else {
+                } else {
                     component = $(node).attr("aria-valuenow");
                     if (component && $.trim(component) !== "") {
                         innerText += component;
@@ -1908,8 +1904,7 @@ function AndiOverlay() {
                 }
                 andiOverlay.insertAssociatedOverlay(this, andiOverlay.createOverlay(overlayClass, "id=" + this.id, overlayTitle, $(this).attr("tabindex")));
             });
-        }
-        else {
+        } else {
             //Hide Overlay Duplicate Ids
             $(btn).attr("aria-pressed", "false").html("show ids" + overlayIcon);
             andiOverlay.overlayButton_off("overlay", $(btn));
@@ -1935,8 +1930,7 @@ function AndiOverlay() {
                     andiOverlay.insertAssociatedOverlay(this, andiOverlay.createOverlay(overlayClass, "aria-disabled=\"true\"", "", $(this).attr("tabindex")));
                 });
             }
-        }
-        else {
+        } else {
             //Hide Overlay Duplicate Ids
             $(btn).attr("aria-pressed", "false").html("show disabled" + overlayIcon);
             andiOverlay.overlayButton_off("overlay", $(btn));
@@ -1952,20 +1946,16 @@ function AndiOverlay() {
             //using parentNode because parentElement doesn't work on text nodes in IE
             element.parentNode.insertBefore(overlayObject, element);
             element = element.parentNode;
-        }
-        else {
+        } else {
             if ($(element).is("option")) {
                 element = $(element).closest("select");
                 $(element).before(overlayObject);
-            }
-            else if ($(element).is("summary")) {
+            } else if ($(element).is("summary")) {
                 element = $(element).closest("details");
                 $(element).before(overlayObject);
-            }
-            else if (!alwaysBefore && $(element).isContainerElement() && !$(element).is("select,textarea")) {
+            } else if (!alwaysBefore && $(element).isContainerElement() && !$(element).is("select,textarea")) {
                 $(element).prepend(overlayObject);
-            }
-            else {
+            } else {
                 $(element).before(overlayObject);
             }
         }
@@ -2059,26 +2049,24 @@ AndiData.grab_coreProperties = function (element) {
                 AndiData.data.isTabbable = false;
                 if ($(element).is("iframe")) {
                     //check if iframe has focusable contents
-                    if ($(element).contents().find(":focusable").length)
+                    if ($(element).contents().find(":focusable").length) {
                         andiAlerter.throwAlert(alert_0123);
-                }
-                else if (!$(element).parent().is(":tabbable")) {
+                    }
+                } else if (!$(element).parent().is(":tabbable")) {
                     //element and parent are not tabbable
-                    if (AndiData.data.accName)
+                    if (AndiData.data.accName) {
                         andiAlerter.throwAlert(alert_0121);
-                    else
+                    } else {
                         andiAlerter.throwAlert(alert_0122);
+                    }
                 }
-            }
-            else if (isNaN(tabindex)) {//tabindex is not a number
+            } else if (isNaN(tabindex)) { //tabindex is not a number
                 andiAlerter.throwAlert(alert_0077, [tabindex]);
                 if (!$(element).is(nativelyTabbableElements))
                     AndiData.data.isTabbable = false;
-            }
-            //else element is tabbable
+            } //element is tabbable
             AndiData.data.tabindex = tabindex;
-        }
-        else if (!$(element).is(nativelyTabbableElements)) {
+        } else if (!$(element).is(nativelyTabbableElements)) {
             AndiData.data.isTabbable = false;
         }
     }
@@ -2097,12 +2085,11 @@ AndiData.grab_coreProperties = function (element) {
             var map = $(element).closest("map");
             if (map)
                 imageSrc = $("#ANDI508-testPage img[usemap=\\#" + $(map).attr("name") + "]").first().attr("src");
-        }
-        else if ($(element).is("img,input[type=image]"))
+        } else if ($(element).is("img,input[type=image]")) {
             imageSrc = $(element).attr("src");
-        else if ($(element).is("svg"))
+        } else if ($(element).is("svg")) {
             imageSrc = ($(element).find("image").first().attr("src"));
-
+        }
         if (imageSrc) {
             imageSrc = imageSrc.split("/").pop(); //get the filename and extension only
             AndiData.data.src = imageSrc;
@@ -2152,12 +2139,13 @@ AndiData.textAlternativeComputation = function (root) {
     //Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
     //TODO: This is expensive
     function traverseAriaHidden(element) {
-        if ($(element).is("#ANDI508-testPage"))
+        if ($(element).is("#ANDI508-testPage")) {
             return false;
-        else if ($(element).attr("aria-hidden") === "true")
+        } else if ($(element).attr("aria-hidden") === "true") {
             return true;
-        else
+        } else {
             return traverseAriaHidden($(element).parent());
+        }
     }
 
     function calcAccName(result) {
@@ -2196,8 +2184,9 @@ AndiData.textAlternativeComputation = function (root) {
         calcAccName(stepB(root, AndiData.data.components));
         calcAccName(stepC(root, AndiData.data.components));
         calcAccName(stepD(root, AndiData.data.components));
-        if (!$(root).is(stepF_exclusions))
+        if (!$(root).is(stepF_exclusions)) {
             calcAccName(stepF(root, AndiData.data.components));
+        }
         calcAccName(stepI(root, AndiData.data.components));
         calcAccName(stepJ(root, AndiData.data.components));
 
@@ -2212,8 +2201,7 @@ AndiData.textAlternativeComputation = function (root) {
         nodesTraversed = [];
         checkIfGroupFound(stepZ(root, AndiData.data));
 
-    }
-    else {
+    } else {
         AndiData.data.isAriaHidden = true;
     }
 
@@ -2261,8 +2249,7 @@ AndiData.textAlternativeComputation = function (root) {
                                         else if (calcRefName(stepF(refElement, refData, true, true))); //name from content
                                         else if (calcRefName(stepI(refElement, refData))); //title attribute
                                         else if (calcRefName(stepJ(refElement, refData))); //placeholder
-                                    }
-                                    else {//Referenced Element has already been traversed.
+                                    } else { //Referenced Element has already been traversed.
                                         andiAlerter.throwAlert(alert_006E, [attribute, idsArray[x]]);
                                         var refData = {}; //will be discarded
                                         var alreadyTraversedText = (
@@ -2275,13 +2262,11 @@ AndiData.textAlternativeComputation = function (root) {
                                         );
                                         AndiData.addComp(data, componentType, [alreadyTraversedText, refElement, idsArray[x]]);
                                     }
-                                }
-                                else {//No, this id was not found, add to list.
+                                } else { //No, this id was not found, add to list.
                                     missingReferences.push(idsArray[x]);
                                     AndiData.addComp(data, componentType, [" ", undefined, idsArray[x]]);
                                 }
-                            }
-                            else { //id has already been directly referenced, this is a duplicate
+                            } else { //id has already been directly referenced, this is a duplicate
                                 if (duplicateRefInstances.indexOf(idsArray[x]) === -1) {
                                     duplicateRefInstances.push(idsArray[x]);
                                     andiAlerter.throwAlert(alert_006D, [attribute, idsArray[x]]);
@@ -2337,12 +2322,12 @@ AndiData.textAlternativeComputation = function (root) {
                     if (!isEmptyComponent(component, "alt", element)) {
                         accumulatedText += AndiData.addComp(data, "alt", component, hasNodeBeenTraversed(element));
                     }
-                }
-                else if ($.trim(component) !== "") {//because alt="" is allowed for images only
-                    if ($(element).is("img[role=presentation],img[role=none]"))
+                } else if ($.trim(component) !== "") { //because alt="" is allowed for images only
+                    if ($(element).is("img[role=presentation],img[role=none]")) {
                         andiAlerter.throwAlert(alert_0142);
-                    else
+                    } else {
                         andiAlerter.throwAlert(alert_0081);
+                    }
                     AndiData.addComp(data, "alt", component);
                 }
             }
@@ -2355,17 +2340,16 @@ AndiData.textAlternativeComputation = function (root) {
                     component = $(element).attr("value");
                     if (component) {
                         accumulatedText += AndiData.addComp(data, "value", component, hasNodeBeenTraversed(element));
-                    }
-                    else {//if type is submit or reset, add component
+                    } else { //if type is submit or reset, add component
                         var type = $(element).attr("type");
-                        if (type === "submit")
+                        if (type === "submit") {
                             accumulatedText += AndiData.addComp(data, "value", "Submit", hasNodeBeenTraversed(element));
-                        else if (type === "reset")
+                        } else if (type === "reset") {
                             accumulatedText += AndiData.addComp(data, "value", "Reset", hasNodeBeenTraversed(element));
+                        }
                     }
                 }
-            }
-            else if (isCalcAccDesc && !usedInName.value) {
+            } else if (isCalcAccDesc && !usedInName.value) {
                 accumulatedText += data.value;
             }
         }
@@ -2378,11 +2362,11 @@ AndiData.textAlternativeComputation = function (root) {
                     component = grab_caption(element);
                     if (component && !accumulatedText) {
                         var caption = AndiData.addComp(data, "caption", component, hasNodeBeenTraversed(element));
-                        if (role !== "presentation" && role !== "none")
+                        if (role !== "presentation" && role !== "none") {
                             accumulatedText += caption;
+                        }
                     }
-                }
-                else if (isCalcAccDesc && !usedInName.caption) {
+                } else if (isCalcAccDesc && !usedInName.caption) {
                     accumulatedText += data.caption;
                 }
             }
@@ -2398,8 +2382,7 @@ AndiData.textAlternativeComputation = function (root) {
                     }
                 }
             }
-        }
-        else if (!isCalcAccDesc) {
+        } else if (!isCalcAccDesc) {
             if ($(element).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]", "input,select,textarea,[contenteditable=true],[contenteditable='']")) {
                 component = grab_label(element);
                 if (component !== undefined) {
@@ -2407,20 +2390,17 @@ AndiData.textAlternativeComputation = function (root) {
                         accumulatedText += AndiData.addComp(data, "label", component, (isRecursion || hasNodeBeenTraversed(element)));
                     }
                 }
-            }
-            else if (testPageData.page_using_fieldset && $(element).is("fieldset")) {
+            } else if (testPageData.page_using_fieldset && $(element).is("fieldset")) {
                 component = grab_legend(element);
                 if (component !== undefined) {
                     accumulatedText += AndiData.addComp(data, "legend", component, hasNodeBeenTraversed(element));
                 }
-            }
-            else if (testPageData.page_using_figure && $(element).is("figure")) {
+            } else if (testPageData.page_using_figure && $(element).is("figure")) {
                 component = grab_figcaption(element);
                 if (component !== undefined) {
                     accumulatedText += AndiData.addComp(data, "figcaption", component, hasNodeBeenTraversed(element));
                 }
-            }
-            else if (browserSupports.svg && ($(element).is("svg") || element instanceof SVGElement)) {
+            } else if (browserSupports.svg && ($(element).is("svg") || element instanceof SVGElement)) {
                 if (!hasNodeBeenTraversed(element)) {
                     component = $(element).find("title").first().text();
                     if (component !== undefined) {
@@ -2429,8 +2409,9 @@ AndiData.textAlternativeComputation = function (root) {
 
                     component = $(element).find("desc").first().text();
                     if (component !== undefined) {
-                        if (data.svgTitle)
+                        if (data.svgTitle) {
                             accumulatedText += " ";
+                        }
                         accumulatedText += AndiData.addComp(data, "svgDesc", component);
                     }
                 }
@@ -2445,13 +2426,12 @@ AndiData.textAlternativeComputation = function (root) {
         var accumulatedText = "";
         if ($(element).is("input[type=text]")) {
             accumulatedText += $(element).val();
-        }
-        else if ($(element).is("select")) {
+        } else if ($(element).is("select")) {
             var selectedOption = $(element).find("option:selected").first();
-            if (selectedOption)
+            if (selectedOption) {
                 accumulatedText += andiUtility.getVisibleInnerText(selectedOption[0], root);
-        }
-        else if ($(element).is("[role=combobox],[role=listbox],[role=progressbar],[role=scrollbar],[role=slider],[role=spinbutton]")) {
+            }
+        } else if ($(element).is("[role=combobox],[role=listbox],[role=progressbar],[role=scrollbar],[role=slider],[role=spinbutton]")) {
             accumulatedText += andiUtility.getVisibleInnerText(element, root);
         }
         return accumulatedText;
@@ -2489,8 +2469,7 @@ AndiData.textAlternativeComputation = function (root) {
                             if (this.childNodes.length)
                                 accumulatedText += AndiData.addComp(data, "innerText", stepG(this.childNodes[0], data));
                         });
-                    }
-                    else if (!$(node).is(exclusions) && $(node).is(":shown")) {
+                    } else if (!$(node).is(exclusions) && $(node).is(":shown")) {
                         var subtreeData;
                         if (isNameFromContent || $(node).isSemantically(nameFromContent_roles, nameFromContent_tags)) {
                             //Recurse through subtree
@@ -2505,17 +2484,16 @@ AndiData.textAlternativeComputation = function (root) {
                             else if (calcSubtreeName(stepJ(node, subtreeData))); //placeholder
 
                             pushSubtreeData(data, subtreeData, node);
-                        }
-                        else {//not a name from content element
+                        } else {//not a name from content element
                             subtreeData = {};
                             accumulatedText += stepF(node, subtreeData, false, isProcessRefTraversal);
-                            if (accumulatedText !== "" && andiUtility.isBlockElement(node))
+                            if (accumulatedText !== "" && andiUtility.isBlockElement(node)) {
                                 accumulatedText += " "; //add extra space after block elements
+                            }
                             pushSubtreeData(data, subtreeData, node);
                         }
                     }
-                }
-                else if (node.nodeType === 3) {//text node
+                } else if (node.nodeType === 3) {//text node
                     accumulatedText += AndiData.addComp(data, "innerText", stepG(node, data));
                 }
             }
@@ -2577,8 +2555,7 @@ AndiData.textAlternativeComputation = function (root) {
                     accumulateText(AndiData.addComp(data, "title", component));
                 }
             }
-        }
-        else if (isCalcAccDesc && !usedInName.title) {
+        } else if (isCalcAccDesc && !usedInName.title) {
             accumulateText(data.title);
         }
         return accumulatedText;
@@ -2730,12 +2707,11 @@ AndiData.textAlternativeComputation = function (root) {
             //Is the element nested inside a label?
             var closestLabel = $(element).closest("label", "body");
             if (closestLabel.length) {//element is nested inside a label
-                //Is this label explictly associated with something else?
+                //Is this label explictly associated with something other?
                 var forAttr = $(closestLabel).attr("for");
                 if (forAttr && forAttr != element.id) {
                     andiAlerter.throwAlert(alert_006F, [forAttr, element.id]);
-                }
-                else {
+                } else {
                     labelElement = closestLabel;
                     labelText = andiUtility.getVisibleInnerText(closestLabel[0], element);
                 }
@@ -2828,10 +2804,11 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         pushProp();
     }
     if (hasProp("aria-checked")) {
-        if (hasRole("option,radio,switch,menuitemcheckbox,menuitemradio,treeitem"))
+        if (hasRole("option,radio,switch,menuitemcheckbox,menuitemradio,treeitem")) {
             prop.out = (prop.val === "true") ? "checked" : "not checked";
-        else if (hasRole("checkbox"))
+        } else if (hasRole("checkbox")) {
             prop.out = (prop.val === "true") ? "checked" : (prop.val === "mixed") ? "partially checked" : "unchecked";
+        }
         pushProp();
     }
     if (hasProp("aria-controls")) {
@@ -2904,10 +2881,11 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         //checked
         if (hasRole("", "input[type=checkbox],input[type=radio]")) {
             prop = { name: "", val: "" };
-            if (element.checked)
+            if (element.checked) {
                 prop.out = "checked";
-            else
+            } else {
                 prop.out = "not checked";
+            }
             pushProp();
         }
     }
@@ -2915,15 +2893,17 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
     //expanded/collapsed
     var expandedInOutput = false;
     if (!browserSupports.isIE && $(element).is("summary")) {
-        if ($(element).closest("details").attr("open"))
+        if ($(element).closest("details").attr("open")) {
             prop = { name: "open", val: "open", out: "expanded" };
-        else
+        } else {
             prop = { name: "", val: "", out: "collapsed" };
+        }
         pushProp();
     }
     if (hasProp("aria-expanded")) {
-        if (!expandedInOutput && hasRole("button,combobox,document,link,section,sectionhead,window", "button,a,section"))
+        if (!expandedInOutput && hasRole("button,combobox,document,link,section,sectionhead,window", "button,a,section")) {
             prop.out = (prop.val === "true") ? "expanded" : "collapsed";
+        }
         pushProp();
     }
 
@@ -2933,10 +2913,10 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         if ($(element).is("[role=heading]")) {
             var ariaLevel = $(element).attr("aria-level");
 
-            if (parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel)
+            if (parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel) {
                 headingLevel = ariaLevel;
-        }
-        else {//native heading tag
+            }
+        } else { //native heading tag
             headingLevel = $(element).prop("tagName").charAt(1);
         }
         prop = { name: "", val: "", out: "heading level " + headingLevel };
@@ -2991,17 +2971,15 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         var group, radioIndex, radioCount = 0;
         if (elementData.role === "radio") {
             group = $(element).closest("[role=radiogroup]").find("[role=radio]");
-        }
-        else if (elementData.role === "menuitemradio") {
+        } else if (elementData.role === "menuitemradio") {
             group = $(element).closest("[role=group],[role=menu],[role=menubar]").find("[role=menuitemradio]");
-        }
-        else {//input[type=radio]
+        } else { //input[type=radio]
             var name = $(element).attr("name");
             if (name) { //get all radio buttons with this name
                 group = $("#ANDI508-testPage input[type=radio][name]").filter(function () { return $(this).attr("name") === name; });
-            }
-            else //no name attribute. group of 1
+            } else { //no name attribute. group of 1
                 group = $(element);
+            }
         }
         if (group) {
             $(group).filter(":shown").each(function () {
@@ -3020,8 +2998,7 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
             prop.out = (prop.val === "ascending") ? "ascending" : (prop.val === "descending") ? "descending" : (prop.val === "other") ? "other" : "";
             pushProp();
         }
-    }
-    else if (hasRole("link", "a") && TestPageData.page_using_table) {
+    } else if (hasRole("link", "a") && TestPageData.page_using_table) {
         var header = $(element).parent();//using .parent() instead of .closest() to help with performance
         if ($(header).is("th,[role=columnheader],[role=rowheader]")) {
             var ariaSort = $(header).attr("aria-sort");
@@ -3075,13 +3052,14 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
     if (extraProps) {
         for (var p = 0; p < extraProps.length; p++) {
             if (extraProps[p]) {
-                if (typeof extraProps[p] == "string")
+                if (typeof extraProps[p] == "string") {
                     prop = { name: extraProps[p], val: $(element).attr(extraProps[p]) };
-                else //typeof array (val needed extra logic that was done in module)
+                } else { //typeof array (val needed extra logic that was done in module)
                     prop = { name: extraProps[p][0], val: extraProps[p][1] };
-
-                if (prop.val)
+                }
+                if (prop.val) {
                     pushProp();
+                }
             }
         }
     }
@@ -3144,33 +3122,33 @@ AndiData.addComp = function (data, componentType, component, hasNodebeenTraverse
             displayText = "<span class='ANDI508-display-" + componentType + "'>" +
                 andiCheck.checkCharacterLimit(component, componentType) + "</span>";
         }
-    }
-    else {//component is an array [text, refElement, id]
+    } else { //component is an array [text, refElement, id]
         if ($.trim(component[0]) !== "" || component[2]) { //add the text
             displayText = "<span class='ANDI508-display-" + componentType + "'>";
 
-            if (component[2]) //add the referenced id
+            if (component[2]) { //add the referenced id
                 displayText += "<span class='ANDI508-display-id'>#" + component[2] + "</span>";
-
-            if (component[1]) //ref element laser
+            }
+            if (component[1]) { //ref element laser
                 displayText += andiLaser.createLaserTarget(component[1], andiUtility.formatForHtml(andiUtility.stripHTML(component[0])));
-
+            }
             displayText += "</span>";
         }
     }
 
     if (displayText) {
         if (componentType === "ariaLabelledby" || componentType === "ariaDescribedby") {
-            if (data[componentType])
-                data[componentType].push(displayText);//push to array
-            else
-                data[componentType] = [displayText];//create array
-        }
-        else {//do not create an array
-            if (data[componentType])
-                data[componentType] += displayText;//append
-            else
-                data[componentType] = displayText;//create
+            if (data[componentType]) {
+                data[componentType].push(displayText); //push to array
+            } else {
+                data[componentType] = [displayText]; //create array
+            }
+        } else { //do not create an array
+            if (data[componentType]) {
+                data[componentType] += displayText; //append
+            } else {
+                data[componentType] = displayText; //create
+            }
         }
     }
 
@@ -3208,7 +3186,7 @@ function AndiCheck() {
     //If there are more parents than children, it will generate an alert with the message and the counts.
     //Note: The function does not test whether the children are actually contained within the parents, it's strictly concerned with the counts.
     //More children than parents might mean a parent is missing or the child tag isn't being used properly.
-    //It will also set the booleans page_using_fieldset, page_using_figure to true if found, which will be used elsewhere for performance enhancements
+    //It will also set the booleans page_using_fieldset, page_using_figure to true if found, which is used for performance enhancements
     this.areThereMoreExclusiveChildrenThanParents = function () {
         var children, parents;
 
