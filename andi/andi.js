@@ -109,8 +109,7 @@ function launchAndi() {
                 $("html").append(document.createElement("body"));
                 $("html body").append(framesSelectionBody);
                 $("#ANDI508-frameSelectionUI-goBack").click(function () { document.location = oldLocation; });
-            }
-            else {//Reload the test page so that the ANDI files that were added are removed.
+            } else { //Reload the test page so that the ANDI files that were added are removed.
                 location.reload();
             }
             return; //Stops ANDI
@@ -202,11 +201,11 @@ function AndiModule(moduleVersionNumber, moduleLetter) {
     //Instantiating a module will reset any overrides
     $("#ANDI508-button-prevElement").off("click").click(function () {
         var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
-        if (isNaN(index)) //no active element yet
+        if (isNaN(index)) { //no active element yet
             index = 2; //begin at first element (this number will be subtracted in the loop)
-        else if (index == 1)
+        } else if (index == 1) {
             index = testPageData.andiElementIndex + 1; //loop back to last element
-
+        }
         //Find the previous element with data-andi508-index
         //Skips over elements that have become hidden, removed from DOM, or excluded from inspection for some reason
         for (var x = index, prev; x > 0; x--) {
@@ -616,10 +615,11 @@ function andiReady() {
         //ANDI Settings
         $("#ANDI508-button-settings")
             .click(function () {
-                if ($("#ANDI508-settingsList").css("display") === "none")
+                if ($("#ANDI508-settingsList").css("display") === "none") {
                     andiSettings.showSettingsList();
-                else
+                } else {
                     andiSettings.hideSettingsList();
+                }
             })
             .focus(andiHotkeyList.hideHotkeysList);
         //Hotkeys List Button
@@ -631,11 +631,11 @@ function andiReady() {
                     andiHotkeyList.buildHotkeyList();
                     //andiHotkeyList.addArrowNavigation();
                     andiHotkeyList.showHotkeysList();
-                }
-                else if ($(hotkeyList).css("display") === "none")
+                } else if ($(hotkeyList).css("display") === "none") {
                     andiHotkeyList.showHotkeysList();
-                else
+                } else {
                     andiHotkeyList.hideHotkeysList();
+                }
             })
             .focus(andiSettings.hideSettingsList);
         //ANDI Help Button
@@ -667,15 +667,16 @@ function andiReady() {
             .on("mouseleave", andiLaser.eraseLaser);
         //Active Element Jump and Section Jump Hotkeys
         $(document).keydown(function (e) {
-            if (e.which === andiHotkeyList.key_active.code && e.altKey)
+            if (e.which === andiHotkeyList.key_active.code && e.altKey) {
                 $("#ANDI508-testPage .ANDI508-element-active").first().focus();
-            else if (e.which === andiHotkeyList.key_jump.code && e.altKey) {
+            } else if (e.which === andiHotkeyList.key_jump.code && e.altKey) {
                 //get next element with ANDI508-sectionJump class
                 var nextSectionJump = $(".ANDI508-sectionJump").eq($(".ANDI508-sectionJump").index($(":focus")) + 1);
-                if (!nextSectionJump.length)
+                if (!nextSectionJump.length) {
                     $(".ANDI508-sectionJump").first().focus();
-                else
+                } else {
                     $(nextSectionJump).focus();
+                }
             }
         });
         //Module Launchers
@@ -718,10 +719,11 @@ function andiReady() {
         $.fn.extend({
             isSemantically: function (roles, tags) {
                 //If this has one of the roles or (is one of the tags and doesn't have another role that isn't empty)
-                if ($.trim($(this).attr("role")))
+                if ($.trim($(this).attr("role"))) {
                     return $(this).is(roles);
-                else
+                } else {
                     return $(this).is(tags);
+                }
             }
         });
 
@@ -758,9 +760,14 @@ function andiReady() {
         if (!String.prototype.includes) {
             String.prototype.includes = function (search, start) {
                 'use strict';
-                if (typeof start !== "number") start = 0;
-                if (start + search.length > this.length) return false;
-                else return this.indexOf(search, start) !== -1;
+                if (typeof start !== "number") {
+                    start = 0;
+                }
+                if (start + search.length > this.length) {
+                    return false;
+                } else {
+                    return this.indexOf(search, start) !== -1;
+                }
             };
         }
 
@@ -813,21 +820,21 @@ function AndiBar() {
 
             if (!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !$(element).is(":focusable"))) {
 
-                if (elementData.accGroup)
+                if (elementData.accGroup) {
                     outputText += elementData.accGroup + " ";
+                }
                 if (elementData.accName) {
                     outputText += elementData.accName;
 
                     //Matching: if accessible name matches accessible description, don't output the description
                     if (elementData.accDesc && matchingTest(elementData.accName, elementData.accDesc))
                         outputText += " " + elementData.accDesc;
-                }
-                else if (elementData.accDesc) { //no accessible name, provide accessible description
+                } else if (elementData.accDesc) { //no accessible name, provide accessible description
                     outputText += " " + elementData.accDesc;
                 }
-
-                if (addOnProps && addOnProps[0])
+                if (addOnProps && addOnProps[0]) {
                     outputText += " " + wrapText("addOnProperties", addOnProps[0]);
+                }
             }
         }
         checkAlerts("warnings");
@@ -882,8 +889,7 @@ function AndiBar() {
                 displayComponents(elementData.components);
                 displayAddOnProps();
                 displaySubtreeComponents();
-            }
-            else {
+            } else {
                 //Don't display any other components because the aria-hidden=true makes them not matter
                 displayAriaHiddenOnly();
             }
@@ -927,8 +933,7 @@ function AndiBar() {
                         for (var i = 1; i < components[component].length; i++) {
                             rows += "<tr><td>" + components[component][i] + "</td></tr>";
                         }
-                    }
-                    else if (component !== "innerText" && component !== "subtree") {
+                    } else if (component !== "innerText" && component !== "subtree") {
                         rows += buildRow(component, formatComponentName(component), components[component]);
                     }
                 }
@@ -960,13 +965,12 @@ function AndiBar() {
                         for (var component in subtree) {
                             if (component === "subtree") {
                                 loopThroughSubtrees(subtree);
-                            }
-                            else if (component !== "innerText" && component !== "role" && component !== "tagNameText") {
+                            } else if (component !== "innerText" && component !== "role" && component !== "tagNameText") {
                                 rowspan++;
 
-                                if (rowspan > 1) //start new row
+                                if (rowspan > 1) { //start new row
                                     subtreeComponents += "<tr>";
-
+                                }
                                 subtreeComponents += "<td><span class='ANDI508-display-" + component + "'>" +
                                     formatComponentName(component) + ":</span> " +
                                     subtree[component] + "</td></tr>";
@@ -976,10 +980,11 @@ function AndiBar() {
                         //Add the <th>
                         if (subtreeComponents) {
                             rows += "<tr><th rowspan=" + rowspan + "><span class='ANDI508-display-id'>child</span>";
-                            if (subtree.role)
+                            if (subtree.role) {
                                 rows += subtree.role;
-                            else
+                            } else {
                                 rows += "&lt;" + subtree.tagNameText + "&gt;";
+                            }
                             rows += "</th>" + subtreeComponents;
                         }
                     }
@@ -1003,8 +1008,7 @@ function AndiBar() {
             //Yes. "re-inspect" the active element
             andiFocuser.focusOn($(activeElement));
             return true;
-        }
-        else {
+        } else {
             $("#ANDI508").focus();
             return false; //module logic should show startUpSummary
         }
@@ -1013,10 +1017,11 @@ function AndiBar() {
     //This function will show the startUpSummary with the text provided and conditionally show the pageAnalysis.
     //It will also hide the activeElementResults
     this.showStartUpSummary = function (summary, showPageAnalysis) {
-        if (showPageAnalysis || testPageData.numberOfAccessibilityAlertsFound > 0)
+        if (showPageAnalysis || testPageData.numberOfAccessibilityAlertsFound > 0) {
             $("#ANDI508-pageAnalysis").show();
-        else
+        } else {
             $("#ANDI508-pageAnalysis").hide();
+        }
         $("#ANDI508-elementDetails").hide();
         $("#ANDI508-startUpSummary").html("<p>" + summary + "</p>").css("display", "inline-block");
     };
@@ -1071,13 +1076,10 @@ function AndiBar() {
                 })
                 //Clicking toggles menu
                 .click(function () {
-                    if ($(this).attr("aria-expanded") === "false") {
-                        //On
+                    if ($(this).attr("aria-expanded") === "false") { //On
                         $(this).attr("aria-expanded", "true");
                         $(this).parent().addClass("ANDI508-moduleActionGroup-visible");
-                    }
-                    else {
-                        //off
+                    } else { //Off
                         $(this).attr("aria-expanded", "false");
                         $(this).parent().removeClass("ANDI508-moduleActionGroup-visible");
                     }
@@ -1219,10 +1221,11 @@ function AndiResetter() {
                     var origFixedTopBot = $(this).attr("data-andi508-origfixedtopbot").split(" ");
                     var top = origFixedTopBot[0];
                     var bottom = origFixedTopBot[1];
-                    if (top != "auto") //if attached to top
+                    if (top != "auto") { //if attached to top
                         $(this).css("top", parseInt(andiHeight) + parseInt(top) + "px"); //add the heights together so there is no overlap
-                    else if (bottom === "auto") //if attached to bottom
+                    } else if (bottom === "auto") { //if attached to bottom
                         $(this).css("top", andiHeight);
+                    }
                 });
             andiHotkeyList.hideHotkeysList();
             if (!hideSettingsList)
@@ -1347,28 +1350,28 @@ function AndiSettings() {
             try {
                 if (window.localStorage) {
                     //Load the Minimode
-                    if (!localStorage.getItem("ANDI508-minimode"))
-                        //Default minimode to false
+                    if (!localStorage.getItem("ANDI508-minimode")) { //Default minimode to false
                         andiSettings.minimode(false);
-                    else {//load from local storage
-                        if (localStorage.getItem("ANDI508-minimode") == "true")
+                    } else { //load from local storage
+                        if (localStorage.getItem("ANDI508-minimode") == "true") {
                             andiSettings.minimode(true);
-                        else
+                        } else {
                             andiSettings.minimode(false);
+                        } 
                     }
                     //Load the Linearize
-                    if (!localStorage.getItem("ANDI508-linearize"))
-                        //Default linearize to false
+                    if (!localStorage.getItem("ANDI508-linearize")) { //Default linearize to false
                         andiSettings.linearize(false);
-                    else {//load from local storage
-                        if (localStorage.getItem("ANDI508-linearize") == "true")
+                    } else { //load from local storage
+                        if (localStorage.getItem("ANDI508-linearize") == "true") {
                             andiSettings.linearize(true);
-                        else
+                        } else {
                             andiSettings.linearize(false);
+                        }
                     }
-                }
-                else//no local storage
+                } else { //no local storage
                     andiSettings.linearize(false);
+                }
             } catch (err) { console.error(err); }
         }
     };
@@ -1380,8 +1383,7 @@ function AndiSettings() {
             $("#ANDI508-body").addClass("ANDI508-minimode");
             document.getElementById("ANDI508-accessibleComponentsTableContainer").style.display = "none";
             andiSettings.setting_on(document.getElementById("ANDI508-button-minimode"));
-        }
-        else {//minimode off
+        } else { //minimode off
             $("#ANDI508-body").removeClass("ANDI508-minimode");
             document.getElementById("ANDI508-accessibleComponentsTableContainer").style.display = "block";
             andiSettings.setting_off(document.getElementById("ANDI508-button-minimode"));
@@ -1417,8 +1419,7 @@ function AndiSettings() {
                 }
 
             });
-        }
-        else {//linearize off
+        } else { //linearize off
             andiSettings.setting_off(document.getElementById("ANDI508-button-linearize"));
             $("#ANDI508-testPage .ANDI508-linearized").removeClass("ANDI508-linearized ANDI508-linearized-position ANDI508-linearized-float");
         }
@@ -1470,20 +1471,22 @@ function AndiSettings() {
 
         //Define the linearize
         $("#ANDI508-button-linearize").click(function () {
-            if ($(this).attr("aria-checked") === "false")
+            if ($(this).attr("aria-checked") === "false") {
                 andiSettings.linearize(true);
-            else
+            } else {
                 andiSettings.linearize(false);
+            }
             andiSettings.saveANDIsettings();
             return false;
         });
 
         //Mini Mode Button
         $("#ANDI508-button-minimode").click(function () {
-            if ($("#ANDI508-body").hasClass("ANDI508-minimode"))
+            if ($("#ANDI508-body").hasClass("ANDI508-minimode")) {
                 andiSettings.minimode(false);
-            else
+            } else {
                 andiSettings.minimode(true);
+            }
             andiSettings.saveANDIsettings();
             return false;
         });
