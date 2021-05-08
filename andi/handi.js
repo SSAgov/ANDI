@@ -52,8 +52,6 @@ function init_module() {
 			$("#ANDI508-additionalElementDetails").append(hidingTechniques);
 	};
 
-	var hidingTechniquesUsed = 0;
-
 	var prevNextBtnsVisible = false;
 
 	AndiModule.initActiveActionButtons({
