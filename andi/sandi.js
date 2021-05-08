@@ -41,6 +41,10 @@ function init_module() {
         this.count = 0;
     }
 
+    sANDI.viewListsList_tableReady = false;
+    sANDI.viewLandmarksList_tableReady = false;
+    sANDI.viewLiveRegionsList_tableReady = false;
+
     var structureExists = false;
     var langAttributesCount = 0;
     var roleAttributesCount = 0;
@@ -506,7 +510,20 @@ function init_module() {
                     .addClass("ANDI508-module-action-active");
                 //No outline for lists mode
 
-                $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+                $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewListsList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button>");
+
+                //List of Lists Button
+                $("#ANDI508-viewListsList-button").click(function () {
+                    if (!sANDI.viewListsList_tableReady) {
+                        sANDI.viewList_buildTable("links");
+                        sANDI.viewList_attachEvents();
+                        sANDI.viewList_attachEvents_links();
+                        sANDI.viewListsList_tableReady = true;
+                    }
+                    sANDI.viewList_toggle("links", this);
+                    andiResetter.resizeHeights();
+                    return false;
+                });
 
                 andiBar.updateResultsSummary("List Elements: " + sANDI.lists.list.length);
                 var listCounts = "";
@@ -550,7 +567,20 @@ function init_module() {
                     .addClass("ANDI508-module-action-active");
                 //No outline for landmarks mode
 
-                $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+                $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLandmarksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button>");
+
+                //Landmarks List Button
+                $("#ANDI508-viewLandmarksList-button").click(function () {
+                    if (!sANDI.viewLandmarksList_tableReady) {
+                        sANDI.viewList_buildTable("links");
+                        sANDI.viewList_attachEvents();
+                        sANDI.viewList_attachEvents_links();
+                        sANDI.viewLandmarksList_tableReady = true;
+                    }
+                    sANDI.viewList_toggle("links", this);
+                    andiResetter.resizeHeights();
+                    return false;
+                });
 
                 andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
                 if (!andiBar.focusIsOnInspectableElement()) {
@@ -563,7 +593,20 @@ function init_module() {
                     .addClass("ANDI508-module-action-active");
                 //No outline for liveRegions mode
 
-                $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view live regions list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+                $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLiveRegionsList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view live regions list</button>");
+
+                //Live Regions List Button
+                $("#ANDI508-viewLiveRegionsList-button").click(function () {
+                    if (!sANDI.viewLiveRegionsList_tableReady) {
+                        sANDI.viewList_buildTable("links");
+                        sANDI.viewList_attachEvents();
+                        sANDI.viewList_attachEvents_links();
+                        sANDI.viewLiveRegionsList_tableReady = true;
+                    }
+                    sANDI.viewList_toggle("links", this);
+                    andiResetter.resizeHeights();
+                    return false;
+                });
 
                 andiBar.updateResultsSummary("Live Regions: " + sANDI.liveRegions.list.length);
                 if (!andiBar.focusIsOnInspectableElement()) {

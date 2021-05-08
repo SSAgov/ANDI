@@ -15,6 +15,8 @@ function init_module() {
         labelTags: false
     });
 
+    fANDI.viewList_tableReady = false;
+
     //This function will analyze the test page for focusable element related markup relating to accessibility
     fANDI.analyze = function () {
 
@@ -105,7 +107,20 @@ function init_module() {
 
         andiBar.updateResultsSummary("Focusable Elements Found: " + testPageData.andiElementIndex);
 
-        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view focusable items list</button>");
+        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewFocusablesList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view focusable items list</button>");
+
+        //Focusable Elements List Button
+        $("#ANDI508-viewFocusablesList-button").click(function () {
+            if (!fANDI.viewList_tableReady) {
+                fANDI.viewList_buildTable("links");
+                fANDI.viewList_attachEvents();
+                fANDI.viewList_attachEvents_links();
+                fANDI.viewList_tableReady = true;
+            }
+            fANDI.viewList_toggle("links", this);
+            andiResetter.resizeHeights();
+            return false;
+        });
 
         //Are There Focusable Elements?
         if (testPageData.andiElementIndex > 0) {

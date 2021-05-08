@@ -26,6 +26,8 @@ function init_module() {
         this.hasHiddenCSSContent = 0;
     }
 
+    hANDI.viewList_tableReady = false;
+
     //This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
     //Holding the shift key will prevent inspection from changing.
     AndiModule.hoverability = function (event) {
@@ -268,7 +270,20 @@ function init_module() {
 
         andiBar.updateResultsSummary("Hidden Elements: " + hANDI.hiddenContents.hiddenElements);
 
-        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view hidden content list</button>");
+        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewHiddenList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view hidden content list</button>");
+
+        //Hidden Elements List Button
+        $("#ANDI508-viewHiddenList-button").click(function () {
+            if (!hANDI.viewList_tableReady) {
+                hANDI.viewList_buildTable("links");
+                hANDI.viewList_attachEvents();
+                hANDI.viewList_attachEvents_links();
+                hANDI.viewList_tableReady = true;
+            }
+            hANDI.viewList_toggle("links", this);
+            andiResetter.resizeHeights();
+            return false;
+        });
 
         //Are There Hidden Elements?
         if (hANDI.hiddenContents.hiddenElements > 0 || hANDI.hiddenContents.hasHiddenCSSContent > 0) {

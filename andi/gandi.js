@@ -10,6 +10,8 @@ function init_module() {
     //create gANDI instance
     var gANDI = new AndiModule(gandiVersionNumber, "g");
 
+    gANDI.viewList_tableReady = false;
+
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
         if (element) {
@@ -216,7 +218,20 @@ function init_module() {
 
         andiBar.updateResultsSummary("Images Found: " + imagesCount);
 
-        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view images list</button>");
+        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewImagesList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view images list</button>");
+
+        //Images List Button
+        $("#ANDI508-viewImagesList-button").click(function () {
+            if (!gANDI.viewList_tableReady) {
+                gANDI.viewList_buildTable("links");
+                gANDI.viewList_attachEvents();
+                gANDI.viewList_attachEvents_links();
+                gANDI.viewList_tableReady = true;
+            }
+            gANDI.viewList_toggle("links", this);
+            andiResetter.resizeHeights();
+            return false;
+        });
 
         //Create Image contained by html (number of image links and image buttons)
         var resultsDetails = "";
