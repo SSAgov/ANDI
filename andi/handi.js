@@ -280,37 +280,20 @@ function init_module() {
 			var moduleActionButtons = "";
 			var revealButtons = "";
 
-			addForceRevealButton("display", hANDI.hiddenContents.hiddenDisplay, "display:none");
-			addForceRevealButton("visibility", hANDI.hiddenContents.hiddenVisibility, "visibility:hidden");
-			addForceRevealButton("position", hANDI.hiddenContents.hiddenPosition, "position:absolute");
-			addForceRevealButton("overflow", hANDI.hiddenContents.hiddenOverflow, "overflow:hidden");
-			addForceRevealButton("fontSize", hANDI.hiddenContents.hiddenFontSize, "font-size:0");
-			addForceRevealButton("textIndent", hANDI.hiddenContents.hiddenTextIndent, "text-indent");
-			addForceRevealButton("html5Hidden", hANDI.hiddenContents.hiddenHTML5, "html5 hidden");
-			addForceRevealButton("opacity", hANDI.hiddenContents.hiddenOpacity, "opacity:0");
+			revealButtons += "<button id='ANDI508-forceReveal_display-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenDisplay + " display:none' aria-pressed='false'>" + hANDI.hiddenContents.hiddenDisplay + " display:none" + findIcon + "</button>";
+			revealButtons += "<button id='ANDI508-forceReveal_visibility-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenVisibility + " visibility:hidden' aria-pressed='false'>" + hANDI.hiddenContents.hiddenVisibility + " visibility:hidden" + findIcon + "</button>";
+			revealButtons += "<button id='ANDI508-forceReveal_position-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenPosition + " position:absolute' aria-pressed='false'>" + hANDI.hiddenContents.hiddenPosition + " position:absolute" + findIcon + "</button>";
+			revealButtons += "<button id='ANDI508-forceReveal_overflow-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenOverflow + " overflow:hidden' aria-pressed='false'>" + hANDI.hiddenContents.hiddenOverflow + " overflow:hidden" + findIcon + "</button>";
+			revealButtons += "<button id='ANDI508-forceReveal_fontSize-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenFontSize + " font-size:0' aria-pressed='false'>" + hANDI.hiddenContents.hiddenFontSize + " font-size:0" + findIcon + "</button>";
+			revealButtons += "<button id='ANDI508-forceReveal_textIndent-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenTextIndent + " text-indent' aria-pressed='false'>" + hANDI.hiddenContents.hiddenTextIndent + " text-indent" + findIcon + "</button>";
+			revealButtons += "<button id='ANDI508-forceReveal_html5Hidden-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenHTML5 + " html5 hidden" + "' aria-pressed='false'>" + hANDI.hiddenContents.hiddenHTML5 + " html5 hidden" + findIcon + "</button>";
+			revealButtons += "<button id='ANDI508-forceReveal_opacity-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenOpacity + " opacity:0' aria-pressed='false'>" + hANDI.hiddenContents.hiddenOpacity + " opacity:0" + findIcon + "</button>";
 
-			function addForceRevealButton(technique, count, buttonText) {
-				if (count > 0) {
-					hidingTechniquesUsed++;
-					revealButtons += "<button id='ANDI508-forceReveal_" + technique + "-button' class='hANDI-revealButton' aria-label='" + count + " " + buttonText + "' aria-pressed='false'>" + count + " " + buttonText + findIcon + "</button>";
-				}
-			}
-
-			if (hidingTechniquesUsed > 0) {
-				if (hidingTechniquesUsed > 1)
-					moduleActionButtons = "<button id='ANDI508-forceRevealAll-button' aria-label='Reveal All' aria-pressed='false'>reveal all" + findIcon + "</button><span class='ANDI508-module-actions-spacer'>|</span> ";
-				moduleActionButtons += "<div class='ANDI508-moduleActionGroup'><button class='ANDI508-moduleActionGroup-toggler'>css hiding techniques</button><div class='ANDI508-moduleActionGroup-options'>" + revealButtons + "</div></div>";
-			}
-
-			if (hANDI.hiddenContents.hasHiddenCSSContent > 0) {
-				if (hidingTechniquesUsed > 0)
-					moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span>&nbsp;";
-				moduleActionButtons += "<button id='ANDI508-highlightCssContent-button' aria-label='content ::before ::after " + hANDI.hiddenContents.hasHiddenCSSContent + " CSS Content' aria-pressed='false'>content ::before ::after " + hANDI.hiddenContents.hasHiddenCSSContent + findIcon + "</button>";
-			}
-
-			if (TestPageData.page_using_titleAttr)
-				//Title Attributes Button
-				moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span>&nbsp;<button id='ANDI508-titleAttributes-button' aria-label='Title Attributes' aria-pressed='false'>title attributes" + overlayIcon + "</button>";
+			moduleActionButtons = "<button id='ANDI508-forceRevealAll-button' aria-label='Reveal All' aria-pressed='false'>reveal all" + findIcon + "</button><span class='ANDI508-module-actions-spacer'>|</span> ";
+			moduleActionButtons += "<div class='ANDI508-moduleActionGroup'><button class='ANDI508-moduleActionGroup-toggler'>css hiding techniques</button><div class='ANDI508-moduleActionGroup-options'>" + revealButtons + "</div></div>";
+			moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span>&nbsp;";
+			moduleActionButtons += "<button id='ANDI508-highlightCssContent-button' aria-label='content ::before ::after " + hANDI.hiddenContents.hasHiddenCSSContent + " CSS Content' aria-pressed='false'>content ::before ::after " + hANDI.hiddenContents.hasHiddenCSSContent + findIcon + "</button>";
+			moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span>&nbsp;<button id='ANDI508-titleAttributes-button' aria-label='Title Attributes' aria-pressed='false'>title attributes" + overlayIcon + "</button>";
 
 			$("#ANDI508-module-actions").html(moduleActionButtons);
 
