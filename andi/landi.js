@@ -141,7 +141,8 @@ function init_module() {
                                     lANDI.links.list.push(
                                         new Link(href,
                                             nameDescription,
-                                            andiData.andiElementIndex,
+                                            lANDI.index,
+                                            //andiData.andiElementIndex,
                                             alerts,
                                             target,
                                             linkPurpose,
@@ -151,7 +152,8 @@ function init_module() {
                                     lANDI.links.list.push(
                                         new Link(href,
                                             nameDescription,
-                                            andiData.andiElementIndex,
+                                            lANDI.index,
+                                            //andiData.andiElementIndex,
                                             alerts,
                                             target,
                                             linkPurpose,
@@ -166,7 +168,7 @@ function init_module() {
                                 andiCheck.commonFocusableElementChecks(andiData, $(this));
                             }
                         }
-
+                        lANDI.index += 1;
                         AndiData.attachDataToElement(this);
                     }
                 }
