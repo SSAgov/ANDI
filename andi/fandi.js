@@ -31,8 +31,7 @@ function init_module() {
                     fANDI.accesskeys.push(this, andiData.accesskey, andiData.andiElementIndex);
                 testPageData.firstLaunchedModulePrep(this, andiData);
                 AndiData.attachDataToElement(this);
-            }
-            else {
+            } else {
                 testPageData.firstLaunchedModulePrep(this);
                 andiCheck.isThisElementDisabled(this);
             }
@@ -59,27 +58,23 @@ function init_module() {
                 if (accesskey.length > 1) { //TODO: could be a non-issue if browsers are supporting space delimited accesskey lists
                     andiAlerter.throwAlert(alert_0052, [accesskey]);
                     addToList(accesskey, alert_0052);
-                }
-                else {
+                } else {
                     //Check for duplicate accesskey
                     if (duplicateComparator.includes(accesskey)) {
                         if ($(element).is("button,input:submit,input:button,input:reset,input:image")) {
                             //duplicate accesskey found on button
                             andiAlerter.throwAlert(alert_0054, [accesskey]);
                             addToList(accesskey, alert_0054);
-                        }
-                        else if ($(element).is("a[href]")) {
+                        } else if ($(element).is("a[href]")) {
                             //duplicate accesskey found on link
                             andiAlerter.throwAlert(alert_0056, [accesskey]);
                             addToList(accesskey, alert_0056);
-                        }
-                        else {
+                        } else {
                             //duplicate accesskey found
                             andiAlerter.throwAlert(alert_0055, [accesskey]);
                             addToList(accesskey, alert_0055);
                         }
-                    }
-                    else {
+                    } else {
                         addToList(accesskey);
                         duplicateComparator += accesskey;
                     }
@@ -92,14 +87,14 @@ function init_module() {
                 if (alertObject) {
                     addClass = "class='ANDI508-display-" + alertObject.level + "'";
                     titleText = alertObject.level + ": " + alertObject.message + accesskey;
-                }
-                else
+                } else {
                     titleText = "AccessKey " + accesskey + " found, focus on element";
-
-                if (index === 0)
+                }
+                if (index === 0) {
                     list += "<span tabindex='0' " + addClass + " title='" + titleText + "'>" + accesskey + "</span> ";
-                else
+                } else {
                     list += "<a href='#' data-andi508-relatedindex='" + index + "' title='" + titleText + "'><span " + addClass + ">" + accesskey + "</span></a> ";
+                }
             }
         };
     }
@@ -143,8 +138,7 @@ function init_module() {
                     andiOverlay.overlayButton_on("overlay", $(this));
                     andiOverlay.overlayTabOrder();
                     AndiModule.activeActionButtons.tabOrder = true;
-                }
-                else {
+                } else {
                     andiOverlay.overlayButton_off("overlay", $(this));
                     andiOverlay.removeOverlay("ANDI508-overlay-tabSequence");
                     AndiModule.activeActionButtons.tabOrder = false;
@@ -159,8 +153,7 @@ function init_module() {
                     andiOverlay.overlayButton_on("overlay", $(this));
                     andiOverlay.overlayTitleAttributes();
                     AndiModule.activeActionButtons.titleAttributes = true;
-                }
-                else {
+                } else {
                     andiOverlay.overlayButton_off("overlay", $(this));
                     andiOverlay.removeOverlay("ANDI508-overlay-titleAttributes");
                     AndiModule.activeActionButtons.titleAttributes = false;
@@ -175,8 +168,7 @@ function init_module() {
                     andiOverlay.overlayButton_on("overlay", $(this));
                     andiOverlay.overlayLabelTags();
                     AndiModule.activeActionButtons.labelTags = true;
-                }
-                else {
+                } else {
                     andiOverlay.overlayButton_off("overlay", $(this));
                     andiOverlay.removeOverlay("ANDI508-overlay-labelTags");
                     AndiModule.activeActionButtons.labelTags = false;
@@ -188,8 +180,7 @@ function init_module() {
             andiBar.focusIsOnInspectableElement();
             andiBar.showElementControls();
             andiBar.showStartUpSummary("Discover accessibility markup for focusable elements by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every focusable element.", true);
-        }
-        else {
+        } else {
             //No Focusable Elements were found
             andiBar.hideElementControls();
             andiBar.showStartUpSummary("No focusable elements were found on this page.");
@@ -243,15 +234,15 @@ function init_module() {
                 //tab index is negative
                 overlayObject = andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-tabSequence", "X", "not in tab order", 0);
                 andiOverlay.insertAssociatedOverlay(this, overlayObject, true);
-            }
-            else if (tabindex == 0 || ($(this).is(":tabbable") && !(tabindex > 0))) {
+            } else if (tabindex == 0 || ($(this).is(":tabbable") && !(tabindex > 0))) {
                 //tabindex is 0 or natively tabbable and tabindex is not greater than zero
 
                 if ($(this).is("input[type=radio][name]")) {
-                    if (lastRadioGroupName !== undefined && lastRadioGroupName === $(this).attr("name"))
+                    if (lastRadioGroupName !== undefined && lastRadioGroupName === $(this).attr("name")) {
                         return; //this is a subsequent radio button, don't add overlay
-                    else
+                    } else {
                         lastRadioGroupName = $(this).attr("name");
+                    }
                 }
                 tabSequence++;
                 titleText = (tabindex == 0) ? "tabIndex=0" : "natively tabbable";
@@ -276,9 +267,9 @@ function init_module() {
                     overlayClasses += " ANDI508-overlay-alert";
                     titleText += "no matching [id]";
                 }
-            }
-            else
+            } else {
                 titleText += "no [for] attribute";
+            }
             labelText += "&gt;";
 
             overlayObject = andiOverlay.createOverlay(overlayClasses, labelText, titleText, 0);

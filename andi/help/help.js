@@ -34,8 +34,7 @@ $(document).ready(function(){
 				.attr("aria-expanded","false")
 				.html("View Table of Contents");
 			$("#tableOfContents").slideUp();
-		}
-		else{
+		} else {
 			$(this)
 				.attr("aria-expanded","true")
 				.html("Hide Table of Contents");
@@ -49,8 +48,7 @@ $(document).ready(function(){
 				.attr("aria-expanded","false")
 				.html("View the Custom Configuration Instructions");
 			$("#customConfig").slideUp();
-		}
-		else{
+		} else {
 			$(this)
 				.attr("aria-expanded","true")
 				.html("Hide the Custom Configuration Instructions");
@@ -62,8 +60,7 @@ $(document).ready(function(){
 		if($(this).attr("aria-expanded") === "true"){
 			$(this).attr("aria-expanded","false")
 				.next().slideUp();
-		}
-		else{
+		} else {
 			$(this).attr("aria-expanded","true")
 				.next().slideDown();
 		}
