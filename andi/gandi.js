@@ -21,6 +21,12 @@ function init_module() {
         }
     };
 
+    //This object class is used to store data about each image. Object instances will be placed into an array.
+    function Image(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
     //This object class is used to keep track of the images on the page
     function Images() {
         this.list = [];
@@ -79,6 +85,7 @@ function init_module() {
                 } else { //not contained by interactive widget
                     andiData = new AndiData(this);
                 }
+                gANDI.images.list.push(new Link(this, andiData.andiElementIndex));
                 //Check for conditions based on semantics
                 if ($(this).is("marquee")) {
                     gANDI.images.inlineCount++;
@@ -97,7 +104,7 @@ function init_module() {
                     andiCheck.commonFocusableElementChecks(andiData, $(this));
                     altTextAnalysis($.trim($(this).attr("alt")));
                     AndiData.attachDataToElement(this);
-                //Check for server side image map
+                    //Check for server side image map
                 } else if ($(this).is("img") && $(this).attr("ismap")) {//Code is written this way to prevent bug in IE8
                     gANDI.images.inlineCount++;
                     andiAlerter.throwAlert(alert_0173);
@@ -143,6 +150,7 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).css("background-image").includes("url(")) {
+                gANDI.images.list.push(new Link(this, andiData.andiElementIndex));
                 gANDI.images.backgroundCount++;
                 $(this).addClass("gANDI508-background");
             }
@@ -177,8 +185,8 @@ function init_module() {
         function isElementDecorative(element, elementData) {
             if ($(element).attr("aria-hidden") === "true") {
                 return true;
-            //TODO: this logic may need to change if screen readers support spec that says aria-label
-            //		should override role=presentation, thus making it not decorative
+                //TODO: this logic may need to change if screen readers support spec that says aria-label
+                //		should override role=presentation, thus making it not decorative
             } else {
                 if (elementData.role === "presentation" || elementData.role === "none") { //role is presentation or none
                     return true;
@@ -350,6 +358,41 @@ function init_module() {
         $("#ANDI508").focus();
     };
 
+    //This function builds the table for the view list
+    lANDI.viewList_buildTable = function (mode) {
+        var tableHTML = "";
+        var rowClasses, tabsHTML, prevNextButtons;
+        var appendHTML = "<div id='lANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='lANDI508-viewList-tabs'>";
+        var nextPrevHTML = "<button id='lANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
+            "<button id='lANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
+            "</div>" +
+            "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
+
+        //BUILD IMAGES LIST TABLE
+        var displayHref, targetText;
+        for (var x = 0; x < gANDI.images.list.length; x++) {
+            //determine if there is an alert
+            rowClasses = "";
+            var nextTabButton = "";
+            if (gANDI.images.list[x].alerts.includes("Alert"))
+                rowClasses += "ANDI508-table-row-alert ";
+
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + gANDI.images.list[x].index + "</th>" +
+                "<td class='ANDI508-alert-column'>" + gANDI.images.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + gANDI.images.list[x].index + "'>" + gANDI.images.list[x].nameDescription + "</a></td>" +
+                "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
+                "</tr>";
+        }
+
+        appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +;
+
+        $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
+
+    };
+
     //This function will update the info in the Active Element Inspection.
     //Should be called after the mouse hover or focus in event.
     AndiModule.inspect = function (element) {
@@ -384,11 +427,11 @@ function init_module() {
             if (regEx_redundantPhrase.test(altText)) {
                 //redundant phrase in alt text
                 andiAlerter.throwAlert(alert_0174);
-            //Check for filename in alt text
+                //Check for filename in alt text
             } else if (regEx_fileTypeExt.test(altText)) {
                 //file name in alt text
                 andiAlerter.throwAlert(alert_0175);
-            //Check for non-descriptive alt text
+                //Check for non-descriptive alt text
             } else if (regEx_nonDescAlt.test(altText)) {
                 //non-descriptive alt text
                 andiAlerter.throwAlert(alert_0176);
