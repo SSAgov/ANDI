@@ -88,7 +88,8 @@ function init_module() {
     });
 
     lANDI.viewList_tableReady = false;
-    lANDI.index = 0;
+    lANDI.linkIndex = 0;
+    lANDI.buttonIndex = 0;
 
     //This function will analyze the test page for link related markup relating to accessibility
     lANDI.analyze = function () {
@@ -140,7 +141,7 @@ function init_module() {
                                     lANDI.links.list.push(
                                         new Link(href,
                                             nameDescription,
-                                            lANDI.index,
+                                            lANDI.linkIndex,
                                             alerts,
                                             target,
                                             linkPurpose,
@@ -150,7 +151,7 @@ function init_module() {
                                     lANDI.links.list.push(
                                         new Link(href,
                                             nameDescription,
-                                            lANDI.index,
+                                            lANDI.linkIndex,
                                             alerts,
                                             target,
                                             linkPurpose,
@@ -210,10 +211,12 @@ function init_module() {
                             nameDescription = "<span class='ANDI508-display-danger'>No Accessible Name</span>";
                         }
                         andiCheck.commonFocusableElementChecks(andiData, $(this));
+                        
                         AndiData.attachDataToElement(this);
 
                         //create Button object and add to array
-                        lANDI.buttons.list.push(new Button(nameDescription, andiData.andiElementIndex, alerts, accesskey, nonUniqueIndex, this));
+                        lANDI.buttons.list.push(new Button(nameDescription, lANDI.buttonIndex, alerts, accesskey, nonUniqueIndex, this));
+                        lANDI.buttonIndex += 1;
                     }
                 }
             }
