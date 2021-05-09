@@ -150,7 +150,7 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).css("background-image").includes("url(")) {
-                gANDI.images.list.push(new Link(this, gANDI.index));
+                gANDI.images.list.push(new Image(this, gANDI.index));
                 gANDI.images.backgroundCount++;
                 $(this).addClass("gANDI508-background");
             }
@@ -166,7 +166,7 @@ function init_module() {
                     andiData = new AndiData(this);
                     AndiData.attachDataToElement(this);
                 }
-                gANDI.images.list.push(new Link(this, gANDI.index));
+                gANDI.images.list.push(new Image(this, gANDI.index));
                 gANDI.images.fontIconCount++;
                 $(this).addClass("gANDI508-fontIcon");
                 //Throw alert
