@@ -232,9 +232,9 @@ function init_module() {
     fANDI.viewList_buildTable = function (mode) {
         var tableHTML = "";
         var rowClasses, tabsHTML, prevNextButtons;
-        var appendHTML = "<div id='lANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='lANDI508-viewList-tabs'>";
-        var nextPrevHTML = "<button id='lANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
-            "<button id='lANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
+        var appendHTML = "<div id='fANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='fANDI508-viewList-tabs'>";
+        var nextPrevHTML = "<button id='fANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
+            "<button id='fANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
             "</div>" +
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
@@ -276,7 +276,7 @@ function init_module() {
                     "</tr>";
             }
 
-            tabsHTML = "<button id='lANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
+            tabsHTML = "<button id='fANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
 
             appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
@@ -299,12 +299,12 @@ function init_module() {
                 .html(listIcon + "hide " + mode + " list")
                 .attr("aria-expanded", "true")
                 .find("img").attr("src", icons_url + "list-on.png");
-            $("#lANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+            $("#fANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
             if (mode === "focusable elements") {
                 AndiModule.activeActionButtons.viewLinksList = true;
             }
         } else { //hide List, show alert list
-            $("#lANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+            $("#fANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
             //$("#ANDI508-resultsSummary").show();
             if (testPageData.numberOfAccessibilityAlertsFound > 0) {
                 $("#ANDI508-alerts-list").show();
