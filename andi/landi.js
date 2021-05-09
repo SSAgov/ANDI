@@ -1,18 +1,19 @@
 //==========================================//
-//lANDI: links ANDI 						//
+//lANDI: links ANDI                         //
 //Created By Social Security Administration //
 //==========================================//
 function init_module() {
-
-    var landiVersionNumber = "8.1.0";
+    var landiVersionNumber, lANDI;
+    landiVersionNumber = "8.1.0";
 
     //create lANDI instance
-    var lANDI = new AndiModule(landiVersionNumber, "l");
+    lANDI = new AndiModule(landiVersionNumber, "l");
 
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
-        if (element)
+        if (element) {
             $(element).removeClass("lANDI508-internalLink lANDI508-externalLink lANDI508-ambiguous lANDI508-anchorTarget");
+        }
     };
 
     //This object class is used to store data about each link. Object instances will be placed into an array.
@@ -105,7 +106,7 @@ function init_module() {
             if ($(this).isSemantically("[role=link]", "a[href],a[tabindex],area")) {
                 if (!andiCheck.isThisElementDisabled(this)) {
 
-                    lANDI.links.count++;
+                    lANDI.links.count += 1;
 
                     if (AndiModule.activeActionButtons.linksMode) {
                         andiData = new AndiData(this);
@@ -130,8 +131,9 @@ function init_module() {
 
                                     testForVagueLinkText(nameDescription);
 
-                                    if (!alerts) //Add this for sorting purposes
+                                    if (!alerts) { //Add this for sorting purposes
                                         alerts = "<i>4</i>";
+                                    }
                                 } else { //No accessible name or description
                                     alerts = alertIcons.danger_noAccessibleName;
                                     nameDescription = "<span class='ANDI508-display-danger'>No Accessible Name</span>";
@@ -179,7 +181,7 @@ function init_module() {
             //ANALYZE BUTTONS
             } else if ($(this).isSemantically("[role=button]", "button,:button,:submit,:reset,:image")) {
                 if (!andiCheck.isThisElementDisabled(this)) {
-                    lANDI.buttons.count++;
+                    lANDI.buttons.count += 1;
 
                     if (AndiModule.activeActionButtons.buttonsMode) {
                         andiData = new AndiData(this);
@@ -198,11 +200,9 @@ function init_module() {
                         if (nameDescription) { //Seach through Buttons Array for same name
                             nonUniqueIndex = scanForNonUniqueness(this, nameDescription);
 
-                            //role=button
-                            if ($(this).is("[role=button]")) {
+                            if ($(this).is("[role=button]")) { //role=button
                                 isElementInTabOrder(this, "button");
                             }
-
                             if (!alerts) { //Add this for sorting purposes
                                 alerts = "<i>4</i>";
                             }
@@ -211,9 +211,8 @@ function init_module() {
                             nameDescription = "<span class='ANDI508-display-danger'>No Accessible Name</span>";
                         }
                         andiCheck.commonFocusableElementChecks(andiData, $(this));
-                        
                         AndiData.attachDataToElement(this);
-
+                        
                         //create Button object and add to array
                         lANDI.buttons.list.push(new Button(nameDescription, lANDI.buttonIndex, alerts, accesskey, nonUniqueIndex, this));
                         lANDI.buttonIndex += 1;
@@ -305,10 +304,10 @@ function init_module() {
                         relatedElement = $(lANDI.links.list[x].element);
                         if (lANDI.links.list[x].ambiguousIndex) { //Yes. Copy the ambiguousIndex from the first instance
                             i = lANDI.links.list[x].ambiguousIndex;
-                            lANDI.links.ambiguousCount++;
+                            lANDI.links.ambiguousCount += 1;
                         } else { //No. increment ambiguousIndex and add it to the first instance.
                             lANDI.links.ambiguousCount = lANDI.links.ambiguousCount + 2;
-                            lANDI.links.ambiguousIndex++;
+                            lANDI.links.ambiguousIndex += 1;
                             i = lANDI.links.ambiguousIndex;
                             lANDI.links.list[x].ambiguousIndex = i;
                             $(relatedElement).addClass("lANDI508-ambiguous");
@@ -345,10 +344,10 @@ function init_module() {
                     relatedElement = $(lANDI.buttons.list[y].element);
                     if (lANDI.buttons.list[y].nonUniqueIndex) { //Yes. Copy the nonUniqueIndex from the first instance
                         m = lANDI.buttons.list[y].nonUniqueIndex;
-                        lANDI.buttons.nonUniqueCount++;
+                        lANDI.buttons.nonUniqueCount += 1;
                     } else { //No. increment nonUniqueIndex and add it to the first instance.
                         lANDI.buttons.nonUniqueCount = lANDI.buttons.nonUniqueCount + 2;
-                        lANDI.buttons.nonUniqueIndex++;
+                        lANDI.buttons.nonUniqueIndex += 1;
                         m = lANDI.buttons.nonUniqueIndex;
                         lANDI.buttons.list[y].nonUniqueIndex = m;
                         $(relatedElement).addClass("lANDI508-ambiguous");
@@ -375,12 +374,12 @@ function init_module() {
                             andiAlerter.throwAlert(alert_0069, [idRef]);
                         }
                     } else { //link is internal and anchor target found
-                        lANDI.links.internalCount++;
+                        lANDI.links.internalCount += 1;
                         linkPurpose = "i";
                         $(element).addClass("lANDI508-internalLink");
                     }
                 } else if (href.charAt(0) !== "#" && !lANDI.isScriptedLink(href)) { //this is an external link
-                    lANDI.links.externalCount++;
+                    lANDI.links.externalCount += 1;
                     linkPurpose = "e";
                     $(element).addClass("lANDI508-externalLink");
                 }
