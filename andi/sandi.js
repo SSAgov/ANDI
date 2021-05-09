@@ -515,12 +515,12 @@ function init_module() {
                 //List of Lists Button
                 $("#ANDI508-viewListsList-button").click(function () {
                     if (!sANDI.viewListsList_tableReady) {
-                        sANDI.viewList_buildTable("links");
+                        sANDI.viewList_buildTable("lists");
                         sANDI.viewList_attachEvents();
                         sANDI.viewList_attachEvents_links();
                         sANDI.viewListsList_tableReady = true;
                     }
-                    sANDI.viewList_toggle("links", this);
+                    sANDI.viewList_toggle("lists", this);
                     andiResetter.resizeHeights();
                     return false;
                 });
@@ -572,12 +572,12 @@ function init_module() {
                 //Landmarks List Button
                 $("#ANDI508-viewLandmarksList-button").click(function () {
                     if (!sANDI.viewLandmarksList_tableReady) {
-                        sANDI.viewList_buildTable("links");
+                        sANDI.viewList_buildTable("landmarks");
                         sANDI.viewList_attachEvents();
                         sANDI.viewList_attachEvents_links();
                         sANDI.viewLandmarksList_tableReady = true;
                     }
-                    sANDI.viewList_toggle("links", this);
+                    sANDI.viewList_toggle("landmarks", this);
                     andiResetter.resizeHeights();
                     return false;
                 });
@@ -598,12 +598,12 @@ function init_module() {
                 //Live Regions List Button
                 $("#ANDI508-viewLiveRegionsList-button").click(function () {
                     if (!sANDI.viewLiveRegionsList_tableReady) {
-                        sANDI.viewList_buildTable("links");
+                        sANDI.viewList_buildTable("live regions");
                         sANDI.viewList_attachEvents();
                         sANDI.viewList_attachEvents_links();
                         sANDI.viewLiveRegionsList_tableReady = true;
                     }
-                    sANDI.viewList_toggle("links", this);
+                    sANDI.viewList_toggle("live regions", this);
                     andiResetter.resizeHeights();
                     return false;
                 });
@@ -738,12 +738,12 @@ function init_module() {
                 tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
                     "<th scope='row'>" + sANDI.buttons.list[b].index + "</th>" +
                     "<td class='ANDI508-alert-column'>" + sANDI.buttons.list[b].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + lANDI.buttons.list[b].index + "'>" + lANDI.buttons.list[b].nameDescription + "</a></td>" +
-                    "<td>" + lANDI.buttons.list[b].accesskey + "</td>" +
+                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.buttons.list[b].index + "'>" + sANDI.buttons.list[b].nameDescription + "</a></td>" +
+                    "<td>" + sANDI.buttons.list[b].accesskey + "</td>" +
                     "</tr>";
             }
 
-            tabsHTML = "<button id='lANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
+            tabsHTML = "<button id='sANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
 
             appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
@@ -753,6 +753,41 @@ function init_module() {
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
+    };
+
+    //This function hide/shows the view list
+    sANDI.viewList_toggle = function (mode, btn) {
+        if ($(btn).attr("aria-expanded") === "false") {
+            //show List, hide alert list
+            $("#ANDI508-alerts-list").hide();
+            andiSettings.minimode(false);
+            $(btn)
+                .addClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "hide " + mode + " list")
+                .attr("aria-expanded", "true")
+                .find("img").attr("src", icons_url + "list-on.png");
+            $("#sANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+            if (mode === "links") {
+                AndiModule.activeActionButtons.viewLinksList = true;
+            } else {
+                AndiModule.activeActionButtons.viewButtonsList = true;
+            }
+        } else { //hide List, show alert list
+            $("#sANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+            //$("#ANDI508-resultsSummary").show();
+            if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+                $("#ANDI508-alerts-list").show();
+            }
+            $(btn)
+                .removeClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "view " + mode + " list")
+                .attr("aria-expanded", "false");
+            if (mode === "links") {
+                AndiModule.activeActionButtons.viewLinksList = false;
+            } else {
+                AndiModule.activeActionButtons.viewButtonsList = false;
+            }
+        }
     };
 
     //This function will update the info in the Active Element Inspection.

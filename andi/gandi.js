@@ -233,7 +233,7 @@ function init_module() {
         //Images List Button
         $("#ANDI508-viewImagesList-button").click(function () {
             if (!gANDI.viewList_tableReady) {
-                gANDI.viewList_buildTable("links");
+                gANDI.viewList_buildTable("images");
                 //gANDI.viewList_attachEvents();
                 //gANDI.viewList_attachEvents_links();
                 gANDI.viewList_tableReady = true;

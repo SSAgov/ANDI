@@ -129,7 +129,7 @@ function init_module() {
         //Focusable Elements List Button
         $("#ANDI508-viewFocusablesList-button").click(function () {
             if (!fANDI.viewList_tableReady) {
-                fANDI.viewList_buildTable("links");
+                fANDI.viewList_buildTable("focusable elements");
                 //fANDI.viewList_attachEvents();
                 //fANDI.viewList_attachEvents_links();
                 fANDI.viewList_tableReady = true;
