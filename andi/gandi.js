@@ -234,11 +234,11 @@ function init_module() {
         $("#ANDI508-viewImagesList-button").click(function () {
             if (!gANDI.viewList_tableReady) {
                 gANDI.viewList_buildTable("links");
-                gANDI.viewList_attachEvents();
-                gANDI.viewList_attachEvents_links();
+                //gANDI.viewList_attachEvents();
+                //gANDI.viewList_attachEvents_links();
                 gANDI.viewList_tableReady = true;
             }
-            gANDI.viewList_toggle("links", this);
+            gANDI.viewList_toggle("images", this);
             andiResetter.resizeHeights();
             return false;
         });
@@ -393,6 +393,39 @@ function init_module() {
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
+    };
+
+    //This function hide/shows the view list
+    gANDI.viewList_toggle = function (mode, btn) {
+        if ($(btn).attr("aria-expanded") === "false") {
+            //show List, hide alert list
+            $("#ANDI508-alerts-list").hide();
+            andiSettings.minimode(false);
+            $(btn)
+                .addClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "hide " + mode + " list")
+                .attr("aria-expanded", "true")
+                .find("img").attr("src", icons_url + "list-on.png");
+            $("#gANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+            if (mode === "focusable elements") {
+                AndiModule.activeActionButtons.viewLinksList = true;
+            }
+        } else { //hide List, show alert list
+            $("#gANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+            //$("#ANDI508-resultsSummary").show();
+            if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+                $("#ANDI508-alerts-list").show();
+            }
+            $(btn)
+                .removeClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "view " + mode + " list")
+                .attr("aria-expanded", "false");
+            if (mode === "links") {
+                AndiModule.activeActionButtons.viewLinksList = false;
+            } else {
+                AndiModule.activeActionButtons.viewButtonsList = false;
+            }
+        }
     };
 
     //This function will update the info in the Active Element Inspection.
