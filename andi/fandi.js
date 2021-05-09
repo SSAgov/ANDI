@@ -129,11 +129,11 @@ function init_module() {
         $("#ANDI508-viewFocusablesList-button").click(function () {
             if (!fANDI.viewList_tableReady) {
                 fANDI.viewList_buildTable("links");
-                fANDI.viewList_attachEvents();
-                fANDI.viewList_attachEvents_links();
+                //fANDI.viewList_attachEvents();
+                //fANDI.viewList_attachEvents_links();
                 fANDI.viewList_tableReady = true;
             }
-            fANDI.viewList_toggle("links", this);
+            fANDI.viewList_toggle("focusable elements", this);
             andiResetter.resizeHeights();
             return false;
         });
@@ -287,6 +287,39 @@ function init_module() {
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
+    };
+
+    //This function hide/shows the view list
+    fANDI.viewList_toggle = function (mode, btn) {
+        if ($(btn).attr("aria-expanded") === "false") {
+            //show List, hide alert list
+            $("#ANDI508-alerts-list").hide();
+            andiSettings.minimode(false);
+            $(btn)
+                .addClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "hide " + mode + " list")
+                .attr("aria-expanded", "true")
+                .find("img").attr("src", icons_url + "list-on.png");
+            $("#lANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+            if (mode === "focusable elements") {
+                AndiModule.activeActionButtons.viewLinksList = true;
+            }
+        } else { //hide List, show alert list
+            $("#lANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+            //$("#ANDI508-resultsSummary").show();
+            if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+                $("#ANDI508-alerts-list").show();
+            }
+            $(btn)
+                .removeClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "view " + mode + " list")
+                .attr("aria-expanded", "false");
+            if (mode === "links") {
+                AndiModule.activeActionButtons.viewLinksList = false;
+            } else {
+                AndiModule.activeActionButtons.viewButtonsList = false;
+            }
+        }
     };
 
     //This function will overlay the tab order sequence.
