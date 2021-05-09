@@ -259,28 +259,6 @@ function init_module() {
             appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
-        } else { //BUILD BUTTON LIST TABLE
-            for (var b = 0; b < fANDI.buttons.list.length; b++) {
-                //determine if there is an alert
-                rowClasses = "";
-                if (fANDI.buttons.list[b].alerts.includes("Alert")) {
-                    rowClasses += "ANDI508-table-row-alert ";
-                }
-
-                tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + fANDI.buttons.list[b].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + fANDI.buttons.list[b].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.buttons.list[b].index + "'>" + fANDI.buttons.list[b].nameDescription + "</a></td>" +
-                    "<td>" + fANDI.buttons.list[b].accesskey + "</td>" +
-                    "</tr>";
-            }
-
-            tabsHTML = "<button id='fANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
-
-            appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:75%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Accesskey <i aria-hidden='true'></i></a></th>";
         }
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
