@@ -376,8 +376,8 @@ function init_module() {
             //determine if there is an alert
             rowClasses = "";
             var nextTabButton = "";
-            if (gANDI.images.list[x].alerts.includes("Alert"))
-                rowClasses += "ANDI508-table-row-alert ";
+            // if (gANDI.images.list[x].alerts.includes("Alert"))
+            //     rowClasses += "ANDI508-table-row-alert ";
 
             tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
                 "<th scope='row'>" + gANDI.images.list[x].index + "</th>" +
