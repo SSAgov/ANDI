@@ -680,14 +680,16 @@ function init_module() {
             //determine if there is an alert
             rowClasses = "";
             var nextTabButton = "";
-            if (sANDI.links.list[x].alerts.includes("Alert"))
+            if (sANDI.links.list[x].alerts.includes("Alert")) {
                 rowClasses += "ANDI508-table-row-alert ";
+            }
 
             if (sANDI.links.list[x].linkPurpose == "i") {
                 rowClasses += "sANDI508-listLinks-internal ";
                 var id = sANDI.links.list[x].href;
-                if (id.charAt(0) === "#")
+                if (id.charAt(0) === "#") {
                     id = id.substring(1, id.length);
+                }
                 nextTabButton = " <button class='sANDI508-nextTab' data-andi508-relatedid='" +
                     id + "' title='focus on the element after id=" +
                     id + "'>next tab</button>";
@@ -711,29 +713,30 @@ function init_module() {
             "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
-    } else { //BUILD BUTTON LIST TABLE
-        for (var b = 0; b < sANDI.buttons.list.length; b++) {
-            //determine if there is an alert
-            rowClasses = "";
-            if (sANDI.buttons.list[b].alerts.includes("Alert")) {
-                rowClasses += "ANDI508-table-row-alert ";
-            }
-
-            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                "<th scope='row'>" + sANDI.buttons.list[b].index + "</th>" +
-                "<td class='ANDI508-alert-column'>" + sANDI.buttons.list[b].alerts + "</td>" +
-                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.buttons.list[b].index + "'>" + sANDI.buttons.list[b].nameDescription + "</a></td>" +
-                "<td>" + sANDI.buttons.list[b].accesskey + "</td>" +
-                "</tr>";
-        }
-
-        tabsHTML = "<button id='sANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
-
-        appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
-            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-            "<th scope='col' style='width:75%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
-            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Accesskey <i aria-hidden='true'></i></a></th>";
     }
+    // else { //BUILD BUTTON LIST TABLE
+    //     for (var b = 0; b < sANDI.buttons.list.length; b++) {
+    //         //determine if there is an alert
+    //         rowClasses = "";
+    //         if (sANDI.buttons.list[b].alerts.includes("Alert")) {
+    //             rowClasses += "ANDI508-table-row-alert ";
+    //         }
+
+    //         tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+    //             "<th scope='row'>" + sANDI.buttons.list[b].index + "</th>" +
+    //             "<td class='ANDI508-alert-column'>" + sANDI.buttons.list[b].alerts + "</td>" +
+    //             "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.buttons.list[b].index + "'>" + sANDI.buttons.list[b].nameDescription + "</a></td>" +
+    //             "<td>" + sANDI.buttons.list[b].accesskey + "</td>" +
+    //             "</tr>";
+    //     }
+
+    //     tabsHTML = "<button id='sANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
+
+    //     appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
+    //         "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+    //         "<th scope='col' style='width:75%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
+    //         "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Accesskey <i aria-hidden='true'></i></a></th>";
+    // }
 
     $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
@@ -781,9 +784,7 @@ AndiModule.inspect = function (element) {
         andiBar.prepareActiveElementInspection(element);
 
         var elementData = $(element).data("andi508");
-
-
-
+        
         var addOnProps = AndiData.getAddOnProps(element, elementData,
             [
                 "aria-level",
