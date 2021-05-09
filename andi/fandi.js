@@ -15,16 +15,32 @@ function init_module() {
         labelTags: false
     });
 
+    //This object class is used to store data about each focusable element. Object instances will be placed into an array.
+    function Focusable(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
+    //This object class is used to keep track of the focusable elements on the page
+    function Focusables() {
+        this.list = [];
+        this.count = 0;
+    }
+
     fANDI.viewList_tableReady = false;
+    fANDI.index = 0;
 
     //This function will analyze the test page for focusable element related markup relating to accessibility
     fANDI.analyze = function () {
+        fANDI.focusables = new Focusables();
 
         fANDI.accesskeys = new AndiAccesskeys();
 
         //Loop through every visible element and run tests
         $(TestPageData.allElements).each(function () {
             if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
+                fANDI.focusables.list.push(new Focusable(this, fANDI.index));
+                fANDI.focusables.count += 1;
                 andiData = new AndiData(this);
 
                 andiCheck.commonFocusableElementChecks(andiData, $(this));
@@ -37,6 +53,7 @@ function init_module() {
                 testPageData.firstLaunchedModulePrep(this);
                 andiCheck.isThisElementDisabled(this);
             }
+            fANDI.index += 1;
         });
 
         andiCheck.areLabelForValid();
@@ -224,49 +241,49 @@ function init_module() {
         if (mode === "links") {
             //BUILD LINKS LIST TABLE
             var displayHref, targetText;
-            for (var x = 0; x < fANDI.links.list.length; x++) {
+            for (var x = 0; x < fANDI.focusables.list.length; x++) {
                 //get target text if internal link
                 displayHref = "";
                 targetText = "";
-                if (fANDI.links.list[x].href) {//if has an href
-                    if (!fANDI.isScriptedLink(fANDI.links.list[x])) {
-                        if (fANDI.links.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
+                if (fANDI.focusables.list[x].href) {//if has an href
+                    if (!fANDI.isScriptedLink(fANDI.focusables.list[x])) {
+                        if (fANDI.focusables.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
                             targetText = "target='_landi'";
-                        displayHref = "<a href='" + fANDI.links.list[x].href + "' " + targetText + ">" + fANDI.links.list[x].href + "</a>";
+                        displayHref = "<a href='" + fANDI.focusables.list[x].href + "' " + targetText + ">" + fANDI.focusables.list[x].href + "</a>";
                     } else { //href contains javascript
-                        displayHref = fANDI.links.list[x].href;
+                        displayHref = fANDI.focusables.list[x].href;
                     }
                 }
 
                 //determine if there is an alert
                 rowClasses = "";
                 var nextTabButton = "";
-                if (fANDI.links.list[x].alerts.includes("Alert"))
+                if (fANDI.focusables.list[x].alerts.includes("Alert"))
                     rowClasses += "ANDI508-table-row-alert ";
 
-                if (fANDI.links.list[x].linkPurpose == "i") {
+                if (fANDI.focusables.list[x].linkPurpose == "i") {
                     rowClasses += "lANDI508-listLinks-internal ";
-                    var id = fANDI.links.list[x].href;
+                    var id = fANDI.focusables.list[x].href;
                     if (id.charAt(0) === "#")
                         id = id.substring(1, id.length);
                     nextTabButton = " <button class='lANDI508-nextTab' data-andi508-relatedid='" +
                         id + "' title='focus on the element after id=" +
                         id + "'>next tab</button>";
-                } else if (fANDI.links.list[x].linkPurpose == "e") {
+                } else if (fANDI.focusables.list[x].linkPurpose == "e") {
                     rowClasses += "lANDI508-listLinks-external ";
                 }
 
                 tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + fANDI.links.list[x].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + fANDI.links.list[x].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.links.list[x].index + "'>" + fANDI.links.list[x].nameDescription + "</a></td>" +
+                    "<th scope='row'>" + fANDI.focusables.list[x].index + "</th>" +
+                    "<td class='ANDI508-alert-column'>" + fANDI.focusables.list[x].alerts + "</td>" +
+                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.focusables.list[x].index + "'>" + fANDI.focusables.list[x].nameDescription + "</a></td>" +
                     "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
                     "</tr>";
             }
 
-            tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + fANDI.links.list.length + ")</button>";
-            tabsHTML += "<button id='lANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='lANDI508-internalLink'>skip links (" + fANDI.links.internalCount + ")</button>";
-            tabsHTML += "<button id='lANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='lANDI508-externalLink'>external links (" + fANDI.links.externalCount + ")</button>";
+            tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + fANDI.focusables.list.length + ")</button>";
+            tabsHTML += "<button id='lANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='lANDI508-internalLink'>skip links (" + fANDI.focusables.internalCount + ")</button>";
+            tabsHTML += "<button id='lANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='lANDI508-externalLink'>external links (" + fANDI.focusables.externalCount + ")</button>";
 
             appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
