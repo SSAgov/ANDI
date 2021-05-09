@@ -602,6 +602,8 @@ function init_module() {
             "</div>" +
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
+        // TODO: Try to separate the logic for using lANDI.links vs lANDI.buttons to make it easier to use
+        //       for sANDI
         if (mode === "links") {
             //BUILD LINKS LIST TABLE
             var displayHref, targetText;
