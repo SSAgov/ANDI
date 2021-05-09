@@ -370,8 +370,6 @@ function init_module() {
             "</div>" +
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
-        //BUILD IMAGES LIST TABLE
-        var displayHref, targetText;
         for (var x = 0; x < gANDI.images.list.length; x++) {
             //determine if there is an alert
             rowClasses = "";
@@ -384,7 +382,7 @@ function init_module() {
                 "<td class='ANDI508-alert-column'></td>" +
                 //"<td class='ANDI508-alert-column'>" + gANDI.images.list[x].alerts + "</td>" +
                 "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + gANDI.images.list[x].index + "'>" + gANDI.images.list[x].element + "</a></td>"
-                "</tr>";
+            "</tr>";
         }
 
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
@@ -407,7 +405,7 @@ function init_module() {
                 .attr("aria-expanded", "true")
                 .find("img").attr("src", icons_url + "list-on.png");
             $("#gANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
-            if (mode === "focusable elements") {
+            if (mode === "images") {
                 AndiModule.activeActionButtons.viewLinksList = true;
             }
         } else { //hide List, show alert list
@@ -420,7 +418,7 @@ function init_module() {
                 .removeClass("ANDI508-viewOtherResults-button-expanded")
                 .html(listIcon + "view " + mode + " list")
                 .attr("aria-expanded", "false");
-            if (mode === "links") {
+            if (mode === "images") {
                 AndiModule.activeActionButtons.viewLinksList = false;
             } else {
                 AndiModule.activeActionButtons.viewButtonsList = false;

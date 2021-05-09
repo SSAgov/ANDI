@@ -280,48 +280,45 @@ function init_module() {
             "</div>" +
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
-        if (mode === "links") {
-            //BUILD LINKS LIST TABLE
-            var displayHref, targetText;
-            for (var x = 0; x < cANDI.links.list.length; x++) {
-                //get target text if internal link
-                displayHref = "";
-                targetText = "";
-                if (cANDI.links.list[x].href) {//if has an href
-                    if (!cANDI.isScriptedLink(cANDI.links.list[x])) {
-                        if (cANDI.links.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
-                            targetText = "target='_cANDI'";
-                        displayHref = "<a href='" + cANDI.links.list[x].href + "' " + targetText + ">" + cANDI.links.list[x].href + "</a>";
-                    } else { //href contains javascript
-                        displayHref = cANDI.links.list[x].href;
-                    }
+        var displayHref, targetText;
+        for (var x = 0; x < cANDI.links.list.length; x++) {
+            //get target text if internal link
+            displayHref = "";
+            targetText = "";
+            if (cANDI.links.list[x].href) {//if has an href
+                if (!cANDI.isScriptedLink(cANDI.links.list[x])) {
+                    if (cANDI.links.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
+                        targetText = "target='_cANDI'";
+                    displayHref = "<a href='" + cANDI.links.list[x].href + "' " + targetText + ">" + cANDI.links.list[x].href + "</a>";
+                } else { //href contains javascript
+                    displayHref = cANDI.links.list[x].href;
                 }
-
-                //determine if there is an alert
-                rowClasses = "";
-                var nextTabButton = "";
-                if (cANDI.links.list[x].alerts.includes("Alert"))
-                    rowClasses += "ANDI508-table-row-alert ";
-
-                if (cANDI.links.list[x].linkPurpose == "i") {
-                    rowClasses += "cANDI508-listLinks-internal ";
-                    var id = cANDI.links.list[x].href;
-                    if (id.charAt(0) === "#")
-                        id = id.substring(1, id.length);
-                    nextTabButton = " <button class='cANDI508-nextTab' data-andi508-relatedid='" +
-                        id + "' title='focus on the element after id=" +
-                        id + "'>next tab</button>";
-                } else if (cANDI.links.list[x].linkPurpose == "e") {
-                    rowClasses += "cANDI508-listLinks-external ";
-                }
-
-                tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + cANDI.links.list[x].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + cANDI.links.list[x].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + cANDI.links.list[x].index + "'>" + cANDI.links.list[x].nameDescription + "</a></td>" +
-                    "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
-                    "</tr>";
             }
+
+            //determine if there is an alert
+            rowClasses = "";
+            var nextTabButton = "";
+            if (cANDI.links.list[x].alerts.includes("Alert"))
+                rowClasses += "ANDI508-table-row-alert ";
+
+            if (cANDI.links.list[x].linkPurpose == "i") {
+                rowClasses += "cANDI508-listLinks-internal ";
+                var id = cANDI.links.list[x].href;
+                if (id.charAt(0) === "#")
+                    id = id.substring(1, id.length);
+                nextTabButton = " <button class='cANDI508-nextTab' data-andi508-relatedid='" +
+                    id + "' title='focus on the element after id=" +
+                    id + "'>next tab</button>";
+            } else if (cANDI.links.list[x].linkPurpose == "e") {
+                rowClasses += "cANDI508-listLinks-external ";
+            }
+
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + cANDI.links.list[x].index + "</th>" +
+                "<td class='ANDI508-alert-column'>" + cANDI.links.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + cANDI.links.list[x].index + "'>" + cANDI.links.list[x].nameDescription + "</a></td>" +
+                "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
+                "</tr>";
 
             tabsHTML = "<button id='cANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + cANDI.links.list.length + ")</button>";
             tabsHTML += "<button id='cANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='cANDI508-internalLink'>skip links (" + cANDI.links.internalCount + ")</button>";
@@ -331,28 +328,6 @@ function init_module() {
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
-        } else { //BUILD BUTTON LIST TABLE
-            for (var b = 0; b < cANDI.buttons.list.length; b++) {
-                //determine if there is an alert
-                rowClasses = "";
-                if (cANDI.buttons.list[b].alerts.includes("Alert")) {
-                    rowClasses += "ANDI508-table-row-alert ";
-                }
-
-                tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + cANDI.buttons.list[b].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + cANDI.buttons.list[b].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + cANDI.buttons.list[b].index + "'>" + cANDI.buttons.list[b].nameDescription + "</a></td>" +
-                    "<td>" + cANDI.buttons.list[b].accesskey + "</td>" +
-                    "</tr>";
-            }
-
-            tabsHTML = "<button id='cANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
-
-            appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:75%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Accesskey <i aria-hidden='true'></i></a></th>";
         }
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");

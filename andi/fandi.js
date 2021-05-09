@@ -228,28 +228,24 @@ function init_module() {
             "</div>" +
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
-        if (mode === "links") {
-            //BUILD LINKS LIST TABLE
-            for (var x = 0; x < fANDI.focusables.list.length; x++) {
+        for (var x = 0; x < fANDI.focusables.list.length; x++) {
+            //determine if there is an alert
+            rowClasses = "";
+            var nextTabButton = "";
+            // if (fANDI.focusables.list[x].alerts.includes("Alert"))
+            //     rowClasses += "ANDI508-table-row-alert ";
 
-                //determine if there is an alert
-                rowClasses = "";
-                var nextTabButton = "";
-                // if (fANDI.focusables.list[x].alerts.includes("Alert"))
-                //     rowClasses += "ANDI508-table-row-alert ";
-
-                tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + fANDI.focusables.list[x].index + "</th>" +
-                    "<td class='ANDI508-alert-column'></td>" +
-                    //"<td class='ANDI508-alert-column'>" + fANDI.focusables.list[x].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.focusables.list[x].index + "'>" + fANDI.focusables.list[x].element + "</a></td>" +
-                    "</tr>";
-            }
-
-            appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + fANDI.focusables.list[x].index + "</th>" +
+                "<td class='ANDI508-alert-column'></td>" +
+                //"<td class='ANDI508-alert-column'>" + fANDI.focusables.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.focusables.list[x].index + "'>" + fANDI.focusables.list[x].element + "</a></td>" +
+                "</tr>";
         }
+
+        appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
@@ -280,7 +276,7 @@ function init_module() {
                 .removeClass("ANDI508-viewOtherResults-button-expanded")
                 .html(listIcon + "view " + mode + " list")
                 .attr("aria-expanded", "false");
-            if (mode === "links") {
+            if (mode === "focusable elements") {
                 AndiModule.activeActionButtons.viewLinksList = false;
             } else {
                 AndiModule.activeActionButtons.viewButtonsList = false;

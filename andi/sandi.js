@@ -677,240 +677,224 @@ function init_module() {
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
         if (mode === "links") {
-            //BUILD LINKS LIST TABLE
-            var displayHref, targetText;
-            for (var x = 0; x < sANDI.links.list.length; x++) {
-                //get target text if internal link
-                displayHref = "";
-                targetText = "";
-                if (sANDI.links.list[x].href) {//if has an href
-                    if (!sANDI.isScriptedLink(sANDI.links.list[x])) {
-                        if (sANDI.links.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
-                            targetText = "target='_sANDI'";
-                        displayHref = "<a href='" + sANDI.links.list[x].href + "' " + targetText + ">" + sANDI.links.list[x].href + "</a>";
-                    } else { //href contains javascript
-                        displayHref = sANDI.links.list[x].href;
-                    }
-                }
+            //determine if there is an alert
+            rowClasses = "";
+            var nextTabButton = "";
+            if (sANDI.links.list[x].alerts.includes("Alert"))
+                rowClasses += "ANDI508-table-row-alert ";
 
-                //determine if there is an alert
-                rowClasses = "";
-                var nextTabButton = "";
-                if (sANDI.links.list[x].alerts.includes("Alert"))
-                    rowClasses += "ANDI508-table-row-alert ";
-
-                if (sANDI.links.list[x].linkPurpose == "i") {
-                    rowClasses += "sANDI508-listLinks-internal ";
-                    var id = sANDI.links.list[x].href;
-                    if (id.charAt(0) === "#")
-                        id = id.substring(1, id.length);
-                    nextTabButton = " <button class='sANDI508-nextTab' data-andi508-relatedid='" +
-                        id + "' title='focus on the element after id=" +
-                        id + "'>next tab</button>";
-                } else if (sANDI.links.list[x].linkPurpose == "e") {
-                    rowClasses += "sANDI508-listLinks-external ";
-                }
-
-                tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + sANDI.links.list[x].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + sANDI.links.list[x].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.links.list[x].index + "'>" + sANDI.links.list[x].nameDescription + "</a></td>" +
-                    "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
-                    "</tr>";
+            if (sANDI.links.list[x].linkPurpose == "i") {
+                rowClasses += "sANDI508-listLinks-internal ";
+                var id = sANDI.links.list[x].href;
+                if (id.charAt(0) === "#")
+                    id = id.substring(1, id.length);
+                nextTabButton = " <button class='sANDI508-nextTab' data-andi508-relatedid='" +
+                    id + "' title='focus on the element after id=" +
+                    id + "'>next tab</button>";
+            } else if (sANDI.links.list[x].linkPurpose == "e") {
+                rowClasses += "sANDI508-listLinks-external ";
             }
 
-            tabsHTML = "<button id='sANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + sANDI.links.list.length + ")</button>";
-            tabsHTML += "<button id='sANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='sANDI508-internalLink'>skip links (" + sANDI.links.internalCount + ")</button>";
-            tabsHTML += "<button id='sANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='sANDI508-externalLink'>external links (" + sANDI.links.externalCount + ")</button>";
-
-            appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
-        } else { //BUILD BUTTON LIST TABLE
-            for (var b = 0; b < sANDI.buttons.list.length; b++) {
-                //determine if there is an alert
-                rowClasses = "";
-                if (sANDI.buttons.list[b].alerts.includes("Alert")) {
-                    rowClasses += "ANDI508-table-row-alert ";
-                }
-
-                tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + sANDI.buttons.list[b].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + sANDI.buttons.list[b].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.buttons.list[b].index + "'>" + sANDI.buttons.list[b].nameDescription + "</a></td>" +
-                    "<td>" + sANDI.buttons.list[b].accesskey + "</td>" +
-                    "</tr>";
-            }
-
-            tabsHTML = "<button id='sANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
-
-            appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:75%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Accesskey <i aria-hidden='true'></i></a></th>";
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + sANDI.links.list[x].index + "</th>" +
+                "<td class='ANDI508-alert-column'>" + sANDI.links.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.links.list[x].index + "'>" + sANDI.links.list[x].nameDescription + "</a></td>" +
+                "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
+                "</tr>";
         }
 
-        $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
+        tabsHTML = "<button id='sANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + sANDI.links.list.length + ")</button>";
+        tabsHTML += "<button id='sANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='sANDI508-internalLink'>skip links (" + sANDI.links.internalCount + ")</button>";
+        tabsHTML += "<button id='sANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='sANDI508-externalLink'>external links (" + sANDI.links.externalCount + ")</button>";
 
-    };
+        appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
+    } else { //BUILD BUTTON LIST TABLE
+        for (var b = 0; b < sANDI.buttons.list.length; b++) {
+            //determine if there is an alert
+            rowClasses = "";
+            if (sANDI.buttons.list[b].alerts.includes("Alert")) {
+                rowClasses += "ANDI508-table-row-alert ";
+            }
 
-    //This function hide/shows the view list
-    sANDI.viewList_toggle = function (mode, btn) {
-        if ($(btn).attr("aria-expanded") === "false") {
-            //show List, hide alert list
-            $("#ANDI508-alerts-list").hide();
-            andiSettings.minimode(false);
-            $(btn)
-                .addClass("ANDI508-viewOtherResults-button-expanded")
-                .html(listIcon + "hide " + mode + " list")
-                .attr("aria-expanded", "true")
-                .find("img").attr("src", icons_url + "list-on.png");
-            $("#sANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
-            if (mode === "links") {
-                AndiModule.activeActionButtons.viewLinksList = true;
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + sANDI.buttons.list[b].index + "</th>" +
+                "<td class='ANDI508-alert-column'>" + sANDI.buttons.list[b].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.buttons.list[b].index + "'>" + sANDI.buttons.list[b].nameDescription + "</a></td>" +
+                "<td>" + sANDI.buttons.list[b].accesskey + "</td>" +
+                "</tr>";
+        }
+
+        tabsHTML = "<button id='sANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
+
+        appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:75%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Accesskey <i aria-hidden='true'></i></a></th>";
+    }
+
+    $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
+
+};
+
+//This function hide/shows the view list
+sANDI.viewList_toggle = function (mode, btn) {
+    if ($(btn).attr("aria-expanded") === "false") {
+        //show List, hide alert list
+        $("#ANDI508-alerts-list").hide();
+        andiSettings.minimode(false);
+        $(btn)
+            .addClass("ANDI508-viewOtherResults-button-expanded")
+            .html(listIcon + "hide " + mode + " list")
+            .attr("aria-expanded", "true")
+            .find("img").attr("src", icons_url + "list-on.png");
+        $("#sANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+        if (mode === "links") {
+            AndiModule.activeActionButtons.viewLinksList = true;
+        } else {
+            AndiModule.activeActionButtons.viewButtonsList = true;
+        }
+    } else { //hide List, show alert list
+        $("#sANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+        //$("#ANDI508-resultsSummary").show();
+        if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+            $("#ANDI508-alerts-list").show();
+        }
+        $(btn)
+            .removeClass("ANDI508-viewOtherResults-button-expanded")
+            .html(listIcon + "view " + mode + " list")
+            .attr("aria-expanded", "false");
+        if (mode === "links") {
+            AndiModule.activeActionButtons.viewLinksList = false;
+        } else {
+            AndiModule.activeActionButtons.viewButtonsList = false;
+        }
+    }
+};
+
+//This function will update the info in the Active Element Inspection.
+//Should be called after the mouse hover or focus in event.
+AndiModule.inspect = function (element) {
+    if ($(element).hasClass("ANDI508-element")) {
+        andiBar.prepareActiveElementInspection(element);
+
+        var elementData = $(element).data("andi508");
+
+
+
+        var addOnProps = AndiData.getAddOnProps(element, elementData,
+            [
+                "aria-level",
+                getDefault_ariaLive(element, elementData),
+                getDefault_ariaAtomic(element, elementData),
+                "aria-busy",
+                "aria-relevant"
+            ]);
+
+        andiBar.displayTable(elementData, element, addOnProps);
+
+        if (AndiModule.activeActionButtons.liveRegions) { //For Live Region mode, update the output live
+            //Copy from the AC table
+            var innerText = $("#ANDI508-accessibleComponentsTable td.ANDI508-display-innerText").first().html();
+            if (innerText) {
+                elementData.accName = "<span class='ANDI508-display-innerText'>" + innerText + "</span>";
+            }
+        }
+
+        andiBar.displayOutput(elementData, element, addOnProps);
+    }
+
+    //This function assumes the default values of aria-live based on the element's role as defined by spec
+    function getDefault_ariaLive(element, elementData) {
+        var val = $.trim($(element).attr("aria-live"));
+        if (!val) {
+            if (elementData.role === "alert") {
+                val = "assertive";
+            } else if (elementData.role === "log" || elementData.role === "status") {
+                val = "polite";
+            } else if (elementData.role === "marquee" || elementData.role === "timer") {
+                val = "off";
             } else {
-                AndiModule.activeActionButtons.viewButtonsList = true;
+                return; //no default
             }
-        } else { //hide List, show alert list
-            $("#sANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
-            //$("#ANDI508-resultsSummary").show();
-            if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-                $("#ANDI508-alerts-list").show();
-            }
-            $(btn)
-                .removeClass("ANDI508-viewOtherResults-button-expanded")
-                .html(listIcon + "view " + mode + " list")
-                .attr("aria-expanded", "false");
-            if (mode === "links") {
-                AndiModule.activeActionButtons.viewLinksList = false;
+        }
+        return ["aria-live", val];
+    }
+
+    //This function assumes the default values of aria-atomic based on the element's role as defined by spec
+    function getDefault_ariaAtomic(element, elementData) {
+        var val = $.trim($(element).attr("aria-atomic"));
+        if (!val) {
+            if (elementData.role === "alert" || elementData.role === "status") {
+                val = "true";
+            } else if (elementData.role === "log" || elementData.role === "marquee" || elementData.role === "timer") {
+                val = "false";
             } else {
-                AndiModule.activeActionButtons.viewButtonsList = false;
+                return; //no default
             }
         }
-    };
+        return ["aria-atomic", val];
+    }
+};
 
-    //This function will update the info in the Active Element Inspection.
-    //Should be called after the mouse hover or focus in event.
-    AndiModule.inspect = function (element) {
-        if ($(element).hasClass("ANDI508-element")) {
-            andiBar.prepareActiveElementInspection(element);
+//This function will overlay the reading order sequence.
+AndiOverlay.prototype.overlayReadingOrder = function () {
+    //Elements that should be excluded from the scan, hidden elements will automatically be filtered out
+    var exclusions = "option,script,style,noscript";
+    //Elements that should be included in the scan even if they don't have innerText
+    var inclusions = "select,input,textarea";
 
-            var elementData = $(element).data("andi508");
+    var readingSequence = 0;
+    var overlayObject;
 
+    traverseReadingOrder(document.getElementById("ANDI508-testPage"));
 
+    //This recursive function traverses the dom tree and inserts the reading order overlay
+    //It distinguishes between element nodes and text nodes
+    //It will check for aria-hidden=true (with inheritance)
+    function traverseReadingOrder(element, ariaHidden) {
 
-            var addOnProps = AndiData.getAddOnProps(element, elementData,
-                [
-                    "aria-level",
-                    getDefault_ariaLive(element, elementData),
-                    getDefault_ariaAtomic(element, elementData),
-                    "aria-busy",
-                    "aria-relevant"
-                ]);
+        //Check for aria-hidden=true
+        ariaHidden = (ariaHidden || $(element).attr("aria-hidden") === "true") ? true : false;
 
-            andiBar.displayTable(elementData, element, addOnProps);
+        for (var z = 0; z < element.childNodes.length; z++) {
 
-            if (AndiModule.activeActionButtons.liveRegions) { //For Live Region mode, update the output live
-                //Copy from the AC table
-                var innerText = $("#ANDI508-accessibleComponentsTable td.ANDI508-display-innerText").first().html();
-                if (innerText) {
-                    elementData.accName = "<span class='ANDI508-display-innerText'>" + innerText + "</span>";
-                }
-            }
-
-            andiBar.displayOutput(elementData, element, addOnProps);
-        }
-
-        //This function assumes the default values of aria-live based on the element's role as defined by spec
-        function getDefault_ariaLive(element, elementData) {
-            var val = $.trim($(element).attr("aria-live"));
-            if (!val) {
-                if (elementData.role === "alert") {
-                    val = "assertive";
-                } else if (elementData.role === "log" || elementData.role === "status") {
-                    val = "polite";
-                } else if (elementData.role === "marquee" || elementData.role === "timer") {
-                    val = "off";
-                } else {
-                    return; //no default
-                }
-            }
-            return ["aria-live", val];
-        }
-
-        //This function assumes the default values of aria-atomic based on the element's role as defined by spec
-        function getDefault_ariaAtomic(element, elementData) {
-            var val = $.trim($(element).attr("aria-atomic"));
-            if (!val) {
-                if (elementData.role === "alert" || elementData.role === "status") {
-                    val = "true";
-                } else if (elementData.role === "log" || elementData.role === "marquee" || elementData.role === "timer") {
-                    val = "false";
-                } else {
-                    return; //no default
-                }
-            }
-            return ["aria-atomic", val];
-        }
-    };
-
-    //This function will overlay the reading order sequence.
-    AndiOverlay.prototype.overlayReadingOrder = function () {
-        //Elements that should be excluded from the scan, hidden elements will automatically be filtered out
-        var exclusions = "option,script,style,noscript";
-        //Elements that should be included in the scan even if they don't have innerText
-        var inclusions = "select,input,textarea";
-
-        var readingSequence = 0;
-        var overlayObject;
-
-        traverseReadingOrder(document.getElementById("ANDI508-testPage"));
-
-        //This recursive function traverses the dom tree and inserts the reading order overlay
-        //It distinguishes between element nodes and text nodes
-        //It will check for aria-hidden=true (with inheritance)
-        function traverseReadingOrder(element, ariaHidden) {
-
-            //Check for aria-hidden=true
-            ariaHidden = (ariaHidden || $(element).attr("aria-hidden") === "true") ? true : false;
-
-            for (var z = 0; z < element.childNodes.length; z++) {
-
-                //if child is an element object that is visible
-                if (element.childNodes[z].nodeType === 1) {
-                    if (!$(element.childNodes[z]).is(exclusions) && $(element.childNodes[z]).is(":shown")) {
-                        if ($(element.childNodes[z]).is(inclusions)) {//no need to look at this element's childNodes
-                            insertReadingOrder(ariaHidden, element.childNodes[z]);
-                            z++;//because a new node was inserted, the indexes changed
-                        } else { //recursion here:
-                            traverseReadingOrder(element.childNodes[z], ariaHidden);
-                        }
-                    }
-                } else if (element.childNodes[z].nodeType === 3) { //if child is a text node
-                    if ($.trim(element.childNodes[z].nodeValue) !== "") {
-                        //Found some text
+            //if child is an element object that is visible
+            if (element.childNodes[z].nodeType === 1) {
+                if (!$(element.childNodes[z]).is(exclusions) && $(element.childNodes[z]).is(":shown")) {
+                    if ($(element.childNodes[z]).is(inclusions)) {//no need to look at this element's childNodes
                         insertReadingOrder(ariaHidden, element.childNodes[z]);
                         z++;//because a new node was inserted, the indexes changed
+                    } else { //recursion here:
+                        traverseReadingOrder(element.childNodes[z], ariaHidden);
                     }
                 }
-            }
-
-            //this function inserts the reading order overlay
-            //if it's hidden using aria-hidden it will insert an alert overlay
-            function insertReadingOrder(ariaHidden, node) {
-                if (ariaHidden) {
-                    overlayObject = andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-readingOrder", "X", "hidden from screen reader using aria-hidden=true");
-                } else {
-                    readingSequence++;
-                    overlayObject = andiOverlay.createOverlay("ANDI508-overlay-readingOrder", readingSequence);
+            } else if (element.childNodes[z].nodeType === 3) { //if child is a text node
+                if ($.trim(element.childNodes[z].nodeValue) !== "") {
+                    //Found some text
+                    insertReadingOrder(ariaHidden, element.childNodes[z]);
+                    z++;//because a new node was inserted, the indexes changed
                 }
-                andiOverlay.insertAssociatedOverlay(node, overlayObject);
             }
         }
-    };
 
-    sANDI.analyze();
-    sANDI.results();
+        //this function inserts the reading order overlay
+        //if it's hidden using aria-hidden it will insert an alert overlay
+        function insertReadingOrder(ariaHidden, node) {
+            if (ariaHidden) {
+                overlayObject = andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-readingOrder", "X", "hidden from screen reader using aria-hidden=true");
+            } else {
+                readingSequence++;
+                overlayObject = andiOverlay.createOverlay("ANDI508-overlay-readingOrder", readingSequence);
+            }
+            andiOverlay.insertAssociatedOverlay(node, overlayObject);
+        }
+    }
+};
+
+sANDI.analyze();
+sANDI.results();
 
 }//end init
