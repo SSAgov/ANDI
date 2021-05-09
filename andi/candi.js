@@ -120,12 +120,12 @@ function init_module() {
         //Color Contrast List Button
         $("#ANDI508-viewColorsList-button").click(function () {
             if (!cANDI.viewList_tableReady) {
-                cANDI.viewList_buildTable("links");
+                cANDI.viewList_buildTable("color contrast");
                 //cANDI.viewList_attachEvents();
                 //cANDI.viewList_attachEvents_links();
                 cANDI.viewList_tableReady = true;
             }
-            cANDI.viewList_toggle("links", this);
+            cANDI.viewList_toggle("color contrast", this);
             andiResetter.resizeHeights();
             return false;
         });
@@ -319,6 +319,41 @@ function init_module() {
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
         }
+
+        //This function hide/shows the view list
+        cANDI.viewList_toggle = function (mode, btn) {
+            if ($(btn).attr("aria-expanded") === "false") {
+                //show List, hide alert list
+                $("#ANDI508-alerts-list").hide();
+                andiSettings.minimode(false);
+                $(btn)
+                    .addClass("ANDI508-viewOtherResults-button-expanded")
+                    .html(listIcon + "hide " + mode + " list")
+                    .attr("aria-expanded", "true")
+                    .find("img").attr("src", icons_url + "list-on.png");
+                $("#cANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+                if (mode === "links") {
+                    AndiModule.activeActionButtons.viewLinksList = true;
+                } else {
+                    AndiModule.activeActionButtons.viewButtonsList = true;
+                }
+            } else { //hide List, show alert list
+                $("#cANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+                //$("#ANDI508-resultsSummary").show();
+                if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+                    $("#ANDI508-alerts-list").show();
+                }
+                $(btn)
+                    .removeClass("ANDI508-viewOtherResults-button-expanded")
+                    .html(listIcon + "view " + mode + " list")
+                    .attr("aria-expanded", "false");
+                if (mode === "links") {
+                    AndiModule.activeActionButtons.viewLinksList = false;
+                } else {
+                    AndiModule.activeActionButtons.viewButtonsList = false;
+                }
+            }
+        };
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
