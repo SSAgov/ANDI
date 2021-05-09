@@ -56,29 +56,6 @@ function init_module() {
         this.nonUniqueCount = 0;
     }
 
-    //Alert icons for the links list table
-    //Ignore the jslint warning about the "new" declaration. It is needed.
-    var alertIcons = new function () {//new is intentional
-        this.danger_noAccessibleName = makeIcon("danger", "No accessible name");
-        this.danger_anchorTargetNotFound = makeIcon("warning", "In-page anchor target not found");
-        this.warning_ambiguous = makeIcon("warning", "Ambiguous: same name, different href");
-        this.caution_ambiguous = makeIcon("caution", "Ambiguous: same name, different href");
-        this.caution_vagueText = makeIcon("caution", "Vague: does not identify link purpose.");
-        this.warning_nonUnique = makeIcon("warning", "Non-Unique: same name as another button");
-        this.warning_tabOrder = makeIcon("warning", "Element not in tab order");
-
-        function makeIcon(alertLevel, titleText) {
-            //The sortPriority number allows alert icon sorting
-            var sortPriority = "3"; //default to caution
-            if (alertLevel == "warning") {
-                sortPriority = "2";
-            } else if (alertLevel == "danger") {
-                sortPriority = "1";
-            }
-            return "<img src='" + icons_url + alertLevel + ".png' alt='" + alertLevel + "' title='Accessibility Alert: " + titleText + "' /><i>" + sortPriority + " </i>";
-        }
-    };
-
     AndiModule.initActiveActionButtons({
         linksMode: true,
         viewLinksList: false,
@@ -135,7 +112,7 @@ function init_module() {
                                         alerts = "<i>4</i>";
                                     }
                                 } else { //No accessible name or description
-                                    alerts = alertIcons.danger_noAccessibleName;
+                                    alerts = "danger: No accessible name";
                                     nameDescription = "<span class='ANDI508-display-danger'>No Accessible Name</span>";
                                 }
 
@@ -207,10 +184,11 @@ function init_module() {
                                 alerts = "<i>4</i>";
                             }
                         } else { //No accessible name or description
-                            alerts = alertIcons.danger_noAccessibleName;
+                            alerts = "danger: No accessible name";
                             nameDescription = "<span class='ANDI508-display-danger'>No Accessible Name</span>";
                         }
                         andiCheck.commonFocusableElementChecks(andiData, $(this));
+
                         AndiData.attachDataToElement(this);
                         
                         //create Button object and add to array
@@ -284,10 +262,10 @@ function init_module() {
                         //Determine which alert level should be thrown
                         if (href.charAt(0) == "#" || lANDI.links.list[x].href.charAt(0) == "#") {
                             //One link is internal
-                            alertIcon = alertIcons.caution_ambiguous;
+                            alertIcon = "caution: Ambiguous: same name, different href";
                             alertObject = alert_0162;
                         } else {
-                            alertIcon = alertIcons.warning_ambiguous;
+                            alertIcon = "warning: Ambiguous: same name, different href";
                             alertObject = alert_0161;
                         }
 
@@ -328,7 +306,7 @@ function init_module() {
             for (var y = 0; y < lANDI.buttons.list.length; y++) {
                 if (nameDescription.toLowerCase() == lANDI.buttons.list[y].nameDescription.toLowerCase()) { //nameDescription matches
 
-                    alertIcon = alertIcons.warning_nonUnique;
+                    alertIcon = "warning: Non-Unique: same name as another button";
                     alertObject = alert_0200;
 
                     //Throw the alert
@@ -370,7 +348,7 @@ function init_module() {
                     if (!isAnchorTargetFound(idRef)) {
                         if (element.onclick === null && $._data(element, 'events').click === undefined) {//no click events
                             //Throw Alert, Anchor Target not found
-                            alerts += alertIcons.danger_anchorTargetNotFound;
+                            alerts += "warning: In-page anchor target not found";
                             andiAlerter.throwAlert(alert_0069, [idRef]);
                         }
                     } else { //link is internal and anchor target found
@@ -404,7 +382,7 @@ function init_module() {
         function testForVagueLinkText(nameDescription) {
             var regEx = /^(click here|here|link|edit|select|more|more info|more information|go)$/g;
             if (regEx.test(nameDescription.toLowerCase())) {
-                alerts += alertIcons.caution_vagueText;
+                alerts += "caution: Vague: does not identify link purpose";
                 andiAlerter.throwAlert(alert_0163);
             }
         }
@@ -413,7 +391,7 @@ function init_module() {
         function isElementInTabOrder(element, role) {
             if (!!$(element).prop("tabIndex") && !$(element).is(":tabbable")) {//Element is not tabbable and has no tabindex
                 //Throw Alert: Element with role=link|button not in tab order
-                alerts += alertIcons.warning_tabOrder;
+                alerts += "warning: Element not in tab order";
                 andiAlerter.throwAlert(alert_0125, [role]);
             }
         }
