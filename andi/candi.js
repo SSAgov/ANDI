@@ -121,8 +121,8 @@ function init_module() {
         $("#ANDI508-viewColorsList-button").click(function () {
             if (!cANDI.viewList_tableReady) {
                 cANDI.viewList_buildTable("links");
-                cANDI.viewList_attachEvents();
-                cANDI.viewList_attachEvents_links();
+                //cANDI.viewList_attachEvents();
+                //cANDI.viewList_attachEvents_links();
                 cANDI.viewList_tableReady = true;
             }
             cANDI.viewList_toggle("links", this);
