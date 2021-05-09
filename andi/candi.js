@@ -296,18 +296,6 @@ function init_module() {
             // if (cANDI.colorContrasts.list[x].alerts.includes("Alert"))
             //     rowClasses += "ANDI508-table-row-alert ";
 
-            if (cANDI.colorContrasts.list[x].linkPurpose == "i") {
-                rowClasses += "cANDI508-listLinks-internal ";
-                var id = cANDI.colorContrasts.list[x].href;
-                if (id.charAt(0) === "#")
-                    id = id.substring(1, id.length);
-                nextTabButton = " <button class='cANDI508-nextTab' data-andi508-relatedid='" +
-                    id + "' title='focus on the element after id=" +
-                    id + "'>next tab</button>";
-            } else if (cANDI.colorContrasts.list[x].linkPurpose == "e") {
-                rowClasses += "cANDI508-listLinks-external ";
-            }
-
             tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
                 "<th scope='row'>" + cANDI.colorContrasts.list[x].index + "</th>" +
                 "<td class='ANDI508-alert-column'></td>" +
