@@ -85,7 +85,7 @@ function init_module() {
                 } else { //not contained by interactive widget
                     andiData = new AndiData(this);
                 }
-                gANDI.images.list.push(new Link(this, gANDI.index));
+                gANDI.images.list.push(new Image(this, gANDI.index));
                 //Check for conditions based on semantics
                 if ($(this).is("marquee")) {
                     gANDI.images.inlineCount++;
