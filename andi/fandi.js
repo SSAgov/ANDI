@@ -49,11 +49,11 @@ function init_module() {
                     fANDI.accesskeys.push(this, andiData.accesskey, andiData.andiElementIndex);
                 testPageData.firstLaunchedModulePrep(this, andiData);
                 AndiData.attachDataToElement(this);
+                fANDI.index += 1;
             } else {
                 testPageData.firstLaunchedModulePrep(this);
                 andiCheck.isThisElementDisabled(this);
             }
-            fANDI.index += 1;
         });
 
         andiCheck.areLabelForValid();
@@ -240,7 +240,6 @@ function init_module() {
 
         if (mode === "links") {
             //BUILD LINKS LIST TABLE
-            var displayHref, targetText;
             for (var x = 0; x < fANDI.focusables.list.length; x++) {
 
                 //determine if there is an alert
