@@ -276,8 +276,8 @@ function init_module() {
         $("#ANDI508-viewHiddenList-button").click(function () {
             if (!hANDI.viewList_tableReady) {
                 hANDI.viewList_buildTable("hidden elements");
-                hANDI.viewList_attachEvents();
-                hANDI.viewList_attachEvents_links();
+                //hANDI.viewList_attachEvents();
+                //hANDI.viewList_attachEvents_links();
                 hANDI.viewList_tableReady = true;
             }
             hANDI.viewList_toggle("hidden elements", this);
