@@ -302,11 +302,10 @@ function init_module() {
                 //"<td class='ANDI508-alert-column'>" + cANDI.colorContrasts.list[x].alerts + "</td>" +
                 "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + cANDI.colorContrasts.list[x].index + "'>" + cANDI.colorContrasts.list[x].element + "</a></td>" +
                 "</tr>";
-
-            appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+        }
+        appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
-        }
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
