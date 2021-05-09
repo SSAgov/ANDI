@@ -670,6 +670,69 @@ function init_module() {
 
 };
 
+//This function will update the info in the Active Element Inspection.
+//Should be called after the mouse hover or focus in event.
+AndiModule.inspect = function (element) {
+    if ($(element).hasClass("ANDI508-element")) {
+        andiBar.prepareActiveElementInspection(element);
+
+        var elementData = $(element).data("andi508");
+
+        var addOnProps = AndiData.getAddOnProps(element, elementData,
+            [
+                "aria-level",
+                getDefault_ariaLive(element, elementData),
+                getDefault_ariaAtomic(element, elementData),
+                "aria-busy",
+                "aria-relevant"
+            ]);
+
+        andiBar.displayTable(elementData, element, addOnProps);
+
+        if (AndiModule.activeActionButtons.liveRegions) { //For Live Region mode, update the output live
+            //Copy from the AC table
+            var innerText = $("#ANDI508-accessibleComponentsTable td.ANDI508-display-innerText").first().html();
+            if (innerText) {
+                elementData.accName = "<span class='ANDI508-display-innerText'>" + innerText + "</span>";
+            }
+        }
+
+        andiBar.displayOutput(elementData, element, addOnProps);
+    }
+
+    //This function assumes the default values of aria-live based on the element's role as defined by spec
+    function getDefault_ariaLive(element, elementData) {
+        var val = $.trim($(element).attr("aria-live"));
+        if (!val) {
+            if (elementData.role === "alert") {
+                val = "assertive";
+            } else if (elementData.role === "log" || elementData.role === "status") {
+                val = "polite";
+            } else if (elementData.role === "marquee" || elementData.role === "timer") {
+                val = "off";
+            } else {
+                return; //no default
+            }
+        }
+        return ["aria-live", val];
+    }
+
+    //This function assumes the default values of aria-atomic based on the element's role as defined by spec
+    function getDefault_ariaAtomic(element, elementData) {
+        var val = $.trim($(element).attr("aria-atomic"));
+        if (!val) {
+            if (elementData.role === "alert" || elementData.role === "status") {
+                val = "true";
+            } else if (elementData.role === "log" || elementData.role === "marquee" || elementData.role === "timer") {
+                val = "false";
+            } else {
+                return; //no default
+            }
+        }
+        return ["aria-atomic", val];
+    }
+};
+
 //This function builds the table for the view list
 sANDI.viewList_buildTable = function (mode) {
     var tableHTML = "";
@@ -789,69 +852,6 @@ sANDI.viewList_buildTable = function (mode) {
             } else {
                 AndiModule.activeActionButtons.viewButtonsList = false;
             }
-        }
-    };
-
-    //This function will update the info in the Active Element Inspection.
-    //Should be called after the mouse hover or focus in event.
-    AndiModule.inspect = function (element) {
-        if ($(element).hasClass("ANDI508-element")) {
-            andiBar.prepareActiveElementInspection(element);
-
-            var elementData = $(element).data("andi508");
-
-            var addOnProps = AndiData.getAddOnProps(element, elementData,
-                [
-                    "aria-level",
-                    getDefault_ariaLive(element, elementData),
-                    getDefault_ariaAtomic(element, elementData),
-                    "aria-busy",
-                    "aria-relevant"
-                ]);
-
-            andiBar.displayTable(elementData, element, addOnProps);
-
-            if (AndiModule.activeActionButtons.liveRegions) { //For Live Region mode, update the output live
-                //Copy from the AC table
-                var innerText = $("#ANDI508-accessibleComponentsTable td.ANDI508-display-innerText").first().html();
-                if (innerText) {
-                    elementData.accName = "<span class='ANDI508-display-innerText'>" + innerText + "</span>";
-                }
-            }
-
-            andiBar.displayOutput(elementData, element, addOnProps);
-        }
-
-        //This function assumes the default values of aria-live based on the element's role as defined by spec
-        function getDefault_ariaLive(element, elementData) {
-            var val = $.trim($(element).attr("aria-live"));
-            if (!val) {
-                if (elementData.role === "alert") {
-                    val = "assertive";
-                } else if (elementData.role === "log" || elementData.role === "status") {
-                    val = "polite";
-                } else if (elementData.role === "marquee" || elementData.role === "timer") {
-                    val = "off";
-                } else {
-                    return; //no default
-                }
-            }
-            return ["aria-live", val];
-        }
-
-        //This function assumes the default values of aria-atomic based on the element's role as defined by spec
-        function getDefault_ariaAtomic(element, elementData) {
-            var val = $.trim($(element).attr("aria-atomic"));
-            if (!val) {
-                if (elementData.role === "alert" || elementData.role === "status") {
-                    val = "true";
-                } else if (elementData.role === "log" || elementData.role === "marquee" || elementData.role === "timer") {
-                    val = "false";
-                } else {
-                    return; //no default
-                }
-            }
-            return ["aria-atomic", val];
         }
     };
 
