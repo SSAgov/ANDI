@@ -11,6 +11,12 @@ function init_module() {
     //create hANDI instance
     var hANDI = new AndiModule(handiVersionNumber, "h");
 
+    //This object class is used to store data about each hidden contrast element. Object instances will be placed into an array.
+    function HiddenContent(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
     //This object class is used to keep track of the hidden content on the page
     function HiddenContents() {
         this.list = [];
@@ -27,6 +33,7 @@ function init_module() {
     }
 
     hANDI.viewList_tableReady = false;
+    hANDI.index = 0;
 
     //This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
     //Holding the shift key will prevent inspection from changing.
@@ -192,8 +199,10 @@ function init_module() {
                     $(this).attr("data-handi508-hidingtechniques", elementCss);
                 }
 
+                hANDI.hiddenContents.list.push(new HiddenContent(this, hANDI.index));
                 andiData = new AndiData(this, true);
                 AndiData.attachDataToElement(this);
+                hANDI.index += 1;
             }
         });
 
