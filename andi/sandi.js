@@ -309,6 +309,21 @@ function init_module() {
         return outlineItem;
     };
 
+    //This function will display the heading list (headings outline)
+    //It should only be called on heading elements
+    sANDI.getOutlineItemModule = function (elementToUse) {
+        var outlineItem = "<a style='margin-left:" + "%' href='#' data-andi508-relatedindex='" + $(elementToUse).attr('data-andi508-index') + "'>&lt;";
+
+        outlineItem += "&gt;";
+        outlineItem += "<span class='ANDI508-display-innerText'>";
+        outlineItem += elementToUse;
+        
+        outlineItem += "</span>";
+        outlineItem += "</a>";
+        outlineItem += "<br />";
+        return outlineItem;
+    };
+
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     sANDI.results = function () {
 
@@ -515,8 +530,8 @@ function init_module() {
                     .addClass("ANDI508-module-action-active");
 
                 //Build Outline
-                for (var x = 0; x < sANDI.headers.list.length; x++) {
-                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                for (var x = 0; x < sANDI.lists.list.length; x++) {
+                    sANDI.outline += sANDI.getOutlineItemModule(sANDI.lists.list[x]);
                 }
                 sANDI.outline += "</div>";
 
