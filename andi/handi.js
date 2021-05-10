@@ -322,7 +322,7 @@ function init_module() {
 
             $("#ANDI508-module-actions").html(moduleActionButtons);
 
-            $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view links list</button>");
+            $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view hidden contents list</button>");
 
             //Hidden Contents List Button
             $("#ANDI508-viewLinksList-button").click(function () {
