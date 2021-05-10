@@ -10,6 +10,12 @@ function init_module() {
     var sANDI = new AndiModule(sANDIVersionNumber, "s");
     sANDI.index = 1;
 
+    //This object class is used to store data about each header. Object instances will be placed into an array.
+    function Header(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
     //This object class is used to keep track of the headers on the page
     function Headers() {
         this.list = [];
@@ -36,10 +42,22 @@ function init_module() {
         this.listItemRoleCount = 0;
     }
 
+    //This object class is used to store data about each landmark. Object instances will be placed into an array.
+    function Landmark(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
     //This object class is used to keep track of the landmarks on the page
     function Landmarks() {
         this.list = [];
         this.count = 0;
+    }
+
+    //This object class is used to store data about each live region. Object instances will be placed into an array.
+    function LiveRegion(element, index) {
+        this.element = element;
+        this.index = index;
     }
 
     //This object class is used to keep track of the live regions on the page
@@ -152,8 +170,9 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
-                sANDI.landmarks.list.push($(this));
+                sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
                 sANDI.landmarks.count += 1;
+                sANDI.index += 1;
                 structureExists = true;
 
                 if (AndiModule.activeActionButtons.landmarks) {
@@ -198,8 +217,9 @@ function init_module() {
                     if ($(this).find("textarea,input:not(:hidden,[type=submit],[type=button],[type=image],[type=reset]),select").length) {
                         andiAlerter.throwAlert(alert_0182);
                     }
-                    sANDI.liveRegions.list.push($(this));
+                    sANDI.liveRegions.list.push(new LiveRegion(this, sANDI.index));
                     sANDI.liveRegions.count += 1;
+                    sANDI.index += 1;
                     AndiData.attachDataToElement(this);
                 }
             }
@@ -292,7 +312,7 @@ function init_module() {
         //display relevant attributes
         if (role) {
             outlineItem += " role='" + role + "' ";
-        } 
+        }
         if (ariaLevel) {
             outlineItem += " aria-level='" + ariaLevel + "' ";
         }
@@ -316,7 +336,7 @@ function init_module() {
 
         outlineItem += "<span class='ANDI508-display-innerText'>";
         outlineItem += elementToUse;
-        
+
         outlineItem += "</span>";
         outlineItem += "</a>";
         outlineItem += "<br />";
