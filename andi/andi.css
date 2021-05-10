@@ -230,6 +230,8 @@ body.ANDI508-testPage
 	scrollbar-arrow-color:black; scrollbar-shadow-color:black;
 	scrollbar-face-color:black; scrollbar-highlight-color:black; scrollbar-track-color:black;}
 
+#ANDI508 #ANDI508-module-actions span.ANDI508-module-actions-spacer
+	{color:gray !important; font-size:8pt;}
 #ANDI508 #ANDI508-module-actions button
 	{border:1px solid black !important; display:inline !important; padding:2px 2.5px !important; font-size:9pt !important;
 	box-shadow:none !important; background:none !important; cursor:pointer !important; white-space:nowrap !important;
