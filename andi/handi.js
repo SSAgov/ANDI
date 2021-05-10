@@ -337,8 +337,14 @@ function init_module() {
         revealButtons += "<button id='ANDI508-forceReveal_opacity-button' class='hANDI-revealButton' aria-label='" + hANDI.hiddenContents.hiddenOpacity + " opacity:0' aria-pressed='false'>" + hANDI.hiddenContents.hiddenOpacity + " opacity:0" + findIcon + "</button>";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         moduleActionButtons = "<button id='ANDI508-forceRevealAll-button' aria-label='Reveal All' aria-pressed='false'>reveal all" + findIcon;
         moduleActionButtons += revealButtons + "</div></div>";
+=======
+        moduleActionButtons = "<button id='ANDI508-forceRevealAll-button' aria-label='Reveal All' aria-pressed='false'>reveal all" + findIcon + "</button><span class='ANDI508-module-actions-spacer'>|</span> ";
+        moduleActionButtons += "<div class='ANDI508-moduleActionGroup'><button class='ANDI508-moduleActionGroup-toggler'>css hiding techniques</button><div class='ANDI508-moduleActionGroup-options'>" + revealButtons + "</div></div>";
+        moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span>&nbsp;";
+>>>>>>> parent of 335326b (Remove spacing for buttons)
 =======
         moduleActionButtons = "<button id='ANDI508-forceRevealAll-button' aria-label='Reveal All' aria-pressed='false'>reveal all" + findIcon + "</button><span class='ANDI508-module-actions-spacer'>|</span> ";
         moduleActionButtons += "<div class='ANDI508-moduleActionGroup'><button class='ANDI508-moduleActionGroup-toggler'>css hiding techniques</button><div class='ANDI508-moduleActionGroup-options'>" + revealButtons + "</div></div>";
