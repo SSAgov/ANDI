@@ -12,9 +12,10 @@ function init_module() {
     var hANDI = new AndiModule(handiVersionNumber, "h");
 
     //This object class is used to store data about each hidden contrast element. Object instances will be placed into an array.
-    function HiddenContent(element, index) {
+    function HiddenContent(element, index, hidingType) {
         this.element = element;
         this.index = index;
+        this.hidingType = hidingType;
     }
 
     //This object class is used to keep track of the hidden content on the page
@@ -103,7 +104,7 @@ function init_module() {
 
     //This function will analyze the test page for elements hidden using CSS
     hANDI.analyze = function () {
-        var isHidingContent, elementCss;
+        var isHidingContent, elementCss, hidingType;
 
         hANDI.hiddenContents = new HiddenContents();
 
@@ -112,14 +113,14 @@ function init_module() {
             elementCss = "";
 
             if (hANDI.containsTestableContent(this)) {
-                hANDI.hiddenContents.list.push(new HiddenContent(this, hANDI.index));
-                hANDI.index += 1;
+                
                 if ($(this).css("display") == "none") { //element display is none
                     hANDI.hiddenContents.hiddenElements += 1;
                     isHidingContent = true;
                     hANDI.hiddenContents.hiddenDisplay += 1;
                     $(this).addClass("ANDI508-forceReveal-display");
                     elementCss += "display:none; ";
+                    hidingType += ". display:none";
                 }
                 if ($(this).css("visibility") == "hidden") { //element visibility is hidden
                     hANDI.hiddenContents.hiddenElements += 1;
@@ -127,6 +128,7 @@ function init_module() {
                     hANDI.hiddenContents.hiddenVisibility += 1;
                     $(this).addClass("ANDI508-forceReveal-visibility");
                     elementCss += "visibility:hidden; ";
+                    hidingType += ". visibility:hidden";
                 }
                 if ($(this).css("position") == "absolute" && ($(this).offset().left < 0 || $(this).offset().top < 0)) { //element is positioned offscreen
                     hANDI.hiddenContents.hiddenElements += 1;
@@ -134,6 +136,7 @@ function init_module() {
                     hANDI.hiddenContents.hiddenPosition += 1;
                     $(this).addClass("ANDI508-forceReveal-position");
                     elementCss += "position:absolute; ";
+                    hidingType += ". position:absolute";
                 }
                 if ($(this).css("opacity") == "0") { //element opacity is zero
                     hANDI.hiddenContents.hiddenElements += 1;
@@ -141,6 +144,7 @@ function init_module() {
                     hANDI.hiddenContents.hiddenOpacity += 1;
                     $(this).addClass("ANDI508-forceReveal-opacity");
                     elementCss += "opacity:0; ";
+                    hidingType += ". opacity:0";
                 }
                 //if element has innerText
                 if ($(this).isContainerElement() && $.trim($(this).text())) {
@@ -152,6 +156,7 @@ function init_module() {
                         hANDI.hiddenContents.hiddenOverflow += 1;
                         $(this).addClass("ANDI508-forceReveal-overflow");
                         elementCss += "overflow:hidden; ";
+                        hidingType += ". overflow:hidden";
                     }
                     if (parseInt($(this).css("font-size")) === 0) { //element font-size is 0
                         hANDI.hiddenContents.hiddenElements += 1;
@@ -159,6 +164,7 @@ function init_module() {
                         hANDI.hiddenContents.hiddenFontSize += 1;
                         $(this).addClass("ANDI508-forceReveal-fontSize");
                         elementCss += "font-size:0; ";
+                        hidingType += ". font-size:0";
                     }
                 }
                 if ($(this).css("text-indent") != "0" || $(this).css("text-indent") != "0px") { //element has a text-indent that makes it off screen
@@ -168,6 +174,7 @@ function init_module() {
                         hANDI.hiddenContents.hiddenTextIndent += 1;
                         $(this).addClass("ANDI508-forceReveal-textIndent");
                         elementCss += "text-indent:" + $(this).css("text-indent") + "; ";
+                        hidingType += ". text-indent:";
                     }
                 }
                 if ($(this).attr("hidden")) { //element has html5 hidden attribute
@@ -176,6 +183,7 @@ function init_module() {
                     hANDI.hiddenContents.hiddenHTML5 += 1;
                     $(this).addClass("ANDI508-forceReveal-html5Hidden");
                     elementCss += "\/*html5 hidden*\/ ";
+                    hidingType += ". html5 hidden";
                 }
             }
 
@@ -186,8 +194,11 @@ function init_module() {
                     $(this).attr("data-handi508-hidingtechniques", elementCss);
                 }
 
+                // TODO: number of hidden elements is said to be 628 for boston.gov (15 + 589 + 21 + 2 + 1), and the max number in the table for the table index row is 618
+                hANDI.hiddenContents.list.push(new HiddenContent(this, hANDI.index, hidingType));
                 andiData = new AndiData(this, true);
                 AndiData.attachDataToElement(this);
+                hANDI.index += 1;
             }
         });
 
@@ -437,7 +448,9 @@ function init_module() {
                 "<th scope='row'>" + hANDI.hiddenContents.list[x].index + "</th>" +
                 "<td class='ANDI508-alert-column'></td>" +
                 //"<td class='ANDI508-alert-column'>" + hANDI.hiddenContents.list[x].alerts + "</td>" +
-                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + hANDI.hiddenContents.list[x].index + "'>" + hANDI.hiddenContents.list[x].element + "</a></td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + hANDI.hiddenContents.list[x].index + "'>" + hANDI.hiddenContents.list[x].element +
+                ' "' + hANDI.hiddenContents.list[x].hidingType + '"' +
+                + "</a></td>" +
                 "</tr>";
         }
 
