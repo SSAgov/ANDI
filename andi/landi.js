@@ -11,8 +11,9 @@ function init_module() {
 
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
-        if (element)
+        if (element) {
             $(element).removeClass("lANDI508-internalLink lANDI508-externalLink lANDI508-ambiguous lANDI508-anchorTarget");
+        }
     };
 
     //This object class is used to store data about each link. Object instances will be placed into an array.
@@ -424,8 +425,9 @@ function init_module() {
         function getNameDescription(name, desc) {
             var n = "";
             var d = "";
-            if (name)
+            if (name) {
                 n = andiUtility.normalizeOutput(name);
+            }
             if (desc) {
                 d = andiUtility.normalizeOutput(desc);
                 if (n === d) { //matchingTest
@@ -460,130 +462,98 @@ function init_module() {
             AndiModule.launchModule("l");
         });
 
-        if (lANDI.links.count > 0 || lANDI.buttons.count > 0) {
-            //Links or buttons were found
+        if (AndiModule.activeActionButtons.linksMode) {
+            andiBar.updateResultsSummary("Links Found: " + lANDI.links.count);
 
-            if (AndiModule.activeActionButtons.linksMode) {
-                andiBar.updateResultsSummary("Links Found: " + lANDI.links.count);
+            $("#ANDI508-linksMode-button").attr("aria-selected", "true").addClass("ANDI508-module-action-active");
 
-                $("#ANDI508-linksMode-button").attr("aria-selected", "true").addClass("ANDI508-module-action-active");
+            //highlightAmbiguousLinks button
+            $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightAmbiguousLinks-button' aria-label='Highlight " + lANDI.links.ambiguousCount + " Ambiguous Links' aria-pressed='false'>" + lANDI.links.ambiguousCount + " ambiguous links" + findIcon + "</button>");
 
-                if (lANDI.links.count > 0) {
-
-                    if (lANDI.links.ambiguousIndex > 0) {
-                        //highlightAmbiguousLinks button
-                        $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightAmbiguousLinks-button' aria-label='Highlight " + lANDI.links.ambiguousCount + " Ambiguous Links' aria-pressed='false'>" + lANDI.links.ambiguousCount + " ambiguous links" + findIcon + "</button>");
-
-                        //Ambiguous Links Button
-                        $("#ANDI508-highlightAmbiguousLinks-button").click(function () {
-                            var testPage = $("#ANDI508-testPage");
-                            if (!$(testPage).hasClass("lANDI508-highlightAmbiguous")) { //On
-                                $("#lANDI508-listLinks-tab-all").click();
-                                $("#ANDI508-testPage")
-                                    //.removeClass("lANDI508-highlightInternal lANDI508-highlightExternal")
-                                    .addClass("lANDI508-highlightAmbiguous");
-                                andiOverlay.overlayButton_on("find", $(this));
-                                AndiModule.activeActionButtons.highlightAmbiguousLinks = true;
-                            } else { //Off
-                                $("#ANDI508-testPage").removeClass("lANDI508-highlightAmbiguous");
-                                andiOverlay.overlayButton_off("find", $(this));
-                                AndiModule.activeActionButtons.highlightAmbiguousLinks = false;
-                            }
-                            andiResetter.resizeHeights();
-                            return false;
-                        });
-                    }
-
-                    $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view links list</button>");
-
-                    //Links List Button
-                    $("#ANDI508-viewLinksList-button").click(function () {
-                        if (!lANDI.viewList_tableReady) {
-                            lANDI.viewList_buildTable("links");
-                            lANDI.viewList_attachEvents();
-                            lANDI.viewList_attachEvents_links();
-                            lANDI.viewList_tableReady = true;
-                        }
-                        lANDI.viewList_toggle("links", this);
-                        andiResetter.resizeHeights();
-                        return false;
-                    });
-
-                    //Show Startup Summary
-                    if (!andiBar.focusIsOnInspectableElement()) {
-                        andiBar.showElementControls();
-                        andiBar.showStartUpSummary("Discover accessibility markup for <span class='ANDI508-module-name-l'>links</span> by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every link.", true);
-                    }
-                } else { //page has no links, but has buttons
-                    andiBar.updateResultsSummary("Links Found: 0");
-
-                    //No links or buttons were found
-                    andiBar.hideElementControls();
-                    andiBar.showStartUpSummary("No <span class='ANDI508-module-name-l'>links</span> were found.");
+            //Ambiguous Links Button
+            $("#ANDI508-highlightAmbiguousLinks-button").click(function () {
+                var testPage = $("#ANDI508-testPage");
+                if (!$(testPage).hasClass("lANDI508-highlightAmbiguous")) { //On
+                    $("#lANDI508-listLinks-tab-all").click();
+                    $("#ANDI508-testPage")
+                        //.removeClass("lANDI508-highlightInternal lANDI508-highlightExternal")
+                        .addClass("lANDI508-highlightAmbiguous");
+                    andiOverlay.overlayButton_on("find", $(this));
+                    AndiModule.activeActionButtons.highlightAmbiguousLinks = true;
+                } else { //Off
+                    $("#ANDI508-testPage").removeClass("lANDI508-highlightAmbiguous");
+                    andiOverlay.overlayButton_off("find", $(this));
+                    AndiModule.activeActionButtons.highlightAmbiguousLinks = false;
                 }
-            } else if (AndiModule.activeActionButtons.buttonsMode) {
-                andiBar.updateResultsSummary("Buttons Found: " + lANDI.buttons.count);
+                andiResetter.resizeHeights();
+                return false;
+            });
 
-                $("#ANDI508-buttonsMode-button").attr("aria-selected", "true").addClass("ANDI508-module-action-active");
+            $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLinksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view links list</button>");
 
-                if (lANDI.buttons.count > 0) {
-
-                    if (lANDI.buttons.nonUniqueCount > 0) {
-                        //highlightNonUniqueButtons
-                        $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightNonUniqueButtons-button' aria-label='Highlight " + lANDI.buttons.nonUniqueCount + " Non-Unique Buttons' aria-pressed='false'>" + lANDI.buttons.nonUniqueCount + " non-unique buttons" + findIcon + "</button>");
-
-                        //highlightNonUniqueButtons Button
-                        $("#ANDI508-highlightNonUniqueButtons-button").click(function () {
-                            var testPage = $("#ANDI508-testPage");
-                            if (!$(testPage).hasClass("lANDI508-highlightAmbiguous")) { //On
-                                $("#lANDI508-listButtons-tab-all").click();
-                                $("#ANDI508-testPage").addClass("lANDI508-highlightAmbiguous");
-                                andiOverlay.overlayButton_on("find", $(this));
-                                AndiModule.activeActionButtons.highlightNonUniqueButtons = true;
-                            } else { //Off
-                                $("#ANDI508-testPage").removeClass("lANDI508-highlightAmbiguous");
-                                andiOverlay.overlayButton_off("find", $(this));
-                                AndiModule.activeActionButtons.highlightNonUniqueButtons = false;
-                            }
-                            andiResetter.resizeHeights();
-                            return false;
-                        });
-                    }
-
-                    $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewButtonsList-button' class='ANDI508-viewOtherResults-button' aria-label='View Buttons List' aria-expanded='false'>" + listIcon + "view buttons list</button>");
-
-                    //View Button List Button
-                    $("#ANDI508-viewButtonsList-button").click(function () {
-                        if (!lANDI.viewList_tableReady) {
-                            lANDI.viewList_buildTable("buttons");
-                            lANDI.viewList_attachEvents();
-                            lANDI.viewList_attachEvents_buttons();
-                            lANDI.viewList_tableReady = true;
-                        }
-                        lANDI.viewList_toggle("buttons", this);
-                        andiResetter.resizeHeights();
-                        return false;
-                    });
-
-                    //Show Startup Summary
-                    if (!andiBar.focusIsOnInspectableElement()) {
-                        andiBar.showElementControls();
-                        andiBar.showStartUpSummary("Discover accessibility markup for <span class='ANDI508-module-name-l'>buttons</span> by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every button.", true);
-                    }
-                } else { //page has no buttons, but has links
-                    andiBar.updateResultsSummary("Buttons Found: 0");
-
-                    //No links or buttons were found
-                    andiBar.hideElementControls();
-                    andiBar.showStartUpSummary("No <span class='ANDI508-module-name-l'>buttons</span> were found.");
+            //Links List Button
+            $("#ANDI508-viewLinksList-button").click(function () {
+                if (!lANDI.viewList_tableReady) {
+                    lANDI.viewList_buildTable("links");
+                    lANDI.viewList_attachEvents();
+                    lANDI.viewList_attachEvents_links();
+                    lANDI.viewList_tableReady = true;
                 }
+                lANDI.viewList_toggle("links", this);
+                andiResetter.resizeHeights();
+                return false;
+            });
+
+            //Show Startup Summary
+            if (!andiBar.focusIsOnInspectableElement()) {
+                andiBar.showElementControls();
+                andiBar.showStartUpSummary("Discover accessibility markup for <span class='ANDI508-module-name-l'>links</span> by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every link.", true);
             }
-        } else {
-            andiBar.updateResultsSummary("Links Found: 0, Buttons Found: 0");
+        } else if (AndiModule.activeActionButtons.buttonsMode) {
+            andiBar.updateResultsSummary("Buttons Found: " + lANDI.buttons.count);
 
-            //No links or buttons were found
-            andiBar.hideElementControls();
-            andiBar.showStartUpSummary("No <span class='ANDI508-module-name-l'>links</span> or <span class='ANDI508-module-name-l'>buttons</span> were found.");
+            $("#ANDI508-buttonsMode-button").attr("aria-selected", "true").addClass("ANDI508-module-action-active");
+
+            //highlightNonUniqueButtons
+            $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightNonUniqueButtons-button' aria-label='Highlight " + lANDI.buttons.nonUniqueCount + " Non-Unique Buttons' aria-pressed='false'>" + lANDI.buttons.nonUniqueCount + " non-unique buttons" + findIcon + "</button>");
+
+            //highlightNonUniqueButtons Button
+            $("#ANDI508-highlightNonUniqueButtons-button").click(function () {
+                var testPage = $("#ANDI508-testPage");
+                if (!$(testPage).hasClass("lANDI508-highlightAmbiguous")) { //On
+                    $("#lANDI508-listButtons-tab-all").click();
+                    $("#ANDI508-testPage").addClass("lANDI508-highlightAmbiguous");
+                    andiOverlay.overlayButton_on("find", $(this));
+                    AndiModule.activeActionButtons.highlightNonUniqueButtons = true;
+                } else { //Off
+                    $("#ANDI508-testPage").removeClass("lANDI508-highlightAmbiguous");
+                    andiOverlay.overlayButton_off("find", $(this));
+                    AndiModule.activeActionButtons.highlightNonUniqueButtons = false;
+                }
+                andiResetter.resizeHeights();
+                return false;
+            });
+
+            $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewButtonsList-button' class='ANDI508-viewOtherResults-button' aria-label='View Buttons List' aria-expanded='false'>" + listIcon + "view buttons list</button>");
+
+            //View Button List Button
+            $("#ANDI508-viewButtonsList-button").click(function () {
+                if (!lANDI.viewList_tableReady) {
+                    lANDI.viewList_buildTable("buttons");
+                    lANDI.viewList_attachEvents();
+                    lANDI.viewList_attachEvents_buttons();
+                    lANDI.viewList_tableReady = true;
+                }
+                lANDI.viewList_toggle("buttons", this);
+                andiResetter.resizeHeights();
+                return false;
+            });
+
+            //Show Startup Summary
+            if (!andiBar.focusIsOnInspectableElement()) {
+                andiBar.showElementControls();
+                andiBar.showStartUpSummary("Discover accessibility markup for <span class='ANDI508-module-name-l'>buttons</span> by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every button.", true);
+            }
         }
 
         andiAlerter.updateAlertList();

@@ -21,8 +21,9 @@ var icons_url = host_url + "icons/";
     andiCss.rel = "stylesheet";
     andiCss.id = "ANDI508-css";
     var prevCss = document.getElementById("ANDI508-css");
-    if (prevCss)//remove already inserted CSS to improve performance on consequtive favelet launches
+    if (prevCss) { //remove already inserted CSS to improve performance on consequtive favelet launches
         head.removeChild(prevCss);
+    }
     head.appendChild(andiCss);
 })();
 
