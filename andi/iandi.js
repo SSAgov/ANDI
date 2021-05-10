@@ -133,13 +133,13 @@ function init_module() {
 
         $("#ANDI508-additionalElementDetails").html("<button>test in new tab</button>");
         $("#ANDI508-additionalElementDetails button").click(function () {
-            iANDI.openIframeInNewWindow(element, $(element).attr("src"));
+            iANDI.openIframeInNewWindow(element);
             return false;
         });
     };
 
     //This function will open an iframe in a new window 
-    iANDI.openIframeInNewWindow = function (iframe, src) {
+    iANDI.openIframeInNewWindow = function (iframe) {
         var iframeWindow;
         var url = $(iframe).attr("src");
 
