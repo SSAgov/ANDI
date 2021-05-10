@@ -646,16 +646,10 @@ function init_module() {
                     return false;
                 });
 
-                if (liveRegionsArray.length > 0) {
-                    andiBar.updateResultsSummary("Live Regions: " + liveRegionsArray.length);
-                    if (!andiBar.focusIsOnInspectableElement()) {
-                        andiBar.showElementControls();
-                        andiBar.showStartUpSummary("<span class='ANDI508-module-name-s'>Live regions</span> found.<br />Discover the Output of the <span class='ANDI508-module-name-s'>live regions</span> by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.", true);
-                    }
-                }
-                else { //No Live Regions
-                    andiBar.hideElementControls();
-                    andiBar.showStartUpSummary("No <span class='ANDI508-module-name-s'>live regions</span>.");
+                andiBar.updateResultsSummary("Live Regions: " + liveRegionsArray.length);
+                if (!andiBar.focusIsOnInspectableElement()) {
+                    andiBar.showElementControls();
+                    andiBar.showStartUpSummary("<span class='ANDI508-module-name-s'>Live regions</span> found.<br />Discover the Output of the <span class='ANDI508-module-name-s'>live regions</span> by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.", true);
                 }
             }
 
