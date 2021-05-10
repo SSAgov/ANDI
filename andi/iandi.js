@@ -48,8 +48,8 @@ function init_module() {
 
         for (var x = 0; x < iANDI.iFrames.list.length; x++) {
             iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + iANDI.iFrames.list[x].index + "'>";
-            if ($(this).attr("src")) {
-                iframesSelectionLinks += $(this).attr("src");
+            if ($(iANDI.iFrames.list[x].element).attr("src")) {
+                iframesSelectionLinks += $(iANDI.iFrames.list[x].element).attr("src");
             } else {
                 iframesSelectionLinks += "No src";
             }
