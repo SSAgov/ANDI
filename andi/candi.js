@@ -12,7 +12,7 @@ function init_module() {
     var cANDI = new AndiModule(cANDIVersionNumber, "c");
 
     cANDI.viewList_tableReady = false;
-    cANDI.index = 0;
+    cANDI.index = 1;
 
     //This object class is used to store data about each color contrast element. Object instances will be placed into an array.
     function ColorContrast(element, index) {

@@ -33,7 +33,7 @@ function init_module() {
     }
 
     hANDI.viewList_tableReady = false;
-    hANDI.index = 0;
+    hANDI.index = 1;
 
     //This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
     //Holding the shift key will prevent inspection from changing.

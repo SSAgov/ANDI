@@ -28,7 +28,7 @@ function init_module() {
     }
 
     fANDI.viewList_tableReady = false;
-    fANDI.index = 0;
+    fANDI.index = 1;
 
     //This function will analyze the test page for focusable element related markup relating to accessibility
     fANDI.analyze = function () {

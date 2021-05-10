@@ -11,7 +11,7 @@ function init_module() {
     var gANDI = new AndiModule(gandiVersionNumber, "g");
 
     gANDI.viewList_tableReady = false;
-    gANDI.index = 0;
+    gANDI.index = 1;
 
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
