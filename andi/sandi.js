@@ -307,13 +307,12 @@ function init_module() {
         // if (gANDI.images.list[x].alerts.includes("Alert"))
         //     rowClasses += "ANDI508-table-row-alert ";
 
-        tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+        sANDI.outline += "<tr class='" + $.trim(rowClasses) + "'>" +
             "<th scope='row'>" + elementUsed.index + "</th>" +
             "<td class='ANDI508-alert-column'></td>" +
             //"<td class='ANDI508-alert-column'>" + gANDI.images.list[x].alerts + "</td>" +
             "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + elementUsed.index + "'>" + elementUsed.element + "</a></td>"
         "</tr>";
-        return tableHTML;
     }
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
@@ -479,7 +478,7 @@ function init_module() {
 
                 //Build Outline
                 for (var x = 0; x < sANDI.headers.list.length; x++) {
-                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                    sANDI.getOutlineItem(sANDI.headers.list[x]);
                 }
                 sANDI.outline += "</div>";
 
