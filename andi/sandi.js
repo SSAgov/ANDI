@@ -509,11 +509,44 @@ function init_module() {
                         listCounts += delimiter + listRoleCount + " role=list";
                         listTypesUsed += delimiter + "[role=list]";
                     }
-                    $("#ANDI508-additionalPageResults").html(listCounts);
+
+                    $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
+                    //Define outline button
+                    $("#ANDI508-viewOutline-button").click(function () {
+                        if ($(this).attr("aria-expanded") === "true") {
+                            //hide Outline, show alert list
+                            $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
+                            if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+                                $("#ANDI508-alerts-list").show();
+                            }
+                            $(this)
+                                .addClass("ANDI508-viewOtherResults-button-expanded")
+                                .html(listIcon + "view headings list")
+                                .attr("aria-expanded", "false")
+                                .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
+                        }
+                        else {
+                            //show Outline, hide alert list
+                            $("#ANDI508-alerts-list").hide();
+
+                            andiSettings.minimode(false);
+                            $(this)
+                                .html(listIcon + "hide list of lists")
+                                .attr("aria-expanded", "true")
+                                .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
+                                .find("img").attr("src", icons_url + "list-on.png");
+                            $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
+                        }
+                        andiResetter.resizeHeights();
+                        return false;
+                    });
+
+                    //$("#ANDI508-additionalPageResults").html(listCounts);
 
                     if (!andiBar.focusIsOnInspectableElement()) {
                         andiBar.showElementControls();
-                        andiBar.showStartUpSummary("List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied.", true);
+                        andiBar.showStartUpSummary("List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied. " + listCounts, true);
                     }
                 }
                 else {
