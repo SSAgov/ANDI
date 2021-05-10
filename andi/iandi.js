@@ -29,6 +29,10 @@ function init_module() {
 
         $(TestPageData.allElements).each(function () {
             if ($(this).is("iframe")) {
+                srcText = ($(this)).attr("src");
+                if (!srcText) {
+                    srcText = "";
+                } 
                 iANDI.iFrames.list.push(new IFrame(this, iANDI.index, ""))
                 andiData = new AndiData(this);
                 andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
