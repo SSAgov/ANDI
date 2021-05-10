@@ -27,16 +27,6 @@ function init_module() {
         this.element = element;
     }
 
-    //This object class is used to store data about each button. Object instances will be placed into an array.
-    function Button(nameDescription, index, alerts, accesskey, nonUniqueIndex, element) {
-        this.nameDescription = nameDescription;
-        this.index = index;
-        this.alerts = alerts;
-        this.accesskey = accesskey;
-        this.nonUniqueIndex = undefined;
-        this.element = element;
-    }
-
     //This object class is used to keep track of the links on the page
     function Links() {
         this.list = [];
@@ -45,6 +35,16 @@ function init_module() {
         this.ambiguousCount = 0;
         this.internalCount = 0;
         this.externalCount = 0;
+    }
+
+    //This object class is used to store data about each button. Object instances will be placed into an array.
+    function Button(nameDescription, index, alerts, accesskey, nonUniqueIndex, element) {
+        this.nameDescription = nameDescription;
+        this.index = index;
+        this.alerts = alerts;
+        this.accesskey = accesskey;
+        this.nonUniqueIndex = undefined;
+        this.element = element;
     }
 
     //This object class is used to keep track of the buttons on the page
@@ -239,7 +239,7 @@ function init_module() {
                 if (element.onclick !== null || $._data(element, "events").click !== undefined) {
                     //Link is clickable but not keyboard accessible
                     andiAlerter.throwAlert(alert_0164);
-                //No click event could be detected
+                    //No click event could be detected
                 } else if (!id && !name) {//Link doesn't have id or name
                     andiAlerter.throwAlert(alert_0128);
                 } else { //Link has id or name
@@ -902,8 +902,8 @@ function init_module() {
             $("#ANDI508-viewList-table tbody tr").each(function () {
                 if ($(this).hasClass("lANDI508-listLinks-internal"))
                     $(this).show();
-                
-                    $(this).hide();
+
+                $(this).hide();
             });
             //Add (glowing) Highlight for Internal Links
             $("#ANDI508-testPage").removeClass("lANDI508-highlightExternal lANDI508-highlightAmbiguous").addClass("lANDI508-highlightInternal");
