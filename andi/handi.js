@@ -121,7 +121,11 @@ function init_module() {
                     hANDI.hiddenContents.hiddenDisplay += 1;
                     $(this).addClass("ANDI508-forceReveal-display");
                     elementCss += "display:none; ";
-                    hidingType += ". display:none";
+                    if (hidingType.length > 0) {
+                        hidingType += ", display:none";
+                    } else {
+                        hidingType += "display:none"
+                    }
                 }
                 if ($(this).css("visibility") == "hidden") { //element visibility is hidden
                     hANDI.hiddenContents.hiddenElements += 1;
@@ -129,7 +133,11 @@ function init_module() {
                     hANDI.hiddenContents.hiddenVisibility += 1;
                     $(this).addClass("ANDI508-forceReveal-visibility");
                     elementCss += "visibility:hidden; ";
-                    hidingType += ". visibility:hidden";
+                    if (hidingType.length > 0) {
+                        hidingType += ", visibility:hidden";
+                    } else {
+                        hidingType += "visibility:hidden"
+                    }
                 }
                 if ($(this).css("position") == "absolute" && ($(this).offset().left < 0 || $(this).offset().top < 0)) { //element is positioned offscreen
                     hANDI.hiddenContents.hiddenElements += 1;
@@ -137,7 +145,11 @@ function init_module() {
                     hANDI.hiddenContents.hiddenPosition += 1;
                     $(this).addClass("ANDI508-forceReveal-position");
                     elementCss += "position:absolute; ";
-                    hidingType += ". position:absolute";
+                    if (hidingType.length > 0) {
+                        hidingType += ", position:absolute";
+                    } else {
+                        hidingType += "position:absolute"
+                    }
                 }
                 if ($(this).css("opacity") == "0") { //element opacity is zero
                     hANDI.hiddenContents.hiddenElements += 1;
@@ -145,7 +157,11 @@ function init_module() {
                     hANDI.hiddenContents.hiddenOpacity += 1;
                     $(this).addClass("ANDI508-forceReveal-opacity");
                     elementCss += "opacity:0; ";
-                    hidingType += ". opacity:0";
+                    if (hidingType.length > 0) {
+                        hidingType += ", opacity:0";
+                    } else {
+                        hidingType += "opacity:0"
+                    }
                 }
                 //if element has innerText
                 if ($(this).isContainerElement() && $.trim($(this).text())) {
@@ -157,7 +173,11 @@ function init_module() {
                         hANDI.hiddenContents.hiddenOverflow += 1;
                         $(this).addClass("ANDI508-forceReveal-overflow");
                         elementCss += "overflow:hidden; ";
-                        hidingType += ". overflow:hidden";
+                        if (hidingType.length > 0) {
+                            hidingType += ", overflow:hidden";
+                        } else {
+                            hidingType += "overflow:hidden"
+                        }
                     }
                     if (parseInt($(this).css("font-size")) === 0) { //element font-size is 0
                         hANDI.hiddenContents.hiddenElements += 1;
@@ -165,7 +185,11 @@ function init_module() {
                         hANDI.hiddenContents.hiddenFontSize += 1;
                         $(this).addClass("ANDI508-forceReveal-fontSize");
                         elementCss += "font-size:0; ";
-                        hidingType += ". font-size:0";
+                        if (hidingType.length > 0) {
+                            hidingType += ", font-size:0";
+                        } else {
+                            hidingType += "font-size:0"
+                        }
                     }
                 }
                 if ($(this).css("text-indent") != "0" || $(this).css("text-indent") != "0px") { //element has a text-indent that makes it off screen
@@ -175,7 +199,11 @@ function init_module() {
                         hANDI.hiddenContents.hiddenTextIndent += 1;
                         $(this).addClass("ANDI508-forceReveal-textIndent");
                         elementCss += "text-indent:" + $(this).css("text-indent") + "; ";
-                        hidingType += ". text-indent:";
+                        if (hidingType.length > 0) {
+                            hidingType += ", text-indent";
+                        } else {
+                            hidingType += "text-indent"
+                        }
                     }
                 }
                 if ($(this).attr("hidden")) { //element has html5 hidden attribute
@@ -184,7 +212,11 @@ function init_module() {
                     hANDI.hiddenContents.hiddenHTML5 += 1;
                     $(this).addClass("ANDI508-forceReveal-html5Hidden");
                     elementCss += "\/*html5 hidden*\/ ";
-                    hidingType += ". html5 hidden";
+                    if (hidingType.length > 0) {
+                        hidingType += ", html5 hidden";
+                    } else {
+                        hidingType += "html5 hidden"
+                    }
                 }
             }
 
