@@ -11,9 +11,10 @@ function init_module() {
     iANDI.index = 1;
 
     //This object class is used to store data about each iFrame. Object instances will be placed into an array.
-    function IFrame(element, index) {
+    function IFrame(element, index, src) {
         this.element = element;
         this.index = index;
+        this.src = src;
     }
 
     //This object class is used to keep track of the iFrames on the page
@@ -28,7 +29,7 @@ function init_module() {
 
         $(TestPageData.allElements).each(function () {
             if ($(this).is("iframe")) {
-                iANDI.iFrames.list.push(new IFrame(this, iANDI.index))
+                iANDI.iFrames.list.push(new IFrame(this, iANDI.index, ""))
                 andiData = new AndiData(this);
                 andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
                 AndiData.attachDataToElement(this);
@@ -45,16 +46,26 @@ function init_module() {
         var iframesSelectionMenu = "";
         var iframesSelectionLinks = "";
 
-        $("#ANDI508-testPage .ANDI508-element").each(function () {
-            //Build iFrame List
-            iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + $(this).attr('data-andi508-index') + "'>";
-            if ($(this).attr("src")) {
+        for (var x = 0; x < iANDI.iFrames.list.length; x++) {
+            iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + iANDI.iFrames.list[x].index + "'>";
+            if (iANDI.iFrames.list[x].src) {
                 iframesSelectionLinks += $(this).attr("src");
             } else {
                 iframesSelectionLinks += "No src";
             }
             iframesSelectionLinks += "</a></li>";
-        });
+        }
+
+        // $("#ANDI508-testPage .ANDI508-element").each(function () {
+        //     //Build iFrame List
+        //     iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + $(this).attr('data-andi508-index') + "'>";
+        //     if ($(this).attr("src")) {
+        //         iframesSelectionLinks += $(this).attr("src");
+        //     } else {
+        //         iframesSelectionLinks += "No src";
+        //     }
+        //     iframesSelectionLinks += "</a></li>";
+        // });
         //iframes contain body content
         if (iframesSelectionLinks) {
             iframesSelectionMenu += "<p>Select iframe to open in a new tab, then launch ANDI.</p>" +
