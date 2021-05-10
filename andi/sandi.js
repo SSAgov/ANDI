@@ -312,9 +312,8 @@ function init_module() {
     //This function will display the heading list (headings outline)
     //It should only be called on heading elements
     sANDI.getOutlineItemModule = function (elementToUse) {
-        var outlineItem = "<a style='margin-left:" + "%' href='#' data-andi508-relatedindex='" + $(elementToUse).attr('data-andi508-index') + "'>&lt;";
+        var outlineItem = '"' + elementToUse.index + '" ';
 
-        outlineItem += "&gt;";
         outlineItem += "<span class='ANDI508-display-innerText'>";
         outlineItem += elementToUse;
         
