@@ -9,10 +9,34 @@ function init_module() {
     //create sANDI instance
     var sANDI = new AndiModule(sANDIVersionNumber, "s");
 
+    //This object class is used to store data about each header. Object instances will be placed into an array.
+    function Header(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
     //This object class is used to keep track of the headers on the page
     function Headers() {
         this.list = [];
         this.count = 0;
+    }
+
+    //This object class is used to store data about each fake header. Object instances will be placed into an array.
+    function FakeHeader(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
+    //This object class is used to keep track of the headers on the page
+    function FakeHeaders() {
+        this.list = [];
+        this.count = 0;
+    }
+
+    //This object class is used to store data about each list. Object instances will be placed into an array.
+    function List(element, index) {
+        this.element = element;
+        this.index = index;
     }
 
     //This object class is used to keep track of the lists on the page
@@ -27,6 +51,12 @@ function init_module() {
         this.dtCount = 0;
         this.listRoleCount = 0;
         this.listItemRoleCount = 0;
+    }
+
+    //This object class is used to store data about each landmark. Object instances will be placed into an array.
+    function Landmark(element, index) {
+        this.element = element;
+        this.index = index;
     }
 
     //This object class is used to keep track of the landmarks on the page
@@ -44,6 +74,7 @@ function init_module() {
     sANDI.viewListsList_tableReady = false;
     sANDI.viewLandmarksList_tableReady = false;
     sANDI.viewLiveRegionsList_tableReady = false;
+    sANDI.index = 0;
 
     var structureExists = false;
     var langAttributesCount = 0;
@@ -62,6 +93,7 @@ function init_module() {
     //This function will analyze the test page for graphics/image related markup relating to accessibility
     sANDI.analyze = function () {
         sANDI.headers = new Headers();
+        sANDI.fakeHeaders = new FakeHeaders();
         sANDI.lists = new Lists();
         sANDI.landmarks = new Landmarks();
         sANDI.liveRegions = new LiveRegions();
@@ -70,7 +102,7 @@ function init_module() {
         $(TestPageData.allElements).each(function () {
             if ($(this).isSemantically("[role=heading]", "h1,h2,h3,h4,h5,h6")) {
                 //Add to the headings array
-                sANDI.headers.list.push($(this));
+                sANDI.headers.list.push(new Header(this, sANDI.index));
                 sANDI.headers.count += 1;
                 structureExists = true;
 
@@ -97,10 +129,11 @@ function init_module() {
 
                     andiCheck.commonNonFocusableElementChecks(andiData, $(this));
                     AndiData.attachDataToElement(this);
+                    sANDI.index += 1;
                 }
             } else if ($(this).isSemantically("[role=listitem],[role=list]", "ol,ul,li,dl,dd,dt")) {
-                //Add to the headings array
-                sANDI.lists.list.push($(this));
+                //Add to the list array
+                sANDI.lists.list.push(new List(this, sANDI.index));
                 structureExists = true;
 
                 if ($(this).isSemantically("[role=list]", "ol,ul,dl")) {
@@ -145,9 +178,10 @@ function init_module() {
 
                     andiCheck.commonNonFocusableElementChecks(andiData, $(this));
                     AndiData.attachDataToElement(this);
+                    sANDI.index += 1;
                 }
             } else if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
-                sANDI.landmarks.list.push($(this));
+                sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
                 sANDI.landmarks.count += 1;
                 structureExists = true;
 
@@ -156,17 +190,20 @@ function init_module() {
 
                     andiCheck.commonNonFocusableElementChecks(andiData, $(this));
                     AndiData.attachDataToElement(this);
+                    sANDI.index += 1;
                 }
             } else if (AndiModule.activeActionButtons.headings && sANDI.headers.list.length === 0 && $(this).is("p,div,span,strong,em")) {
                 //Since sANDI has not found a heading yet, check if this element is a fake headings
 
                 if (sANDI.isFakeHeading(this)) {
                     structureExists = true;
+                    sANDI.fakeHeaders.list.push(new FakeHeader(this, sANDI.index))
 
                     andiData = new AndiData(this);
 
                     andiAlerter.throwAlert(alert_0190);
                     AndiData.attachDataToElement(this);
+                    sANDI.index += 1;
                 }
             }
 
@@ -195,6 +232,7 @@ function init_module() {
                         andiAlerter.throwAlert(alert_0182);
                     }
                     AndiData.attachDataToElement(this);
+                    sANDI.index += 1;
                 }
             }
 
@@ -208,7 +246,6 @@ function init_module() {
 
     //This function determine's if the element looks like a heading but is not semantically a heading
     sANDI.isFakeHeading = function (element) {
-
         var isFakeHeading = false;
 
         var limit_textLength = 30; //text longer than this will not be considered a fake heading
@@ -516,8 +553,8 @@ function init_module() {
                 $("#ANDI508-viewListsList-button").click(function () {
                     if (!sANDI.viewListsList_tableReady) {
                         sANDI.viewList_buildTable("lists");
-                        sANDI.viewList_attachEvents();
-                        sANDI.viewList_attachEvents_links();
+                        //sANDI.viewList_attachEvents();
+                        //sANDI.viewList_attachEvents_links();
                         sANDI.viewListsList_tableReady = true;
                     }
                     sANDI.viewList_toggle("lists", this);
@@ -573,8 +610,8 @@ function init_module() {
                 $("#ANDI508-viewLandmarksList-button").click(function () {
                     if (!sANDI.viewLandmarksList_tableReady) {
                         sANDI.viewList_buildTable("landmarks");
-                        sANDI.viewList_attachEvents();
-                        sANDI.viewList_attachEvents_links();
+                        //sANDI.viewList_attachEvents();
+                        //sANDI.viewList_attachEvents_links();
                         sANDI.viewLandmarksList_tableReady = true;
                     }
                     sANDI.viewList_toggle("landmarks", this);
@@ -599,8 +636,8 @@ function init_module() {
                 $("#ANDI508-viewLiveRegionsList-button").click(function () {
                     if (!sANDI.viewLiveRegionsList_tableReady) {
                         sANDI.viewList_buildTable("live regions");
-                        sANDI.viewList_attachEvents();
-                        sANDI.viewList_attachEvents_links();
+                        //sANDI.viewList_attachEvents();
+                        //sANDI.viewList_attachEvents_links();
                         sANDI.viewLiveRegionsList_tableReady = true;
                     }
                     sANDI.viewList_toggle("live regions", this);
@@ -733,7 +770,125 @@ AndiModule.inspect = function (element) {
     }
 };
 
-    // TODO: Add viewList_buildTable for sANDI
+//This function builds the table for the view list
+sANDI.viewList_buildTable = function (mode) {
+    var tableHTML = "";
+    var rowClasses, tabsHTML, prevNextButtons;
+    var appendHTML = "<div id='sANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='sANDI508-viewList-tabs'>";
+    var nextPrevHTML = "<button id='sANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
+        "<button id='sANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
+        "</div>" +
+        "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
+
+    if (mode === "links") {
+        //BUILD LINKS LIST TABLE
+        var displayHref, targetText;
+        for (var x = 0; x < sANDI.links.list.length; x++) {
+            //get target text if internal link
+            displayHref = "";
+            targetText = "";
+            if (sANDI.links.list[x].href) {//if has an href
+                if (!sANDI.isScriptedLink(sANDI.links.list[x])) {
+                    if (sANDI.links.list[x].href.charAt(0) !== "#") //href doesn't start with # (points externally)
+                        targetText = "target='_sANDI'";
+                    displayHref = "<a href='" + sANDI.links.list[x].href + "' " + targetText + ">" + sANDI.links.list[x].href + "</a>";
+                } else { //href contains javascript
+                    displayHref = sANDI.links.list[x].href;
+                }
+            }
+
+            //determine if there is an alert
+            rowClasses = "";
+            var nextTabButton = "";
+            if (sANDI.links.list[x].alerts.includes("Alert"))
+                rowClasses += "ANDI508-table-row-alert ";
+
+            if (sANDI.links.list[x].linkPurpose == "i") {
+                rowClasses += "sANDI508-listLinks-internal ";
+                var id = sANDI.links.list[x].href;
+                if (id.charAt(0) === "#")
+                    id = id.substring(1, id.length);
+                nextTabButton = " <button class='sANDI508-nextTab' data-andi508-relatedid='" +
+                    id + "' title='focus on the element after id=" +
+                    id + "'>next tab</button>";
+            } else if (sANDI.links.list[x].linkPurpose == "e") {
+                rowClasses += "sANDI508-listLinks-external ";
+            }
+
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + sANDI.links.list[x].index + "</th>" +
+                "<td class='ANDI508-alert-column'>" + sANDI.links.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.links.list[x].index + "'>" + sANDI.links.list[x].nameDescription + "</a></td>" +
+                "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
+                "</tr>";
+        }
+
+        tabsHTML = "<button id='sANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + sANDI.links.list.length + ")</button>";
+        tabsHTML += "<button id='sANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='sANDI508-internalLink'>skip links (" + sANDI.links.internalCount + ")</button>";
+        tabsHTML += "<button id='sANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='sANDI508-externalLink'>external links (" + sANDI.links.externalCount + ")</button>";
+
+        appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
+    } else { //BUILD BUTTON LIST TABLE
+        for (var b = 0; b < sANDI.buttons.list.length; b++) {
+            //determine if there is an alert
+            rowClasses = "";
+            if (sANDI.buttons.list[b].alerts.includes("Alert")) {
+                rowClasses += "ANDI508-table-row-alert ";
+            }
+
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + sANDI.buttons.list[b].index + "</th>" +
+                "<td class='ANDI508-alert-column'>" + sANDI.buttons.list[b].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + sANDI.buttons.list[b].index + "'>" + sANDI.buttons.list[b].nameDescription + "</a></td>" +
+                "<td>" + sANDI.buttons.list[b].accesskey + "</td>" +
+                "</tr>";
+        }
+
+        tabsHTML = "<button id='sANDI508-listButtons-tab-all' aria-label='View All Buttons' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all buttons</button>";
+
+        appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='button number'>#<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:75%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Accesskey <i aria-hidden='true'></i></a></th>";
+    }
+
+    //This function hide/shows the view list
+    sANDI.viewList_toggle = function (mode, btn) {
+        if ($(btn).attr("aria-expanded") === "false") {
+            //show List, hide alert list
+            $("#ANDI508-alerts-list").hide();
+            andiSettings.minimode(false);
+            $(btn)
+                .addClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "hide " + mode + " list")
+                .attr("aria-expanded", "true")
+                .find("img").attr("src", icons_url + "list-on.png");
+            $("#sANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+            if (mode === "links") {
+                AndiModule.activeActionButtons.viewLinksList = true;
+            } else {
+                AndiModule.activeActionButtons.viewButtonsList = true;
+            }
+        } else { //hide List, show alert list
+            $("#sANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+            //$("#ANDI508-resultsSummary").show();
+            if (testPageData.numberOfAccessibilityAlertsFound > 0) {
+                $("#ANDI508-alerts-list").show();
+            }
+            $(btn)
+                .removeClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "view " + mode + " list")
+                .attr("aria-expanded", "false");
+            if (mode === "links") {
+                AndiModule.activeActionButtons.viewLinksList = false;
+            } else {
+                AndiModule.activeActionButtons.viewButtonsList = false;
+            }
+        }
+    };
 
     //This function will overlay the reading order sequence.
     AndiOverlay.prototype.overlayReadingOrder = function () {
