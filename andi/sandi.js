@@ -218,7 +218,12 @@ function init_module() {
     };
 
     //Initialize outline
-    sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
+    if (AndiModule.activeActionButtons.headings) {
+        sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
+    } else {
+        sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>List of Lists:</h3><div class='ANDI508-scrollable'>";
+    }
+        
 
     //This function will display the heading list (headings outline)
     //It should only be called on heading elements
@@ -522,7 +527,7 @@ function init_module() {
                             }
                             $(this)
                                 .addClass("ANDI508-viewOtherResults-button-expanded")
-                                .html(listIcon + "view headings list")
+                                .html(listIcon + "hide list of lists")
                                 .attr("aria-expanded", "false")
                                 .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
                         }
