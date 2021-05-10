@@ -300,6 +300,22 @@ function init_module() {
         return outlineItem;
     };
 
+    sANDI.getOutlineItemModule = function(elementUsed) {
+        //determine if there is an alert
+        rowClasses = "";
+        var nextTabButton = "";
+        // if (gANDI.images.list[x].alerts.includes("Alert"))
+        //     rowClasses += "ANDI508-table-row-alert ";
+
+        tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+            "<th scope='row'>" + elementUsed.index + "</th>" +
+            "<td class='ANDI508-alert-column'></td>" +
+            //"<td class='ANDI508-alert-column'>" + gANDI.images.list[x].alerts + "</td>" +
+            "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + elementUsed.index + "'>" + elementUsed.element + "</a></td>"
+        "</tr>";
+        return tableHTML;
+    }
+
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     sANDI.results = function () {
 
@@ -506,8 +522,8 @@ function init_module() {
                     .addClass("ANDI508-module-action-active");
 
                 //Build Outline
-                for (var x = 0; x < sANDI.headers.list.length; x++) {
-                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                for (var x = 0; x < sANDI.lists.list.length; x++) {
+                    sANDI.outline += sANDI.getOutlineItemModule(sANDI.lists.list[x]);
                 }
 
                 // this.listRoleCount = 0;
