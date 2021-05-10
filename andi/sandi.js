@@ -168,7 +168,7 @@ function init_module() {
             }
 
             if ($(this).is("[role=alert],[role=status],[role=log],[role=marquee],[role=timer],[aria-live=polite],[aria-live=assertive]")) {
-                
+
                 if (AndiModule.activeActionButtons.liveRegions) {
                     andiData = new AndiData(this);
 
@@ -281,10 +281,12 @@ function init_module() {
         var outlineItem = "<a style='margin-left:" + indentLevel + "%' href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
 
         //display relevant attributes
-        if (role)
+        if (role) {
             outlineItem += " role='" + role + "' ";
-        if (ariaLevel)
+        }
+        if (ariaLevel) {
             outlineItem += " aria-level='" + ariaLevel + "' ";
+        }
 
         outlineItem += "&gt;";
         outlineItem += "<span class='ANDI508-display-innerText'>";
@@ -320,35 +322,39 @@ function init_module() {
         andiBar.initializeModuleActionGroups();
 
         //Define sANDI mode buttons (headings, lists, landmarks)
+        AndiModule.activeActionButtons.headings = false;
+        AndiModule.activeActionButtons.lists = false;
+        AndiModule.activeActionButtons.landmarks = false;
+        AndiModule.activeActionButtons.liveRegions = false;
         $("#ANDI508-headings-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
             AndiModule.activeActionButtons.headings = true;
-            AndiModule.activeActionButtons.lists = false;
-            AndiModule.activeActionButtons.landmarks = false;
-            AndiModule.activeActionButtons.liveRegions = false;
+            // AndiModule.activeActionButtons.lists = false;
+            // AndiModule.activeActionButtons.landmarks = false;
+            // AndiModule.activeActionButtons.liveRegions = false;
             AndiModule.launchModule("s");
         });
         $("#ANDI508-lists-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
-            AndiModule.activeActionButtons.headings = false;
+            // AndiModule.activeActionButtons.headings = false;
             AndiModule.activeActionButtons.lists = true;
-            AndiModule.activeActionButtons.landmarks = false;
-            AndiModule.activeActionButtons.liveRegions = false;
+            // AndiModule.activeActionButtons.landmarks = false;
+            // AndiModule.activeActionButtons.liveRegions = false;
             AndiModule.launchModule("s");
         });
         $("#ANDI508-landmarks-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
-            AndiModule.activeActionButtons.headings = false;
-            AndiModule.activeActionButtons.lists = false;
+            // AndiModule.activeActionButtons.headings = false;
+            // AndiModule.activeActionButtons.lists = false;
             AndiModule.activeActionButtons.landmarks = true;
-            AndiModule.activeActionButtons.liveRegions = false;
+            // AndiModule.activeActionButtons.liveRegions = false;
             AndiModule.launchModule("s");
         });
         $("#ANDI508-liveRegions-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
-            AndiModule.activeActionButtons.headings = false;
-            AndiModule.activeActionButtons.lists = false;
-            AndiModule.activeActionButtons.landmarks = false;
+            // AndiModule.activeActionButtons.headings = false;
+            // AndiModule.activeActionButtons.lists = false;
+            // AndiModule.activeActionButtons.landmarks = false;
             AndiModule.activeActionButtons.liveRegions = true;
             AndiModule.launchModule("s");
         });
@@ -502,7 +508,11 @@ function init_module() {
                 $("#ANDI508-lists-button")
                     .attr("aria-selected", "true")
                     .addClass("ANDI508-module-action-active");
-                //No outline for lists mode
+
+                //Build Outline
+                for (var x = 0; x < sANDI.headers.list.length; x++) {
+                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                }
 
                 // this.listRoleCount = 0;
                 // this.listItemRoleCount = 0;
@@ -576,7 +586,11 @@ function init_module() {
                 $("#ANDI508-landmarks-button")
                     .attr("aria-selected", "true")
                     .addClass("ANDI508-module-action-active");
-                //No outline for landmarks mode
+
+                //Build Outline
+                for (var x = 0; x < sANDI.headers.list.length; x++) {
+                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                }
 
                 $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
@@ -617,7 +631,11 @@ function init_module() {
                 $("#ANDI508-liveRegions-button")
                     .attr("aria-selected", "true")
                     .addClass("ANDI508-module-action-active");
-                //No outline for liveRegions mode
+
+                //Build Outline
+                for (var x = 0; x < sANDI.headers.list.length; x++) {
+                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                }
 
                 $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view live regions list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
