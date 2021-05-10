@@ -620,8 +620,6 @@ function init_module() {
 
             var elementData = $(element).data("andi508");
 
-
-
             var addOnProps = AndiData.getAddOnProps(element, elementData,
                 [
                     "aria-level",
