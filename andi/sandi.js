@@ -63,7 +63,7 @@ function init_module() {
         sANDI.liveRegions = new LiveRegions();
 
         //Loop through every visible element
-        $(TestPageData.allVisibleElements).each(function () {
+        $(TestPageData.allElements).each(function () {
             if ($(this).isSemantically("[role=heading]", "h1,h2,h3,h4,h5,h6")) {
                 //Add to the headings array
                 sANDI.headers.list.push($(this));

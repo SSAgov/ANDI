@@ -100,7 +100,7 @@ function init_module() {
         var href, nameDescription, alerts, target, linkPurpose, accesskey, alertIcon, alertObject, relatedElement, nonUniqueIndex, ambiguousIndex;
 
         //Loop through every visible element and run tests
-        $(TestPageData.allVisibleElements).each(function () {
+        $(TestPageData.allElements).each(function () {
             //ANALYZE LINKS
             if ($(this).isSemantically("[role=link]", "a[href],a[tabindex],area")) {
                 if (!andiCheck.isThisElementDisabled(this)) {
