@@ -227,7 +227,7 @@ function init_module() {
                     $(this).attr("data-handi508-hidingtechniques", elementCss);
                 }
 
-                // TODO: number of hidden elements is said to be 628 for boston.gov (15 + 589 + 21 + 2 + 1), and the max number in the table for the table index row is 618
+                // NOTE: If the number of hidden content does not match the max number of elements shown in the table, then there are some elements with multiple hiding types
                 hANDI.hiddenContents.list.push(new HiddenContent(this, hANDI.index, hidingType));
                 andiData = new AndiData(this, true);
                 AndiData.attachDataToElement(this);
