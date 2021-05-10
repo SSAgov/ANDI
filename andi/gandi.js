@@ -411,9 +411,8 @@ function init_module() {
         } else { //hide List, show alert list
             $("#gANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
             //$("#ANDI508-resultsSummary").show();
-            if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-                $("#ANDI508-alerts-list").show();
-            }
+            
+            $("#ANDI508-alerts-list").show();
             $(btn)
                 .removeClass("ANDI508-viewOtherResults-button-expanded")
                 .html(listIcon + "view " + mode + " list")
