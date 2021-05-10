@@ -143,7 +143,7 @@ function init_module() {
         var iframeWindow;
         var url = $(iframe).attr("src");
 
-        if (src) {
+        if (url) {
             iframeWindow = window.open(url, "_blank"); //opens user preference, usually new tab
             iframeWindow.focus();
         }
