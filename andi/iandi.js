@@ -56,16 +56,6 @@ function init_module() {
             iframesSelectionLinks += "</a></li>";
         }
 
-        // $("#ANDI508-testPage .ANDI508-element").each(function () {
-        //     //Build iFrame List
-        //     iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + $(this).attr('data-andi508-index') + "'>";
-        //     if ($(this).attr("src")) {
-        //         iframesSelectionLinks += $(this).attr("src");
-        //     } else {
-        //         iframesSelectionLinks += "No src";
-        //     }
-        //     iframesSelectionLinks += "</a></li>";
-        // });
         //iframes contain body content
         if (iframesSelectionLinks) {
             iframesSelectionMenu += "<p>Select iframe to open in a new tab, then launch ANDI.</p>" +
