@@ -8,11 +8,18 @@ function init_module() {
 
     //create sANDI instance
     var sANDI = new AndiModule(sANDIVersionNumber, "s");
+    sANDI.index = 1;
 
     //This object class is used to keep track of the headers on the page
     function Headers() {
         this.list = [];
         this.count = 0;
+    }
+
+    //This object class is used to store data about each list. Object instances will be placed into an array.
+    function List(element, index) {
+        this.element = element;
+        this.index = index;
     }
 
     //This object class is used to keep track of the lists on the page
@@ -95,9 +102,10 @@ function init_module() {
                 }
             } else if ($(this).isSemantically("[role=listitem],[role=list]", "ol,ul,li,dl,dd,dt")) {
                 //Add to the headings array
-                sANDI.lists.list.push($(this));
+                sANDI.lists.list.push(new List(this, sANDI.index));
                 sANDI.lists.count += 1;
                 structureExists = true;
+                sANDI.index += 1;
 
                 if ($(this).isSemantically("[role=list]", "ol,ul,dl")) {
                     if ($(this).is("ul")) {
