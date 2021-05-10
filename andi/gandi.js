@@ -86,6 +86,7 @@ function init_module() {
                     andiData = new AndiData(this);
                 }
                 gANDI.images.list.push(new Image(this, gANDI.index));
+                gANDI.index += 1;
                 //Check for conditions based on semantics
                 if ($(this).is("marquee")) {
                     gANDI.images.inlineCount++;
@@ -151,6 +152,7 @@ function init_module() {
                 }
             } else if ($(this).css("background-image").includes("url(")) {
                 gANDI.images.list.push(new Image(this, gANDI.index));
+                gANDI.index += 1;
                 gANDI.images.backgroundCount++;
                 $(this).addClass("gANDI508-background");
             }
@@ -167,6 +169,7 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
                 gANDI.images.list.push(new Image(this, gANDI.index));
+                gANDI.index += 1;
                 gANDI.images.fontIconCount++;
                 $(this).addClass("gANDI508-fontIcon");
                 //Throw alert
@@ -177,7 +180,6 @@ function init_module() {
                     //andiAlerter.throwAlert(alert_017A);
                 }
             }
-            gANDI.index += 1;
         });
         if (gANDI.images.backgroundCount > 0) { //Page has background images
             andiAlerter.throwAlert(alert_0177, alert_0177.message, 0);
