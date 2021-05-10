@@ -112,6 +112,8 @@ function init_module() {
             elementCss = "";
 
             if (hANDI.containsTestableContent(this)) {
+                hANDI.hiddenContents.list.push(new HiddenContent(this, hANDI.index));
+                hANDI.index += 1;
                 if ($(this).css("display") == "none") { //element display is none
                     hANDI.hiddenContents.hiddenElements += 1;
                     isHidingContent = true;
@@ -184,10 +186,8 @@ function init_module() {
                     $(this).attr("data-handi508-hidingtechniques", elementCss);
                 }
 
-                hANDI.hiddenContents.list.push(new HiddenContent(this, hANDI.index));
                 andiData = new AndiData(this, true);
                 AndiData.attachDataToElement(this);
-                hANDI.index += 1;
             }
         });
 
