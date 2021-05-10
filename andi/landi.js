@@ -88,6 +88,7 @@ function init_module() {
     });
 
     lANDI.viewList_tableReady = false;
+    lANDI.index = 1;
 
     //This function will analyze the test page for link related markup relating to accessibility
     lANDI.analyze = function () {
@@ -103,7 +104,6 @@ function init_module() {
             //ANALYZE LINKS
             if ($(this).isSemantically("[role=link]", "a[href],a[tabindex],area")) {
                 if (!andiCheck.isThisElementDisabled(this)) {
-
                     lANDI.links.count++;
 
                     if (AndiModule.activeActionButtons.linksMode) {
@@ -140,7 +140,7 @@ function init_module() {
                                     lANDI.links.list.push(
                                         new Link(href,
                                             nameDescription,
-                                            andiData.andiElementIndex,
+                                            lANDI.index,
                                             alerts,
                                             target,
                                             linkPurpose,
@@ -151,7 +151,7 @@ function init_module() {
                                     lANDI.links.list.push(
                                         new Link(href,
                                             nameDescription,
-                                            andiData.andiElementIndex,
+                                            lANDI.index,
                                             alerts,
                                             target,
                                             linkPurpose,
@@ -168,6 +168,7 @@ function init_module() {
                         }
 
                         AndiData.attachDataToElement(this);
+                        lANDI.index += 1;
                     }
                 }
             } else if (AndiModule.activeActionButtons.linksMode && $(this).is("a")) { //Analyze elements that might be links
@@ -177,7 +178,6 @@ function init_module() {
                 //Don't allow element to appear in next/prev flow or hover. Also remove highlight.
                 $(this).addClass("ANDI508-exclude-from-inspection").removeClass("ANDI508-highlight");
             } else if ($(this).isSemantically("[role=button]", "button,:button,:submit,:reset,:image")) { //ANALYZE BUTTONS
-
                 if (!andiCheck.isThisElementDisabled(this)) {
                     lANDI.buttons.count++;
 
@@ -215,7 +215,8 @@ function init_module() {
                         AndiData.attachDataToElement(this);
 
                         //create Button object and add to array
-                        lANDI.buttons.list.push(new Button(nameDescription, andiData.andiElementIndex, alerts, accesskey, nonUniqueIndex, this));
+                        lANDI.buttons.list.push(new Button(nameDescription, lANDI.index, alerts, accesskey, nonUniqueIndex, this));
+                        lANDI.index += 1;
                     }
                 }
             }
