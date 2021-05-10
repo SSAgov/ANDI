@@ -320,8 +320,7 @@ function init_module() {
             "<th scope='row'>" + elementUsed.index + "</th>" +
             "<td class='ANDI508-alert-column'></td>" +
             //"<td class='ANDI508-alert-column'>" + gANDI.images.list[x].alerts + "</td>" +
-            "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + elementUsed.index + "'>" + elementUsed.element + "</a></td>"
-        "</tr>";
+            "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + elementUsed.index + "'>" + elementUsed.element + "</a></td></tr>";
     }
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
