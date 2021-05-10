@@ -258,6 +258,7 @@ function init_module() {
     };
 
     //Initialize outline
+    sANDI.headerOutline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
     sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
 
     //This function will display the heading list (headings outline)
@@ -486,7 +487,7 @@ function init_module() {
 
                 //Build Outline
                 for (var x = 0; x < sANDI.headers.list.length; x++) {
-                    sANDI.getOutlineItem(sANDI.headers.list[x]);
+                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
                 }
                 sANDI.outline += "</div>";
 
