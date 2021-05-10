@@ -532,9 +532,7 @@ function init_module() {
                 for (var x = 0; x < sANDI.lists.list.length; x++) {
                     sANDI.outline += sANDI.getOutlineItemModule(sANDI.lists.list[x]);
                 }
-
-                // this.listRoleCount = 0;
-                // this.listItemRoleCount = 0;
+                sANDI.outline += "</div>";
 
                 andiBar.updateResultsSummary("List Elements: " + sANDI.lists.list.length);
                 var listCounts = "";
