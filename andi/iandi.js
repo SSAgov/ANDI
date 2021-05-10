@@ -11,9 +11,10 @@ function init_module() {
     iANDI.index = 1;
 
     //This object class is used to store data about each iFrame. Object instances will be placed into an array.
-    function IFrame(element, index) {
+    function IFrame(element, index, alert) {
         this.element = element;
         this.index = index;
+        this.alert = alert;
     }
 
     //This object class is used to keep track of the iFrames on the page
@@ -29,7 +30,7 @@ function init_module() {
         $(TestPageData.allElements).each(function () {
             if ($(this).is("iframe")) {
                 // TODO: Try to add src to element
-                iANDI.iFrames.list.push(new IFrame(this, iANDI.index))
+                iANDI.iFrames.list.push(new IFrame(this, iANDI.index, ""))
                 andiData = new AndiData(this);
                 andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
                 AndiData.attachDataToElement(this);
