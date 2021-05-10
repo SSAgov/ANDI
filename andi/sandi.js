@@ -608,6 +608,7 @@ function init_module() {
                 for (var x = 0; x < sANDI.headers.list.length; x++) {
                     sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
                 }
+                sANDI.outline += "</div>";
 
                 $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
@@ -653,6 +654,7 @@ function init_module() {
                 for (var x = 0; x < sANDI.headers.list.length; x++) {
                     sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
                 }
+                sANDI.outline += "</div>";
 
                 $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view live regions list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
