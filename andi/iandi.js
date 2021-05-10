@@ -8,14 +8,31 @@ function init_module() {
 
     //create iANDI instance
     var iANDI = new AndiModule(iandiVersionNumber, "i");
+    iANDI.index = 1;
+
+    //This object class is used to store data about each iFrame. Object instances will be placed into an array.
+    function IFrame(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
+    //This object class is used to keep track of the iFrames on the page
+    function IFrames() {
+        this.list = [];
+        this.count = 0;
+    }
 
     //This function will analyze the test page for focusable element related markup relating to accessibility
     iANDI.analyze = function () {
+        iANDI.iFrames = new IFrames();
+
         $(TestPageData.allElements).each(function () {
             if ($(this).is("iframe")) {
+                iANDI.iFrames.list.push(new IFrame(this, iANDI.index))
                 andiData = new AndiData(this);
                 andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
                 AndiData.attachDataToElement(this);
+                iANDI.index += 1;
             }
         });
     };
