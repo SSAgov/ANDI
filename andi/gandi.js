@@ -261,10 +261,8 @@ function init_module() {
 
         moduleActionButtons += "<button id='ANDI508-fadeInlineImages-button' aria-label='Hide " + gANDI.images.inlineCount + " Inline Images' aria-pressed='false'>hide " + gANDI.images.inlineCount + " inline</button>";
         moduleActionButtons += "<button id='ANDI508-highlightDecorativeImages-button' aria-label='Highlight " + gANDI.images.decorativeCount + " Decorative Inline Images' aria-pressed='false'>" + gANDI.images.decorativeCount + " decorative inline" + findIcon + "</button>";
-        moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
         moduleActionButtons += "<button id='ANDI508-removeBackgroundImages-button' aria-label='Hide " + gANDI.images.backgroundCount + " Background Images' aria-pressed='false'>hide " + gANDI.images.backgroundCount + " background</button>";
         moduleActionButtons += "<button id='ANDI508-highlightBackgroundImages-button' aria-label='Highlight " + gANDI.images.backgroundCount + " Background Images' aria-pressed='false'>find " + gANDI.images.backgroundCount + " background" + findIcon + "</button>";
-        moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
         moduleActionButtons += "<button id='ANDI508-highlightFontIcons-button' aria-label='Find " + gANDI.images.fontIconCount + " Font Icons' aria-pressed='false'>" + gANDI.images.fontIconCount + " font icons</button>";
 
         $("#ANDI508-module-actions").html(moduleActionButtons);

@@ -168,8 +168,7 @@ function init_module() {
             }
 
             if ($(this).is("[role=alert],[role=status],[role=log],[role=marquee],[role=timer],[aria-live=polite],[aria-live=assertive]")) {
-                sANDI.liveRegions.list.push($(this));
-                sANDI.liveRegions.count += 1;
+                
                 if (AndiModule.activeActionButtons.liveRegions) {
                     andiData = new AndiData(this);
 
@@ -191,6 +190,8 @@ function init_module() {
                     if ($(this).find("textarea,input:not(:hidden,[type=submit],[type=button],[type=image],[type=reset]),select").length) {
                         andiAlerter.throwAlert(alert_0182);
                     }
+                    sANDI.liveRegions.list.push($(this));
+                    sANDI.liveRegions.count += 1;
                     AndiData.attachDataToElement(this);
                 }
             }
