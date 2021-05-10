@@ -129,7 +129,7 @@ function init_module() {
             moduleActionButtons += ">headers/id mode</button>";
 
             //Markup Overlay Button
-            moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-markup-button' aria-label='Markup Overlay' aria-pressed='false'>markup" + overlayIcon + "</button>";
+            moduleActionButtons += "<button id='ANDI508-markup-button' aria-label='Markup Overlay' aria-pressed='false'>markup" + overlayIcon + "</button>";
 
             $("#ANDI508-module-actions").html(moduleActionButtons);
 

@@ -472,7 +472,7 @@ function init_module() {
 
                     if (lANDI.links.ambiguousIndex > 0) {
                         //highlightAmbiguousLinks button
-                        $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightAmbiguousLinks-button' aria-label='Highlight " + lANDI.links.ambiguousCount + " Ambiguous Links' aria-pressed='false'>" + lANDI.links.ambiguousCount + " ambiguous links" + findIcon + "</button>");
+                        $("#ANDI508-module-actions").append("<button id='ANDI508-highlightAmbiguousLinks-button' aria-label='Highlight " + lANDI.links.ambiguousCount + " Ambiguous Links' aria-pressed='false'>" + lANDI.links.ambiguousCount + " ambiguous links" + findIcon + "</button>");
 
                         //Ambiguous Links Button
                         $("#ANDI508-highlightAmbiguousLinks-button").click(function () {
@@ -530,7 +530,7 @@ function init_module() {
 
                     if (lANDI.buttons.nonUniqueCount > 0) {
                         //highlightNonUniqueButtons
-                        $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightNonUniqueButtons-button' aria-label='Highlight " + lANDI.buttons.nonUniqueCount + " Non-Unique Buttons' aria-pressed='false'>" + lANDI.buttons.nonUniqueCount + " non-unique buttons" + findIcon + "</button>");
+                        $("#ANDI508-module-actions").append("<button id='ANDI508-highlightNonUniqueButtons-button' aria-label='Highlight " + lANDI.buttons.nonUniqueCount + " Non-Unique Buttons' aria-pressed='false'>" + lANDI.buttons.nonUniqueCount + " non-unique buttons" + findIcon + "</button>");
 
                         //highlightNonUniqueButtons Button
                         $("#ANDI508-highlightNonUniqueButtons-button").click(function () {
