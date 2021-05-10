@@ -104,13 +104,14 @@ function init_module() {
 
     //This function will analyze the test page for elements hidden using CSS
     hANDI.analyze = function () {
-        var isHidingContent, elementCss, hidingType = "";
+        var isHidingContent, elementCss, hidingType;
 
         hANDI.hiddenContents = new HiddenContents();
 
         $(TestPageData.allElements).not("area,base,basefont,datalist,link,meta,noembed,noframes,param,rp,script,noscript,source,style,template,track,title").each(function () {
             isHidingContent = false;
             elementCss = "";
+            hidingType = ""
 
             if (hANDI.containsTestableContent(this)) {
                 
