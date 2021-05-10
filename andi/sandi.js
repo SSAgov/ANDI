@@ -606,8 +606,8 @@ function init_module() {
                     .addClass("ANDI508-module-action-active");
 
                 //Build Outline
-                for (var x = 0; x < sANDI.headers.list.length; x++) {
-                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                for (var x = 0; x < sANDI.landmarks.list.length; x++) {
+                    sANDI.outline += sANDI.getOutlineItemModule(sANDI.landmarks.list[x]);
                 }
                 sANDI.outline += "</div>";
 
@@ -652,8 +652,8 @@ function init_module() {
                     .addClass("ANDI508-module-action-active");
 
                 //Build Outline
-                for (var x = 0; x < sANDI.headers.list.length; x++) {
-                    sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+                for (var x = 0; x < sANDI.liveRegions.list.length; x++) {
+                    sANDI.outline += sANDI.getOutlineItemModule(sANDI.liveRegions.list[x]);
                 }
                 sANDI.outline += "</div>";
 
