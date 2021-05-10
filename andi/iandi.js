@@ -133,7 +133,7 @@ function init_module() {
 
         $("#ANDI508-additionalElementDetails").html("<button>test in new tab</button>");
         $("#ANDI508-additionalElementDetails button").click(function () {
-            iANDI.openIframeInNewWindow(element);
+            iANDI.openIframeInNewWindow(element, $(element).attr("src"));
             return false;
         });
     };
@@ -143,7 +143,7 @@ function init_module() {
         var iframeWindow;
         var url = $(iframe).attr("src");
 
-        if (url) {
+        if (src) {
             iframeWindow = window.open(url, "_blank"); //opens user preference, usually new tab
             iframeWindow.focus();
         }
