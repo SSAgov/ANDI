@@ -145,8 +145,6 @@ function init_module() {
         if (url) {
             iframeWindow = window.open(url, "_blank"); //opens user preference, usually new tab
             iframeWindow.focus();
-        } else {
-            alert("This iframe has no [src] and cannot be opened independently. ANDI cannot be used to test the contents of this iframe.");
         }
     };
 
