@@ -327,12 +327,12 @@ function init_module() {
             //Hidden Contents List Button
             $("#ANDI508-viewLinksList-button").click(function () {
                 if (!hANDI.viewList_tableReady) {
-                    hANDI.viewList_buildTable("links");
+                    hANDI.viewList_buildTable("hidden contents");
                     //hANDI.viewList_attachEvents();
                     //hANDI.viewList_attachEvents_links();
                     hANDI.viewList_tableReady = true;
                 }
-                hANDI.viewList_toggle("links", this);
+                hANDI.viewList_toggle("hidden contents", this);
                 andiResetter.resizeHeights();
                 return false;
             });
