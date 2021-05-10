@@ -283,7 +283,7 @@ function init_module() {
         //display relevant attributes
         if (role) {
             outlineItem += " role='" + role + "' ";
-        }
+        } 
         if (ariaLevel) {
             outlineItem += " aria-level='" + ariaLevel + "' ";
         }
@@ -322,39 +322,35 @@ function init_module() {
         andiBar.initializeModuleActionGroups();
 
         //Define sANDI mode buttons (headings, lists, landmarks)
-        AndiModule.activeActionButtons.headings = false;
-        AndiModule.activeActionButtons.lists = false;
-        AndiModule.activeActionButtons.landmarks = false;
-        AndiModule.activeActionButtons.liveRegions = false;
         $("#ANDI508-headings-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
             AndiModule.activeActionButtons.headings = true;
-            // AndiModule.activeActionButtons.lists = false;
-            // AndiModule.activeActionButtons.landmarks = false;
-            // AndiModule.activeActionButtons.liveRegions = false;
+            AndiModule.activeActionButtons.lists = false;
+            AndiModule.activeActionButtons.landmarks = false;
+            AndiModule.activeActionButtons.liveRegions = false;
             AndiModule.launchModule("s");
         });
         $("#ANDI508-lists-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
-            // AndiModule.activeActionButtons.headings = false;
+            AndiModule.activeActionButtons.headings = false;
             AndiModule.activeActionButtons.lists = true;
-            // AndiModule.activeActionButtons.landmarks = false;
-            // AndiModule.activeActionButtons.liveRegions = false;
+            AndiModule.activeActionButtons.landmarks = false;
+            AndiModule.activeActionButtons.liveRegions = false;
             AndiModule.launchModule("s");
         });
         $("#ANDI508-landmarks-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
-            // AndiModule.activeActionButtons.headings = false;
-            // AndiModule.activeActionButtons.lists = false;
+            AndiModule.activeActionButtons.headings = false;
+            AndiModule.activeActionButtons.lists = false;
             AndiModule.activeActionButtons.landmarks = true;
-            // AndiModule.activeActionButtons.liveRegions = false;
+            AndiModule.activeActionButtons.liveRegions = false;
             AndiModule.launchModule("s");
         });
         $("#ANDI508-liveRegions-button").click(function () {
             andiResetter.softReset($("#ANDI508-testPage"));
-            // AndiModule.activeActionButtons.headings = false;
-            // AndiModule.activeActionButtons.lists = false;
-            // AndiModule.activeActionButtons.landmarks = false;
+            AndiModule.activeActionButtons.headings = false;
+            AndiModule.activeActionButtons.lists = false;
+            AndiModule.activeActionButtons.landmarks = false;
             AndiModule.activeActionButtons.liveRegions = true;
             AndiModule.launchModule("s");
         });
