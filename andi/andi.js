@@ -2551,7 +2551,6 @@ AndiData.textAlternativeComputation = function (root) {
             component = $(element).attr("title");
             if (component !== undefined) {
                 if (!isEmptyComponent(component, "title", element)) {
-                    TestPageData.page_using_titleAttr = true;
                     accumulateText(AndiData.addComp(data, "title", component));
                 }
             }
@@ -3942,7 +3941,6 @@ function TestPageData() {
     //Booleans which will be set if the associated tags are found. Helps with performance.
     this.page_using_figure = false;
     this.page_using_fieldset = false;
-    this.page_using_titleAttr = false;
     this.page_using_role_group = false;
     this.page_using_role_radiogroup = false;
     this.page_using_role_combobox = false;
