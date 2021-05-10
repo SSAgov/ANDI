@@ -449,9 +449,7 @@ function init_module() {
                 "<td class='ANDI508-alert-column'></td>" +
                 //"<td class='ANDI508-alert-column'>" + hANDI.hiddenContents.list[x].alerts + "</td>" +
                 "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + hANDI.hiddenContents.list[x].index + "'>" + hANDI.hiddenContents.list[x].element +
-                ' "' + hANDI.hiddenContents.list[x].hidingType + '"' +
-                + "</a></td>" +
-                "</tr>";
+                ' "' + hANDI.hiddenContents.list[x].hidingType + '"' + "</a></td>" + "</tr>";
         }
 
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
