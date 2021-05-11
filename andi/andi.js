@@ -3218,13 +3218,14 @@ function AndiCheck() {
     this.isThereExactlyOnePageTitle = function () {
         var pageTitleCount = $("head title").length;
         if (document.title === "") { //check document.title because could have been set by javascript
-            if (pageTitleCount === 0)
+            if (pageTitleCount === 0) {
                 andiAlerter.throwAlert(alert_0072, alert_0072.message, 0);
-            else if (pageTitleCount === 1 && $.trim($("head title").text()) === "")
+            } else if (pageTitleCount === 1 && $.trim($("head title").text()) === "") {
                 andiAlerter.throwAlert(alert_0071, alert_0071.message, 0);
-        }
-        else if (pageTitleCount > 1)
+            }
+        } else if (pageTitleCount > 1) {
             andiAlerter.throwAlert(alert_0073, alert_0073.message, 0);
+        }
     };
 
     //==Element Checks==//
@@ -3255,19 +3256,17 @@ function AndiCheck() {
 
                 var message;
                 if (tagNameText === "iframe") {
-                    if (elementData.tabindex)
+                    if (elementData.tabindex) {
                         andiAlerter.throwAlert(alert_0007);
-                    else//no tabindex
+                    } else { //no tabindex
                         andiAlerter.throwAlert(alert_0009);
-                }
-                else if (elementData.isTabbable) {
-                    //Does this element have a role?
+                    }
+                } else if (elementData.isTabbable) { //Does this element have a role?
                     if (elementData.role) {
                         var roleCapitalized = elementData.role.charAt(0).toUpperCase() + elementData.role.slice(1);
                         message = roleCapitalized + " Element" + alert_0008.message;
-                    }
                     //Is this an input element, excluding input[image]?
-                    else if (tagNameText.includes("input") && tagNameText != "input[type=image]") {
+                    } else if (tagNameText.includes("input") && tagNameText != "input[type=image]") {
                         switch (tagNameText) {
                             case "input[type=text]":
                                 message = "Textbox" + alert_0001.message; break;
@@ -3278,9 +3277,7 @@ function AndiCheck() {
                             default:
                                 message = "Input Element" + alert_0001.message;
                         }
-                    }
-                    //All other elements:
-                    else switch (tagNameText) {
+                    } else switch (tagNameText) { //All other elements:
                         case "a":
                             message = "Link" + alert_0002.message;
                             break;
@@ -3305,13 +3302,11 @@ function AndiCheck() {
                         default:
                             message = "Element" + alert_0002.message;
                     }
-                }
-                else {//not tabbable
+                } else { //not tabbable
                     //Does this element have a role?
                     if (elementData.role === "img") {
                         message = "[role=img] Element" + alert_0008.message;
-                    }
-                    else {
+                    } else {
                         switch (tagNameText) {
                             case "img":
                             case "input[type=image]":
@@ -3322,16 +3317,15 @@ function AndiCheck() {
                     }
                 }
 
-                if (elementData.components.ariaDescribedby)
-                    //element has no name but has ariaDescribedby
+                if (elementData.components.ariaDescribedby) { //element has no name but has ariaDescribedby
                     andiAlerter.throwAlert(alert_0021);
-                else if (message) {
+                } else if (message) {
                     andiAlerter.throwAlert(alert_0001, message);
                 }
 
-                if (elementData.components.legend)
-                    //element has no name but has legend
+                if (elementData.components.legend) { //element has no name but has legend
                     andiAlerter.throwAlert(alert_0022);
+                }
             }
         }
     };
@@ -3351,10 +3345,11 @@ function AndiCheck() {
             }
             if (idMatchesFound > 1) {//Duplicate Found
                 var message = "";
-                if (component === "label[for]") //label[for]
+                if (component === "label[for]") { //label[for]
                     message = "Element has duplicate id [id=" + id + "] and is referenced by a &lt;label[for]&gt;";
-                else //anything else
+                } else { //other
                     message = "[" + component + "] is referencing a duplicate id [id=" + id + "]";
+                }
                 andiAlerter.throwAlert(alert_0011, [message]);
             }
         }
@@ -3416,10 +3411,11 @@ function AndiCheck() {
             var clickableAreaLimit = 21; //px
             if (height < clickableAreaLimit && width < clickableAreaLimit) {
                 //The height and with of the element is smaller than the clickableAreaLimit
-                if (andiData.tagNameText == "input[type=radio]")
+                if (andiData.tagNameText == "input[type=radio]") {
                     andiAlerter.throwAlert(alert_0210, ["radio button"]);
-                else if (andiData.tagNameText == "input[type=checkbox]")
+                } else if (andiData.tagNameText == "input[type=checkbox]") {
                     andiAlerter.throwAlert(alert_0210, ["checkbox"]);
+                }
             }
         }
     };
@@ -3438,11 +3434,12 @@ function AndiCheck() {
     //NOTE: role=presentation/none are not factored in here
     //      because browsers automatically ignore them if the element is focusable
     this.hasThisElementBeenHiddenFromScreenReader = function (element, elementData, isDangerous) {
-        if (elementData.isAriaHidden) {
-            if (isDangerous) //this type of element should not be hidden from screen reader
+        if (elementData.isAriaHidden) { //this type of element should not be hidden from screen reader
+            if (isDangerous) {
                 andiAlerter.throwAlert(alert_0260); //danger level alert
-            else //this type of element could be hidden by a screen reader, but tester should investigate
+            } else { //this type of element could be hidden by a screen reader, but tester should investigate
                 andiAlerter.throwAlert(alert_0261); //warning level alert
+            }
         }
     };
 
@@ -3468,10 +3465,11 @@ function AndiCheck() {
     //This function will throw an alert if the canvas has no focusable children
     this.lookForCanvasFallback = function (element) {
         if ($(element).is("canvas")) {
-            if (!$(element).children().filter(":focusable").length)
+            if (!$(element).children().filter(":focusable").length) {
                 andiAlerter.throwAlert(alert_0124);
-            else //has focusable fallback content
+            } else { //has focusable fallback content
                 andiAlerter.throwAlert(alert_0127);
+            }
         }
     };
 
@@ -3481,19 +3479,20 @@ function AndiCheck() {
             var message;
             if ($(element).is("table") && $(element).attr("summary")) {
                 var role = $(element).attr("role");
-                if (role !== "presentation" && role !== "none")
+                if (role !== "presentation" && role !== "none") {
                     message = ["attribute [summary] in &lt;table&gt;, use &lt;caption&gt; or [aria-label] instead"];
-            }
-            else if ($(element).is("a") && $(element).attr("name"))
+                }
+            } else if ($(element).is("a") && $(element).attr("name")) {
                 message = ["attribute [name] in &lt;a&gt;, use [id] instead"];
-            else if ($(element).is("td") && $(element).attr("scope"))
+            } else if ($(element).is("td") && $(element).attr("scope")) {
                 message = ["attribute [scope] on &lt;td&gt;, in HTML5 [scope] only valid on &lt;th&gt;"];
-
+            }
             if (message) {
-                if ($(element).hasClass("ANDI508-element"))
+                if ($(element).hasClass("ANDI508-element")) {
                     andiAlerter.throwAlert(alert_0078, message);
-                else
+                } else {
                     andiAlerter.throwAlert(alert_0078, message, 0);
+                }
             }
         }
     };
@@ -3505,8 +3504,7 @@ function AndiCheck() {
         //Check if any ids were not found
         if (missingReferences.length === 1) {//one reference is missing
             andiAlerter.throwAlert(alert_0063, [attribute, missingReferences]);
-        }
-        else if (missingReferences.length > 1) {//more than one reference missing
+        } else if (missingReferences.length > 1) { //more than one reference missing
             andiAlerter.throwAlert(alert_0065, [attribute, missingReferences]);
         }
     };
@@ -3584,20 +3582,22 @@ function AndiAlerter() {
     function alertMessage(alertObject, customMessage) {
         //var message = "<img alt='"+alertObject.level+": ' src='"+icons_url+alertObject.level+".png' />";
         var message = "";
-        if (typeof customMessage === "string")
+        if (typeof customMessage === "string") {
             message += customMessage;
-        else if (customMessage !== undefined)
+        } else if (customMessage !== undefined) {
             message += getParams(alertObject, customMessage); //use custom message
-        else
+        } else {
             message += alertObject.message; //use default alert message
+        }
         return message;
 
         //This function will fill in the parameters of the alert message with the string in the array
         function getParams(alertObject, paramArray) {
             var m = alertObject.message.split("%%%");
             var message = "";
-            for (var x = 0; x < paramArray.length; x++)
+            for (var x = 0; x < paramArray.length; x++) {
                 message += m[x] + paramArray[x];
+            }
             message += m[m.length - 1];
             return message;
         }
@@ -3625,8 +3625,7 @@ function AndiAlerter() {
             listItemHtml += "href='javascript:void(0)' data-andi508-relatedindex='" + elementIndex + "' aria-label='" + alertObject.level + ": " + message + " Element #" + elementIndex + "'>" +
                 "<img alt='" + alertObject.level + "' role='presentation' src='" + icons_url + alertObject.level + ".png' />" +
                 message + "</a></li>";
-        }
-        else {
+        } else {
             //No, This alert is not specific to an indexed element. Insert message with link to help page.
             listItemHtml += "href='" + help_url + "alerts.html?" + alertObject.info + "' target='_blank' aria-label='" + alertObject.level + ": " + message + "'>" +
                 "<img alt='" + alertObject.level + "' role='presentation' src='" + icons_url + alertObject.level + ".png' />" +
@@ -3640,16 +3639,16 @@ function AndiAlerter() {
         if (alertObject.level === "danger") {
             alertGroup.dangers.push(listItemHtml);
             alertGroup.level = "danger";
-        }
-        else if (alertObject.level === "warning") {
+        } else if (alertObject.level === "warning") {
             alertGroup.warnings.push(listItemHtml);
-            if (alertGroup.level !== "danger")
+            if (alertGroup.level !== "danger") {
                 alertGroup.level = "warning";
-        }
-        else {
+            }
+        } else {
             alertGroup.cautions.push(listItemHtml);
-            if (alertGroup.level !== "danger" && alertGroup.level !== "warning")
+            if (alertGroup.level !== "danger" && alertGroup.level !== "warning") {
                 alertGroup.level = "caution";
+            }
         }
         testPageData.numberOfAccessibilityAlertsFound++;
     };
@@ -3671,12 +3670,13 @@ function AndiAlerter() {
             var alertGroup;
             for (var x = 0; x < AndiAlerter.alertGroups.length; x++) {
                 alertGroup = AndiAlerter.alertGroups[x];
-                if (alertGroup.level === "danger")
+                if (alertGroup.level === "danger") {
                     dangers.push(alertGroup);
-                else if (alertGroup.level === "warning")
+                } else if (alertGroup.level === "warning") {
                     warnings.push(alertGroup);
-                else if (alertGroup.level === "caution")
+                } else if (alertGroup.level === "caution") {
                     cautions.push(alertGroup);
+                }
             }
             return { dangers: dangers, warnings: warnings, cautions: cautions };
         }
@@ -3739,7 +3739,7 @@ function AndiAlerter() {
                                 case 13: //enter
                                     if (!$(this).hasClass("ANDI508-alertGroup-toggler"))
                                         $(this).click(function () { return false; }); //follow the link to the element
-                                    //else, the mouse click method takes care of the enter key for the alertGroup-toggler
+                                    //otherwise, the mouse click method takes care of the enter key for the alertGroup-toggler
                                     break;
                                 case 40: //down
                                     $(alertLinksTabbableArray[alertLinksTabbableArray.indexOf(this) + 1]).focus();//next tabbable link
@@ -3752,15 +3752,17 @@ function AndiAlerter() {
                                         toggleAlertGroupList(this); //show associating alertGroup-list
                                     break;
                                 case 37: //left
-                                    if (!$(this).hasClass("ANDI508-alertGroup-toggler"))
+                                    if (!$(this).hasClass("ANDI508-alertGroup-toggler")) {
                                         $(this).closest(".ANDI508-alertGroup-container").find("a.ANDI508-alertGroup-toggler").focus(); //focus on root
-                                    else if ($(this).parent().next().css("display") != "none")
+                                    } else if ($(this).parent().next().css("display") != "none") {
                                         toggleAlertGroupList(this); //hide associating alertGroup-list
+                                    }
                                     break;
                                 case 106: //asterisk
                                     $("#ANDI508-alerts-container a.ANDI508-alertGroup-toggler").each(function () {
-                                        if ($(this).css("display") != "none")
+                                        if ($(this).css("display") != "none") {
                                             toggleAlertGroupList(this); //show every alertGroup-list
+                                        }
                                     });
                                     $(this).focus();//retain focus
                                     break;
@@ -3779,8 +3781,7 @@ function AndiAlerter() {
                             toggleAlertGroupList(this);
                             return false;
                         });
-                    }
-                    else {
+                    } else {
                         andiFocuser.addFocusClick($(this));
                         //Add andiLaser drawing to the alert links
                         $(this).on("mouseover", andiLaser.drawAlertLaser);
@@ -3808,8 +3809,7 @@ function AndiAlerter() {
                         $(groupListContainer).children().first().find("a").focus();
                         $(trigger).attr("aria-expanded", "true");
                         tabindex = "0";
-                    }
-                    else {
+                    } else {
                         //hide alertGroup-list
                         $(groupListContainer).slideUp(AndiSettings.andiAnimationSpeed);
                         $(trigger).attr("aria-expanded", "false");
@@ -3902,7 +3902,7 @@ function AlertButton(label, id, clickLogic, overlayIcon) {
     this.label = label; //button's innerText
     this.id = id;		//button's id
     this.clickLogic = clickLogic; //buttons clicklogic
-    this.overlayIcon = overlayIcon; //if button should contain overlayIcon, pass in overlayIcon. else pass in empty string ""
+    this.overlayIcon = overlayIcon; //if button should contain overlayIcon, pass in overlayIcon. otherwise, pass in empty string ""
 }
 
 TestPageData.allVisibleElements = undefined;
@@ -4013,8 +4013,7 @@ var oldIE = false; //used to determine if old version of IE is being used.
             if (parseInt(j[i]) > parseInt(m[i])) {
                 needJquery = false;
                 break; //existing jquery version is greater than required minimum
-            }
-            else if (parseInt(j[i]) < parseInt(m[i])) {
+            } else if (parseInt(j[i]) < parseInt(m[i])) {
                 break; //existing jquery version is less than required minimum
             }
         }
@@ -4022,13 +4021,16 @@ var oldIE = false; //used to determine if old version of IE is being used.
     if (needJquery) {
         var script = document.createElement("script"); var done = false;
         //Which version is needed?
-        if (!oldIE) { script.src = jqueryDownloadSource + jqueryPreferredVersion + "/jquery.min.js"; }//IE 9 or later is being used, download preferred jquery version.
-        else { script.src = jqueryDownloadSource + jqueryMinimumVersion + "/jquery.min.js"; }//Download minimum jquery version.
+        if (!oldIE) {
+            script.src = jqueryDownloadSource + jqueryPreferredVersion + "/jquery.min.js";
+        //IE 9 or later is being used, download preferred jquery version.
+        } else {
+            script.src = jqueryDownloadSource + jqueryMinimumVersion + "/jquery.min.js";
+        } //Download minimum jquery version.
         //Waits until jQuery is ready before running ANDI
         script.onload = script.onreadystatechange = function () { if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) { done = true; launchAndi(); } };
         document.getElementsByTagName("head")[0].appendChild(script);
-    }
-    else { //sufficient version of jQuery already exists
+    } else { //sufficient version of jQuery already exists
         launchAndi(); //initialize ANDI
     }
 })();
