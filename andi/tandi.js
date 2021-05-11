@@ -493,7 +493,7 @@ function init_module() {
                 }
             }
 
-            //This functoin will add the highlight to the element
+            //This function will add the highlight to the element
             //if updateAssociatedHeaderCellsText is true it will add the text to the header cells
             function addHighlight(element, updateAssociatedHeaderCellsText) {
                 $(element).addClass("tANDI508-highlight");
