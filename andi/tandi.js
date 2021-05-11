@@ -28,8 +28,9 @@ function init_module() {
     //Holding the shift key will prevent inspection from changing.
     AndiModule.hoverability = function (event) {
         //When hovering, inspect the cells of the data table, not the table itself. Unless it's a presentation table
-        if (!event.shiftKey && !$(this).is("table:not([role=presentation],[role=none]),[role=table],[role=grid],[role=treegrid]"))
+        if (!event.shiftKey && !$(this).is("table:not([role=presentation],[role=none]),[role=table],[role=grid],[role=treegrid]")) {
             AndiModule.inspect(this);
+        }
     };
 
     //This function removes markup in the test page that was added by this module
@@ -133,8 +134,9 @@ function init_module() {
 
             $("#ANDI508-module-actions").html(moduleActionButtons);
 
-            if (!activeElementFound)
+            if (!activeElementFound) {
                 activeTableIndex = 0;//Analyze first table
+            }
             analyzeTable(tANDI.tables.list[activeTableIndex]);
 
             //Add "prev table" and "next table" buttons
@@ -232,7 +234,6 @@ function init_module() {
 
     //This function updates the results in the ANDI Bar
     tANDI.results = function () {
-
         //Update Results Summary text depending on the active table type (data or presentation)
         andiBar.updateResultsSummary("Tables: " + tANDI.tables.tableCount + " (data tables: " + tANDI.tables.dataTablesCount + ", presentation tables: " + tANDI.tables.presentationTablesCount + ")");
 
@@ -290,15 +291,9 @@ function init_module() {
             [
                 ["scope", $(element).attr("scope")],
                 ["id", element.id],
-                "colspan",
-                "rowspan",
-                "aria-colcount",
-                "aria-rowcount",
-                "aria-colindex",
-                "aria-rowindex",
-                "aria-colspan",
-                "aria-rowspan"
-            ]);
+                "colspan", "rowspan",
+                "aria-colcount", "aria-rowcount", "aria-colindex",
+                "aria-rowindex", "aria-colspan", "aria-rowspan"]);
 
         andiBar.displayOutput(elementData, element, addOnProps);
 
@@ -632,11 +627,12 @@ function init_module() {
 
                 var presentationTablesShouldNotHave = "";
 
-                if ($(table).find("caption").filter(":visible").first().length)
+                if ($(table).find("caption").filter(":visible").first().length) {
                     presentationTablesShouldNotHave += "a &lt;caption&gt;, ";
-
-                if ($(all_th).first().length)
+                }
+                if ($(all_th).first().length) {
                     presentationTablesShouldNotHave += "&lt;th&gt; cells, ";
+                }
 
                 cellCount = 0;
 
@@ -644,22 +640,28 @@ function init_module() {
                 var presTableWithHeaders = false;
                 $(all_cells).each(function () {
                     cellCount++;
-                    if ($(this).attr("scope"))
+                    if ($(this).attr("scope")) {
                         presTableWithScope = true;
-                    if ($(this).attr("headers"))
+                    }
+                    if ($(this).attr("headers")) {
                         presTableWithHeaders = true;
+                    }
                 });
 
-                if (presTableWithScope)
+                if (presTableWithScope) {
                     presentationTablesShouldNotHave += "cells with [scope] attributes, ";
-                if (presTableWithHeaders)
-                    presentationTablesShouldNotHave += "cells with [headers] attributes, ";
+                }
+                if (presTableWithHeaders) {
+                    presentationTablesShouldNotHave += "cells with [headers] attributes, "; 
+                }
 
-                if ($(table).attr("summary"))
+                if ($(table).attr("summary")) {
                     presentationTablesShouldNotHave += "a [summary] attribute, ";
+                }
 
-                if (presentationTablesShouldNotHave)
+                if (presentationTablesShouldNotHave) {
                     andiAlerter.throwAlert(alert_0041, [presentationTablesShouldNotHave.slice(0, -2)]);
+                }
 
                 AndiData.attachDataToElement(table);
 
@@ -692,8 +694,9 @@ function init_module() {
                     cells = $(row).find("th,td").filter(":visible");
 
                     //Set colCount
-                    if (colCount < cells.length)
+                    if (colCount < cells.length) {
                         colCount = cells.length;
+                    }
 
                     //Figure out colIndex/rowIndex colgroupIndex/rowgroupIndex
                     $(cells).each(function loopA() {
@@ -701,10 +704,12 @@ function init_module() {
                         cell = $(this);
                         if ($(cell).is("th")) {
                             thCount++;
-                            if (thCount > 1)
+                            if (thCount > 1) {
                                 hasThRow = true;
-                            if (rowCount > 1)
+                            }
+                            if (rowCount > 1) {
                                 hasThCol = true;
+                            }
 
                             scope = $(cell).attr("scope");
                             if (scope) {
@@ -792,16 +797,19 @@ function init_module() {
                     });
 
                     //Determine if table is using colgroupSegmentation
-                    if (colgroupSegmentation_colgroupsPerRowCounter == 1)
+                    if (colgroupSegmentation_colgroupsPerRowCounter == 1) {
                         colgroupSegmentation_segments++;
-                    if (colgroupSegmentation_segments > 1)
+                    }
+                    if (colgroupSegmentation_segments > 1) {
                         colgroupSegmentation = true;
+                    }
 
                     //There are no more cells in this row, however, the rest of the rowspanArray needs to be decremented.
                     //Decrement any additional rowspans from previous rows
                     for (var d = colIndex; d < rowspanArray.length; d++) {
-                        if (rowspanArray[d] > 1)
+                        if (rowspanArray[d] > 1) {
                             rowspanArray[d]--;
+                        }
                     }
                     rowIndex++;
                 });
