@@ -57,8 +57,9 @@ function init_module() {
         andiBar.prepareActiveElementInspection(element);
         var hidingTechniques = $(element).attr("data-handi508-hidingtechniques");
         $("#ANDI508-additionalElementDetails").html("");
-        if (hidingTechniques)
+        if (hidingTechniques) {
             $("#ANDI508-additionalElementDetails").append(hidingTechniques);
+        }
     };
 
     var prevNextBtnsVisible = false;
