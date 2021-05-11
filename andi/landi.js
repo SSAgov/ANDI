@@ -105,7 +105,7 @@ function init_module() {
             //ANALYZE LINKS
             if ($(this).isSemantically("[role=link]", "a[href],a[tabindex],area")) {
                 if (!andiCheck.isThisElementDisabled(this)) {
-                    lANDI.links.count++;
+                    lANDI.links.count += 1;
 
                     if (AndiModule.activeActionButtons.linksMode) {
                         andiData = new AndiData(this);
@@ -180,7 +180,7 @@ function init_module() {
                 $(this).addClass("ANDI508-exclude-from-inspection").removeClass("ANDI508-highlight");
             } else if ($(this).isSemantically("[role=button]", "button,:button,:submit,:reset,:image")) { //ANALYZE BUTTONS
                 if (!andiCheck.isThisElementDisabled(this)) {
-                    lANDI.buttons.count++;
+                    lANDI.buttons.count += 1;
 
                     if (AndiModule.activeActionButtons.buttonsMode) {
                         andiData = new AndiData(this);
@@ -307,10 +307,10 @@ function init_module() {
                         relatedElement = $(lANDI.links.list[x].element);
                         if (lANDI.links.list[x].ambiguousIndex) { //Yes. Copy the ambiguousIndex from the first instance
                             i = lANDI.links.list[x].ambiguousIndex;
-                            lANDI.links.ambiguousCount++;
+                            lANDI.links.ambiguousCount += 1;
                         } else { //No. increment ambiguousIndex and add it to the first instance.
                             lANDI.links.ambiguousCount = lANDI.links.ambiguousCount + 2;
-                            lANDI.links.ambiguousIndex++;
+                            lANDI.links.ambiguousIndex += 1;
                             i = lANDI.links.ambiguousIndex;
                             lANDI.links.list[x].ambiguousIndex = i;
                             $(relatedElement).addClass("lANDI508-ambiguous");
@@ -347,10 +347,10 @@ function init_module() {
                     relatedElement = $(lANDI.buttons.list[y].element);
                     if (lANDI.buttons.list[y].nonUniqueIndex) { //Yes. Copy the nonUniqueIndex from the first instance
                         m = lANDI.buttons.list[y].nonUniqueIndex;
-                        lANDI.buttons.nonUniqueCount++;
+                        lANDI.buttons.nonUniqueCount += 1;
                     } else { //No. increment nonUniqueIndex and add it to the first instance.
                         lANDI.buttons.nonUniqueCount = lANDI.buttons.nonUniqueCount + 2;
-                        lANDI.buttons.nonUniqueIndex++;
+                        lANDI.buttons.nonUniqueIndex += 1;
                         m = lANDI.buttons.nonUniqueIndex;
                         lANDI.buttons.list[y].nonUniqueIndex = m;
                         $(relatedElement).addClass("lANDI508-ambiguous");
@@ -377,12 +377,12 @@ function init_module() {
                             andiAlerter.throwAlert(alert_0069, [idRef]);
                         }
                     } else { //link is internal and anchor target found
-                        lANDI.links.internalCount++;
+                        lANDI.links.internalCount += 1;
                         linkPurpose = "i";
                         $(element).addClass("lANDI508-internalLink");
                     }
                 } else if (href.charAt(0) !== "#" && !lANDI.isScriptedLink(href)) {//this is an external link
-                    lANDI.links.externalCount++;
+                    lANDI.links.externalCount += 1;
                     linkPurpose = "e";
                     $(element).addClass("lANDI508-externalLink");
                 }
