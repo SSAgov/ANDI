@@ -881,7 +881,6 @@ function init_module() {
 
     // Simple class for handling sRGB colors
     (function () {
-
         var _ = self.Color = function (rgba) {
             if (rgba === 'transparent') {
                 rgba = [0, 0, 0, 0];
