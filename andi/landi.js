@@ -580,15 +580,8 @@ function init_module() {
 
             var elementData = $(element).data("andi508");
             var addOnProps = AndiData.getAddOnProps(element, elementData,
-                [
-                    ["href", lANDI.normalizeHref(element)],
-                    "rel",
-                    "download",
-                    "media",
-                    "target",
-                    "type"
-                ]
-            );
+                [["href", lANDI.normalizeHref(element)], "rel", "download", "media",
+                "target", "type"]);
 
             andiBar.displayOutput(elementData, element, addOnProps);
             andiBar.displayTable(elementData, element, addOnProps);
@@ -650,10 +643,8 @@ function init_module() {
             }
 
             tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + lANDI.links.list.length + ")</button>";
-            if (lANDI.links.internalCount > 0)
-                tabsHTML += "<button id='lANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='lANDI508-internalLink'>skip links (" + lANDI.links.internalCount + ")</button>";
-            if (lANDI.links.externalCount > 0)
-                tabsHTML += "<button id='lANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='lANDI508-externalLink'>external links (" + lANDI.links.externalCount + ")</button>";
+            tabsHTML += "<button id='lANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='lANDI508-internalLink'>skip links (" + lANDI.links.internalCount + ")</button>";
+            tabsHTML += "<button id='lANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='lANDI508-externalLink'>external links (" + lANDI.links.externalCount + ")</button>";
 
             appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
