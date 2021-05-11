@@ -46,8 +46,9 @@ function init_module() {
     AndiModule.cleanup = function (testPage, element) {
         if (element) {
             $(element).removeAttr("data-handi508-hidingtechniques").removeClass("ANDI508-forceReveal ANDI508-forceReveal-display ANDI508-forceReveal-visibility ANDI508-forceReveal-position ANDI508-forceReveal-opacity ANDI508-forceReveal-overflow ANDI508-forceReveal-fontSize ANDI508-forceReveal-textIndent");
-            if ($(element).hasClass("ANDI508-forceReveal-html5Hidden"))
+            if ($(element).hasClass("ANDI508-forceReveal-html5Hidden")) {
                 $(element).attr("hidden", "hidden").removeClass("ANDI508-forceReveal-html5Hidden"); //add the hidden attribute back
+            }
         } else {
             $(testPage).find(".hANDI508-hasHiddenCssContent").removeClass("hANDI508-hasHiddenCssContent");
         }
