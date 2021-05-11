@@ -761,17 +761,16 @@ function init_module() {
     //This function will check the contrast for an element
     //It takes into consideration the font-size and font-weight
     cANDI.contrastDisplay = function (element) {
-
         var cANDI_data = $(element).data("candi508");
 
         $("#cANDI508-fontsize").html(convertPxToPt(cANDI_data.size) + "pt");
 
-        //Display Font-weight (if bold)
-        if (cANDI_data.weight >= 700)
+        if (cANDI_data.weight >= 700) { //Display Font-weight (if bold)
             $("#cANDI508-fontweight").html("bold");
-
+        }
+        
         //Display Font-family
-        //$("#cANDI508-fontfamily").html(cANDI_data.family);
+        $("#cANDI508-fontfamily").html(cANDI_data.family);
 
         //Display Text Color
         displayColorValue("#cANDI508-fg", cANDI_data.fgColor);
