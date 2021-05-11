@@ -339,14 +339,16 @@ function init_module() {
                     andiOverlay.overlayButton_on("find", $(this));
                     $("#ANDI508-testPage .ANDI508-forceReveal-" + technique).each(function () {
                         $(this).addClass("ANDI508-forceReveal");
-                        if (technique === "html5Hidden")//remove hidden attribute for html5Hidden technique
+                        if (technique === "html5Hidden") { //remove hidden attribute for html5Hidden technique
                             $(this).removeAttr("hidden");
+                        }
                     });
                     AndiModule.activeActionButtons["forceReveal_" + technique] = true;
                 } else {
                     andiOverlay.overlayButton_off("find", $(this));
-                    if (technique === "html5Hidden")//add the hidden attribute back on
+                    if (technique === "html5Hidden") { //add the hidden attribute back on
                         $("#ANDI508-testPage .ANDI508-forceReveal-html5Hidden").attr("hidden", "hidden");
+                    }
                     AndiModule.activeActionButtons["forceReveal_" + technique] = false;
                     hANDI.unreveal();
                 }
