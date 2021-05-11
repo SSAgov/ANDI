@@ -1000,7 +1000,7 @@ function init_module() {
                     //Original Code (Mod 3):
                     //ratio = Math.round(ratio, 1);
                     //Modified code (Mod 3): increased the contrast rounding precision to two decimals
-                    ratio = Math.round(ratio, 2);
+                    //ratio = Math.round(ratio, 2);
 
                     return {
                         ratio: ratio,
@@ -1037,8 +1037,8 @@ function init_module() {
                 }
 
                 return {
-                    ratio: Math.round((min + max) / 2, 2),
-                    error: Math.round((max - min) / 2, 2),
+                    ratio: (min + max) / 2,
+                    error: (max - min) / 2,
                     min: min,
                     max: max,
                     closest: closest,
