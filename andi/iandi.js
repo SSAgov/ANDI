@@ -123,9 +123,9 @@ function init_module() {
     //Should be called after the mouse hover or focus in event.
     AndiModule.inspect = function (element) {
         andiBar.prepareActiveElementInspection(element);
-
-        var elementData = $(element).data("andi508");
-        var addOnProps = AndiData.getAddOnProps(element, elementData, ["src"]);
+        var elementData, addOnProps;
+        elementData = $(element).data("andi508");
+        addOnProps = AndiData.getAddOnProps(element, elementData, ["src"]);
 
         andiBar.displayOutput(elementData, element, addOnProps);
         andiBar.displayTable(elementData, element, addOnProps);
@@ -139,8 +139,8 @@ function init_module() {
 
     //This function will open an iframe in a new window 
     iANDI.openIframeInNewWindow = function (iframe) {
-        var iframeWindow;
-        var url = $(iframe).attr("src");
+        var iframeWindow, url;
+        url = $(iframe).attr("src");
 
         if (url) {
             iframeWindow = window.open(url, "_blank"); //opens user preference, usually new tab
