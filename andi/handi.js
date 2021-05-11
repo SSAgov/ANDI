@@ -113,16 +113,14 @@ function init_module() {
             elementCss = "";
 
             if (hANDI.containsTestableContent(this)) {
-                if ($(this).css("display") == "none") {
-                    //element display is none
+                if ($(this).css("display") == "none") { //element display is none
                     hANDI.hiddenContents.count++;
                     isHidingContent = true;
                     hANDI.hiddenContents.hiddenDisplay++;
                     $(this).addClass("ANDI508-forceReveal-display");
                     elementCss += "display:none; ";
                 }
-                if ($(this).css("visibility") == "hidden") {
-                    //element visibility is hidden
+                if ($(this).css("visibility") == "hidden") { //element visibility is hidden
                     hANDI.hiddenContents.count++;
                     isHidingContent = true;
                     hANDI.hiddenContents.hiddenVisibility++;
@@ -137,16 +135,15 @@ function init_module() {
                     $(this).addClass("ANDI508-forceReveal-position");
                     elementCss += "position:absolute; ";
                 }
-                if ($(this).css("opacity") == "0") {
-                    //element opacity is zero
+                if ($(this).css("opacity") == "0") { //element opacity is zero
                     hANDI.hiddenContents.count++;
                     isHidingContent = true;
                     hANDI.hiddenContents.hiddenOpacity++;
                     $(this).addClass("ANDI508-forceReveal-opacity");
                     elementCss += "opacity:0; ";
                 }
-                //if element has innerText
-                if ($(this).isContainerElement() && $.trim($(this).text())) {
+                
+                if ($(this).isContainerElement() && $.trim($(this).text())) { //if element has innerText
                     if ($(this).css("overflow") == "hidden" &&
                         (parseInt($(this).css("height")) <= 1 || parseInt($(this).css("width")) <= 1)) {
                         //element has overflow hidden and a small height or width
@@ -156,8 +153,7 @@ function init_module() {
                         $(this).addClass("ANDI508-forceReveal-overflow");
                         elementCss += "overflow:hidden; ";
                     }
-                    if (parseInt($(this).css("font-size")) === 0) {
-                        //element font-size is 0
+                    if (parseInt($(this).css("font-size")) === 0) { //element font-size is 0
                         hANDI.hiddenContents.count++;
                         isHidingContent = true;
                         hANDI.hiddenContents.hiddenFontSize++;
@@ -175,8 +171,7 @@ function init_module() {
                         elementCss += "text-indent:" + $(this).css("text-indent") + "; ";
                     }
                 }
-                if ($(this).attr("hidden")) {
-                    //element has html5 hidden attribute
+                if ($(this).attr("hidden")) { //element has html5 hidden attribute
                     hANDI.hiddenContents.count++;
                     isHidingContent = true;
                     hANDI.hiddenContents.hiddenHTML5++;
@@ -185,8 +180,7 @@ function init_module() {
                 }
             }
 
-            if (isHidingContent) {
-                //create data-handi508-hidingtechniques
+            if (isHidingContent) { //create data-handi508-hidingtechniques
                 if (elementCss !== "") {
                     elementCss = "<h3 class='ANDI508-heading'>Hiding Technique:</h3> <span class='ANDI508-code'>" + $.trim(elementCss) + "</span>";
                     $(this).attr("data-handi508-hidingtechniques", elementCss);
