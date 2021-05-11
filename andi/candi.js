@@ -28,13 +28,6 @@ function init_module() {
         this.elementsWithTextCount = 0;
     }
 
-    //This function will set the values of the require ratios for a given WCAG level
-    var wcagLevel = {
-        level: "AA",
-        smallTextReqRatio: 4.5,
-        largeTextReqRatio: 3
-    };
-
     AndiModule.initActiveActionButtons({
         contrastPlayground: false,
         grayscale: false
@@ -50,9 +43,7 @@ function init_module() {
                 cANDI.colorContrasts.imageCount++;
             } else {
                 if (hasTextExcludingChildren(this)) {
-                    if (!hasAdditionalHidingTechniques(this)) {
-                        //Element is not hidden and contains text.
-
+                    if (!hasAdditionalHidingTechniques(this)) { //Element is not hidden and contains text.
                         cANDI.colorContrasts.elementsWithTextCount++;
 
                         //Try to get the contrast ratio automatically
@@ -130,8 +121,9 @@ function init_module() {
             return false;
         });
 
-        if (cANDI.colorContrasts.imageCount > 0)
+        if (cANDI.colorContrasts.imageCount > 0) {
             andiAlerter.throwAlert(alert_0231, alert_0231.message, 0);
+        }
 
         //If browser doesn't support input[type=color] nothing will open
         var colorSelectorWidgets = "<input type='color' id='cANDI508-colorSelectorWidget-fg' value='#000000' hidden /><input type='color' id='cANDI508-colorSelectorWidget-bg' value='#ffffff' hidden />";
@@ -206,11 +198,11 @@ function init_module() {
         });
 
         $("#cANDI508-playground-suggest-small").click(function () {
-            cANDI.playground_suggest(wcagLevel.smallTextReqRatio);
+            cANDI.playground_suggest(4.5);
             $("#cANDI508-playground-result").focus();
         });
         $("#cANDI508-playground-suggest-large").click(function () {
-            cANDI.playground_suggest(wcagLevel.largeTextReqRatio);
+            cANDI.playground_suggest(3);
             $("#cANDI508-playground-result").focus();
         });
 
@@ -457,12 +449,12 @@ function init_module() {
         $("#cANDI508-playground-ratio").removeClass("cANDI508-invalid").html(ratio);
 
         //Hide or Show Suggestion Buttons
-        if (ratio < wcagLevel.largeTextReqRatio) {
+        if (ratio < 3) {
             $("#cANDI508-playground-suggest-large").css("visibility", "visible");
         } else {
             $("#cANDI508-playground-suggest-large").css("visibility", "hidden");
         }
-        if (ratio < wcagLevel.smallTextReqRatio) {
+        if (ratio < 4.5) {
             $("#cANDI508-playground-suggest-small").css("visibility", "visible");
         } else {
             $("#cANDI508-playground-suggest-small").css("visibility", "hidden");
@@ -575,8 +567,8 @@ function init_module() {
         function contrastTest(cANDI_data) {
 
             //AA Requirements (default)
-            var ratio_small = wcagLevel.smallTextReqRatio;
-            var ratio_large = wcagLevel.largeTextReqRatio;
+            var ratio_small = 4.5;
+            var ratio_large = 3;
 
             //Set minReq (minimum requirement)
             cANDI_data.minReq = ratio_small;
@@ -645,10 +637,10 @@ function init_module() {
         if (cANDI_data.result === "FAIL") {
             //Text does not meet minimum contrast ratio
             var minReq = $(element).data("candi508").minReq;
-            if (minReq === wcagLevel.largeTextReqRatio) {
-                andiAlerter.throwAlert(alert_0240, ["large text ", wcagLevel.level, minReq]);
+            if (minReq === 3) {
+                andiAlerter.throwAlert(alert_0240, ["large text ", "AA", minReq]);
             } else {
-                andiAlerter.throwAlert(alert_0240, [" ", wcagLevel.level, minReq]);
+                andiAlerter.throwAlert(alert_0240, [" ", "AA", minReq]);
             }
         } else if (!cANDI_data.result) { //Opacity Less Than 1
             if ($(element).data("candi508").opacity) {
