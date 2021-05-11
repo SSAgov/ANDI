@@ -63,8 +63,9 @@ function init_module() {
         $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewIframeList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view iframe list</button><div id='iANDI508-iframeList-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'><div class='ANDI508-scrollable'>" + iframesSelectionMenu + "</div></div>");
 
         $("#iANDI508-iframeList-container").find("a").click(function () {
-            var relatedIndex = $(this).attr("data-andi508-relatedindex");
-            var relatedIframe = $("#ANDI508-testPage .ANDI508-element[data-andi508-index=" + relatedIndex + "]");
+            var relatedIndex, relatedIframe;
+            relatedIndex = $(this).attr("data-andi508-relatedindex");
+            relatedIframe = $("#ANDI508-testPage .ANDI508-element[data-andi508-index=" + relatedIndex + "]");
             iANDI.openIframeInNewWindow(relatedIframe);
         });
 
