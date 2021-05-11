@@ -1,13 +1,12 @@
 //=============================================//
 //fANDI: focusable elements ANDI (default mode)//
-//Created By Social Security Administration	   //
+//Created By Social Security Administration    //
 //=============================================//
 function init_module() {
-
-    var fandiVersionNumber = "7.0.0";
+    var fandiVersionNumber = "7.0.0", fANDI;
 
     //create fANDI instance
-    var fANDI = new AndiModule(fandiVersionNumber, "f");
+    fANDI = new AndiModule(fandiVersionNumber, "f");
 
     AndiModule.initActiveActionButtons({
         tabOrder: false,
@@ -37,7 +36,7 @@ function init_module() {
         fANDI.accesskeys = new AndiAccesskeys();
 
         //Loop through every visible element and run tests
-        //TODO: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
+        //NOTE: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
         //      $(TestPageData.allElements).not( ....).each(function ())
         $(TestPageData.allElements).each(function () {
             if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
