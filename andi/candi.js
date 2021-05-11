@@ -792,7 +792,7 @@ function init_module() {
             //Display Contrast Ratio
             $("#cANDI508-ratio").html(cANDI_data.ratio + "<span class='cANDI508-ratio-darker'>:1</span>");
 
-            //Display Resylt
+            //Display Result
             if (cANDI_data.result === "PASS") {
                 $("#cANDI508-result").html("PASS").addClass("cANDI508-pass");
             } else { //FAIL
