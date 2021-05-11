@@ -42,9 +42,9 @@ function init_module() {
     //Inserts some counter totals, displays the accesskey list
     iANDI.results = function () {
         andiBar.updateResultsSummary("Iframes with Content: " + testPageData.andiElementIndex);
-        var iframesSelectionMenu = "", iframesSelectionLinks = "";
+        var iframesSelectionMenu = "", iframesSelectionLinks = "", x;
 
-        for (var x = 0; x < iANDI.iFrames.list.length; x++) {
+        for (x = 0; x < iANDI.iFrames.list.length; x++) {
             iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + iANDI.iFrames.list[x].index + "'>";
             if ($(iANDI.iFrames.list[x].element).attr("src")) {
                 iframesSelectionLinks += $(iANDI.iFrames.list[x].element).attr("src");
