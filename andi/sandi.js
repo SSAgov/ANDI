@@ -234,23 +234,15 @@ function init_module() {
 
     //This function determine's if the element looks like a heading but is not semantically a heading
     sANDI.isFakeHeading = function (element) {
-
         var isFakeHeading = false;
 
-        var limit_textLength = 30; //text longer than this will not be considered a fake heading
-
-        var limit_fontSize = 22; //px  (an h2 starts around 24px)
-        var limit_boldFontSize = 15; //px
-
         var text = $.trim($(element).text());
-        if (text.length > 0 && text.length < limit_textLength) {
-            //text is not empty, but less than char limit
-
+        if (text.length > 0 && text.length < 30) { //text is not empty, but less than char limit
             var fakeHeading_fontSize = parseInt($(element).css("font-size"));
             var fakeHeading_fontWeight = $(element).css("font-weight");
 
-            if (fakeHeading_fontSize > limit_fontSize ||
-                (isBold(fakeHeading_fontWeight) && fakeHeading_fontSize > limit_boldFontSize)
+            if (fakeHeading_fontSize > 22 ||
+                (isBold(fakeHeading_fontWeight) && fakeHeading_fontSize > 15)
             ) { //fakeHeading_fontSize is greater than size limit
 
                 var nextElement = $(element).next().filter(":visible");
