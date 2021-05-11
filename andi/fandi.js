@@ -253,8 +253,7 @@ function init_module() {
 
     //This function hide/shows the view list
     fANDI.viewList_toggle = function (mode, btn) {
-        if ($(btn).attr("aria-expanded") === "false") {
-            //show List, hide alert list
+        if ($(btn).attr("aria-expanded") === "false") {  //show List, hide alert list
             $("#ANDI508-alerts-list").hide();
             andiSettings.minimode(false);
             $(btn)
@@ -270,7 +269,7 @@ function init_module() {
             $("#fANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
             //$("#ANDI508-resultsSummary").show();
             $("#ANDI508-alerts-list").show();
-            
+
             $(btn)
                 .removeClass("ANDI508-viewOtherResults-button-expanded")
                 .html(listIcon + "view " + mode + " list")

@@ -1439,8 +1439,7 @@ function init_module() {
 
     //This function hide/shows the view list
     tANDI.viewList_toggle = function (btn) {
-        if ($(btn).attr("aria-expanded") === "false") {
-            //show List, hide alert list
+        if ($(btn).attr("aria-expanded") === "false") { //show List, hide alert list
             $("#ANDI508-alerts-list").hide();
             andiSettings.minimode(false);
             $(btn)
@@ -1450,8 +1449,7 @@ function init_module() {
                 .find("img").attr("src", icons_url + "list-on.png");
             $("#tANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
             AndiModule.activeActionButtons.viewTableList = true;
-        } else {
-            //hide List, show alert list
+        } else { //hide List, show alert list
             $("#tANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
             //$("#ANDI508-resultsSummary").show();
             $("#ANDI508-alerts-list").show();

@@ -395,8 +395,7 @@ function init_module() {
 
     //This function hide/shows the view list
     gANDI.viewList_toggle = function (mode, btn) {
-        if ($(btn).attr("aria-expanded") === "false") {
-            //show List, hide alert list
+        if ($(btn).attr("aria-expanded") === "false") { //show List, hide alert list
             $("#ANDI508-alerts-list").hide();
             andiSettings.minimode(false);
             $(btn)
