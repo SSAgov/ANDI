@@ -37,6 +37,8 @@ function init_module() {
         fANDI.accesskeys = new AndiAccesskeys();
 
         //Loop through every visible element and run tests
+        //TODO: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
+        //      $(TestPageData.allElements).not( ....).each(function ())
         $(TestPageData.allElements).each(function () {
             if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
                 fANDI.focusables.list.push(new Focusable(this, fANDI.index));
