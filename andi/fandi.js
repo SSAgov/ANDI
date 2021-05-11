@@ -80,19 +80,16 @@ function init_module() {
                 if (accesskey.length > 1) { //TODO: could be a non-issue if browsers are supporting space delimited accesskey lists
                     andiAlerter.throwAlert(alert_0052, [accesskey]);
                     addToList(accesskey, alert_0052);
-                } else {
-                    //Check for duplicate accesskey
+                } else { //Check for duplicate accesskey
                     if (duplicateComparator.includes(accesskey)) {
                         if ($(element).is("button,input:submit,input:button,input:reset,input:image")) {
                             //duplicate accesskey found on button
                             andiAlerter.throwAlert(alert_0054, [accesskey]);
                             addToList(accesskey, alert_0054);
-                        } else if ($(element).is("a[href]")) {
-                            //duplicate accesskey found on link
+                        } else if ($(element).is("a[href]")) { //duplicate accesskey found on link
                             andiAlerter.throwAlert(alert_0056, [accesskey]);
                             addToList(accesskey, alert_0056);
-                        } else {
-                            //duplicate accesskey found
+                        } else { //duplicate accesskey found
                             andiAlerter.throwAlert(alert_0055, [accesskey]);
                             addToList(accesskey, alert_0055);
                         }
