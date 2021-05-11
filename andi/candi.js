@@ -780,8 +780,9 @@ function init_module() {
 
         //Display text-shadow color if it exists
         //TODO: display the color in a color box, however, browsers order this property's value differently
-        if ($(element).css("text-shadow") != "none")
+        if ($(element).css("text-shadow") != "none") {
             $("#cANDI508-table-style tbody").append("<tr><th scope='row' class='cANDI508-label'>Text-Shadow:</th><td><span id='cANDI508-textshadow'>" + $(element).css("text-shadow") + "</span></td></tr>");
+        }
 
         //If Result is PASS or FAIL
         if (cANDI_data.result) {
