@@ -1,13 +1,13 @@
 //=============================================//
 //fANDI: focusable elements ANDI (default mode)//
-//Created By Social Security Administration	   //
+//Created By Social Security Administration    //
 //=============================================//
 function init_module() {
-
-    var iandiVersionNumber = "3.0.1";
+    var iandiVersionNumber, iANDI;
+    iandiVersionNumber = "3.0.1";
 
     //create iANDI instance
-    var iANDI = new AndiModule(iandiVersionNumber, "i");
+    iANDI = new AndiModule(iandiVersionNumber, "i");
     iANDI.index = 1;
 
     //This object class is used to store data about each iFrame. Object instances will be placed into an array.
@@ -29,7 +29,7 @@ function init_module() {
 
         $(TestPageData.allElements).each(function () {
             if ($(this).is("iframe")) {
-                iANDI.iFrames.list.push(new IFrame(this, iANDI.index, ""))
+                iANDI.iFrames.list.push(new IFrame(this, iANDI.index, ""));
                 andiData = new AndiData(this);
                 andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
                 AndiData.attachDataToElement(this);
@@ -42,9 +42,7 @@ function init_module() {
     //Inserts some counter totals, displays the accesskey list
     iANDI.results = function () {
         andiBar.updateResultsSummary("Iframes with Content: " + testPageData.andiElementIndex);
-
-        var iframesSelectionMenu = "";
-        var iframesSelectionLinks = "";
+        var iframesSelectionMenu = "", iframesSelectionLinks = "";
 
         for (var x = 0; x < iANDI.iFrames.list.length; x++) {
             iframesSelectionLinks += "<li><a href='javascript:void(0)' data-andi508-relatedindex='" + iANDI.iFrames.list[x].index + "'>";
