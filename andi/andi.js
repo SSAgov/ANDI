@@ -967,7 +967,7 @@ function AndiBar() {
                             if (component === "subtree") {
                                 loopThroughSubtrees(subtree);
                             } else if (component !== "innerText" && component !== "role" && component !== "tagNameText") {
-                                rowspan++;
+                                rowspan += 1;
 
                                 if (rowspan > 1) { //start new row
                                     subtreeComponents += "<tr>";
@@ -1895,7 +1895,7 @@ function AndiOverlay() {
                 //loop through allIds and compare
                 for (x = 0; x < testPageData.allIds.length; x++) {
                     if (this.id === testPageData.allIds[x].id) {
-                        idMatchesFound++;
+                        idMatchesFound += 1;
                         if (idMatchesFound == 2) break; //duplicate found so stop searching, for performance
                     }
                 }
@@ -2011,7 +2011,7 @@ function AndiData(element, skipTAC) {
 
     andiAlerter.reset();
 
-    testPageData.andiElementIndex++;
+    testPageData.andiElementIndex += 1;
 
     AndiData.data = {
         andiElementIndex: testPageData.andiElementIndex,
