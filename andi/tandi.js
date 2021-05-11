@@ -265,11 +265,7 @@ function init_module() {
         }
 
         andiAlerter.updateAlertList();
-        if (!AndiModule.activeActionButtons.viewTableList && testPageData.numberOfAccessibilityAlertsFound > 0) {
-            $("#ANDI508-alerts-list").show();
-        } else {
-            $("#ANDI508-alerts-list").hide();
-        }
+        $("#ANDI508-alerts-list").show();
     };
 
     //This function will inspect a table or table cell
@@ -1458,8 +1454,8 @@ function init_module() {
             //hide List, show alert list
             $("#tANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
             //$("#ANDI508-resultsSummary").show();
-            if (testPageData.numberOfAccessibilityAlertsFound > 0)
-                $("#ANDI508-alerts-list").show();
+            $("#ANDI508-alerts-list").show();
+            
             $(btn)
                 .removeClass("ANDI508-viewOtherResults-button-expanded")
                 .html(listIcon + "view table list")

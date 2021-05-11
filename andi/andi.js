@@ -3656,13 +3656,12 @@ function AndiAlerter() {
 
     //This function will update the ANDI508-alerts-list.
     this.updateAlertList = function () {
-        if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-            //Yes, Accessibility alerts were found.
+        if (testPageData.numberOfAccessibilityAlertsFound > 0) { //Yes, Accessibility alerts were found.
             buildAlertGroupsHtml(sortAlertGroups());
             showAlertButtons();
-        }
-        else//No accessibility alerts.
+        } else { //No accessibility alerts.
             $("#ANDI508-alerts-list").html("").hide();
+        }
 
         //This function sorts the alert groups into their levels
         function sortAlertGroups() {
