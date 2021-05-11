@@ -786,7 +786,6 @@ function init_module() {
 
         //If Result is PASS or FAIL
         if (cANDI_data.result) {
-
             //Display Background Color
             displayColorValue("#cANDI508-bg", cANDI_data.bgColor);
 
