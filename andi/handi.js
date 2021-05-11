@@ -494,7 +494,6 @@ function init_module() {
             }
         });
 
-        
         if (revealAllOn) { //Toggle Reveal All Button
             andiOverlay.overlayButton_on("find", $("#ANDI508-forceRevealAll-button"));
         } else {
