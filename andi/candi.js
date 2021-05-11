@@ -150,8 +150,7 @@ function init_module() {
 
         //Define contrastPlayground button
         $("#ANDI508-contrastPlayground-button").click(function () {
-            if ($(this).attr("aria-expanded") == "false") {
-                //show Contrast Playground, hide alert list
+            if ($(this).attr("aria-expanded") == "false") { //show Contrast Playground, hide alert list
                 $("#ANDI508-alerts-list").hide();
                 andiSettings.minimode(false);
                 $(this)
@@ -162,8 +161,7 @@ function init_module() {
                 cANDI.playground_open();
                 $("#cANDI508-contrastPlayground").slideDown(AndiSettings.andiAnimationSpeed).focus();
                 AndiModule.activeActionButtons.contrastPlayground = true;
-            } else {
-                //hide Contrast Playground, show alert list
+            } else { //hide Contrast Playground, show alert list
                 $("#cANDI508-contrastPlayground").slideUp(AndiSettings.andiAnimationSpeed);
                 $("#ANDI508-alerts-list").show();
                 
@@ -210,7 +208,11 @@ function init_module() {
         var moduleActionButtons = "";
 
         //Does the browser support CSS filter:grayscale?
-        if ((function () { var el = document.createElement("a"); el.style.cssText = (document.body.style.webkitFilter !== undefined ? '-webkit-' : '') + 'filter:grayscale(100%)'; return !!el.style.length && !oldIE; }()))
+        if ((function () {
+            var el = document.createElement("a");
+            el.style.cssText = (document.body.style.webkitFilter !== undefined ? '-webkit-' : '') + 'filter:grayscale(100%)';
+            return !!el.style.length && !oldIE;
+        }()))
             moduleActionButtons += "<button id='ANDI508-grayscale-button' aria-pressed='false'>grayscale</button>";
 
         $("#ANDI508-module-actions").html(moduleActionButtons);
