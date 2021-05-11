@@ -103,7 +103,6 @@ function init_module() {
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     cANDI.results = function () {
-
         andiBar.updateResultsSummary("Elements Containing Text: " + cANDI.colorContrasts.elementsWithTextCount);
 
         $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewColorsList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view color contrast list</button>");
