@@ -841,8 +841,7 @@ function init_module() {
                                 } else if (lastRowgroupIndex && lastRowgroupRowSpan > 0)
                                     $(this).attr("data-tandi508-rowgroupindex", lastRowgroupIndex);
                             });
-                            //Decrement lastRowgroupRowSpan
-                            lastRowgroupRowSpan--;
+                            lastRowgroupRowSpan--; //Decrement lastRowgroupRowSpan
                         }
 
                     });
@@ -852,13 +851,12 @@ function init_module() {
                 $(all_cells).each(function loopC() {
                     cell = $(this);
 
-                    //scope
-                    scope = $(cell).attr("scope");
+                    scope = $(cell).attr("scope"); //scope
                     headers = $(cell).attr("headers");
 
-                    if (headers)
+                    if (headers) {
                         tableHasHeaders = true;
-
+                    }
                     if (scope && $(cell).is("th")) {
 
                         if (scope == "row" || scope == "rowgroup") {
@@ -916,19 +914,20 @@ function init_module() {
                         //andiData.grab_scope($(cell));
                         if (AndiModule.activeActionButtons.scopeMode) {
                             //Only throw scope alerts if in "scope mode"
-                            if (tooManyScopeRowLevels)
+                            if (tooManyScopeRowLevels) {
                                 andiAlerter.throwAlert(alert_0043, [tANDI.scopeLevelLimit, "row"]);
-                            if (tooManyScopeColLevels)
+                            }
+                            if (tooManyScopeColLevels) {
                                 andiAlerter.throwAlert(alert_0043, [tANDI.scopeLevelLimit, "col"]);
+                            }
                             andiCheck.detectDeprecatedHTML($(cell));
                             if (scope !== "col" && scope !== "row" && scope !== "colgroup" && scope !== "rowgroup")//scope value is invalid
                                 andiAlerter.throwAlert(alert_007C, [scope]);
                         }
                     }
-
-                    if (headers)
+                    if (headers) {
                         tANDI.grab_headers(cell, andiData, table);
-
+                    }
                     //If this is not the upper left cell
                     if ($(cell).is("th") && !andiData.accName && !($(this).attr("data-tandi508-rowindex") === "1" && $(this).attr("data-tandi508-colindex") === "1"))
                         //Header cell is empty
@@ -963,11 +962,10 @@ function init_module() {
                 } else { //Has th cells
                     
                     if (AndiModule.activeActionButtons.scopeMode) {
-                        if (hasThRow && hasThCol)
+                        if (hasThRow && hasThCol) {
                             scopeRequired = true;
-
-                        if (!tableHasScopes) {
-                            //Table Has No Scopes
+                        }
+                        if (!tableHasScopes) { //Table Has No Scopes
                             if (tableHasHeaders) { //No Scope, Has Headers
                                 andiAlerter.throwAlert(alert_004B);
                             } else { //No Scope, No Headers
@@ -975,8 +973,7 @@ function init_module() {
                             }
                         }
 
-                        if (scopeRequired) {
-                            //Check intersections for scope
+                        if (scopeRequired) { //Check intersections for scope
                             var xDirectionHasTh, yDirectionHasTh;
                             $(all_th).each(function () {
                                 //if this th does not have scope
@@ -1013,8 +1010,7 @@ function init_module() {
                             });
                         }
                     } else if (!AndiModule.activeActionButtons.scopeMode) {
-                        if (!tableHasHeaders) {
-                            //Table Has No Headers
+                        if (!tableHasHeaders) { //Table Has No Headers
                             if (tableHasScopes) { //No Headers, Has Scope
                                 andiAlerter.throwAlert(alert_004C);
                             } else { //No Headers, No Scope
@@ -1473,15 +1469,18 @@ function init_module() {
 
             markupOverlay = $(this).prop("tagName").toLowerCase();
 
-            if (role)
+            if (role) {
                 markupOverlay += " role=" + role;
-            if (id)
+            }
+            if (id) {
                 markupOverlay += " id=" + id;
-            if (headers)
+            }
+            if (headers) {
                 markupOverlay += " headers=" + headers;
-            if (scope)
+            }
+            if (scope) {
                 markupOverlay += " scope=" + scope;
-
+            }
             $(this).prepend(andiOverlay.createOverlay("ANDI508-overlay-tableMarkup", markupOverlay));
         });
     };
