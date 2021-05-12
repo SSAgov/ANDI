@@ -18,7 +18,7 @@ function init_module() {
     // result: undefined,
 
     //This object class is used to store data about each color contrast element. Object instances will be placed into an array.
-    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, semiTransparency, opacity, bgImage, size, weight, family, minReq, result, disabled) {
+    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, semiTransparency, opacity, bgImage, size, weight, family, minReq, disabled) {
         this.element = element;
         this.index = index;
         this.bgColor = bgColor;
@@ -32,7 +32,6 @@ function init_module() {
         this.weight = weight;
         this.family = family;
         this.minReq = minReq;
-        this.result = result;
         this.disabled = disabled;
     }
 
@@ -72,7 +71,7 @@ function init_module() {
 
                             //Throw alerts if necessary
                             cANDI.processResult($(this));
-                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast, cANDI_data.ratio, cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family, cANDI_data.minReq, cANDI_data.result, cANDI_data.disabled));
+                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast, cANDI_data.ratio, cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family, cANDI_data.minReq, cANDI_data.disabled));
                             AndiData.attachDataToElement(this);
                             cANDI.index += 1;
                         } else {
@@ -317,13 +316,13 @@ function init_module() {
                 ' "' + cANDI.colorContrasts.list[x].weight + '"' +
                 ' "' + cANDI.colorContrasts.list[x].family + '"' +
                 ' "' + cANDI.colorContrasts.list[x].minReq + '"' +
-                ' "' + cANDI.colorContrasts.list[x].result + '"' +
+                // NOTE: Add results in the future
                 ' "' + cANDI.colorContrasts.list[x].disabled + '"' + "</a></td>" +
                 "</tr>";
         }
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:85%'><a href='javascript:void(0)'>bgColor fgColor contrast ratio semiTransparency opacity bgImage size weight family minReq result disabled<i aria-hidden='true'></i></a></th>";
+                "<th scope='col' style='width:85%'><a href='javascript:void(0)'>bgColor fgColor contrast ratio semiTransparency opacity bgImage size weight family minReq<i aria-hidden='true'></i></a></th>";
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
@@ -565,11 +564,6 @@ function init_module() {
         var size = parseFloat($(fgElement).css("font-size"));
         var weight = $(fgElement).css("font-weight");
         var family = $(fgElement).css("font-family")
-        var result = "";
-
-        if (!disabled) { //Run the contrast test
-            result = contrastTest(cANDI_data);
-        }
 
         //Set minReq (minimum requirement)
         var minReq = 4.5;
@@ -591,24 +585,25 @@ function init_module() {
             weight: weight,
             family: family,
             minReq: minReq,
-            result: result,
+            result: undefined,
             disabled: disabled
         };
 
+        if (!disabled) { //Run the contrast test
+            contrastTest(cANDI_data);
+        }
         //send cANDI_data back
         return cANDI_data;
 
         //This function does the contrast test
         function contrastTest(cANDI_data) {
-            var result = "";
             if (cANDI_data.bgImage === "none" && !cANDI_data.opacity) { //No, Display PASS/FAIL Result and Requirement Ratio
                 if (cANDI_data.ratio >= cANDI_data.minReq) {
-                    result = "PASS";
+                    cANDI_data.result = "PASS";
                 } else {
-                    result = "FAIL";
+                    cANDI_data.result = "FAIL";
                 }
             }
-            return result;
         }
 
         //This function will recursively get the element that contains the background-color or background-image.
