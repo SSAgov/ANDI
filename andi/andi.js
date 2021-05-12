@@ -3182,7 +3182,6 @@ function AndiCheck() {
     };
 
     //==Test Page Checks==//
-
     //This function will count the number of visible fieldset/figure/table tags and compare to the number of legend/figcaption/caption tags
     //If there are more parents than children, it will generate an alert with the message and the counts.
     //Note: The function does not test whether the children are actually contained within the parents, it's strictly concerned with the counts.
