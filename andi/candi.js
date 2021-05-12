@@ -504,8 +504,7 @@ function init_module() {
             if (cANDI.suggestForegroundChange(cANDI_data, suggestedFgColor, suggestedBgColor)) {
                 //Suggest Foreground Color
                 displayColorValue("#cANDI508-playground-fg", suggestedFgColor);
-            } else {
-                //Suggest Background Color
+            } else { //Suggest Background Color
                 displayColorValue("#cANDI508-playground-bg", suggestedBgColor);
             }
 
