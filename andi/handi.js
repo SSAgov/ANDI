@@ -196,8 +196,9 @@ function init_module() {
         if (!oldIE) {
             hANDI.detectCssInjectedContent();
 
-            if ($("#ANDI508-testPage .hANDI508-hasHiddenCssContent").first().length)
+            if ($("#ANDI508-testPage .hANDI508-hasHiddenCssContent").first().length) {
                 andiAlerter.throwAlert(alert_0220, alert_0220.message, 0);
+            }
         }
     };
 
