@@ -3645,13 +3645,11 @@ function AndiAlerter() {
     this.addToAlertsList = function (alertObject, message, elementIndex) {
         //Should this alert be associated with a focusable element?
         var listItemHtml = " tabindex='-1' ";
-        if (elementIndex !== 0) {
-            //Yes, this alert should point to a focusable element. Insert as link:
+        if (elementIndex !== 0) { //Yes, this alert should point to a focusable element. Insert as link:
             listItemHtml += "href='javascript:void(0)' data-andi508-relatedindex='" + elementIndex + "' aria-label='" + alertObject.level + ": " + message + " Element #" + elementIndex + "'>" +
                 "<img alt='" + alertObject.level + "' role='presentation' src='" + icons_url + alertObject.level + ".png' />" +
                 message + "</a></li>";
-        } else {
-            //No, This alert is not specific to an indexed element. Insert message with link to help page.
+        } else { //No, This alert is not specific to an indexed element. Insert message with link to help page.
             listItemHtml += "href='" + help_url + "alerts.html?" + alertObject.info + "' target='_blank' aria-label='" + alertObject.level + ": " + message + "'>" +
                 "<img alt='" + alertObject.level + "' role='presentation' src='" + icons_url + alertObject.level + ".png' />" +
                 message + "</a></li>";
@@ -3738,12 +3736,15 @@ function AndiAlerter() {
                         "'><a href='#' class='ANDI508-alertGroup-toggler' tabindex='0' role='treeitem' aria-expanded='false' " +
                         "aria-label='" + group.level + " " + totalAlerts + " " + group.heading + "'>" +
                         group.heading + ": (<span class='ANDI508-total' style='display:inline'>" + totalAlerts + "</span>)</a><ol class='ANDI508-alertGroup-list'>";
-                    for (var d = 0; d < group.dangers.length; d++)
+                    for (var d = 0; d < group.dangers.length; d++) {
                         html += "<li class='ANDI508-display-danger'><a " + "aria-posinset='" + parseInt(d + 1) + "' aria-setsize='" + totalAlerts + "' " + group.dangers[d];
-                    for (var w = 0; w < group.warnings.length; w++)
+                    }
+                    for (var w = 0; w < group.warnings.length; w++) {
                         html += "<li class='ANDI508-display-warning'><a " + "aria-posinset='" + parseInt(w + 1) + "' aria-setsize='" + totalAlerts + "' " + group.warnings[w];
-                    for (var c = 0; c < group.cautions.length; c++)
+                    }
+                    for (var c = 0; c < group.cautions.length; c++) {
                         html += "<li class='ANDI508-display-caution'><a " + "aria-posinset='" + parseInt(c + 1) + "' aria-setsize='" + totalAlerts + "' " + group.cautions[c];
+                    }
                     html += "</ol></li>";
                 }
             }
