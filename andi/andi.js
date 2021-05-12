@@ -3557,9 +3557,9 @@ function AndiAlerter() {
             this.addToAlertsList(alertObject, message, index);
 
             //Add the Alert Button to the alertButtons array (to be displayed later)
-
-            if (alertObject.alertButton && alertButtons.indexOf(alertObject) < 0)
+            if (alertObject.alertButton && alertButtons.indexOf(alertObject) < 0) {
                 alertButtons.push(alertObject);
+            }
         }
     };
 
