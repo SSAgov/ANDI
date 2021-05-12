@@ -405,16 +405,13 @@ function init_module() {
 
     //This function will grab the colors from the active element, if it is available.
     cANDI.playground_open = function () {
-
         //Try to get fg color from active element
-        if (!getColorFromActive("fg")) {
-            //No color to get, default to black
+        if (!getColorFromActive("fg")) { //No color to get, default to black
             displayColorValue("#cANDI508-playground-fg", Color.BLACK);
         }
 
         //Try to get fg color from active element
-        if (!getColorFromActive("bg")) {
-            //No color to get, default to white
+        if (!getColorFromActive("bg")) { //No color to get, default to white
             displayColorValue("#cANDI508-playground-bg", Color.WHITE);
         }
 
@@ -470,8 +467,7 @@ function init_module() {
             var colorSelectorBox = $(this).prev();
 
             //Is this a 6 digit hex value with #
-            if (value.length === 7 && validHex.test(value)) {
-                //Set this element's color selector box
+            if (value.length === 7 && validHex.test(value)) { //Set this element's color selector box
                 $(colorSelectorBox).attr("style", "background-color:" + value + " !important; background-image:none;");
                 $(this).removeAttr("aria-invalid");
             } else {
@@ -483,8 +479,7 @@ function init_module() {
 
         if (valid) {
             return true;
-        } else {
-            //Cannot calculate the contrast ratio
+        } else { //Cannot calculate the contrast ratio
             $("#cANDI508-playground-ratio").addClass("cANDI508-invalid").html("?");
             $("#cANDI508-playground-suggest-large").css("visibility", "hidden");
             $("#cANDI508-playground-suggest-small").css("visibility", "hidden");
