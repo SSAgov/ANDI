@@ -564,6 +564,8 @@ function init_module() {
         var size = parseFloat($(fgElement).css("font-size"));
         var weight = $(fgElement).css("font-weight");
         var family = $(fgElement).css("font-family")
+
+        //Set minReq (minimum requirement)
         var minReq = 4.5;
         if (size >= 24) {
             minReq = 3;
@@ -595,14 +597,6 @@ function init_module() {
 
         //This function does the contrast test
         function contrastTest(cANDI_data) {
-            //Set minReq (minimum requirement)
-            cANDI_data.minReq = 4.5;
-
-            if (cANDI_data.size >= 24) {
-                cANDI_data.minReq = 3;
-            } else if (cANDI_data.size >= 18.66 && cANDI_data.weight >= 700) { //700 is where bold begins, 18.66 is approx equal to 14pt
-                cANDI_data.minReq = 3;
-            }
             if (cANDI_data.bgImage === "none" && !cANDI_data.opacity) { //No, Display PASS/FAIL Result and Requirement Ratio
                 if (cANDI_data.ratio >= cANDI_data.minReq) {
                     cANDI_data.result = "PASS";
