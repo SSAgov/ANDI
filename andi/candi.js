@@ -245,10 +245,7 @@ function init_module() {
 
         andiAlerter.updateAlertList();
 
-        AndiModule.engageActiveActionButtons([
-            "contrastPlayground",
-            "grayscale"
-        ]);
+        AndiModule.engageActiveActionButtons(["contrastPlayground", "grayscale"]);
 
         $("#ANDI508").focus();
 
@@ -658,8 +655,7 @@ function init_module() {
     cANDI.getSuggestedColorHTML = function (cANDI_data) {
 
         var suggestedColorHtml = "<tr><th class='cANDI508-label' scope='row'>Suggested&nbsp;";
-        if (cANDI_data) {
-            //Get Suggested Color
+        if (cANDI_data) { //Get Suggested Color
             var suggestedFgColor = cANDI.getSuggestedColor(cANDI_data, "fg");
             var suggestedBgColor = cANDI.getSuggestedColor(cANDI_data, "bg");
 
@@ -669,8 +665,7 @@ function init_module() {
                 //Suggest Foreground Color
                 suggestedColor = suggestedFgColor;
                 suggestedColorHtml += "Text&nbsp;Color";
-            } else {
-                //Suggest Background Color
+            } else { //Suggest Background Color
                 suggestedColor = suggestedBgColor;
                 suggestedColorHtml += "Background";
             }
