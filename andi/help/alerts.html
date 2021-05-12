@@ -3078,19 +3078,48 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<br />
 	<h3>Why did ANDI alert this?</h3>
 	<p>
-	<span class='brand'>ANDI</span> has found at least one element that contains a CSS <code>background-image</code>.
+	<span class='brand'>ANDI</span> has found an element styled as a <code>background-image</code> using CSS.
+	A manual evaluation of all background images is needed.
 	</p>
 
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	If the background image is not decorative or contains important information, a person who is visually impaired
-	may miss important information if the image does not have a text description or text equivalent
+	When images contain important information, a person who is visually impaired
+	will miss the important information if the image does not have a text description or text equivalent
 	somewhere on the page.
+	</p>
+	<p>
+	Screen readers consider all background images to be decorative and 
+	therefore visually impaired users are not told about the presence of background images.
+	Note: This is only an accessibility issue when background images contain important information.
 	</p>
 
 	<h3>What should be done?</h3>
 	<p>
-	Ensure that all non-decorative background images have a text alternative description somewhere on the page.
+	Ensure that any background images that are meaningful have a text alternative somewhere on the page.
+	Graphics/Images <span class='brand'>ANDI</span> has two helpful features to locate background images:
+	The <a href="modules.html#gANDI-hideBgImagesButton">Hide Background</a> 
+	and <a href="modules.html#gANDI-highlightBgImagesButton">Find Background</a> buttons.
+	</p>
+	<p>
+	If meaningful background images are found with no text alternatives, consider these solutions:
+		<div class="example">
+			<ul>
+				<li>
+				Instead of using CSS to display the image, make the image inline by converting the element to a
+				<code>&lt;img&gt;</code> tag and provide a text alternative for the image using the
+				<code>alt</code> attribute. This will make the image discoverable by screen reader users.
+				</li>
+				<li>
+				Continue using CSS to display the background-image, but add <code>role="img"</code> to the element styled as a CSS background-image 
+				and provide an accessible name using <code>aria-label</code> or <code>aria-labelledby</code>.
+				This will make the image discoverable by screen reader users.
+				</li>
+				<li>
+				Provide a text description of the meaningful background image somewhere on the page.
+				</li>
+			</ul>
+		</div>
 	</p>
 	</div>
 	</section>
