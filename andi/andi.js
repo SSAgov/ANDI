@@ -3398,9 +3398,10 @@ function AndiCheck() {
             for (var f = 0; f < testPageData.allFors.length; f++) {
                 referencedElement = document.getElementById(testPageData.allFors[f].htmlFor);
                 if (referencedElement && $(referencedElement).hasClass("ANDI508-element")) {
-                    if (!$(referencedElement).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]", "input,select,textarea,button,[contenteditable=true],[contenteditable='']"))
+                    if (!$(referencedElement).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]", "input,select,textarea,button,[contenteditable=true],[contenteditable='']")) {
                         //is not a form element
                         andiAlerter.throwAlertOnOtherElement($(referencedElement).attr("data-andi508-index"), alert_0091);
+                    }
                 }
             }
         }
