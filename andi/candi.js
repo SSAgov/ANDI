@@ -1,5 +1,5 @@
 //==========================================//
-//cANDI: colors ANDI 						//
+//cANDI: colors ANDI                        //
 //Created By Social Security Administration //
 //==========================================//
 function init_module() {
@@ -14,10 +14,25 @@ function init_module() {
     cANDI.viewList_tableReady = false;
     cANDI.index = 1;
 
+    //NOTE: Add result in the future
+    // result: undefined,
+
     //This object class is used to store data about each color contrast element. Object instances will be placed into an array.
-    function ColorContrast(element, index) {
+    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, semiTransparency, opacity, bgImage, size, weight, family, minReq, disabled) {
         this.element = element;
         this.index = index;
+        this.bgColor = bgColor;
+        this.fgColor = fgColor;
+        this.contrast = contrast;
+        this.ratio = ratio;
+        this.semiTransparency = semiTransparency
+        this.opacity = opacity
+        this.bgImage = bgImage;
+        this.size = size;
+        this.weight = weight;
+        this.family = family;
+        this.minReq = minReq;
+        this.disabled = disabled;
     }
 
     //This object class is used to keep track of the color contrast elements on the page
@@ -56,8 +71,7 @@ function init_module() {
 
                             //Throw alerts if necessary
                             cANDI.processResult($(this));
-
-                            cANDI.colorContrasts.list.push(new ColorContrast(this, cANDI.index));
+                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast, cANDI_data.ratio, cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family, cANDI_data.minReq, cANDI_data.disabled));
                             AndiData.attachDataToElement(this);
                             cANDI.index += 1;
                         } else {
@@ -515,9 +529,10 @@ function init_module() {
 
     //This function will get the contrast
     cANDI.getContrast = function (fgElement) {
-        var disabled = isThisDisabled(fgElement);
-        var semiTransparency = false;
-        var opacity = false;
+        var disabled, semiTransparency, opacity;
+        disabled = isThisDisabled(fgElement);
+        semiTransparency = false;
+        opacity = false;
 
         //Get background color
         var bgColor = new Color($(fgElement).css("background-color"));
@@ -532,6 +547,16 @@ function init_module() {
 
         var contrast = fgColor.contrast(bgColor);
         var ratio = contrast.ratio;
+        var bgImage = $(bgElement).css("background-image");
+        var size = parseFloat($(fgElement).css("font-size"));
+        var weight = $(fgElement).css("font-weight");
+        var family = $(fgElement).css("font-family")
+        var minReq = 4.5;
+        if (size >= 24) {
+            minReq = 3;
+        } else if (size >= 18.66 && weight >= 700) { //700 is where bold begins, 18.66 is approx equal to 14pt
+            minReq = 3;
+        }
 
         var cANDI_data = {
             bgColor: bgColor,
@@ -540,11 +565,11 @@ function init_module() {
             ratio: ratio,
             semiTransparency: semiTransparency,
             opacity: opacity,
-            bgImage: $(bgElement).css("background-image"),
-            size: parseFloat($(fgElement).css("font-size")),
-            weight: $(fgElement).css("font-weight"),
-            family: $(fgElement).css("font-family"),
-            minReq: undefined,
+            bgImage: bgImage,
+            size: size,
+            weight: weight,
+            family: family,
+            minReq: minReq,
             result: undefined,
             disabled: disabled
         };
@@ -557,17 +582,13 @@ function init_module() {
 
         //This function does the contrast test
         function contrastTest(cANDI_data) {
-            //AA Requirements (default)
-            var ratio_small = 4.5;
-            var ratio_large = 3;
-
             //Set minReq (minimum requirement)
-            cANDI_data.minReq = ratio_small;
+            cANDI_data.minReq = 4.5;
 
             if (cANDI_data.size >= 24) {
-                cANDI_data.minReq = ratio_large;
+                cANDI_data.minReq = 3;
             } else if (cANDI_data.size >= 18.66 && cANDI_data.weight >= 700) { //700 is where bold begins, 18.66 is approx equal to 14pt
-                cANDI_data.minReq = ratio_large;
+                cANDI_data.minReq = 3;
             }
             if (cANDI_data.bgImage === "none" && !cANDI_data.opacity) { //No, Display PASS/FAIL Result and Requirement Ratio
                 if (cANDI_data.ratio >= cANDI_data.minReq) {
