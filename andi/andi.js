@@ -3534,8 +3534,9 @@ function AndiCheck() {
 
     //This function will throw alert_0101
     this.areThereComponentsThatShouldntBeCombined = function (data) {
-        if (data.components.ariaLabel && data.components.ariaLabelledby)
+        if (data.components.ariaLabel && data.components.ariaLabelledby) {
             andiAlerter.throwAlert(alert_0101, ["[aria-label] with [aria-labelledby]"]);
+        }
     };
 
     //This function checks the character length of the componentText.
@@ -3546,8 +3547,9 @@ function AndiCheck() {
             (componentName === "ariaLabel" || componentName === "title" || componentName === "alt") &&
             componentText.length > AndiCheck.characterLimiter
         ) {
-            if (componentName === "ariaLabel")
+            if (componentName === "ariaLabel") {
                 componentName = "aria-label";
+            }
             andiAlerter.throwAlert(alert_0151, [componentName]);
             return insertCharacterLimitMark(componentText);
         }
