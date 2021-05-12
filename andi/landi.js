@@ -67,7 +67,11 @@ function init_module() {
         this.caution_vagueText         = makeIcon("caution", "Vague: does not identify link purpose.");
         this.warning_nonUnique         = makeIcon("warning", "Non-Unique: same name as another button");
         this.warning_tabOrder          = makeIcon("warning", "Element not in tab order");
-        this.warning_noHrefRecognition = makeIcon("warning", "<a> without [href] may not be recognized as a link; add [role=link] or [href].")
+        this.warning_noHrefRecognition = makeIcon("warning", "<a> without [href] may not be recognized as a link; add [role=link] or [href].");
+        this.warning_clickEvent        = makeIcon("warning", "Link has click event but is not keyboard accessible.");
+        this.warning_hrefIDTabindex    = makeIcon("warning", "<a> element has no [href], [id], or [tabindex]; This might be a link that only works with a mouse.");
+        this.warning_hrefTabindex      = makeIcon("warning", "<a> element has no [href], or [tabindex]; This might be a link that only works with a mouse.");
+        this.caution_alertTargetLink   = makeIcon("caution", "This <a> element is the target of another link; When link is followed, target may not receive visual indication of focus.")
 
         function makeIcon(alertLevel, titleText) {
             //The sortPriority number allows alert icon sorting
@@ -163,7 +167,7 @@ function init_module() {
 
                                     isElementInTabOrder(this, "link");
                                 } else if (!andiData.role) { //link has no role and no href, suggest using role=link or href
-                                    alertIcon = alertIcons.warning_noHrefRecognition
+                                    alerts += alertIcons.warning_noHrefRecognition
                                     andiAlerter.throwAlert(alert_0168);
                                 }
 
@@ -242,9 +246,11 @@ function init_module() {
 
                 if (element.onclick !== null || $._data(element, "events").click !== undefined) {
                     //Link is clickable but not keyboard accessible
+                    alerts += alertIcons.warning_clickEvent;
                     andiAlerter.throwAlert(alert_0164);
                     //No click event could be detected
                 } else if (!id && !name) {//Link doesn't have id or name
+                    alerts += alertIcons.warning_hrefIDTabindex;
                     andiAlerter.throwAlert(alert_0128);
                 } else { //Link has id or name
                     //Determine if the link is an anchor for another link
@@ -263,13 +269,18 @@ function init_module() {
                     });
                     if (!isDefinitelyAnAnchor) {
                         if (element.onclick === null && $._data(element, "events").click === undefined) {
+                            alerts += alertIcons.warning_hrefTabindex;
                             andiAlerter.throwAlert(alert_0129);
                         } else { //Link is clickable but not keyboard accessible
+                            alerts += alertIcons.warning_clickEvent;
                             andiAlerter.throwAlert(alert_0164);
                         }
                     } else if (name) { //name is deprecated
+                        alertMessage = "This <a> element has [name=" + name + "] which is a deprecated way of making an anchor target; use [id].";
+                        alerts += "<img src='" + icons_url + "caution.png' alt='caution' title='Accessibility Alert: " + alertMessage + "' /><i>3 </i>";
                         andiAlerter.throwAlert(alert_007B, [name]);
                     } else {
+                        alerts += alertIcons.caution_alertTargetLink;
                         andiAlerter.throwAlert(alert_012A); //definitely an anchor, but not focusable
                     }
                 }
@@ -333,7 +344,6 @@ function init_module() {
         function scanForNonUniqueness(element, nameDescription) {
             for (var y = 0; y < lANDI.buttons.list.length; y++) {
                 if (nameDescription.toLowerCase() == lANDI.buttons.list[y].nameDescription.toLowerCase()) { //nameDescription matches
-
                     alertIcon = alertIcons.warning_nonUnique;
                     alertObject = alert_0200;
 
@@ -376,7 +386,8 @@ function init_module() {
                     if (!isAnchorTargetFound(idRef)) {
                         if (element.onclick === null && $._data(element, 'events').click === undefined) {//no click events
                             //Throw Alert, Anchor Target not found
-                            alerts += alertIcons.danger_anchorTargetNotFound;
+                            alertMessage = "In-page anchor target with [id=" + idRef + "] not found."
+                            alerts += "<img src='" + icons_url + "warning.png' alt='warning' title='Accessibility Alert: " + alertMessage + "' /><i>2 </i>";
                             andiAlerter.throwAlert(alert_0069, [idRef]);
                         }
                     } else { //link is internal and anchor target found
@@ -419,6 +430,8 @@ function init_module() {
         function isElementInTabOrder(element, role) {
             if (!!$(element).prop("tabIndex") && !$(element).is(":tabbable")) {//Element is not tabbable and has no tabindex
                 //Throw Alert: Element with role=link|button not in tab order
+                alertMessage = "Element with [role=" + role + "] not in the keyboard tab order."
+                alerts += "<img src='" + icons_url + "warning.png' alt='warning' title='Accessibility Alert: " + alertMessage + "' /><i>2 </i>";
                 alerts += alertIcons.warning_tabOrder;
                 andiAlerter.throwAlert(alert_0125, [role]);
             }
