@@ -27,12 +27,6 @@ var icons_url = host_url + "icons/";
     head.appendChild(andiCss);
 })();
 
-//Representation of Empty String that will appear on screen
-AndiCheck.emptyString = "\"\"";
-
-//This number is 2x breath interval of a screen reader (125 characters)
-AndiCheck.characterLimiter = 250;
-
 //Set the global animation speed
 AndiSettings.andiAnimationSpeed = 50; //milliseconds
 
@@ -45,18 +39,18 @@ AndiModule.module = "f";
 //===============//
 // ANDI OBJECTS: //
 //===============//
-var andiResetter = new AndiResetter();		//Resets things ANDI changed
-var andiSettings = new AndiSettings();		//Stores Settings
-var andiBar = new AndiBar();			//Main Display
-var andiHotkeyList = new AndiHotkeyList();	//Hotkey assignments/display panel
-var andiCheck = new AndiCheck();		//Alert Testing
-var andiAlerter = new AndiAlerter();		//Alert Throwing
-var andiLaser = new AndiLaser();		//Laser Functionality
-var andiFocuser = new AndiFocuser();		//Focusing Functionality
-var andiUtility = new AndiUtility();		//String Manipulation
-var andiOverlay = new AndiOverlay();		//Used to create overlays
-var testPageData; 								//Test Page Data Storage/Analysis, instantiated within module launch
-var andiData;									//Element Data Storage/Analysis, instantiated within module's analysis logic
+var andiResetter = new AndiResetter();     //Resets things ANDI changed
+var andiSettings = new AndiSettings();     //Stores Settings
+var andiBar = new AndiBar();               //Main Display
+var andiHotkeyList = new AndiHotkeyList(); //Hotkey assignments/display panel
+var andiCheck = new AndiCheck();           //Alert Testing
+var andiAlerter = new AndiAlerter();       //Alert Throwing
+var andiLaser = new AndiLaser();           //Laser Functionality
+var andiFocuser = new AndiFocuser();       //Focusing Functionality
+var andiUtility = new AndiUtility();       //String Manipulation
+var andiOverlay = new AndiOverlay();       //Used to create overlays
+var testPageData;                          //Test Page Data Storage/Analysis, instantiated within module launch
+var andiData;                              //Element Data Storage/Analysis, instantiated within module's analysis logic
 
 var browserSupports = {
     //Does the browser support SVG?
@@ -437,7 +431,7 @@ var alert_0133 = new Alert("caution", "13", "Live region has no innerText conten
 
 var alert_0142 = new Alert("caution", "14", "Image is presentational; its [alt] will not be used in output.", "image_alt_not_used");
 
-var alert_0151 = new Alert("warning", "15", "[%%%] attribute length exceeds " + AndiCheck.characterLimiter + " characters; consider condensing.", "character_length");
+var alert_0151 = new Alert("warning", "15", "[%%%] attribute length exceeds " + 250 + " characters; consider condensing.", "character_length");
 
 var alert_0161 = new Alert("warning", "16", "Ambiguous Link: same name/description as another link but different href.", "ambiguous_link");
 var alert_0162 = new Alert("caution", "16", "Ambiguous Link: same name/description as another link but different href.", "ambiguous_link");//caution level thrown for internal links
@@ -2240,7 +2234,7 @@ AndiData.textAlternativeComputation = function (root) {
                                         //Don't call stepB again to avoid infinite loops (spec explicitely defines this)
                                         if (element != refElement && $(refElement).attr(attribute)) {//reference contains another reference
                                             andiAlerter.throwAlert(alert_006C, [attribute, attribute]);
-                                            AndiData.addComp(data, componentType, [(AndiCheck.emptyString + " "), refElement, idsArray[x]]);
+                                            AndiData.addComp(data, componentType, [("\"\" "), refElement, idsArray[x]]);
                                         }
 
                                         var refData = {}; //will be discarded
@@ -2671,7 +2665,7 @@ AndiData.textAlternativeComputation = function (root) {
     function isEmptyComponent(component, componentType, element) {
         if ($.trim(component) == "") {
             if (element == root)//only record empty components for the root
-                addEmptyComponent(componentType, AndiCheck.emptyString);
+                addEmptyComponent(componentType, "\"\"");
             return true;
         }
         return false;
@@ -3545,7 +3539,7 @@ function AndiCheck() {
     this.checkCharacterLimit = function (componentText, componentName) {
         if (componentText &&
             (componentName === "ariaLabel" || componentName === "title" || componentName === "alt") &&
-            componentText.length > AndiCheck.characterLimiter
+            componentText.length > 250
         ) {
             if (componentName === "ariaLabel") {
                 componentName = "aria-label";
@@ -3558,9 +3552,9 @@ function AndiCheck() {
         //This function inserts a pipe character into the componentText at the characterLimiter position
         //The color of the pipe is the color of a warning
         function insertCharacterLimitMark(componentText) {//inject scissors unicode
-            return andiUtility.formatForHtml(componentText.substring(0, AndiCheck.characterLimiter)) +
+            return andiUtility.formatForHtml(componentText.substring(0, 250)) +
                 "<span class='ANDI508-display-warning'>&hellip;&#9986;&hellip;</span>" +
-                andiUtility.formatForHtml(componentText.substring(AndiCheck.characterLimiter, componentText.length));
+                andiUtility.formatForHtml(componentText.substring(250, componentText.length));
         }
     };
 }

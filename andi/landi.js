@@ -948,7 +948,7 @@ function init_module() {
         if (typeof href != "undefined") {
             href = $.trim($(element).attr("href"));
             if (href === "") {
-                href = AndiCheck.emptyString;
+                href = "\"\"";
             } else if (href.length > 1 && href.charAt(href.length - 1) == "/") {
                 href = href.slice(0, -1);
             }
