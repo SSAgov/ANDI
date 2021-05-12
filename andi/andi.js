@@ -3174,8 +3174,9 @@ function AndiCheck() {
     //This function is used to check for alerts related to non-focusable elements
     this.commonNonFocusableElementChecks = function (andiData, element, isElementMustHaveName) {
         this.hasThisElementBeenHiddenFromScreenReader(element, andiData);
-        if (isElementMustHaveName)
+        if (isElementMustHaveName) {
             this.wasAccessibleNameFound(andiData);
+        }
         this.areThereComponentsThatShouldntBeCombined(andiData);
         this.areThereAnyMisspelledAria(element);
     };
