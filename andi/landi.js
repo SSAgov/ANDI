@@ -62,11 +62,12 @@ function init_module() {
     var alertIcons = new function () {//new is intentional
         this.danger_noAccessibleName = makeIcon("danger", "No accessible name");
         this.danger_anchorTargetNotFound = makeIcon("warning", "In-page anchor target not found");
-        this.warning_ambiguous = makeIcon("warning", "Ambiguous: same name, different href");
-        this.caution_ambiguous = makeIcon("caution", "Ambiguous: same name, different href");
-        this.caution_vagueText = makeIcon("caution", "Vague: does not identify link purpose.");
-        this.warning_nonUnique = makeIcon("warning", "Non-Unique: same name as another button");
-        this.warning_tabOrder = makeIcon("warning", "Element not in tab order");
+        this.warning_ambiguous         = makeIcon("warning", "Ambiguous: same name, different href");
+        this.caution_ambiguous         = makeIcon("caution", "Ambiguous: same name, different href");
+        this.caution_vagueText         = makeIcon("caution", "Vague: does not identify link purpose.");
+        this.warning_nonUnique         = makeIcon("warning", "Non-Unique: same name as another button");
+        this.warning_tabOrder          = makeIcon("warning", "Element not in tab order");
+        this.warning_noHrefRecognition = makeIcon("warning", "<a> without [href] may not be recognized as a link; add [role=link] or [href].")
 
         function makeIcon(alertLevel, titleText) {
             //The sortPriority number allows alert icon sorting
@@ -162,6 +163,7 @@ function init_module() {
 
                                     isElementInTabOrder(this, "link");
                                 } else if (!andiData.role) { //link has no role and no href, suggest using role=link or href
+                                    alertIcon = alertIcons.warning_noHrefRecognition
                                     andiAlerter.throwAlert(alert_0168);
                                 }
 
@@ -198,7 +200,7 @@ function init_module() {
                             accesskey = "";
                         }
 
-                        if (nameDescription) { //Seach through Buttons Array for same name
+                        if (nameDescription) { //Search through Buttons Array for same name
                             nonUniqueIndex = scanForNonUniqueness(this, nameDescription);
 
                             if ($(this).is("[role=button]")) { //role=button
@@ -276,7 +278,7 @@ function init_module() {
             return true;
         }
 
-        //This function will seach through Links Array for same name different href
+        //This function will search through Links Array for same name different href
         function scanForAmbiguity(element, nameDescription, href) {
             var regEx = /^https?:\/\//; //Strip out the http:// or https:// from the compare
 

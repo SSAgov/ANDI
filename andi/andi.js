@@ -21,7 +21,7 @@ var icons_url = host_url + "icons/";
     andiCss.rel = "stylesheet";
     andiCss.id = "ANDI508-css";
     var prevCss = document.getElementById("ANDI508-css");
-    if (prevCss) { //remove already inserted CSS to improve performance on consequtive favelet launches
+    if (prevCss) { //remove already inserted CSS to improve performance on consecutive favelet launches
         head.removeChild(prevCss);
     }
     head.appendChild(andiCss);
@@ -52,11 +52,11 @@ var andiHotkeyList = new AndiHotkeyList();	//Hotkey assignments/display panel
 var andiCheck = new AndiCheck();		//Alert Testing
 var andiAlerter = new AndiAlerter();		//Alert Throwing
 var andiLaser = new AndiLaser();		//Laser Functionality
-var andiFocuser = new AndiFocuser();		//Focusing Funtionality
+var andiFocuser = new AndiFocuser();		//Focusing Functionality
 var andiUtility = new AndiUtility();		//String Manipulation
 var andiOverlay = new AndiOverlay();		//Used to create overlays
 var testPageData; 								//Test Page Data Storage/Analysis, instantiated within module launch
-var andiData;									//Element Data Storage/Analysis, instatiated within module's analysis logic
+var andiData;									//Element Data Storage/Analysis, instantiated within module's analysis logic
 
 var browserSupports = {
     //Does the browser support SVG?
@@ -181,7 +181,7 @@ function AndiModule(moduleVersionNumber, moduleLetter) {
             }
         });
 
-    //The module should implement these priveleged methods
+    //The module should implement these privileged methods
     this.analyze = undefined;
     this.results = undefined;
 
@@ -360,7 +360,7 @@ var alert_0012 = new Alert("danger", "1", "More than one &lt;label[for=%%%]&gt; 
 var alert_0021 = new Alert("warning", "2", "[aria-describedby] should be used in combination with a component that provides an accessible name.", "dby_alone");
 var alert_0022 = new Alert("danger", "2", "&lt;legend&gt; should be used in combination with a component that provides an accessible name.", "legend_alone");
 
-var alert_0031 = new Alert("danger", "3", "[aria-labeledby] is mispelled, use [aria-labelledby].", "misspell");
+var alert_0031 = new Alert("danger", "3", "[aria-labeledby] is misspelled, use [aria-labelledby].", "misspell");
 var alert_0032 = new Alert("danger", "3", "[aria-role] not a valid attribute, use [role] instead.", "aria_role");
 
 var alert_0041 = new Alert("warning", "4", "Presentation table has data table markup (%%%); Is this a data table?", "pres_table_not_have");
@@ -456,7 +456,7 @@ var alert_0178 = new Alert("danger", "17", "&lt;area&gt; not contained in &lt;ma
 var alert_0179 = new Alert("caution", "17", "Screen reader will not recognize this font icon as an image; Add an appropriate role such as [role=img].", "");
 var alert_017A = new Alert("caution", "17", "Font Icon. Is this a meaningful image?", "");
 
-var alert_0180 = new Alert("warning", "18", "[aria-level] is not a greater-than-zero integar; level 2 will be assumed.", "arialevel_not_gt_zero_integar");
+var alert_0180 = new Alert("warning", "18", "[aria-level] is not a greater-than-zero integer; level 2 will be assumed.", "arialevel_not_gt_zero_integer");
 var alert_0182 = new Alert("danger", "18", "Live Region contains a form element.", "live_region_form_element");
 var alert_0183 = new Alert("danger", "18", "[role=image] is invalid; Use [role=img].", "role_image_invalid");
 var alert_0184 = new Alert("danger", "18", "A live region can only be a container element.", "live_region_not_container");
