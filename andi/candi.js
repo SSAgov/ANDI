@@ -550,15 +550,14 @@ function init_module() {
             disabled: disabled
         };
 
-        if (!disabled) //Run the contrast test
+        if (!disabled) { //Run the contrast test
             contrastTest(cANDI_data);
-
+        }
         //send cANDI_data back
         return cANDI_data;
 
         //This function does the contrast test
         function contrastTest(cANDI_data) {
-
             //AA Requirements (default)
             var ratio_small = 4.5;
             var ratio_large = 3;
@@ -656,8 +655,7 @@ function init_module() {
 
             var suggestedColor;
 
-            if (cANDI.suggestForegroundChange(cANDI_data, suggestedFgColor, suggestedBgColor)) {
-                //Suggest Foreground Color
+            if (cANDI.suggestForegroundChange(cANDI_data, suggestedFgColor, suggestedBgColor)) { //Suggest Foreground Color
                 suggestedColor = suggestedFgColor;
                 suggestedColorHtml += "Text&nbsp;Color";
             } else { //Suggest Background Color
@@ -679,7 +677,6 @@ function init_module() {
 
     //This function will suggest a foreground color that satisfies the minReq
     cANDI.getSuggestedColor = function (cANDI_data, fgbg) {
-
         var contrastingColor;
         var suggestedColor;
 
@@ -694,11 +691,9 @@ function init_module() {
         var contrastOnBlack = Color.BLACK.contrast(contrastingColor).ratio;
         var contrastOnWhite = Color.WHITE.contrast(contrastingColor).ratio;
 
-        if (contrastOnBlack > contrastOnWhite) {
-            //Original Color is closer to black
+        if (contrastOnBlack > contrastOnWhite) {  //Original Color is closer to black
             //Suggest lighter foreground color
             for (var x = 0; x < 256; x++) {
-
                 for (var i = 0; i < 3; i++) {
                     if (suggestedColor.rgba[i] > 0)
                         suggestedColor.rgba[i]--;
@@ -708,11 +703,9 @@ function init_module() {
                     break;
                 }
             }
-        } else {
-            //Original Color is closer to white
+        } else { //Original Color is closer to white
             //Suggest darker foreground color
             for (var y = 0; y < 256; y++) {
-
                 for (var j = 0; j < 3; j++) {
                     if (suggestedColor.rgba[j] < 255)
                         suggestedColor.rgba[j]++;
