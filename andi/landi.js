@@ -58,6 +58,7 @@ function init_module() {
 
     //Alert icons for the links list table
     //Ignore the jslint warning about the "new" declaration. It is needed.
+    //TODO: Make sure all alerts are covered by the alertIcons function, then work on adding this to other modules
     var alertIcons = new function () {//new is intentional
         this.danger_noAccessibleName = makeIcon("danger", "No accessible name");
         this.danger_anchorTargetNotFound = makeIcon("warning", "In-page anchor target not found");
