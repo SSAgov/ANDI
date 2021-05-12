@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.3.4";
+var andiVersionNumber = "27.3.5";
 
 //==============//
 // ANDI CONFIG: //
@@ -2863,7 +2863,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		pushProp();
 	}
 	if(elementData.isAriaHidden){
-		prop.name = "aria-hidden"
+		prop.name = "aria-hidden";
 		prop.val = "true";
 		prop.out = "";
 		pushProp();
@@ -3278,86 +3278,82 @@ function AndiCheck(){
 		}
 	};
 
-	//This function will throw alert_0001 depending on the tagName passed
+	//This function will throw No Accessible Name alert depending on the tagName passed
 	this.wasAccessibleNameFound = function(elementData){
 		if(!elementData.isAriaHidden){ //element is not aria-hidden=true and not contained by aria-hidden=true
 			var tagNameText = elementData.tagNameText;
 			if(!elementData.accName){
 
-				var message;
-				if(tagNameText === "iframe"){
-					if(elementData.tabindex)
-						andiAlerter.throwAlert(alert_0007);
-					else//no tabindex
-						andiAlerter.throwAlert(alert_0009);
-				}
-				else if(elementData.isTabbable){
-					//Does this element have a role?
-					if(elementData.role){
-						var roleCapitalized = elementData.role.charAt(0).toUpperCase()+elementData.role.slice(1);
-						message = roleCapitalized+" Element"+alert_0008.message;
-					}
-					//Is this an input element, excluding input[image]?
-					else if(tagNameText.includes("input") && tagNameText != "input[type=image]"){
-						switch(tagNameText){
-						case "input[type=text]":
-							message = "Textbox"+alert_0001.message; break;
-						case "input[type=radio]":
-							message = "Radio Button"+alert_0001.message; break;
-						case "input[type=checkbox]":
-							message = "Checkbox"+alert_0001.message; break;
-						default:
-							message = "Input Element"+alert_0001.message;
-						}
-					}
-					//All other elements:
-					else switch(tagNameText){
-						case "a":
-							message = "Link"+alert_0002.message;
-							break;
-						case "img":
-						case "input[type=image]":
-							message = "Image"+alert_0003.message; break;
-						case "button":
-							message = "Button"+alert_0002.message; break;
-						case "select":
-							message = "Select"+alert_0001.message; break;
-						case "textarea":
-							message = "Textarea"+alert_0001.message; break;
-						case "table":
-							message = alert_0004.message; break;
-						case "figure":
-							message = alert_0005.message; break;
-						case "th":
-						case "td":
-							message = "Table Cell"+alert_0002.message; break;
-						case "canvas":
-							message = "Canvas"+alert_0008.message; break;
-						default:
-							message = "Element"+alert_0002.message;
-					}
-				}
-				else{//not tabbable
-					//Does this element have a role?
-					if(elementData.role === "img"){
-						message = "[role=img] Element"+alert_0008.message;
-					}
-					else{
-						switch(tagNameText){
-						case "img":
-						case "input[type=image]":
-							if(!elementData.role) message = "Image"+alert_0003.message; break;
-						case "canvas":
-							message = "Canvas"+alert_0008.message; break;
-						}
-					}
-				}
-
 				if(elementData.components.ariaDescribedby)
 					//element has no name but has ariaDescribedby
 					andiAlerter.throwAlert(alert_0021);
-				else if(message){
-					andiAlerter.throwAlert(alert_0001,message);
+				else { //throw No Accessible Name Alert
+					if(tagNameText === "iframe"){
+						if(elementData.tabindex)
+							andiAlerter.throwAlert(alert_0007);
+						else//no tabindex
+							andiAlerter.throwAlert(alert_0009);
+					}
+					else if(elementData.isTabbable){
+						//Does this element have a role?
+						if(elementData.role){
+							var roleCapitalized = elementData.role.charAt(0).toUpperCase()+elementData.role.slice(1);
+							andiAlerter.throwAlert(alert_0008, roleCapitalized+" Element"+alert_0008.message);
+						}
+						//Is this an input element, excluding input[image]?
+						else if(tagNameText.includes("input") && tagNameText != "input[type=image]"){
+							switch(tagNameText){
+							case "input[type=text]":
+								andiAlerter.throwAlert(alert_0001, "Textbox"+alert_0001.message); break;
+							case "input[type=radio]":
+								andiAlerter.throwAlert(alert_0001, "Radio Button"+alert_0001.message); break;
+							case "input[type=checkbox]":
+								andiAlerter.throwAlert(alert_0001, "Checkbox"+alert_0001.message); break;
+							default:
+								andiAlerter.throwAlert(alert_0001, "Input Element"+alert_0001.message);
+							}
+						}
+						//All other elements:
+						else switch(tagNameText){
+							case "a":
+								andiAlerter.throwAlert(alert_0002, "Link"+alert_0002.message); break;
+							case "img":
+							case "input[type=image]":
+								andiAlerter.throwAlert(alert_0003, "Image"+alert_0003.message); break;
+							case "button":
+								andiAlerter.throwAlert(alert_0002, "Button"+alert_0002.message); break;
+							case "select":
+								andiAlerter.throwAlert(alert_0001, "Select"+alert_0001.message); break;
+							case "textarea":
+								andiAlerter.throwAlert(alert_0001, "Textarea"+alert_0001.message); break;
+							case "table":
+								andiAlerter.throwAlert(alert_0004, alert_0004.message); break;
+							case "figure":
+								andiAlerter.throwAlert(alert_0005, alert_0005.message); break;
+							case "th":
+							case "td":
+								andiAlerter.throwAlert(alert_0002, "Table Cell"+alert_0002.message); break;
+							case "canvas":
+								andiAlerter.throwAlert(alert_0008, "Canvas"+alert_0008.message); break;
+							default:
+								andiAlerter.throwAlert(alert_0002, "Element"+alert_0002.message);
+						}
+					}
+					else{//not tabbable
+						//Does this element have a role?
+						if(elementData.role === "img"){
+							andiAlerter.throwAlert(alert_0008, "[role=img] Element"+alert_0008.message);
+						}
+						else{
+							switch(tagNameText){
+							case "img":
+							case "input[type=image]":
+								if(!elementData.role) andiAlerter.throwAlert(alert_0003, "Image"+alert_0003.message); break;
+							case "canvas":
+								andiAlerter.throwAlert(alert_0008, "Canvas"+alert_0008.message); break;
+							}
+						}
+					}
 				}
 
 				if(elementData.components.legend)
