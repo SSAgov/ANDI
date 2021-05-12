@@ -3410,14 +3410,18 @@ function AndiCheck() {
     //This function will throw alert_0112 if commonly troublesome Javascript events are found on the element.
     this.areThereAnyTroublesomeJavascriptEvents = function (element) {
         var events = "";
-        if ($(element).is("[onblur]"))
+        if ($(element).is("[onblur]")) {
             events += "[onBlur] ";
-        if ($(element).is("input,select,textarea") && $(element).is("[onchange]"))
+        }
+        if ($(element).is("input,select,textarea") && $(element).is("[onchange]")) {
             events += "[onChange] ";
-        if ($(element).is("[ondblclick]"))
+        }
+        if ($(element).is("[ondblclick]")) {
             events += "[ondblclick] ";
-        if (events !== "")
+        }
+        if (events !== "") {
             andiAlerter.throwAlert(alert_0112, [$.trim(events)]);
+        }
     };
 
     //This function will check the clickable area of the element.
