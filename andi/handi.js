@@ -114,31 +114,31 @@ function init_module() {
 
             if (hANDI.containsTestableContent(this)) {
                 if ($(this).css("display") == "none") { //element display is none
-                    hANDI.hiddenContents.count++;
+                    hANDI.hiddenContents.count += 1;
                     isHidingContent = true;
-                    hANDI.hiddenContents.hiddenDisplay++;
+                    hANDI.hiddenContents.hiddenDisplay += 1;
                     $(this).addClass("ANDI508-forceReveal-display");
                     elementCss += "display:none; ";
                 }
                 if ($(this).css("visibility") == "hidden") { //element visibility is hidden
-                    hANDI.hiddenContents.count++;
+                    hANDI.hiddenContents.count += 1;
                     isHidingContent = true;
-                    hANDI.hiddenContents.hiddenVisibility++;
+                    hANDI.hiddenContents.hiddenVisibility += 1;
                     $(this).addClass("ANDI508-forceReveal-visibility");
                     elementCss += "visibility:hidden; ";
                 }
                 if ($(this).css("position") == "absolute" && ($(this).offset().left < 0 || $(this).offset().top < 0)) {
                     //element is positioned offscreen
-                    hANDI.hiddenContents.count++;
+                    hANDI.hiddenContents.count += 1;
                     isHidingContent = true;
-                    hANDI.hiddenContents.hiddenPosition++;
+                    hANDI.hiddenContents.hiddenPosition += 1;
                     $(this).addClass("ANDI508-forceReveal-position");
                     elementCss += "position:absolute; ";
                 }
                 if ($(this).css("opacity") == "0") { //element opacity is zero
-                    hANDI.hiddenContents.count++;
+                    hANDI.hiddenContents.count += 1;
                     isHidingContent = true;
-                    hANDI.hiddenContents.hiddenOpacity++;
+                    hANDI.hiddenContents.hiddenOpacity += 1;
                     $(this).addClass("ANDI508-forceReveal-opacity");
                     elementCss += "opacity:0; ";
                 }
@@ -147,16 +147,16 @@ function init_module() {
                     if ($(this).css("overflow") == "hidden" &&
                         (parseInt($(this).css("height")) <= 1 || parseInt($(this).css("width")) <= 1)) {
                         //element has overflow hidden and a small height or width
-                        hANDI.hiddenContents.count++;
+                        hANDI.hiddenContents.count += 1;
                         isHidingContent = true;
-                        hANDI.hiddenContents.hiddenOverflow++;
+                        hANDI.hiddenContents.hiddenOverflow += 1;
                         $(this).addClass("ANDI508-forceReveal-overflow");
                         elementCss += "overflow:hidden; ";
                     }
                     if (parseInt($(this).css("font-size")) === 0) { //element font-size is 0
-                        hANDI.hiddenContents.count++;
+                        hANDI.hiddenContents.count += 1;
                         isHidingContent = true;
-                        hANDI.hiddenContents.hiddenFontSize++;
+                        hANDI.hiddenContents.hiddenFontSize += 1;
                         $(this).addClass("ANDI508-forceReveal-fontSize");
                         elementCss += "font-size:0; ";
                     }
@@ -164,17 +164,17 @@ function init_module() {
                 if ($(this).css("text-indent") != "0" || $(this).css("text-indent") != "0px") {
                     if (parseInt($(this).css("text-indent")) < -998) {
                         //element has a text-indent that makes it off screen
-                        hANDI.hiddenContents.count++;
+                        hANDI.hiddenContents.count += 1;
                         isHidingContent = true;
-                        hANDI.hiddenContents.hiddenTextIndent++;
+                        hANDI.hiddenContents.hiddenTextIndent += 1;
                         $(this).addClass("ANDI508-forceReveal-textIndent");
                         elementCss += "text-indent:" + $(this).css("text-indent") + "; ";
                     }
                 }
                 if ($(this).attr("hidden")) { //element has html5 hidden attribute
-                    hANDI.hiddenContents.count++;
+                    hANDI.hiddenContents.count += 1;
                     isHidingContent = true;
-                    hANDI.hiddenContents.hiddenHTML5++;
+                    hANDI.hiddenContents.hiddenHTML5 += 1;
                     $(this).addClass("ANDI508-forceReveal-html5Hidden");
                     elementCss += "\/*html5 hidden*\/ ";
                 }
@@ -235,7 +235,7 @@ function init_module() {
             }
 
             if (hasHiddenCSSContent) {
-                hANDI.hiddenContents.elementsWithCSS++;
+                hANDI.hiddenContents.elementsWithCSS += 1;
                 $(TestPageData.allVisibleElements[x]).addClass("hANDI508-hasHiddenCssContent");
             }
         }
