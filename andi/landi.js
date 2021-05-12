@@ -167,7 +167,7 @@ function init_module() {
 
                                     isElementInTabOrder(this, "link");
                                 } else if (!andiData.role) { //link has no role and no href, suggest using role=link or href
-                                    alerts += alertIcons.warning_noHrefRecognition
+                                    alerts += alertIcons.warning_noHrefRecognition;
                                     andiAlerter.throwAlert(alert_0168);
                                 }
 
