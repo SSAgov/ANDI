@@ -103,11 +103,11 @@ function init_module() {
 
                 //Is this a presentation table?
                 if ($(this).is("[role=presentation],[role=none]")) { //It's a presentation table
-                    tANDI.tables.presentationTablesCount++;
+                    tANDI.tables.presentationTablesCount += 1;
                 } else if ($(this).isSemantically("[role=table],[role=grid],[role=treegrid]", "table")) { //It's a data table
-                    tANDI.tables.dataTablesCount++;
+                    tANDI.tables.dataTablesCount += 1;
                 } else { //It table with a non-typical role
-                    tANDI.tables.presentationTablesCount++;
+                    tANDI.tables.presentationTablesCount += 1;
                 }
 
                 //Determine if this is a refresh of tANDI (there is an active element)
@@ -117,7 +117,7 @@ function init_module() {
                     activeElementFound = true;
                 }
 
-                tANDI.tables.tableCount++;
+                tANDI.tables.tableCount += 1;
             });
 
             var moduleActionButtons = "";
@@ -212,7 +212,7 @@ function init_module() {
                     if (activeTableIndex == tANDI.tables.list.length - 1) {
                         activeTableIndex = 0;
                     } else {
-                        activeTableIndex++;
+                        activeTableIndex += 1;
                     }
                     tANDI.reset();
                     analyzeTable(tANDI.tables.list[activeTableIndex]);
@@ -639,7 +639,7 @@ function init_module() {
                 var presTableWithScope = false;
                 var presTableWithHeaders = false;
                 $(all_cells).each(function () {
-                    cellCount++;
+                    cellCount += 1;
                     if ($(this).attr("scope")) {
                         presTableWithScope = true;
                     }
@@ -687,7 +687,7 @@ function init_module() {
                 $(all_rows).each(function () {
                     //Reset variables for this row
                     row = $(this);
-                    rowCount++;
+                    rowCount += 1;
                     colIndex = 0;
                     colgroupSegmentation_colgroupsPerRowCounter = 0;
 
@@ -703,7 +703,7 @@ function init_module() {
                         //Increment cell counters
                         cell = $(this);
                         if ($(cell).is("th")) {
-                            thCount++;
+                            thCount += 1;
                             if (thCount > 1) {
                                 hasThRow = true;
                             }
@@ -715,17 +715,17 @@ function init_module() {
                             if (scope) {
                                 if (scope == "colgroup") {
                                     //TODO: more logic here to catch misuse of colgroup
-                                    colgroupIndex++;
+                                    colgroupIndex += 1;
                                     $(cell).attr("data-tandi508-colgroupindex", colgroupIndex);
-                                    colgroupSegmentation_colgroupsPerRowCounter++;
+                                    colgroupSegmentation_colgroupsPerRowCounter += 1;
                                 } else if (scope == "rowgroup") {
                                     //TODO: more logic here to catch misuse of colgroup
-                                    rowgroupIndex++;
+                                    rowgroupIndex += 1;
                                     $(cell).attr("data-tandi508-rowgroupindex", rowgroupIndex);
                                 }
                             }
                         } else {
-                            tdCount++;
+                            tdCount += 1;
                         }
 
                         //get colspan
@@ -763,7 +763,7 @@ function init_module() {
                                     //decrement this item in the rowspan array
                                     rowspanArray[a]--;
                                     //increment the colIndex an extra amount to essentially skip this colIndex location
-                                    colIndex++;
+                                    colIndex += 1;
                                 }
                             }
                         }
@@ -771,14 +771,14 @@ function init_module() {
                         if (colspan < 2) {
                             $(cell).attr("data-tandi508-colindex", colIndex);
                             rowspanArray[colIndex] = rowspan;
-                            colIndex++;
+                            colIndex += 1;
                         } else { //colspan > 1
                             indexValue = "";
                             colIndexPlusColspan = parseInt(colIndex) + colspan;
                             for (var b = colIndex; b < colIndexPlusColspan; b++) {
                                 indexValue += b + " ";
                                 rowspanArray[colIndex] = rowspan;
-                                colIndex++;
+                                colIndex += 1;
                             }
                             $(cell).attr("data-tandi508-colindex", $.trim(indexValue));
                         }
@@ -798,7 +798,7 @@ function init_module() {
 
                     //Determine if table is using colgroupSegmentation
                     if (colgroupSegmentation_colgroupsPerRowCounter == 1) {
-                        colgroupSegmentation_segments++;
+                        colgroupSegmentation_segments += 1;
                     }
                     if (colgroupSegmentation_segments > 1) {
                         colgroupSegmentation = true;
@@ -811,7 +811,7 @@ function init_module() {
                             rowspanArray[d]--;
                         }
                     }
-                    rowIndex++;
+                    rowIndex += 1;
                 });
 
                 //Loop B - colgroup/rowgroup segementation
@@ -824,7 +824,7 @@ function init_module() {
                             colgroupsInThisRow = 0;
                             $(row).find("th,td").filter(":visible").each(function () {
                                 if ($(this).attr("scope") == "colgroup") {
-                                    colgroupsInThisRow++;
+                                    colgroupsInThisRow += 1;
                                     //store this colgroupIndex to temp variable
                                     c = $(this).attr("data-tandi508-colgroupindex");
                                 } else if (lastColgroupIndex) { //set this cell's colgroupIndex
@@ -997,9 +997,9 @@ function init_module() {
                                     $(all_th).each(function () {
                                         //determine if x direction multiple th at this rowindex
                                         if (rowIndex == $(this).attr("data-tandi508-rowindex"))
-                                            xDirectionThCount++;
+                                            xDirectionThCount += 1;
                                         if (colIndex == $(this).attr("data-tandi508-colindex"))
-                                            yDirectionThCount++;
+                                            yDirectionThCount += 1;
 
                                         if (xDirectionThCount > 1)
                                             xDirectionHasTh = true;
@@ -1091,7 +1091,7 @@ function init_module() {
             $(all_rows).each(function () {
                 //Reset variables for this row
                 row = $(this);
-                rowCount++;
+                rowCount += 1;
                 colIndex = 0;
                 colgroupSegmentation_colgroupsPerRowCounter = 0;
 
@@ -1106,7 +1106,7 @@ function init_module() {
                     //Increment cell counters
                     cell = $(this);
                     if ($(cell).is("th,[role=columnheader],[role=rowheader]")) {
-                        headerCount++;
+                        headerCount += 1;
                         if (headerCount > 1)
                             hasHeaderRow = true;
                         if (rowCount > 1)
@@ -1114,10 +1114,10 @@ function init_module() {
 
                         if ($(cell).is("th") && !$(cell).is("[role=columnheader],[role=rowheader]")) {
                             //table cell is missing role
-                            headersMissingRoleCount++;
+                            headersMissingRoleCount += 1;
                         }
                     } else {
-                        nonHeaderCount++;
+                        nonHeaderCount += 1;
                     }
 
                     //get colspan
@@ -1155,7 +1155,7 @@ function init_module() {
                                 //decrement this item in the rowspan array
                                 rowspanArray[a]--;
                                 //increment the colIndex an extra amount to essentially skip this colIndex location
-                                colIndex++;
+                                colIndex += 1;
                             }
                         }
                     }
@@ -1163,14 +1163,14 @@ function init_module() {
                     if (colspan < 2) {
                         $(cell).attr("data-tandi508-colindex", colIndex);
                         rowspanArray[colIndex] = rowspan;
-                        colIndex++;
+                        colIndex += 1;
                     } else {//colspan > 1
                         indexValue = "";
                         colIndexPlusColspan = parseInt(colIndex) + colspan;
                         for (var b = colIndex; b < colIndexPlusColspan; b++) {
                             indexValue += b + " ";
                             rowspanArray[colIndex] = rowspan;
-                            colIndex++;
+                            colIndex += 1;
                         }
                         $(cell).attr("data-tandi508-colindex", $.trim(indexValue));
                     }
@@ -1194,7 +1194,7 @@ function init_module() {
                     if (rowspanArray[d] > 1)
                         rowspanArray[d]--;
                 }
-                rowIndex++;
+                rowIndex += 1;
             });
 
             //Loop C (grab the accessibility components for each cell)
@@ -1281,7 +1281,7 @@ function init_module() {
                     });
                 }
                 if (!isContainedByRow)
-                    cellsNotContainedByRow++;
+                    cellsNotContainedByRow += 1;
                 return isContainedByRow;
             }
         }
@@ -1586,7 +1586,7 @@ function init_module() {
                     //loop through tableThIds and compare
                     for (z = 0; z < tableThIds.length; z++) {
                         if (id === tableThIds[z].id) {
-                            idMatchesFound++;
+                            idMatchesFound += 1;
                             if (idMatchesFound === 2) break; //duplicate found so stop searching, for performance
                         }
                     }

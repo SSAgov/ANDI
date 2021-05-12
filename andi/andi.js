@@ -1627,7 +1627,7 @@ function AndiLaser() {
             var relatedLaserIndex;
             if (!$(targetElement).hasClass("ANDI508-relatedLaserTarget")) {
                 //increment relatedLaserIndex and store onto targetElement
-                relatedLaserIndex = testPageData.relatedLaserIndex++;
+                relatedLaserIndex = testPageData.relatedLaserIndex += 1;
                 $(targetElement).addClass("ANDI508-relatedLaserTarget").attr("data-andi508-relatedlaserindex", relatedLaserIndex);
             } else { //get relatedLaserIndex from targetElement
                 relatedLaserIndex = $(targetElement).attr("data-andi508-relatedlaserindex");
@@ -2983,7 +2983,7 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         }
         if (group) {
             $(group).filter(":shown").each(function () {
-                radioCount++;
+                radioCount += 1;
                 if ($(this).is(element)) //check if the radio button is this one
                     radioIndex = radioCount; //set the index
             });
@@ -3351,7 +3351,7 @@ function AndiCheck() {
             //loop through allIds and compare
             for (var x = 0; x < testPageData.allIds.length; x++) {
                 if (id === testPageData.allIds[x].id) {
-                    idMatchesFound++;
+                    idMatchesFound += 1;
                     if (idMatchesFound === 2) {
                         break; //duplicate found so stop searching, for performance
                     }
@@ -3378,7 +3378,7 @@ function AndiCheck() {
                 var forMatchesFound = 0;
                 for (var x = 0; x < testPageData.allFors.length; x++) {
                     if (id === $.trim($(testPageData.allFors[x]).attr("for"))) {
-                        forMatchesFound++;
+                        forMatchesFound += 1;
                         if (forMatchesFound == 2) {
                             break; //duplicate found so stop searching, for performance
                         }
@@ -3472,7 +3472,7 @@ function AndiCheck() {
         if (element.disabled) {
             //if the element has aria-hidden=true, assume intentiality behind making this element disabled. Therefore don't complain about this element's disabled state.
             if ($(element).attr("aria-hidden") !== "true") {
-                testPageData.disabledElementsCount++;
+                testPageData.disabledElementsCount += 1;
                 return true;
             }
         }
@@ -3673,7 +3673,7 @@ function AndiAlerter() {
                 alertGroup.level = "caution";
             }
         }
-        testPageData.numberOfAccessibilityAlertsFound++;
+        testPageData.numberOfAccessibilityAlertsFound += 1;
     };
 
     //This function will update the ANDI508-alerts-list.

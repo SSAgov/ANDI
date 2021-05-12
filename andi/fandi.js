@@ -299,13 +299,13 @@ function init_module() {
         while (z > 0) {
             for (var x = 0; x < greaterThanZeroArray.length; x++) {
                 if ($(greaterThanZeroArray[x]).attr("tabindex") == i) {
-                    tabSequence++;
+                    tabSequence += 1;
                     overlayObject = andiOverlay.createOverlay("ANDI508-overlay-tabSequence ANDI508-overlay-tabSequence-greaterThanZero", tabSequence, "tabIndex=" + i, i);
                     andiOverlay.insertAssociatedOverlay($(greaterThanZeroArray[x]), overlayObject, true);
                     z--;
                 }
             }
-            i++;
+            i += 1;
         }
 
         //PASS 2: Get tabindex=0 and natively tabbable:
@@ -327,7 +327,7 @@ function init_module() {
                         lastRadioGroupName = $(this).attr("name");
                     }
                 }
-                tabSequence++;
+                tabSequence += 1;
                 titleText = (tabindex == 0) ? "tabIndex=0" : "natively tabbable";
                 overlayObject = andiOverlay.createOverlay("ANDI508-overlay-tabSequence", tabSequence, titleText, 0);
                 andiOverlay.insertAssociatedOverlay(this, overlayObject, true);

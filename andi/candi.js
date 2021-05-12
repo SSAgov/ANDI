@@ -40,11 +40,11 @@ function init_module() {
         //Elements that are disabled or have aria-disabled="true" do not need to be tested
         $(TestPageData.allElements).filter("*:not(option)").each(function () {
             if ($(this).is("img[src],input:image[src],svg,canvas")) {
-                cANDI.colorContrasts.imageCount++;
+                cANDI.colorContrasts.imageCount += 1;
             } else {
                 if (hasTextExcludingChildren(this)) {
                     if (!hasAdditionalHidingTechniques(this)) { //Element is not hidden and contains text.
-                        cANDI.colorContrasts.elementsWithTextCount++;
+                        cANDI.colorContrasts.elementsWithTextCount += 1;
 
                         //Try to get the contrast ratio automatically
                         var cANDI_data = cANDI.getContrast($(this));
@@ -61,7 +61,7 @@ function init_module() {
                             AndiData.attachDataToElement(this);
                             cANDI.index += 1;
                         } else {
-                            testPageData.disabledElementsCount++;
+                            testPageData.disabledElementsCount += 1;
                         }
                     }
                 }
@@ -390,7 +390,7 @@ function init_module() {
         if (shade == "lighter") {
             for (var l = 0; l < 3; l++) {
                 if (color.rgba[l] < 255)
-                    color.rgba[l]++;
+                    color.rgba[l] += 1;
             }
         } else { //darker
             for (var d = 0; d < 3; d++) {
@@ -707,7 +707,7 @@ function init_module() {
             for (var y = 0; y < 256; y++) {
                 for (var j = 0; j < 3; j++) {
                     if (suggestedColor.rgba[j] < 255)
-                        suggestedColor.rgba[j]++;
+                        suggestedColor.rgba[j] += 1;
                 }
 
                 if (suggestedColor.contrast(contrastingColor).ratio >= cANDI_data.minReq) {

@@ -64,11 +64,11 @@ function init_module() {
                 closestWidgetParent = $(this).closest("a,button,[role=button],[role=link]");
                 if ($(closestWidgetParent).length) {
                     if ($(closestWidgetParent).isSemantically("[role=link]", "a")) {
-                        gANDI.images.imageLinkCount++;
+                        gANDI.images.imageLinkCount += 1;
                     } else if ($(closestWidgetParent).isSemantically("[role=button]", "button")) {
-                        gANDI.images.imageButtonCount++;
+                        gANDI.images.imageButtonCount += 1;
                     }
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     isImageContainedByInteractiveWidget = true;
                 }
             }
@@ -89,31 +89,31 @@ function init_module() {
                 gANDI.index += 1;
                 //Check for conditions based on semantics
                 if ($(this).is("marquee")) {
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     andiAlerter.throwAlert(alert_0171);
                     AndiData.attachDataToElement(this);
                 } else if ($(this).is("blink")) {
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     andiAlerter.throwAlert(alert_0172);
                     AndiData.attachDataToElement(this);
                 } else if ($(this).is("canvas")) {
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
                     AndiData.attachDataToElement(this);
                 } else if ($(this).is("input:image")) {
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     andiCheck.commonFocusableElementChecks(andiData, $(this));
                     altTextAnalysis($.trim($(this).attr("alt")));
                     AndiData.attachDataToElement(this);
                     //Check for server side image map
                 } else if ($(this).is("img") && $(this).attr("ismap")) {//Code is written this way to prevent bug in IE8
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     andiAlerter.throwAlert(alert_0173);
                     AndiData.attachDataToElement(this);
                 } else if (!isImageContainedByInteractiveWidget && $(this).is("img,svg,[role=img]")) { //an image used by an image map is handled by the <area>
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     if (isElementDecorative(this, andiData)) {
-                        gANDI.images.decorativeCount++;
+                        gANDI.images.decorativeCount += 1;
                         $(this).addClass("gANDI508-decorative");
 
                         if ($(this).prop("tabIndex") >= 0) { //Decorative image is in the tab order
@@ -129,7 +129,7 @@ function init_module() {
                     }
                     AndiData.attachDataToElement(this);
                 } else if ($(this).is("area")) {
-                    gANDI.images.inlineCount++;
+                    gANDI.images.inlineCount += 1;
                     var map = $(this).closest("map");
                     if ($(map).length) { //<area> is contained in <map>
                         var mapName = "#" + $(map).attr("name");
@@ -146,14 +146,14 @@ function init_module() {
                         andiAlerter.throwAlert(alert_0178, alert_0178.message, 0);
                     }
                 } else if ($(this).is("[role=image]")) {
-                    //gANDI.images.inlineCount++;
+                    //gANDI.images.inlineCount += 1;
                     andiAlerter.throwAlert(alert_0183);
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).css("background-image").includes("url(")) {
                 gANDI.images.list.push(new Image(this, gANDI.index));
                 gANDI.index += 1;
-                gANDI.images.backgroundCount++;
+                gANDI.images.backgroundCount += 1;
                 $(this).addClass("gANDI508-background");
             }
 
@@ -170,7 +170,7 @@ function init_module() {
                 }
                 gANDI.images.list.push(new Image(this, gANDI.index));
                 gANDI.index += 1;
-                gANDI.images.fontIconCount++;
+                gANDI.images.fontIconCount += 1;
                 $(this).addClass("gANDI508-fontIcon");
                 //Throw alert
                 if (andiData.accName && !andiData.isTabbable) {

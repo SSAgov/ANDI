@@ -127,15 +127,15 @@ function init_module() {
 
                 if ($(this).isSemantically("[role=list]", "ol,ul,dl")) {
                     if ($(this).is("ul")) {
-                        sANDI.lists.ulCount++;
+                        sANDI.lists.ulCount += 1;
                     } else if ($(this).is("ol")) {
-                        sANDI.lists.olCount++;
+                        sANDI.lists.olCount += 1;
                     } else if ($(this).is("dl")) {
-                        sANDI.lists.dlCount++;
+                        sANDI.lists.dlCount += 1;
                     } else {
-                        sANDI.lists.listRoleCount++;
+                        sANDI.lists.listRoleCount += 1;
                     }
-                    sANDI.lists.count++;
+                    sANDI.lists.count += 1;
                 }
 
                 if (AndiModule.activeActionButtons.lists) {
@@ -226,9 +226,9 @@ function init_module() {
 
             //For all elements on the page
             if ($.trim($(this).attr("role")))
-                roleAttributesCount++;
+                roleAttributesCount += 1;
             if ($.trim($(this).prop("lang")))
-                langAttributesCount++;
+                langAttributesCount += 1;
         });
     };
 
@@ -426,7 +426,7 @@ function init_module() {
                         langOverlayText = $(this).prop("tagName").toLowerCase() + " lang=" + $(this).prop("lang");
                         overlayObject = andiOverlay.createOverlay("ANDI508-overlay-langAttributes", langOverlayText);
                         andiOverlay.insertAssociatedOverlay(this, overlayObject);
-                        langOfPartsCount++;
+                        langOfPartsCount += 1;
                     }
                 });
 
@@ -852,7 +852,7 @@ function init_module() {
                     if (!$(element.childNodes[z]).is(exclusions) && $(element.childNodes[z]).is(":shown")) {
                         if ($(element.childNodes[z]).is(inclusions)) {//no need to look at this element's childNodes
                             insertReadingOrder(ariaHidden, element.childNodes[z]);
-                            z++;//because a new node was inserted, the indexes changed
+                            z += 1;//because a new node was inserted, the indexes changed
                         } else { //recursion here:
                             traverseReadingOrder(element.childNodes[z], ariaHidden);
                         }
@@ -860,7 +860,7 @@ function init_module() {
                 } else if (element.childNodes[z].nodeType === 3) { //otherwise, if child is a text node
                     if ($.trim(element.childNodes[z].nodeValue) !== "") { //Found some text
                         insertReadingOrder(ariaHidden, element.childNodes[z]);
-                        z++;//because a new node was inserted, the indexes changed
+                        z += 1;//because a new node was inserted, the indexes changed
                     }
                 }
             }
@@ -871,7 +871,7 @@ function init_module() {
                 if (ariaHidden) {
                     overlayObject = andiOverlay.createOverlay("ANDI508-overlay-alert ANDI508-overlay-readingOrder", "X", "hidden from screen reader using aria-hidden=true");
                 } else {
-                    readingSequence++;
+                    readingSequence += 1;
                     overlayObject = andiOverlay.createOverlay("ANDI508-overlay-readingOrder", readingSequence);
                 }
                 andiOverlay.insertAssociatedOverlay(node, overlayObject);
