@@ -3193,22 +3193,33 @@ function AndiCheck() {
         //legend/fieldset
         parents = $(TestPageData.allVisibleElements).filter("fieldset").length * 1; //*1 ensures that the var will be a number
         children = $(TestPageData.allVisibleElements).filter("legend").length * 1; //*1 ensures that the var will be a number
-        if (children > parents) andiAlerter.throwAlert(alert_0074, [children, parents], 0);
-        if (parents > 0) testPageData.page_using_fieldset = true;
+        if (children > parents) {
+            andiAlerter.throwAlert(alert_0074, [children, parents], 0);
+        }
+        if (parents > 0) {
+            testPageData.page_using_fieldset = true;
+        }
 
         //figcaption/figure
         parents = $(TestPageData.allVisibleElements).filter("figure").length * 1; //*1 ensures that the var will be a number
         children = $(TestPageData.allVisibleElements).filter("figcaption").length * 1; //*1 ensures that the var will be a number
-        if (children > parents) andiAlerter.throwAlert(alert_0075, [children, parents], 0);
-        if (parents > 0) testPageData.page_using_figure = true;
+        if (children > parents) {
+            andiAlerter.throwAlert(alert_0075, [children, parents], 0);
+        }
+        if (parents > 0) {
+            testPageData.page_using_figure = true;
+        }
 
         //caption/table
         if (TestPageData.page_using_table) {
             parents = $(TestPageData.allVisibleElements).filter("table").length * 1; //*1 ensures that the var will be a number
             children = $(TestPageData.allVisibleElements).filter("caption").length * 1; //*1 ensures that the var will be a number
-            if (children)
+            if (children) {
                 TestPageData.page_using_caption = true;
-            if (children > parents) andiAlerter.throwAlert(alert_0076, [children, parents], 0);
+            }
+            if (children > parents) {
+                andiAlerter.throwAlert(alert_0076, [children, parents], 0);
+            }
         }
     };
 
