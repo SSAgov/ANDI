@@ -3444,11 +3444,12 @@ function AndiCheck() {
 
     //This function will search for misspelled aria attributes and throw an alert if found.
     this.areThereAnyMisspelledAria = function (element) {
-        if ($(element).is("[aria-role]"))
+        if ($(element).is("[aria-role]")) {
             andiAlerter.throwAlert(alert_0032);
-
-        if ($(element).is("[aria-labeledby]"))
+        }
+        if ($(element).is("[aria-labeledby]")) {
             andiAlerter.throwAlert(alert_0031);
+        }
     };
 
     //This function will throw alert_0260 or alert_0261
