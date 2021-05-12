@@ -3240,7 +3240,6 @@ function AndiCheck() {
     };
 
     //==Element Checks==//
-
     //This function resets the accessibleComponentsTable
     //returns true if components were found that should appear in the accessibleComponentsTable
     this.wereComponentsFound = function (isTabbable, accessibleComponentsTableBody) {
@@ -3249,10 +3248,11 @@ function AndiCheck() {
         //Display total
         $("#ANDI508-accessibleComponentsTotal").html(total);
 
-        if (total === 0) {//No components. Display message in table
+        if (total === 0) { //No components. Display message in table
             var alertLevel = "danger"; //tabbable elements with no components, default to red
-            if (!isTabbable)
+            if (!isTabbable) {
                 alertLevel = "caution"; //non-tabbable elements with no components, default to yellow
+            }
             $(accessibleComponentsTableBody).html(
                 "<tr><th id='ANDI508-accessibleComponentsTable-noData' class='ANDI508-display-" +
                 alertLevel + "'>No accessibility markup found for this Element.</th></tr>");
@@ -3264,7 +3264,6 @@ function AndiCheck() {
         if (!elementData.isAriaHidden) { //element is not aria-hidden=true and not contained by aria-hidden=true
             var tagNameText = elementData.tagNameText;
             if (!elementData.accName) {
-
                 var message;
                 if (tagNameText === "iframe") {
                     if (elementData.tabindex) {
@@ -3321,7 +3320,9 @@ function AndiCheck() {
                         switch (tagNameText) {
                             case "img":
                             case "input[type=image]":
-                                if (!elementData.role) message = "Image" + alert_0003.message; break;
+                                if (!elementData.role) {
+                                    message = "Image" + alert_0003.message; break;
+                                }
                             case "canvas":
                                 message = "Canvas" + alert_0008.message; break;
                         }
@@ -3351,7 +3352,9 @@ function AndiCheck() {
             for (var x = 0; x < testPageData.allIds.length; x++) {
                 if (id === testPageData.allIds[x].id) {
                     idMatchesFound++;
-                    if (idMatchesFound === 2) break; //duplicate found so stop searching, for performance
+                    if (idMatchesFound === 2) {
+                        break; //duplicate found so stop searching, for performance
+                    }
                 }
             }
             if (idMatchesFound > 1) {//Duplicate Found
@@ -3376,11 +3379,14 @@ function AndiCheck() {
                 for (var x = 0; x < testPageData.allFors.length; x++) {
                     if (id === $.trim($(testPageData.allFors[x]).attr("for"))) {
                         forMatchesFound++;
-                        if (forMatchesFound == 2) break; //duplicate found so stop searching, for performance
+                        if (forMatchesFound == 2) {
+                            break; //duplicate found so stop searching, for performance
+                        }
                     }
                 }
-                if (forMatchesFound > 1) //Duplicate Found
+                if (forMatchesFound > 1) { //Duplicate Found
                     andiAlerter.throwAlert(alert_0012, [id, id]);
+                }
             }
         }
     };
