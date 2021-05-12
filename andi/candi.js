@@ -304,7 +304,20 @@ function init_module() {
                 "<th scope='row'>" + cANDI.colorContrasts.list[x].index + "</th>" +
                 "<td class='ANDI508-alert-column'></td>" +
                 //"<td class='ANDI508-alert-column'>" + cANDI.colorContrasts.list[x].alerts + "</td>" +
-                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + cANDI.colorContrasts.list[x].index + "'>" + cANDI.colorContrasts.list[x].element + "</a></td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + cANDI.colorContrasts.list[x].index + "'>" +
+                ' "' + cANDI.colorContrasts.list[x].bgColor + '"' +
+                ' "' + cANDI.colorContrasts.list[x].fgColor + '"' +
+                ' "' + cANDI.colorContrasts.list[x].contrast + '"' +
+                ' "' + cANDI.colorContrasts.list[x].ratio + '"' +
+                ' "' + cANDI.colorContrasts.list[x].semiTransparency + '"' +
+                ' "' + cANDI.colorContrasts.list[x].opacity + '"' +
+                ' "' + cANDI.colorContrasts.list[x].bgImage + '"' +
+                ' "' + cANDI.colorContrasts.list[x].size + '"' +
+                ' "' + cANDI.colorContrasts.list[x].weight + '"' +
+                ' "' + cANDI.colorContrasts.list[x].family + '"' +
+                ' "' + cANDI.colorContrasts.list[x].minReq + '"' +
+                // NOTE: Add results in the future
+                ' "' + cANDI.colorContrasts.list[x].disabled + '"' + "</a></td>" +
                 "</tr>";
         }
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
