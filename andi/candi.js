@@ -256,14 +256,15 @@ function init_module() {
             andiResetter.resizeHeights();
             return false;
         });
-        
+
         if (!andiBar.focusIsOnInspectableElement()) {
             andiBar.showElementControls();
             andiBar.showStartUpSummary("Discover the <span class='ANDI508-module-name-c'>color contrast</span> for elements containing text.", true);
         }
-        if (testPageData.disabledElementsCount > 0)
+        if (testPageData.disabledElementsCount > 0) {
             andiAlerter.throwAlert(alert_0251, [testPageData.disabledElementsCount], 0);
-
+        }
+        
         andiAlerter.updateAlertList();
 
         AndiModule.engageActiveActionButtons(["contrastPlayground", "grayscale"]);
