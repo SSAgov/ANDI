@@ -136,7 +136,7 @@ function init_module() {
         $("#ANDI508-viewColorsList-button").click(function () {
             if (!cANDI.viewList_tableReady) {
                 cANDI.viewList_buildTable("color contrast");
-                //cANDI.viewList_attachEvents();
+                cANDI.viewList_attachEvents();
                 //cANDI.viewList_attachEvents_links();
                 cANDI.viewList_tableReady = true;
             }
@@ -372,6 +372,129 @@ function init_module() {
                 AndiModule.activeActionButtons.viewButtonsList = false;
             }
         }
+    };
+
+    //This function attaches the click,hover,focus events to the items in the view list
+    cANDI.viewList_attachEvents = function () {
+        //Add focus click to each link (output) in the table
+        $("#ANDI508-viewList-table td a[data-andi508-relatedindex]").each(function () {
+            andiFocuser.addFocusClick($(this));
+            var relatedElement = $("#ANDI508-testPage [data-andi508-index=" + $(this).attr("data-andi508-relatedindex") + "]").first();
+            andiLaser.createLaserTrigger($(this), $(relatedElement));
+            $(this)
+                .hover(function () {
+                    if (!event.shiftKey)
+                        AndiModule.inspect(relatedElement[0]);
+                })
+                .focus(function () {
+                    AndiModule.inspect(relatedElement[0]);
+                });
+        });
+
+        //This will define the click logic for the table sorting.
+        //Table sorting does not use aria-sort because .removeAttr("aria-sort") crashes in old IE
+        $("#ANDI508-viewList-table th a").click(function () {
+            var table = $(this).closest("table");
+            $(table).find("th").find("i").html("")
+                .end().find("a"); //remove all arrow
+
+            var rows = $(table).find("tr:gt(0)").toArray().sort(sortCompare($(this).parent().index()));
+            this.asc = !this.asc;
+            if (!this.asc) {
+                rows = rows.reverse();
+                $(this).attr("title", "descending")
+                    .parent().find("i").html("&#9650;"); //up arrow
+            } else {
+                $(this).attr("title", "ascending")
+                    .parent().find("i").html("&#9660;"); //down arrow
+            }
+            for (var i = 0; i < rows.length; i++) {
+                $(table).append(rows[i]);
+            }
+
+            //Table Sort Functionality
+            function sortCompare(index) {
+                return function (a, b) {
+                    var valA = getCellValue(a, index);
+                    var valB = getCellValue(b, index);
+                    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB);
+                };
+                function getCellValue(row, index) {
+                    return $(row).children("td,th").eq(index).text();
+                }
+            }
+        });
+
+        //Define listLinks next button
+        $("#cANDI508-viewList-button-next").click(function () {
+            //Get class name based on selected tab
+            var selectedTabClass = $("#cANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
+            var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
+            var focusGoesOnThisIndex;
+
+            if (index == testPageData.andiElementIndex || isNaN(index)) {
+                //No link being inspected yet, get first element according to selected tab
+                focusGoesOnThisIndex = $("#ANDI508-testPage ." + selectedTabClass).first().attr("data-andi508-index");
+                andiFocuser.focusByIndex(focusGoesOnThisIndex); //loop back to first
+            } else {
+                //Find the next element with class from selected tab and data-andi508-index
+                //This will skip over elements that may have been removed from the DOM
+                for (var x = index; x < testPageData.andiElementIndex; x++) {
+                    //Get next element within set of selected tab type
+                    if ($("#ANDI508-testPage ." + selectedTabClass + "[data-andi508-index='" + (x + 1) + "']").length) {
+                        focusGoesOnThisIndex = x + 1;
+                        andiFocuser.focusByIndex(focusGoesOnThisIndex);
+                        break;
+                    }
+                }
+            }
+
+            //Highlight the row in the links list that associates with this element
+            cANDI.viewList_rowHighlight(focusGoesOnThisIndex);
+            $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
+                this.scrollIntoView();
+            });
+
+            return false;
+        });
+
+        //Define listLinks prev button
+        $("#cANDI508-viewList-button-prev").click(function () {
+            //Get class name based on selected tab
+            var selectedTabClass = $("#cANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
+            var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
+            var firstElementInListIndex = $("#ANDI508-testPage ." + selectedTabClass).first().attr("data-andi508-index");
+            var focusGoesOnThisIndex;
+
+            if (isNaN(index)) { //no active element yet
+                //get first element according to selected tab
+                andiFocuser.focusByIndex(firstElementInListIndex); //loop back to first
+                focusGoesOnThisIndex = firstElementInListIndex;
+            } else if (index == firstElementInListIndex) {
+                //Loop to last element in list
+                focusGoesOnThisIndex = $("#ANDI508-testPage ." + selectedTabClass).last().attr("data-andi508-index");
+                andiFocuser.focusByIndex(focusGoesOnThisIndex); //loop back to last
+            } else {
+                //Find the previous element with class from selected tab and data-andi508-index
+                //This will skip over elements that may have been removed from the DOM
+                for (var x = index; x > 0; x--) {
+                    //Get next element within set of selected tab type
+                    if ($("#ANDI508-testPage ." + selectedTabClass + "[data-andi508-index='" + (x - 1) + "']").length) {
+                        focusGoesOnThisIndex = x - 1;
+                        andiFocuser.focusByIndex(focusGoesOnThisIndex);
+                        break;
+                    }
+                }
+            }
+
+            //Highlight the row in the links list that associates with this element
+            cANDI.viewList_rowHighlight(focusGoesOnThisIndex);
+            $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
+                this.scrollIntoView();
+            });
+
+            return false;
+        });
     };
 
     //This function will update the info in the Active Element Inspection.
