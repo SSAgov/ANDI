@@ -79,11 +79,11 @@ function init_module() {
 
                             //Throw alerts if necessary
                             cANDI.processResult($(this));
-                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast,
-                                                                                  cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max, 
-                                                                                  cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.opacityValue,
-                                                                                  cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family,
-                                                                                  cANDI_data.minReq, cANDI_data.result, cANDI_data.disabled));
+                            cANDI.colorContrasts.list.push(new ColorContrast(this, cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast,
+                                cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max,
+                                cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.opacityValue,
+                                cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family,
+                                cANDI_data.minReq, cANDI_data.result, cANDI_data.disabled));
                             AndiData.attachDataToElement(this);
                             cANDI.index += 1;
                         } else {
@@ -189,7 +189,7 @@ function init_module() {
             } else { //hide Contrast Playground, show alert list
                 $("#cANDI508-contrastPlayground").slideUp(AndiSettings.andiAnimationSpeed);
                 $("#ANDI508-alerts-list").show();
-                
+
                 $(this)
                     .removeClass("ANDI508-viewOtherResults-button-expanded")
                     .html(listIcon + "show contrast playground ")
@@ -256,18 +256,13 @@ function init_module() {
             andiResetter.resizeHeights();
             return false;
         });
-
-        if (cANDI.colorContrasts.elementsWithTextCount > 0) {
-            if (!andiBar.focusIsOnInspectableElement()) {
-                andiBar.showElementControls();
-                andiBar.showStartUpSummary("Discover the <span class='ANDI508-module-name-c'>color contrast</span> for elements containing text.", true);
-            }
-            if (testPageData.disabledElementsCount > 0)
-                andiAlerter.throwAlert(alert_0251, [testPageData.disabledElementsCount], 0);
-        } else { //No text containing elements were found
-            andiBar.hideElementControls();
-            andiBar.showStartUpSummary("No elements containing text were found on this page.");
+        
+        if (!andiBar.focusIsOnInspectableElement()) {
+            andiBar.showElementControls();
+            andiBar.showStartUpSummary("Discover the <span class='ANDI508-module-name-c'>color contrast</span> for elements containing text.", true);
         }
+        if (testPageData.disabledElementsCount > 0)
+            andiAlerter.throwAlert(alert_0251, [testPageData.disabledElementsCount], 0);
 
         andiAlerter.updateAlertList();
 
@@ -337,10 +332,10 @@ function init_module() {
                 "</tr>";
         }
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:85%'><a href='javascript:void(0)'>" +  '"bgColor" ' + '"fgColor" ' + '"contrast" ' + '"ratio" ' + '"error" ' +
-                '"min" ' + '"max" ' + '"semiTransparency" ' + '"opacity" ' + '"opacityValue" ' + '"bgImage" ' + '"size" ' + '"weight" ' + '"family" ' +
-                '"minReq" ' + '"result" ' + '"disabled"' + "<i aria-hidden='true'></i></a></th>";
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:85%'><a href='javascript:void(0)'>" + '"bgColor" ' + '"fgColor" ' + '"contrast" ' + '"ratio" ' + '"error" ' +
+            '"min" ' + '"max" ' + '"semiTransparency" ' + '"opacity" ' + '"opacityValue" ' + '"bgImage" ' + '"size" ' + '"weight" ' + '"family" ' +
+            '"minReq" ' + '"result" ' + '"disabled"' + "<i aria-hidden='true'></i></a></th>";
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
@@ -605,7 +600,7 @@ function init_module() {
                 }
             }
         }
-        
+
 
         var cANDI_data = {
             bgColor: bgColor,
@@ -806,7 +801,7 @@ function init_module() {
         if (cANDI_data.weight >= 700) { //Display Font-weight (if bold)
             $("#cANDI508-fontweight").html("bold");
         }
-        
+
         //Display Font-family
         $("#cANDI508-fontfamily").html(cANDI_data.family);
 
