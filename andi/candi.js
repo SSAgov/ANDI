@@ -100,8 +100,7 @@ function init_module() {
             if ( //font-size:0
                 parseInt($(element).css("font-size")) === 0 ||
                 //text-indent is pushing the element off the page
-                (
-                    $(element).css("text-indent") != "0" || $(element).css("text-indent") != "0px") && parseInt($(element).css("text-indent")) < -998 ||
+                ($(element).css("text-indent") != "0" || $(element).css("text-indent") != "0px") && parseInt($(element).css("text-indent")) < -998 ||
                 //overflow:hidden and height:1 width:1
                 $(element).css("overflow") == "hidden" && (parseInt($(element).css("height")) <= 1 || parseInt($(element).css("width")) <= 1)
             ) {
