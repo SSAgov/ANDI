@@ -687,6 +687,7 @@ function init_module() {
             }
         } else if (!cANDI_data.result) { //Opacity Less Than 1
             if ($(element).data("candi508").opacity) {
+                cANDI_data.opacity = $(element).data("candi508").opacity;
                 andiAlerter.throwAlert(alert_0232);
             }
             if ($(element).data("candi508").bgImage !== "none") { //Has Background Image
