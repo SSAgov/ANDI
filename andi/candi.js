@@ -21,7 +21,7 @@ function init_module() {
     // result: undefined,
 
     //This object class is used to store data about each color contrast element. Object instances will be placed into an array.
-    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, error, min, max, semiTransparency, opacity, bgImage, size, weight, family, minReq, result, disabled) {
+    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, error, min, max, semiTransparency, opacity, opacityValue, bgImage, size, weight, family, minReq, result, disabled) {
         this.element = element;
         this.index = index;
         this.bgColor = bgColor;
@@ -31,8 +31,9 @@ function init_module() {
         this.error = error;
         this.min = min;
         this.max = max;
-        this.semiTransparency = semiTransparency
-        this.opacity = opacity
+        this.semiTransparency = semiTransparency;
+        this.opacity = opacity;
+        this.opacityValue = opacityValue;
         this.bgImage = bgImage;
         this.size = size;
         this.weight = weight;
@@ -78,7 +79,11 @@ function init_module() {
 
                             //Throw alerts if necessary
                             cANDI.processResult($(this));
-                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast, cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max, cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family, cANDI_data.minReq, cANDI_data.result, cANDI_data.disabled));
+                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast,
+                                                                                  cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max, 
+                                                                                  cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.opacityValue,
+                                                                                  cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family,
+                                                                                  cANDI_data.minReq, cANDI_data.result, cANDI_data.disabled));
                             AndiData.attachDataToElement(this);
                             cANDI.index += 1;
                         } else {
@@ -321,6 +326,7 @@ function init_module() {
                 ' "' + cANDI.colorContrasts.list[x].max + '"' +
                 ' "' + cANDI.colorContrasts.list[x].semiTransparency + '"' +
                 ' "' + cANDI.colorContrasts.list[x].opacity + '"' +
+                ' "' + cANDI.colorContrasts.list[x].opacityValue + '"' +
                 ' "' + cANDI.colorContrasts.list[x].bgImage + '"' +
                 ' "' + cANDI.colorContrasts.list[x].size + '"' +
                 ' "' + cANDI.colorContrasts.list[x].weight + '"' +
@@ -578,6 +584,7 @@ function init_module() {
         var weight = $(fgElement).css("font-weight");
         var family = $(fgElement).css("font-family")
         var result = "";
+        var opacityValue = parseInt($(fgElement).css("opacity"));
 
         //Set minReq (minimum requirement)
         var minReq = 4.5;
@@ -608,6 +615,7 @@ function init_module() {
             max: max,
             semiTransparency: semiTransparency,
             opacity: opacity,
+            opacityValue: opacityValue,
             bgImage: bgImage,
             size: size,
             weight: weight,
