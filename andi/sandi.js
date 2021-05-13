@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var sANDIVersionNumber = "4.1.3";
+var sANDIVersionNumber = "4.1.4";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -69,7 +69,7 @@ sANDI.analyze = function(){
 			}
 		}
 		else if($(this).isSemantically("[role=listitem],[role=list]","ol,ul,li,dl,dd,dt")){
-			//Add to the headings array
+			//Add to the lists array
 			listsArray.push($(this));
 			structureExists = true;
 
@@ -113,6 +113,7 @@ sANDI.analyze = function(){
 			}
 		}
 		else if($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]","main,header,footer,nav,form,aside")){
+			//Add to the landmarks array
 			landmarksArray.push($(this));
 			structureExists = true;
 
@@ -137,6 +138,7 @@ sANDI.analyze = function(){
 		}
 
 		if($(this).is("[role=alert],[role=status],[role=log],[role=marquee],[role=timer],[aria-live=polite],[aria-live=assertive]")){
+			//Add to the live regions array
 			liveRegionsArray.push($(this));
 			if(AndiModule.activeActionButtons.liveRegions){
 				andiData = new AndiData(this);
