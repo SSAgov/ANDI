@@ -6,6 +6,9 @@ function init_module() {
 
     var cANDIVersionNumber = "4.1.2";
 
+    //NOTE: Website used to calculate contrast-ratio for color-contrast with opacity
+    //      - https://contrast-ratio.com/
+
     //TODO: select box, check for selected
 
     //create cANDI instance
@@ -619,8 +622,9 @@ function init_module() {
 
         //This function will recursively get the element that contains the background-color or background-image.
         function getBgElement(element, recursion) {
-            if (!disabled)
+            if (!disabled) {
                 disabled = isThisDisabled(element);
+            }
 
             if (parseInt($(element).css("opacity")) < 1)
                 opacity = true;
@@ -646,8 +650,9 @@ function init_module() {
                     }
                 } else if (thisBgColor.alpha < 1) {
                     //Look at parent element
-                    if (thisBgColor.alpha > 0)
+                    if (thisBgColor.alpha > 0) {
                         semiTransparency = true;
+                    }
                     return getBgElement($(element).parent(), true);
                 }
                 return element;
