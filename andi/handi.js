@@ -294,7 +294,8 @@ function init_module() {
             if (!hANDI.viewList_tableReady) {
                 hANDI.viewList_buildTable("hidden contents");
                 hANDI.viewList_attachEvents();
-                //hANDI.viewList_attachEvents_links();
+                // NOTE: Uncomment if there is some events that you want to add that are specific to this page
+                //hANDI.viewList_attachEvents_hiddenContent();
                 hANDI.viewList_tableReady = true;
             }
             hANDI.viewList_toggle("hidden contents", this);

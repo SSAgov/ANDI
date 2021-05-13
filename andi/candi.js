@@ -137,7 +137,8 @@ function init_module() {
             if (!cANDI.viewList_tableReady) {
                 cANDI.viewList_buildTable("color contrast");
                 cANDI.viewList_attachEvents();
-                //cANDI.viewList_attachEvents_links();
+                // NOTE: Uncomment if there is some events that you want to add that are specific to this page
+                //cANDI.viewList_attachEvents_colorContrast();
                 cANDI.viewList_tableReady = true;
             }
             cANDI.viewList_toggle("color contrast", this);
