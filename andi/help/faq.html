@@ -55,6 +55,10 @@
 		<li><a href="#missingFeature-cANDI">Where is Color Contrast?</a></li>
 		<li><a href="#missingFeature-lasers">Where are the Lasers?</a></li>
 	</ul>
+	<h3>Other Questions</h3>
+	<ul>
+		<li><a href="#hostYourOwn">How do I host my own ANDI?</a></li>
+	</ul>	
 	<h3>Contact Development Team</h3>
 	<ul>
 		<li><a href="#contactUs-bug">Found a Bug</a></li>
@@ -408,6 +412,35 @@
 		<span class="brand">ANDI</span>'s <a href="howtouse.html#Lasers">"lasers"</a> will not work in versions of Internet Explorer prior to 9 
 		(including compatibility modes) because <span class="brand">ANDI</span>'s "lasers" are built using SVG
 		(scalable vector graphics) which are not supported by older IE versions.
+		</p>
+	</div>
+	</details>
+	</section>
+</div>
+<div class="division">
+<h2>Other Questions</h2>
+	<section tabindex="-1" aria-labelledby="lby-hostYourOwn" id='hostYourOwn' 
+		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+	<details>
+	<summary id="lby-hostYourOwn"
+		 itemprop="name">How do I host my own ANDI?</summary>
+	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+		<p itemprop="text">
+			<ol>
+				<li><a href="https://github.com/SSAgov/ANDI" target="_blank">Download ANDI's source code from GitHub</a>.</li>
+				<li>Determine if you are going to host ANDI on a server (<code>https://[ALTERNATE_HOST]/andi/</code>) or locally (<code>file://C:/WS/repos/[ALTERNATE_HOST]/andi/</code>).</li>
+				<li>In the andi.js file:
+					<ul style="margin-left:5%;">
+					<li>modify the <code>host_url</code> to point to the location that you decided in step 2.</li>
+					<li>(optional) modify the <code>jqueryDownloadSource</code> location to a custom jquery location.</li>
+					</ul>
+				</li>
+				<li>If you are hosting on a server, upload the modified ANDI source code to the server that you decided in step 2. If you are running locally, skip this step.</li>
+				<li>Create a new bookmark called "my ANDI" or whatever you choose to name it.</li>
+				<li>Modify the bookmark's launch script to point to your instance of ANDI:
+					<textarea readonly aria-label="favelet launch script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','[ALTERNATE_HOST]/andi/andi.js');document.body.appendChild(andiScript)})());</textarea>
+				</li>
+			</ol>
 		</p>
 	</div>
 	</details>

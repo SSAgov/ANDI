@@ -287,27 +287,8 @@
 
 		<p id='hostYourOwn' tabindex="-1">
 		If your organization wishes to host a local instance of 
-		<span class="brand">ANDI</span>, the accessibility testing tool, refer to this guide:
-		<button id="customConfig-button" class="expandButton" aria-expanded="false">View the Customization Instructions</button>
+		<span class="brand">ANDI</span>, the accessibility testing tool, <a href="faq.html#hostYourOwn">refer to this guide</a>.
 		</p>
-		<div id="customConfig" class="hideOnLoad">
-			<hr />
-			<h3>How to Host Your Own ANDI</h3>
-			<div class="example">
-			<ol>
-				<li><a href="https://github.com/SSAgov/ANDI" target="_blank">Download ANDI's source code from GitHub</a>.</li>
-				<li>In the andi.js file:
-					<ul style="margin-left:5%;">
-					<li>modify the <code>host_url</code> to point to your custom location.</li>
-					<li>(optional) modify the <code>jqueryDownloadSource</code> location to your custom jquery location.</li>
-					</ul>
-				</li>
-				<li>Modify the favelet's launch script to point to your host:
-					<textarea readonly aria-label="favelet launch script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','[ALTERNATE_HOST]/andi.js');document.body.appendChild(andiScript)})());</textarea>
-				</li>
-			</ol>
-			</div>
-		</div>
 	</div>
 	</section>
 </div>
