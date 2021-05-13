@@ -564,7 +564,7 @@ function init_module() {
         disabled = isThisDisabled(fgElement);
         semiTransparency = false;
         opacity = false;
-        var opacityValue = parseInt($(fgElement).css("opacity"));
+        var opacityValue = $(fgElement).css("opacity");
 
         //Get background color
         var bgColor = new Color($(fgElement).css("background-color"));
@@ -638,7 +638,7 @@ function init_module() {
 
             if (parseInt($(element).css("opacity")) < 1) {
                 opacity = true;
-                opacityValue = parseFloat($(element).css("opacity"));
+                opacityValue = $(element).css("opacity");
             }
 
             if ($(element).css("background-image") !== "none") {
