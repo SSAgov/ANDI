@@ -638,7 +638,7 @@ function init_module() {
 
             if (parseInt($(element).css("opacity")) < 1) {
                 opacity = true;
-                opacityValue = parseInt($(element).css("opacity"));
+                opacityValue = parseFloat($(element).css("opacity"));
             }
 
             if ($(element).css("background-image") !== "none") {
