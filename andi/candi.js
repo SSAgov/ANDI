@@ -564,6 +564,7 @@ function init_module() {
         disabled = isThisDisabled(fgElement);
         semiTransparency = false;
         opacity = false;
+        var opacityValue = parseInt($(fgElement).css("opacity"));
 
         //Get background color
         var bgColor = new Color($(fgElement).css("background-color"));
@@ -586,7 +587,6 @@ function init_module() {
         var weight = $(fgElement).css("font-weight");
         var family = $(fgElement).css("font-family")
         var result = "";
-        var opacityValue = parseInt($(fgElement).css("opacity"));
 
         //Set minReq (minimum requirement)
         var minReq = 4.5;
@@ -636,8 +636,10 @@ function init_module() {
                 disabled = isThisDisabled(element);
             }
 
-            if (parseInt($(element).css("opacity")) < 1)
+            if (parseInt($(element).css("opacity")) < 1) {
                 opacity = true;
+                opacityValue = parseInt($(element).css("opacity"));
+            }
 
             if ($(element).css("background-image") !== "none") {
                 return element;
