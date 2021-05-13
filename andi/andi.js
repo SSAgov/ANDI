@@ -2825,7 +2825,7 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         pushProp();
     }
     if (elementData.isAriaHidden) {
-        prop.name = "aria-hidden"
+        prop.name = "aria-hidden";
         prop.val = "true";
         prop.out = "";
         pushProp();
@@ -3060,8 +3060,9 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
 
     //This function determines if the element has a role or tagname
     function hasRole(roles, tagNames) {
-        if (roles.length > 0)
+        if (roles.length > 0) {
             roles = "[role=" + roles.replace(/,+/g, "],[role=") + "]";
+        }
         return $(element).isSemantically(roles, tagNames);
     }
     //This function determines if the element has an attribute
