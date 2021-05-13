@@ -833,6 +833,7 @@ function init_module() {
                 }
             }
         } else { //MANUAL TEST NEEDED - Cannot determine pass or fail status
+            displayColorValue("#cANDI508-bg", cANDI_data.bgColor);
             //Insert the reason:
             if (cANDI_data.bgImage != "none") {
                 $("#cANDI508-bg").html("<span class='cANDI508-attention'>has background image</span>");
