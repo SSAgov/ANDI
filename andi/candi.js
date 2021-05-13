@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "4.1.2";
+var cANDIVersionNumber = "4.1.3";
 
 //TODO: select box, check for selected
 
@@ -104,25 +104,23 @@ cANDI.results = function(){
 
 	if(imgCount > 0)
 		andiAlerter.throwAlert(alert_0231,alert_0231.message,0);
-	
-	//If browser doesn't support input[type=color] nothing will open
-	var colorSelectorWidgets = "<input type='color' id='cANDI508-colorSelectorWidget-fg' value='#000000' hidden /><input type='color' id='cANDI508-colorSelectorWidget-bg' value='#ffffff' hidden />";
-	
+		
 	//Contrast Playground HTML
 	$("#ANDI508-additionalPageResults").append(
 	"<button id='ANDI508-contrastPlayground-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"show contrast playground</button>"+
 	"<div id='cANDI508-contrastPlayground' tabindex='0' class='ANDI508-viewOtherResults-expanded'><h3 class='ANDI508-heading'>Contrast Playground:</h3><div id='cANDI508-contrastPlayground-area'>"+
 	"<div id='cANDI508-playground-instructions'>Enter two hex color values to get the contrast ratio.</div>"+
-	colorSelectorWidgets +
+	"<input type='color' id='cANDI508-colorSelectorWidget-fg' value='#000000' style='width:1px; opacity:0;' />"+
 	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-fg' style='background-color:#000000 !important' aria-label='visual color picker, select text color'></button>"+
 	"<input type='text' id='cANDI508-playground-fg' maxlength='7' title='Text Color Hex' value='#000000' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />/&nbsp;"+
+	"<input type='color' id='cANDI508-colorSelectorWidget-bg' value='#ffffff' style='width:1px; opacity:0;' />"+
 	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-bg' style='background-color:#ffffff !important' aria-label='visual color picker, select background color'></button>"+
 	"<input type='text' id='cANDI508-playground-bg' maxlength='7' title='Background Color Hex' value='#ffffff' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />= "+
 	"<div tabindex='0' id='cANDI508-playground-result' aria-describedby='cANDI508-playground-instructions'><span id='cANDI508-playground-ratio'>21</span>:1</div><br />"+
 	"<div id='cANDI508-playground-instructions-controls'>Arrow keys adjust brightness: &uarr; lightens, &darr; darkens.</div>"+
 	"<div id='cANDI508-playground-buttons'>"+
-	"<button id='cANDI508-playground-suggest-small' class='ANDI508-viewOtherResults-button'>get small text suggestion</button>"+
-	"<button id='cANDI508-playground-suggest-large' class='ANDI508-viewOtherResults-button'>get large text suggestion</button>"+
+	"<button id='cANDI508-playground-suggest-small' class='ANDI508-viewOtherResults-button'>get 4.5:1 suggestion</button>"+
+	"<button id='cANDI508-playground-suggest-large' class='ANDI508-viewOtherResults-button'>get 3:1 suggestion</button>"+
 	"</div></div></div>");
 
 	enableColorWidget("fg");
