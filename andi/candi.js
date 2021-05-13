@@ -833,15 +833,9 @@ function init_module() {
                 }
             }
         } else { //MANUAL TEST NEEDED - Cannot determine pass or fail status
-            //Remove Background Color Selector Box
-            $("#cANDI508-colorSelector-background").remove();
-
             //Insert the reason:
             if (cANDI_data.bgImage != "none") {
                 $("#cANDI508-bg").html("<span class='cANDI508-attention'>has background image</span>");
-            } else if (cANDI_data.opacity) {
-                $("#cANDI508-bg").closest("tr").remove();
-                $("#cANDI508-fg").closest("tr").remove();
             }
             $("#cANDI508-result").html("MANUAL TEST NEEDED").addClass("cANDI508-manual");
         }
