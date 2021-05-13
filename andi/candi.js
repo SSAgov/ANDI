@@ -18,7 +18,7 @@ function init_module() {
     // result: undefined,
 
     //This object class is used to store data about each color contrast element. Object instances will be placed into an array.
-    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, semiTransparency, opacity, bgImage, size, weight, family, minReq, disabled) {
+    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, semiTransparency, opacity, bgImage, size, weight, family, minReq, result, disabled) {
         this.element = element;
         this.index = index;
         this.bgColor = bgColor;
@@ -32,6 +32,7 @@ function init_module() {
         this.weight = weight;
         this.family = family;
         this.minReq = minReq;
+        this.result = result;
         this.disabled = disabled;
     }
 
@@ -316,7 +317,7 @@ function init_module() {
                 ' "' + cANDI.colorContrasts.list[x].weight + '"' +
                 ' "' + cANDI.colorContrasts.list[x].family + '"' +
                 ' "' + cANDI.colorContrasts.list[x].minReq + '"' +
-                // NOTE: Add results in the future
+                ' "' + cANDI.colorContrasts.list[x].result + '"' +
                 ' "' + cANDI.colorContrasts.list[x].disabled + '"' + "</a></td>" +
                 "</tr>";
         }
@@ -564,6 +565,7 @@ function init_module() {
         var size = parseFloat($(fgElement).css("font-size"));
         var weight = $(fgElement).css("font-weight");
         var family = $(fgElement).css("font-family")
+        var result = "";
 
         //Set minReq (minimum requirement)
         var minReq = 4.5;
@@ -572,6 +574,17 @@ function init_module() {
         } else if (size >= 18.66 && weight >= 700) { //700 is where bold begins, 18.66 is approx equal to 14pt
             minReq = 3;
         }
+
+        if (!disabled) { //Run the contrast test
+            if (bgImage === "none" && !opacity) { //No, Display PASS/FAIL Result and Requirement Ratio
+                if (ratio >= minReq) {
+                    result = "PASS";
+                } else {
+                    result = "FAIL";
+                }
+            }
+        }
+        
 
         var cANDI_data = {
             bgColor: bgColor,
@@ -585,26 +598,12 @@ function init_module() {
             weight: weight,
             family: family,
             minReq: minReq,
-            result: undefined,
+            result: result,
             disabled: disabled
         };
 
-        if (!disabled) { //Run the contrast test
-            contrastTest(cANDI_data);
-        }
         //send cANDI_data back
         return cANDI_data;
-
-        //This function does the contrast test
-        function contrastTest(cANDI_data) {
-            if (cANDI_data.bgImage === "none" && !cANDI_data.opacity) { //No, Display PASS/FAIL Result and Requirement Ratio
-                if (cANDI_data.ratio >= cANDI_data.minReq) {
-                    cANDI_data.result = "PASS";
-                } else {
-                    cANDI_data.result = "FAIL";
-                }
-            }
-        }
 
         //This function will recursively get the element that contains the background-color or background-image.
         function getBgElement(element, recursion) {
