@@ -329,7 +329,7 @@ function init_module() {
         }
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:85%'><a href='javascript:void(0)'> + bgColor fgColor contrast ratio error min max semiTransparency opacity bgImage size weight family minReq result disabled<i aria-hidden='true'></i></a></th>";
+                "<th scope='col' style='width:85%'><a href='javascript:void(0)'> bgColor fgColor contrast ratio error min max semiTransparency opacity bgImage size weight family minReq result disabled<i aria-hidden='true'></i></a></th>";
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
 
