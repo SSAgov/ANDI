@@ -507,9 +507,8 @@ function init_module() {
             $("#ANDI508-viewOutline-button").click(function () {
                 if ($(this).attr("aria-expanded") === "true") { //hide Outline, show alert list
                     $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                    if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-                        $("#ANDI508-alerts-list").show();
-                    }
+                    $("#ANDI508-alerts-list").show();
+
                     $(this)
                         .addClass("ANDI508-viewOtherResults-button-expanded")
                         .html(listIcon + "view headings list")
@@ -581,9 +580,8 @@ function init_module() {
                 if ($(this).attr("aria-expanded") === "true") {
                     //hide Outline, show alert list
                     $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                    if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-                        $("#ANDI508-alerts-list").show();
-                    }
+                    $("#ANDI508-alerts-list").show();
+                    
                     $(this)
                         .addClass("ANDI508-viewOtherResults-button-expanded")
                         .html(listIcon + "hide list of lists")
@@ -628,9 +626,8 @@ function init_module() {
                 if ($(this).attr("aria-expanded") === "true") {
                     //hide Outline, show alert list
                     $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                    if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-                        $("#ANDI508-alerts-list").show();
-                    }
+                    $("#ANDI508-alerts-list").show();
+                    
                     $(this)
                         .addClass("ANDI508-viewOtherResults-button-expanded")
                         .html(listIcon + "hide landmarks list")
@@ -674,9 +671,8 @@ function init_module() {
                 if ($(this).attr("aria-expanded") === "true") {
                     //hide Outline, show alert list
                     $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                    if (testPageData.numberOfAccessibilityAlertsFound > 0) {
-                        $("#ANDI508-alerts-list").show();
-                    }
+                    $("#ANDI508-alerts-list").show();
+
                     $(this)
                         .addClass("ANDI508-viewOtherResults-button-expanded")
                         .html(listIcon + "hide live regions list")
