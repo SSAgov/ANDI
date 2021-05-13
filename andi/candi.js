@@ -75,7 +75,7 @@ function init_module() {
 
                             //Throw alerts if necessary
                             cANDI.processResult($(this));
-                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast, cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max, cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family, cANDI_data.minReq, cANDI_data.disabled));
+                            cANDI.colorContrasts.list.push(new ColorContrast(this,cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast, cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max, cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family, cANDI_data.minReq, cANDI_data.result, cANDI_data.disabled));
                             AndiData.attachDataToElement(this);
                             cANDI.index += 1;
                         } else {
