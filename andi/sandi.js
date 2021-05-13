@@ -66,7 +66,6 @@ function init_module() {
         this.count = 0;
     }
 
-    var structureExists = false;
     var langAttributesCount = 0;
     var roleAttributesCount = 0;
 
@@ -93,7 +92,6 @@ function init_module() {
                 //Add to the headings array
                 sANDI.headers.list.push($(this));
                 sANDI.headers.count += 1;
-                structureExists = true;
 
                 if (AndiModule.activeActionButtons.headings) {
                     andiData = new AndiData(this);
@@ -122,7 +120,6 @@ function init_module() {
                 //Add to the headings array
                 sANDI.lists.list.push(new List(this, sANDI.index));
                 sANDI.lists.count += 1;
-                structureExists = true;
                 sANDI.index += 1;
 
                 if ($(this).isSemantically("[role=list]", "ol,ul,dl")) {
@@ -170,8 +167,6 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
-                structureExists = true;
-
                 if (AndiModule.activeActionButtons.landmarks) {
                     sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
                     sANDI.landmarks.count += 1;
@@ -185,8 +180,6 @@ function init_module() {
                 //Since sANDI has not found a heading yet, check if this element is a fake headings
 
                 if (sANDI.isFakeHeading(this)) {
-                    structureExists = true;
-
                     andiData = new AndiData(this);
 
                     andiAlerter.throwAlert(alert_0190);
