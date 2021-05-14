@@ -16,7 +16,7 @@ function init_module() {
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
         if (element) {
-            $(element).removeClass("gANDI508-background gANDI508-fontIcon");
+            $(element).removeClass("gANDI508-inline gANDI508-decorative gANDI508-background gANDI508-fontIcon gANDI508-imageLink gANDI508-imageButton");
         } else {
             $(testPage).find(".gANDI508-decorative").removeClass("gANDI508-decorative");
         }
