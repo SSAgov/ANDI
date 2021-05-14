@@ -111,7 +111,7 @@ function init_module() {
         $(TestPageData.allElements).not("area,base,basefont,datalist,link,meta,noembed,noframes,param,rp,script,noscript,source,style,template,track,title").each(function () {
             isHidingContent = false;
             elementCss = "";
-
+            
             if (hANDI.containsTestableContent(this)) {
                 if ($(this).css("display") == "none") { //element display is none
                     hANDI.hiddenContents.count += 1;
@@ -443,7 +443,19 @@ function init_module() {
             "</tr>";
         }
 
-        appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+        tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + hANDI.hiddenContents.list.length + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-display' aria-label='View display:none' aria-selected='false' data-andi508-relatedclass='lANDI508-display'>display:none (" + hANDI.hiddenContents.hiddenDisplay + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-visibility' aria-label='View visibility:hidden' aria-selected='false' data-andi508-relatedclass='lANDI508-visibility'>visibility:hidden (" + hANDI.hiddenContents.hiddenVisibility + ")</button>";
+        tabsHTML = "<button id='lANDI508-listLinks-tab-position' aria-label='View position:absolute' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-position'>position:absolute (" + hANDI.hiddenContents.hiddenPosition + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-opacity' aria-label='View opacity:0' aria-selected='false' data-andi508-relatedclass='lANDI508-opacity'>opacity:0 (" + hANDI.hiddenContents.hiddenOpacity + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-overflow' aria-label='View overflow:hidden' aria-selected='false' data-andi508-relatedclass='lANDI508-overflow'>overflow:hidden (" + hANDI.hiddenContents.hiddenOverflow + ")</button>";
+        tabsHTML = "<button id='lANDI508-listLinks-tab-fontSize' aria-label='View font-size:0' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-fontSize'>font-size:0 (" + hANDI.hiddenFontSize + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-textIndent' aria-label='View text-indent' aria-selected='false' data-andi508-relatedclass='lANDI508-textIndent'>text-indent (" + hANDI.hiddenContents.hiddenTextIndent + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-html5Hidden' aria-label='View html5 hidden' aria-selected='false' data-andi508-relatedclass='lANDI508-html5Hidden'>html5 hidden (" + hANDI.hiddenContents.hiddenHTML5 + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-css' aria-label='View css' aria-selected='false' data-andi508-relatedclass='lANDI508-css'>css (" + hANDI.hiddenContents.elementsWithCSS + ")</button>";
+
+
+        appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
 
