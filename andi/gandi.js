@@ -578,7 +578,7 @@ function init_module() {
             gANDI.viewList_selectTab(this);
             $("#ANDI508-viewList-table tbody tr").show();
             //Remove All (glowing) Highlights
-            $("#ANDI508-testPage").removeClass("gANDI508-highlightInternal gANDI508-highlightExternal gANDI508-highlightAmbiguous");
+            $("#ANDI508-testPage").removeClass("gANDI508-highlightInline gANDI508-highlightBackground gANDI508-highlightDecorative gANDI508-highlightFontIcon gANDI508-highlightImageLink gANDI508-highlightImageButton");
             //Turn Off Ambiguous Button
             andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
             andiResetter.resizeHeights();
@@ -593,7 +593,7 @@ function init_module() {
                 $(this).hide();
             });
             //Add (glowing) Highlight for Internal Links
-            $("#ANDI508-testPage").removeClass("gANDI508-highlightExternal gANDI508-highlightAmbiguous").addClass("gANDI508-highlightInternal");
+            $("#ANDI508-testPage").removeClass("gANDI508-highlightBackground gANDI508-highlightDecorative gANDI508-highlightFontIcon gANDI508-highlightImageLink gANDI508-highlightImageButton").addClass("gANDI508-highlightInline");
             //Turn Off Ambiguous Button
             andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
             andiResetter.resizeHeights();
@@ -609,7 +609,7 @@ function init_module() {
                 }
             });
             //Add (glowing) Highlight for External Links
-            $("#ANDI508-testPage").removeClass("gANDI508-highlightInternal gANDI508-highlightAmbiguous").addClass("gANDI508-highlightExternal");
+            $("#ANDI508-testPage").removeClass("gANDI508-highlightInline gANDI508-highlightBackground gANDI508-highlightFontIcon gANDI508-highlightImageLink gANDI508-highlightImageButton").addClass("gANDI508-highlightDecorative");
             //Turn Off Ambiguous Button
             andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
             andiResetter.resizeHeights();
