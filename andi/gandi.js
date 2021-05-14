@@ -245,8 +245,7 @@ function init_module() {
             if (!gANDI.viewList_tableReady) {
                 gANDI.viewList_buildTable("images");
                 gANDI.viewList_attachEvents();
-                // NOTE: Uncomment if there is some events that you want to add that are specific to this page
-                //gANDI.viewList_attachEvents_images();
+                gANDI.viewList_attachEvents_images();
                 gANDI.viewList_tableReady = true;
             }
             gANDI.viewList_toggle("images", this);
@@ -574,7 +573,7 @@ function init_module() {
     //gANDI508-listImages-tab-imageButton
 
     //This function attaches click events to the items specific to the Links view list
-    gANDI.viewList_attachEvents_links = function () {
+    gANDI.viewList_attachEvents_images = function () {
         $("#gANDI508-listImages-tab-all").click(function () {
             gANDI.viewList_selectTab(this);
             $("#ANDI508-viewList-table tbody tr").show();
