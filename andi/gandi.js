@@ -386,7 +386,18 @@ function init_module() {
             "</tr>";
         }
 
-        appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+        // this.imageButtonCount = 0; //images contained in buttons
+
+        tabsHTML = "<button id='gANDI508-listImages-tab-all' aria-label='View All Images' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all images (" + gANDI.images.list.length + ")</button>";
+        tabsHTML += "<button id='gANDI508-listImages-tab-inline' aria-label='View Inline Images' aria-selected='false' data-andi508-relatedclass='gANDI508-inline'>inline images (" + gANDI.images.inlineCount + ")</button>";
+        tabsHTML += "<button id='gANDI508-listImages-tab-background' aria-label='View Background Images' aria-selected='false' data-andi508-relatedclass='gANDI508-background'>background images (" + gANDI.images.backgroundCount + ")</button>";
+        tabsHTML += "<button id='gANDI508-listImages-tab-decorative' aria-label='View Decorative Images' aria-selected='false' data-andi508-relatedclass='gANDI508-decorative'>decorative images (" + gANDI.images.decorativeCount + ")</button>";
+        tabsHTML += "<button id='gANDI508-listImages-tab-fontIcon' aria-label='View Font Icon Images' aria-selected='false' data-andi508-relatedclass='gANDI508-fontIcon'>font icon images (" + gANDI.images.fontIconCount + ")</button>";
+        tabsHTML += "<button id='gANDI508-listImages-tab-imageLink' aria-label='View Image Links' aria-selected='false' data-andi508-relatedclass='gANDI508-imageLink'>image links (" + gANDI.images.imageLinkCount + ")</button>";
+        tabsHTML += "<button id='gANDI508-listImages-tab-imageButton' aria-label='View Image Buttons' aria-selected='false' data-andi508-relatedclass='gANDI508-imageButton'>imageButton (" + gANDI.images.imageButtonCount + ")</button>";
+
+
+        appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
 
@@ -476,7 +487,7 @@ function init_module() {
             }
         });
 
-        //Define listLinks next button
+        //Define listImages next button
         $("#gANDI508-viewList-button-next").click(function () {
             //Get class name based on selected tab
             var selectedTabClass = $("#gANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
@@ -509,7 +520,7 @@ function init_module() {
             return false;
         });
 
-        //Define listLinks prev button
+        //Define listImages prev button
         $("#gANDI508-viewList-button-prev").click(function () {
             //Get class name based on selected tab
             var selectedTabClass = $("#gANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
