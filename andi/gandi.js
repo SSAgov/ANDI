@@ -587,9 +587,9 @@ function init_module() {
         $("#gANDI508-listImages-tab-inline").click(function () {
             gANDI.viewList_selectTab(this);
             $("#ANDI508-viewList-table tbody tr").each(function () {
-                if ($(this).hasClass("gANDI508-inline"))
+                if ($(this).hasClass("gANDI508-inline")) {
                     $(this).show();
-
+                }
                 $(this).hide();
             });
             //Add (glowing) Highlight for Internal Links
