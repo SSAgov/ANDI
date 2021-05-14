@@ -633,6 +633,12 @@ function init_module() {
         });
     };
 
+    //This function handles the selection of a tab.
+    gANDI.viewList_selectTab = function (tab) {
+        $("#gANDI508-viewList-tabs button").removeClass().attr("aria-selected", "false");
+        $(tab).addClass("ANDI508-tab-active").attr("aria-selected", "true");
+    };
+
     //This function will update the info in the Active Element Inspection.
     //Should be called after the mouse hover or focus in event.
     AndiModule.inspect = function (element) {
