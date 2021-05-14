@@ -65,8 +65,10 @@ function init_module() {
                 if ($(closestWidgetParent).length) {
                     if ($(closestWidgetParent).isSemantically("[role=link]", "a")) {
                         gANDI.images.imageLinkCount += 1;
+                        $(this).addClass("gANDI508-imageLink");
                     } else if ($(closestWidgetParent).isSemantically("[role=button]", "button")) {
                         gANDI.images.imageButtonCount += 1;
+                        $(this).addClass("gANDI508-imageButton");
                     }
                     gANDI.images.inlineCount += 1;
                     isImageContainedByInteractiveWidget = true;
@@ -92,24 +94,29 @@ function init_module() {
                     gANDI.images.inlineCount += 1;
                     andiAlerter.throwAlert(alert_0171);
                     AndiData.attachDataToElement(this);
+                    $(this).addClass("gANDI508-inline");
                 } else if ($(this).is("blink")) {
                     gANDI.images.inlineCount += 1;
                     andiAlerter.throwAlert(alert_0172);
                     AndiData.attachDataToElement(this);
+                    $(this).addClass("gANDI508-inline");
                 } else if ($(this).is("canvas")) {
                     gANDI.images.inlineCount += 1;
                     andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
                     AndiData.attachDataToElement(this);
+                    $(this).addClass("gANDI508-inline");
                 } else if ($(this).is("input:image")) {
                     gANDI.images.inlineCount += 1;
                     andiCheck.commonFocusableElementChecks(andiData, $(this));
                     altTextAnalysis($.trim($(this).attr("alt")));
                     AndiData.attachDataToElement(this);
+                    $(this).addClass("gANDI508-inline");
                     //Check for server side image map
                 } else if ($(this).is("img") && $(this).attr("ismap")) {//Code is written this way to prevent bug in IE8
                     gANDI.images.inlineCount += 1;
                     andiAlerter.throwAlert(alert_0173);
                     AndiData.attachDataToElement(this);
+                    $(this).addClass("gANDI508-inline");
                 } else if (!isImageContainedByInteractiveWidget && $(this).is("img,svg,[role=img]")) { //an image used by an image map is handled by the <area>
                     gANDI.images.inlineCount += 1;
                     if (isElementDecorative(this, andiData)) {
@@ -131,6 +138,7 @@ function init_module() {
                 } else if ($(this).is("area")) {
                     gANDI.images.inlineCount += 1;
                     var map = $(this).closest("map");
+                    $(this).addClass("gANDI508-inline");
                     if ($(map).length) { //<area> is contained in <map>
                         var mapName = "#" + $(map).attr("name");
                         if ($("#ANDI508-testPage img[usemap='" + mapName + "']").length) {
@@ -396,7 +404,6 @@ function init_module() {
         tabsHTML += "<button id='gANDI508-listImages-tab-imageLink' aria-label='View Image Links' aria-selected='false' data-andi508-relatedclass='gANDI508-imageLink'>image links (" + gANDI.images.imageLinkCount + ")</button>";
         tabsHTML += "<button id='gANDI508-listImages-tab-imageButton' aria-label='View Image Buttons' aria-selected='false' data-andi508-relatedclass='gANDI508-imageButton'>imageButton (" + gANDI.images.imageButtonCount + ")</button>";
 
-
         appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
@@ -556,6 +563,74 @@ function init_module() {
             });
 
             return false;
+        });
+    };
+
+    //gANDI508-listImages-tab-inline
+    //gANDI508-listImages-tab-background
+    //gANDI508-listImages-tab-decorative
+    //gANDI508-listImages-tab-fontIcon
+    //gANDI508-listImages-tab-imageLink
+    //gANDI508-listImages-tab-imageButton
+
+    //This function attaches click events to the items specific to the Links view list
+    gANDI.viewList_attachEvents_links = function () {
+        $("#gANDI508-listImages-tab-all").click(function () {
+            gANDI.viewList_selectTab(this);
+            $("#ANDI508-viewList-table tbody tr").show();
+            //Remove All (glowing) Highlights
+            $("#ANDI508-testPage").removeClass("gANDI508-highlightInternal gANDI508-highlightExternal gANDI508-highlightAmbiguous");
+            //Turn Off Ambiguous Button
+            andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
+            andiResetter.resizeHeights();
+            return false;
+        });
+        $("#gANDI508-listImages-tab-inline").click(function () {
+            gANDI.viewList_selectTab(this);
+            $("#ANDI508-viewList-table tbody tr").each(function () {
+                if ($(this).hasClass("gANDI508-inline"))
+                    $(this).show();
+
+                $(this).hide();
+            });
+            //Add (glowing) Highlight for Internal Links
+            $("#ANDI508-testPage").removeClass("gANDI508-highlightExternal gANDI508-highlightAmbiguous").addClass("gANDI508-highlightInternal");
+            //Turn Off Ambiguous Button
+            andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
+            andiResetter.resizeHeights();
+            return false;
+        });
+        $("#gANDI508-listImages-tab-decorative").click(function () {
+            gANDI.viewList_selectTab(this);
+            $("#ANDI508-viewList-table tbody tr").each(function () {
+                if ($(this).hasClass("gANDI508-decorative")) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+            //Add (glowing) Highlight for External Links
+            $("#ANDI508-testPage").removeClass("gANDI508-highlightInternal gANDI508-highlightAmbiguous").addClass("gANDI508-highlightExternal");
+            //Turn Off Ambiguous Button
+            andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
+            andiResetter.resizeHeights();
+            return false;
+        });
+
+        //Define next tab button
+        $("#ANDI508-viewList-table button.gANDI508-nextTab").each(function () {
+            $(this).click(function () {
+                var allElementsInTestPage = $("#ANDI508-testPage *");
+                var idRef = $(this).attr("data-andi508-relatedid");
+                var anchorTargetElement = document.getElementById(idRef) || document.getElementsByName(idRef)[0];
+                var anchorTargetElementIndex = parseInt($(allElementsInTestPage).index($(anchorTargetElement)), 10);
+                for (var x = anchorTargetElementIndex; x < allElementsInTestPage.length; x++) {
+                    if ($(allElementsInTestPage).eq(x).is(":tabbable")) {
+                        $(allElementsInTestPage).eq(x).focus();
+                        break;
+                    }
+                }
+            });
         });
     };
 
