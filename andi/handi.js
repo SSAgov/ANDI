@@ -454,7 +454,6 @@ function init_module() {
         tabsHTML += "<button id='lANDI508-listLinks-tab-html5Hidden' aria-label='View html5 hidden' aria-selected='false' data-andi508-relatedclass='lANDI508-html5Hidden'>html5 hidden (" + hANDI.hiddenContents.hiddenHTML5 + ")</button>";
         tabsHTML += "<button id='lANDI508-listLinks-tab-css' aria-label='View css' aria-selected='false' data-andi508-relatedclass='lANDI508-css'>css (" + hANDI.hiddenContents.elementsWithCSS + ")</button>";
 
-
         appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
