@@ -129,8 +129,6 @@ function init_module() {
             if (!fANDI.viewList_tableReady) {
                 fANDI.viewList_buildTable("focusable elements");
                 fANDI.viewList_attachEvents();
-                // NOTE: Uncomment if there is some events that you want to add that are specific to this page
-                //fANDI.viewList_attachEvents_focusable();
                 fANDI.viewList_tableReady = true;
             }
             fANDI.viewList_toggle("focusable elements", this);
