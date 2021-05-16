@@ -11,7 +11,7 @@ function init_module() {
     //TODO: Remove the code for links once the code for bANDI is verified as working
 
     //create bANDI instance
-    var bANDI = new AndiModule(bANDIVersionNumber, "b");
+    var bANDI = new AndiModule(bandiVersionNumber, "b");
 
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
