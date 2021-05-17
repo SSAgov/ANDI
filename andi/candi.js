@@ -21,11 +21,14 @@ function init_module() {
     // result: undefined,
 
     //This object class is used to store data about each color contrast element. Object instances will be placed into an array.
-    function ColorContrast(element, index, bgColor, fgColor, contrast, ratio, error, min, max, semiTransparency, opacity, opacityValue, bgImage, size, weight, family, minReq, result, disabled) {
+    function ColorContrast(element, index, bgColor, bgAlpha, fgColor, fgAlpha, contrast, ratio, error, min, max, semiTransparency, opacity, 
+                           opacityValue, bgImage, size, weight, family, minReq, result, disabled) {
         this.element = element;
         this.index = index;
         this.bgColor = bgColor;
+        this.bgAlpha = bgAlpha;
         this.fgColor = fgColor;
+        this.fgAlpha = fgAlpha;
         this.contrast = contrast;
         this.ratio = ratio;
         this.error = error;
@@ -79,8 +82,8 @@ function init_module() {
 
                             //Throw alerts if necessary
                             cANDI.processResult($(this));
-                            cANDI.colorContrasts.list.push(new ColorContrast(this, cANDI.index, cANDI_data.bgColor, cANDI_data.fgColor, cANDI_data.contrast,
-                                cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max,
+                            cANDI.colorContrasts.list.push(new ColorContrast(this, cANDI.index, cANDI_data.bgColor, cANDI_data.bgAlpha, cANDI_data.fgColor, cANDI_data.fgAlpha,
+                                cANDI_data.contrast, cANDI_data.ratio, cANDI_data.error, cANDI_data.min, cANDI_data.max,
                                 cANDI_data.semiTransparency, cANDI_data.opacity, cANDI_data.opacityValue,
                                 cANDI_data.bgImage, cANDI_data.size, cANDI_data.weight, cANDI_data.family,
                                 cANDI_data.minReq, cANDI_data.result, cANDI_data.disabled));
@@ -314,7 +317,9 @@ function init_module() {
                 //"<td class='ANDI508-alert-column'>" + cANDI.colorContrasts.list[x].alerts + "</td>" +
                 "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + cANDI.colorContrasts.list[x].index + "'>" +
                 ' "' + cANDI.colorContrasts.list[x].bgColor + '"' +
+                ' "' + cANDI.colorContrasts.list[x].bgAlpha + '"' +
                 ' "' + cANDI.colorContrasts.list[x].fgColor + '"' +
+                ' "' + cANDI.colorContrasts.list[x].fgAlpha + '"' +
                 ' "' + cANDI.colorContrasts.list[x].contrast + '"' +
                 ' "' + cANDI.colorContrasts.list[x].ratio + '"' +
                 ' "' + cANDI.colorContrasts.list[x].error + '"' +
@@ -334,8 +339,8 @@ function init_module() {
         }
         appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
             "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-            "<th scope='col' style='width:85%'><a href='javascript:void(0)'>" + '"bgColor" ' + '"fgColor" ' + '"contrast" ' + '"ratio" ' + '"error" ' +
-            '"min" ' + '"max" ' + '"semiTransparency" ' + '"opacity" ' + '"opacityValue" ' + '"bgImage" ' + '"size" ' + '"weight" ' + '"family" ' +
+            "<th scope='col' style='width:85%'><a href='javascript:void(0)'>" + '"bgColor" ' + '"bgAlpha" ' + '"fgColor" ' + '"fgAlpha" ' +'"contrast" ' + '"ratio" ' +
+            '"error" ' + '"min" ' + '"max" ' + '"semiTransparency" ' + '"opacity" ' + '"opacityValue" ' + '"bgImage" ' + '"size" ' + '"weight" ' + '"family" ' +
             '"minReq" ' + '"result" ' + '"disabled"' + "<i aria-hidden='true'></i></a></th>";
 
         $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
@@ -728,7 +733,9 @@ function init_module() {
 
         var cANDI_data = {
             bgColor: bgColor,
+            bgAlpha: bgColor.alpha,
             fgColor: fgColor,
+            fgAlpha: fgColor.alpha,
             contrast: contrast,
             ratio: ratio,
             error: error,
