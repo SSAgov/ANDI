@@ -56,7 +56,6 @@ function init_module() {
     };
 
     AndiModule.initActiveActionButtons({
-        buttonsMode: true,
         viewButtonsList: false,
         highlightNonUniqueButtons: false
     });
@@ -77,42 +76,40 @@ function init_module() {
                 if (!andiCheck.isThisElementDisabled(this)) {
                     bANDI.buttons.count += 1;
 
-                    if (AndiModule.activeActionButtons.buttonsMode) {
-                        andiData = new AndiData(this);
+                    andiData = new AndiData(this);
 
-                        nameDescription = getNameDescription(andiData.accName, andiData.accDesc);
+                    nameDescription = getNameDescription(andiData.accName, andiData.accDesc);
 
-                        alerts = "";
-                        alertIcon = "";
-                        alertObject = "";
+                    alerts = "";
+                    alertIcon = "";
+                    alertObject = "";
 
-                        if (andiData.accesskey) {
-                            accesskey = andiData.accesskey;
-                        } else {
-                            accesskey = "";
-                        }
-
-                        if (nameDescription) { //Search through Buttons Array for same name
-                            nonUniqueIndex = scanForNonUniqueness(this, nameDescription);
-
-                            if ($(this).is("[role=button]")) { //role=button
-                                isElementInTabOrder(this, "button");
-                            }
-                            if (!alerts) { //Add this for sorting purposes
-                                alerts = "<i>4</i>";
-                            }
-                        } else { //No accessible name or description
-                            alerts = alertIcons.danger_noAccessibleName;
-                            nameDescription = "<span class='ANDI508-display-danger'>No Accessible Name</span>";
-                        }
-
-                        andiCheck.commonFocusableElementChecks(andiData, $(this));
-                        AndiData.attachDataToElement(this);
-
-                        //create Button object and add to array
-                        bANDI.buttons.list.push(new Button(nameDescription, bANDI.index, alerts, accesskey, nonUniqueIndex, this));
-                        bANDI.index += 1;
+                    if (andiData.accesskey) {
+                        accesskey = andiData.accesskey;
+                    } else {
+                        accesskey = "";
                     }
+
+                    if (nameDescription) { //Search through Buttons Array for same name
+                        nonUniqueIndex = scanForNonUniqueness(this, nameDescription);
+
+                        if ($(this).is("[role=button]")) { //role=button
+                            isElementInTabOrder(this, "button");
+                        }
+                        if (!alerts) { //Add this for sorting purposes
+                            alerts = "<i>4</i>";
+                        }
+                    } else { //No accessible name or description
+                        alerts = alertIcons.danger_noAccessibleName;
+                        nameDescription = "<span class='ANDI508-display-danger'>No Accessible Name</span>";
+                    }
+
+                    andiCheck.commonFocusableElementChecks(andiData, $(this));
+                    AndiData.attachDataToElement(this);
+
+                    //create Button object and add to array
+                    bANDI.buttons.list.push(new Button(nameDescription, bANDI.index, alerts, accesskey, nonUniqueIndex, this));
+                    bANDI.index += 1;
                 }
             }
         });
@@ -189,63 +186,47 @@ function init_module() {
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     bANDI.results = function () {
+        andiBar.updateResultsSummary("Buttons Found: " + bANDI.buttons.count);
 
-        //Add Module Mode Buttons
-        var moduleModeButtons = "<button id='ANDI508-buttonsMode-button' class='bANDI508-mode' aria-label='" + bANDI.buttons.count + " Buttons' aria-selected='false'>" + bANDI.buttons.count + " buttons</button>";
-        $("#ANDI508-module-actions").html(moduleModeButtons);
+        //highlightNonUniqueButtons
+        $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightNonUniqueButtons-button' aria-label='Highlight " + bANDI.buttons.nonUniqueCount + " Non-Unique Buttons' aria-pressed='false'>" + bANDI.buttons.nonUniqueCount + " non-unique buttons" + findIcon + "</button>");
 
-        //Define bANDI mode buttons
-        $("#ANDI508-buttonsMode-button").click(function () {
-            andiResetter.softReset($("#ANDI508-testPage"));
-            AndiModule.activeActionButtons.buttonsMode = true;
-            AndiModule.launchModule("b");
+        //highlightNonUniqueButtons Button
+        $("#ANDI508-highlightNonUniqueButtons-button").click(function () {
+            var testPage = $("#ANDI508-testPage");
+            if (!$(testPage).hasClass("bANDI508-highlightAmbiguous")) { //On
+                $("#bANDI508-listButtons-tab-all").click();
+                $("#ANDI508-testPage").addClass("bANDI508-highlightAmbiguous");
+                andiOverlay.overlayButton_on("find", $(this));
+                AndiModule.activeActionButtons.highlightNonUniqueButtons = true;
+            } else { //Off
+                $("#ANDI508-testPage").removeClass("bANDI508-highlightAmbiguous");
+                andiOverlay.overlayButton_off("find", $(this));
+                AndiModule.activeActionButtons.highlightNonUniqueButtons = false;
+            }
+            andiResetter.resizeHeights();
+            return false;
         });
 
-        if (AndiModule.activeActionButtons.buttonsMode) {
-            andiBar.updateResultsSummary("Buttons Found: " + bANDI.buttons.count);
+        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewButtonsList-button' class='ANDI508-viewOtherResults-button' aria-label='View Buttons List' aria-expanded='false'>" + listIcon + "view buttons list</button>");
 
-            $("#ANDI508-buttonsMode-button").attr("aria-selected", "true").addClass("ANDI508-module-action-active");
-
-            //highlightNonUniqueButtons
-            $("#ANDI508-module-actions").append("<span class='ANDI508-module-actions-spacer'>|</span> <button id='ANDI508-highlightNonUniqueButtons-button' aria-label='Highlight " + bANDI.buttons.nonUniqueCount + " Non-Unique Buttons' aria-pressed='false'>" + bANDI.buttons.nonUniqueCount + " non-unique buttons" + findIcon + "</button>");
-
-            //highlightNonUniqueButtons Button
-            $("#ANDI508-highlightNonUniqueButtons-button").click(function () {
-                var testPage = $("#ANDI508-testPage");
-                if (!$(testPage).hasClass("bANDI508-highlightAmbiguous")) { //On
-                    $("#bANDI508-listButtons-tab-all").click();
-                    $("#ANDI508-testPage").addClass("bANDI508-highlightAmbiguous");
-                    andiOverlay.overlayButton_on("find", $(this));
-                    AndiModule.activeActionButtons.highlightNonUniqueButtons = true;
-                } else { //Off
-                    $("#ANDI508-testPage").removeClass("bANDI508-highlightAmbiguous");
-                    andiOverlay.overlayButton_off("find", $(this));
-                    AndiModule.activeActionButtons.highlightNonUniqueButtons = false;
-                }
-                andiResetter.resizeHeights();
-                return false;
-            });
-
-            $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewButtonsList-button' class='ANDI508-viewOtherResults-button' aria-label='View Buttons List' aria-expanded='false'>" + listIcon + "view buttons list</button>");
-
-            //View Button List Button
-            $("#ANDI508-viewButtonsList-button").click(function () {
-                if (!bANDI.viewList_tableReady) {
-                    bANDI.viewList_buildTable("buttons");
-                    bANDI.viewList_attachEvents();
-                    bANDI.viewList_attachEvents_buttons();
-                    bANDI.viewList_tableReady = true;
-                }
-                bANDI.viewList_toggle("buttons", this);
-                andiResetter.resizeHeights();
-                return false;
-            });
-
-            //Show Startup Summary
-            if (!andiBar.focusIsOnInspectableElement()) {
-                andiBar.showElementControls();
-                andiBar.showStartUpSummary("Discover accessibility markup for <span class='ANDI508-module-name-l'>buttons</span> by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every button.", true);
+        //View Button List Button
+        $("#ANDI508-viewButtonsList-button").click(function () {
+            if (!bANDI.viewList_tableReady) {
+                bANDI.viewList_buildTable("buttons");
+                bANDI.viewList_attachEvents();
+                bANDI.viewList_attachEvents_buttons();
+                bANDI.viewList_tableReady = true;
             }
+            bANDI.viewList_toggle("buttons", this);
+            andiResetter.resizeHeights();
+            return false;
+        });
+
+        //Show Startup Summary
+        if (!andiBar.focusIsOnInspectableElement()) {
+            andiBar.showElementControls();
+            andiBar.showStartUpSummary("Discover accessibility markup for <span class='ANDI508-module-name-l'>buttons</span> by hovering over the highlighted elements or pressing the next/previous element buttons. Determine if the ANDI Output conveys a complete and meaningful contextual equivalent for every button.", true);
         }
 
         andiAlerter.updateAlertList();
