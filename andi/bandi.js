@@ -20,28 +20,6 @@ function init_module() {
         }
     };
 
-    //This object class is used to store data about each link. Object instances will be placed into an array.
-    function Link(href, nameDescription, index, alerts, target, linkPurpose, ambiguousIndex, element) {
-        this.href = href;
-        this.nameDescription = nameDescription;
-        this.index = index;
-        this.alerts = alerts;
-        this.target = target;
-        this.linkPurpose = linkPurpose;
-        this.ambiguousIndex = undefined;
-        this.element = element;
-    }
-
-    //This object class is used to keep track of the links on the page
-    function Links() {
-        this.list = [];
-        this.count = 0;
-        this.ambiguousIndex = 0;
-        this.ambiguousCount = 0;
-        this.internalCount = 0;
-        this.externalCount = 0;
-    }
-
     //This object class is used to store data about each button. Object instances will be placed into an array.
     function Button(nameDescription, index, alerts, accesskey, nonUniqueIndex, element) {
         this.nameDescription = nameDescription;
@@ -65,17 +43,8 @@ function init_module() {
     //TODO: Make sure all alerts are covered by the alertIcons function, then work on adding this to other modules
     var alertIcons = new function () {//new is intentional
         this.danger_noAccessibleName = makeIcon("danger", "No accessible name");
-        this.danger_anchorTargetNotFound = makeIcon("warning", "In-page anchor target not found");
-        this.warning_ambiguous = makeIcon("warning", "Ambiguous: same name, different href");
-        this.caution_ambiguous = makeIcon("caution", "Ambiguous: same name, different href");
-        this.caution_vagueText = makeIcon("caution", "Vague: does not identify link purpose.");
         this.warning_nonUnique = makeIcon("warning", "Non-Unique: same name as another button");
         this.warning_tabOrder = makeIcon("warning", "Element not in tab order");
-        this.warning_noHrefRecognition = makeIcon("warning", "<a> without [href] may not be recognized as a link; add [role=link] or [href].");
-        this.warning_clickEvent = makeIcon("warning", "Link has click event but is not keyboard accessible.");
-        this.warning_hrefIDTabindex = makeIcon("warning", "<a> element has no [href], [id], or [tabindex]; This might be a link that only works with a mouse.");
-        this.warning_hrefTabindex = makeIcon("warning", "<a> element has no [href], or [tabindex]; This might be a link that only works with a mouse.");
-        this.caution_alertTargetLink = makeIcon("caution", "This <a> element is the target of another link; When link is followed, target may not receive visual indication of focus.")
 
         function makeIcon(alertLevel, titleText) {
             //The sortPriority number allows alert icon sorting
@@ -103,12 +72,10 @@ function init_module() {
 
     //This function will analyze the test page for link related markup relating to accessibility
     bANDI.analyze = function () {
-
-        bANDI.links = new Links();
         bANDI.buttons = new Buttons();
 
         //Variables used to build the links/buttons list array.
-        var href, nameDescription, alerts, target, linkPurpose, accesskey, alertIcon, alertObject, relatedElement, nonUniqueIndex, ambiguousIndex;
+        var nameDescription, alerts, accesskey, alertIcon, alertObject, relatedElement, nonUniqueIndex;
 
         //Loop through every visible element and run tests
         $(TestPageData.allElements).each(function () {
@@ -196,54 +163,6 @@ function init_module() {
             return false;
         }
 
-        //This function searches for anchor target if href is internal and greater than 1 character e.g. href="#x"
-        function determineLinkPurpose(href, element) {
-            if (typeof href !== "undefined") {
-                if (href.charAt(0) === "#" && href.length > 1) {
-                    var idRef = href.slice(1); //do not convert to lowercase
-                    if (!isAnchorTargetFound(idRef)) {
-                        if (element.onclick === null && $._data(element, 'events').click === undefined) {//no click events
-                            //Throw Alert, Anchor Target not found
-                            alertMessage = "In-page anchor target with [id=" + idRef + "] not found."
-                            alerts += "<img src='" + icons_url + "warning.png' alt='warning' title='Accessibility Alert: " + alertMessage + "' /><i>2 </i>";
-                            andiAlerter.throwAlert(alert_0069, [idRef]);
-                        }
-                    } else { //link is internal and anchor target found
-                        bANDI.links.internalCount += 1;
-                        linkPurpose = "i";
-                        $(element).addClass("bANDI508-internalLink");
-                    }
-                } else if (href.charAt(0) !== "#" && !bANDI.isScriptedLink(href)) {//this is an external link
-                    bANDI.links.externalCount += 1;
-                    linkPurpose = "e";
-                    $(element).addClass("bANDI508-externalLink");
-                }
-            }
-
-            //This function searches allIds list to check if anchor target exists. return true if found.
-            function isAnchorTargetFound(idRef) {
-                //for(var z=0; z<testPageData.allIds.length; z++){
-                //	if(testPageData.allIds[z].id.toString().toLowerCase() == idRef)
-                //		return true;
-                //}
-                var anchorTarget = document.getElementById(idRef) || document.getElementsByName(idRef)[0];
-                if ($(anchorTarget).is(":visible")) {
-                    $(anchorTarget).addClass("bANDI508-anchorTarget");
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        //This function checks the link text for vagueness
-        function testForVagueLinkText(nameDescription) {
-            var regEx = /^(click here|here|link|edit|select|more|more info|more information|go)$/g;
-            if (regEx.test(nameDescription.toLowerCase())) {
-                alerts += alertIcons.caution_vagueText;
-                andiAlerter.throwAlert(alert_0163);
-            }
-        }
-
         //This function determines if an element[role] is in tab order
         function isElementInTabOrder(element, role) {
             if (!!$(element).prop("tabIndex") && !$(element).is(":tabbable")) {//Element is not tabbable and has no tabindex
@@ -278,8 +197,7 @@ function init_module() {
     bANDI.results = function () {
 
         //Add Module Mode Buttons
-        var moduleModeButtons = "<button id='ANDI508-linksMode-button' class='bANDI508-mode' aria-label='" + bANDI.links.count + " Links' aria-selected='false'>" + bANDI.links.count + " links</button>" +
-            "<button id='ANDI508-buttonsMode-button' class='bANDI508-mode' aria-label='" + bANDI.buttons.count + " Buttons' aria-selected='false'>" + bANDI.buttons.count + " buttons</button>";
+        var moduleModeButtons = "<button id='ANDI508-buttonsMode-button' class='bANDI508-mode' aria-label='" + bANDI.buttons.count + " Buttons' aria-selected='false'>" + bANDI.buttons.count + " buttons</button>";
         $("#ANDI508-module-actions").html(moduleModeButtons);
 
         //Define bANDI mode buttons
@@ -373,59 +291,7 @@ function init_module() {
             "</div>" +
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
-        if (mode === "links") {
-            //BUILD LINKS LIST TABLE
-            var displayHref, targetText;
-            for (var x = 0; x < bANDI.links.list.length; x++) {
-                //get target text if internal link
-                displayHref = "";
-                targetText = "";
-                if (bANDI.links.list[x].href) {//if has an href
-                    if (!bANDI.isScriptedLink(bANDI.links.list[x])) {
-                        if (bANDI.links.list[x].href.charAt(0) !== "#") { //href doesn't start with # (points externally)
-                            targetText = "target='_bANDI'";
-                        }
-                        displayHref = "<a href='" + bANDI.links.list[x].href + "' " + targetText + ">" + bANDI.links.list[x].href + "</a>";
-                    } else { //href contains javascript
-                        displayHref = bANDI.links.list[x].href;
-                    }
-                }
-
-                //determine if there is an alert
-                rowClasses = "";
-                var nextTabButton = "";
-                if (bANDI.links.list[x].alerts.includes("Alert"))
-                    rowClasses += "ANDI508-table-row-alert ";
-
-                if (bANDI.links.list[x].linkPurpose == "i") {
-                    rowClasses += "bANDI508-listLinks-internal ";
-                    var id = bANDI.links.list[x].href;
-                    if (id.charAt(0) === "#")
-                        id = id.substring(1, id.length);
-                    nextTabButton = " <button class='bANDI508-nextTab' data-andi508-relatedid='" +
-                        id + "' title='focus on the element after id=" +
-                        id + "'>next tab</button>";
-                } else if (bANDI.links.list[x].linkPurpose == "e") {
-                    rowClasses += "bANDI508-listLinks-external ";
-                }
-
-                tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + bANDI.links.list[x].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + bANDI.links.list[x].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + bANDI.links.list[x].index + "'>" + bANDI.links.list[x].nameDescription + "</a></td>" +
-                    "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
-                    "</tr>";
-            }
-
-            tabsHTML = "<button id='bANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + bANDI.links.list.length + ")</button>";
-            tabsHTML += "<button id='bANDI508-listLinks-tab-internal' aria-label='View Skip Links' aria-selected='false' data-andi508-relatedclass='bANDI508-internalLink'>skip links (" + bANDI.links.internalCount + ")</button>";
-            tabsHTML += "<button id='bANDI508-listLinks-tab-external' aria-label='View External Links' aria-selected='false' data-andi508-relatedclass='bANDI508-externalLink'>external links (" + bANDI.links.externalCount + ")</button>";
-
-            appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
-        } else { //BUILD BUTTON LIST TABLE
+        if (mode === "buttons") { //BUILD BUTTON LIST TABLE
             for (var b = 0; b < bANDI.buttons.list.length; b++) {
                 //determine if there is an alert
                 rowClasses = "";
@@ -463,9 +329,7 @@ function init_module() {
                 .attr("aria-expanded", "true")
                 .find("img").attr("src", icons_url + "list-on.png");
             $("#bANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
-            if (mode === "links") {
-                AndiModule.activeActionButtons.viewLinksList = true;
-            } else {
+            if (mode === "buttons") {
                 AndiModule.activeActionButtons.viewButtonsList = true;
             }
         } else { //hide List, show alert list
@@ -477,9 +341,7 @@ function init_module() {
                 .removeClass("ANDI508-viewOtherResults-button-expanded")
                 .html(listIcon + "view " + mode + " list")
                 .attr("aria-expanded", "false");
-            if (mode === "links") {
-                AndiModule.activeActionButtons.viewLinksList = false;
-            } else {
+            if (mode === "buttons") {
                 AndiModule.activeActionButtons.viewButtonsList = false;
             }
         }
