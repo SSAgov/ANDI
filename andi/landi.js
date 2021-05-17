@@ -9,7 +9,7 @@ function init_module() {
     //create lANDI instance
     var lANDI = new AndiModule(landiVersionNumber, "l");
 
-    //TODO: remove parts of lANDI that are about buttons once the code for bANDI is verified as working
+    //TODO: Determine whether code that is part of the Buttons ANDI page should be removed
 
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
@@ -63,7 +63,6 @@ function init_module() {
     //TODO: Make sure all alerts are covered by the alertIcons function, then work on adding this to other modules
     var alertIcons = new function () {//new is intentional
         this.danger_noAccessibleName = makeIcon("danger", "No accessible name");
-        this.danger_anchorTargetNotFound = makeIcon("warning", "In-page anchor target not found");
         this.warning_ambiguous         = makeIcon("warning", "Ambiguous: same name, different href");
         this.caution_ambiguous         = makeIcon("caution", "Ambiguous: same name, different href");
         this.caution_vagueText         = makeIcon("caution", "Vague: does not identify link purpose.");
