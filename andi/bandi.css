@@ -53,9 +53,3 @@
 		
 	#ANDI508-testPage.bANDI508-testPage.bANDI508-highlightAmbiguous .bANDI508-ambiguous
 		{border:2.5px solid #6565e4 !important; box-shadow:0 0 25px 1px #6565e4 !important}
-		
-	#ANDI508-testPage.bANDI508-testPage.bANDI508-highlightInternal a.ANDI508-element.bANDI508-internalLink
-		{border:2.5px solid #8787fe !important; box-shadow:0 0 25px 1px #8787fe !important}
-		
-	#ANDI508-testPage.bANDI508-testPage.bANDI508-highlightExternal a.ANDI508-element.bANDI508-externalLink
-		{border:2.5px solid #4d9dc8 !important; box-shadow:0 0 25px 1px #4d9dc8 !important}
