@@ -444,8 +444,8 @@ function init_module() {
         }
 
         tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + hANDI.hiddenContents.list.length + ")</button>";
-        tabsHTML += "<button id='lANDI508-listLinks-tab-display' aria-label='View display:none' aria-selected='false' data-andi508-relatedclass='lANDI508-display'>display:none (" + hANDI.hiddenContents.hiddenDisplay + ")</button>";
-        tabsHTML += "<button id='lANDI508-listLinks-tab-visibility' aria-label='View visibility:hidden' aria-selected='false' data-andi508-relatedclass='lANDI508-visibility'>visibility:hidden (" + hANDI.hiddenContents.hiddenVisibility + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-display' aria-label='View display' aria-selected='false' data-andi508-relatedclass='lANDI508-display'>display (" + hANDI.hiddenContents.hiddenDisplay + ")</button>";
+        tabsHTML += "<button id='lANDI508-listLinks-tab-visibility' aria-label='View visibility' aria-selected='false' data-andi508-relatedclass='lANDI508-visibility'>visibility (" + hANDI.hiddenContents.hiddenVisibility + ")</button>";
         tabsHTML = "<button id='lANDI508-listLinks-tab-position' aria-label='View position:absolute' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-position'>position:absolute (" + hANDI.hiddenContents.hiddenPosition + ")</button>";
         tabsHTML += "<button id='lANDI508-listLinks-tab-opacity' aria-label='View opacity:0' aria-selected='false' data-andi508-relatedclass='lANDI508-opacity'>opacity:0 (" + hANDI.hiddenContents.hiddenOpacity + ")</button>";
         tabsHTML += "<button id='lANDI508-listLinks-tab-overflow' aria-label='View overflow:hidden' aria-selected='false' data-andi508-relatedclass='lANDI508-overflow'>overflow:hidden (" + hANDI.hiddenContents.hiddenOverflow + ")</button>";
