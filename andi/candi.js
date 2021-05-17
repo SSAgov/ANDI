@@ -721,7 +721,7 @@ function init_module() {
         }
 
         if (!disabled) { //Run the contrast test
-            if (bgImage === "none" && !opacity) { //No, Display PASS/FAIL Result and Requirement Ratio
+            if (bgImage === "none" && (!opacity || parseInt($(fgElement).css("opacity")) > 0) ) { //No, Display PASS/FAIL Result and Requirement Ratio
                 if (ratio >= minReq) {
                     result = "PASS";
                 } else {
