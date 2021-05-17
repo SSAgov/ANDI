@@ -114,6 +114,7 @@ function init_module() {
             }
         });
 
+        //Detect disabled buttons
         andiCheck.areThereDisabledElements("buttons");
 
         //This function searches the button list for non-uniqueness.

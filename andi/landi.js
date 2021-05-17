@@ -9,7 +9,7 @@ function init_module() {
     //create lANDI instance
     var lANDI = new AndiModule(landiVersionNumber, "l");
 
-    //TODO: remove parts of lANDI that are about buttons once the code for bANDI is verified as working
+    //TODO: remove parts of lANDI that are about buttons once determining how danger_anchorTargetNotFound should work
 
     //This function removes markup in the test page that was added by this module
     AndiModule.cleanup = function (testPage, element) {
