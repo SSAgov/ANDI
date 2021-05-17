@@ -56,7 +56,7 @@ function init_module() {
     };
 
     AndiModule.initActiveActionButtons({
-        buttonsMode: false,
+        buttonsMode: true,
         viewButtonsList: false,
         highlightNonUniqueButtons: false
     });
