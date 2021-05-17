@@ -38,7 +38,7 @@ function init_module() {
         this.nonUniqueCount = 0;
     }
 
-    //Alert icons for the links list table
+    //Alert icons for the buttons list table
     //Ignore the jslint warning about the "new" declaration. It is needed.
     //TODO: Make sure all alerts are covered by the alertIcons function, then work on adding this to other modules
     var alertIcons = new function () {//new is intentional
