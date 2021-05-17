@@ -5,10 +5,7 @@
 //move the buttons code into bANDI           //
 //===========================================//
 function init_module() {
-
     var bandiVersionNumber = "8.1.0";
-
-    //TODO: Remove the code for links once the code for bANDI is verified as working
 
     //create bANDI instance
     var bANDI = new AndiModule(bandiVersionNumber, "b");
@@ -59,9 +56,6 @@ function init_module() {
     };
 
     AndiModule.initActiveActionButtons({
-        linksMode: true,
-        viewLinksList: false,
-        highlightAmbiguousLinks: false,
         buttonsMode: false,
         viewButtonsList: false,
         highlightNonUniqueButtons: false
@@ -74,7 +68,7 @@ function init_module() {
     bANDI.analyze = function () {
         bANDI.buttons = new Buttons();
 
-        //Variables used to build the links/buttons list array.
+        //Variables used to build the buttons list array.
         var nameDescription, alerts, accesskey, alertIcon, alertObject, relatedElement, nonUniqueIndex;
 
         //Loop through every visible element and run tests
@@ -266,7 +260,7 @@ function init_module() {
     AndiModule.inspect = function (element) {
         if ($(element).hasClass("ANDI508-element")) {
 
-            //Highlight the row in the links list that associates with this element
+            //Highlight the row in the buttons list that associates with this element
             bANDI.viewList_rowHighlight($(element).attr("data-andi508-index"));
 
             andiBar.prepareActiveElementInspection(element);
@@ -408,7 +402,7 @@ function init_module() {
             }
         });
 
-        //Define listLinks next button
+        //Define listButtons next button
         $("#bANDI508-viewList-button-next").click(function () {
             //Get class name based on selected tab
             var selectedTabClass = $("#bANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
@@ -432,7 +426,7 @@ function init_module() {
                 }
             }
 
-            //Highlight the row in the links list that associates with this element
+            //Highlight the row in the buttons list that associates with this element
             bANDI.viewList_rowHighlight(focusGoesOnThisIndex);
             $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
                 this.scrollIntoView();
@@ -441,7 +435,7 @@ function init_module() {
             return false;
         });
 
-        //Define listLinks prev button
+        //Define listButtons prev button
         $("#bANDI508-viewList-button-prev").click(function () {
             //Get class name based on selected tab
             var selectedTabClass = $("#bANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
@@ -470,74 +464,13 @@ function init_module() {
                 }
             }
 
-            //Highlight the row in the links list that associates with this element
+            //Highlight the row in the buttons list that associates with this element
             bANDI.viewList_rowHighlight(focusGoesOnThisIndex);
             $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
                 this.scrollIntoView();
             });
 
             return false;
-        });
-    };
-
-    //This function attaches click events to the items specific to the Links view list
-    bANDI.viewList_attachEvents_links = function () {
-        $("#bANDI508-listLinks-tab-all").click(function () {
-            bANDI.viewList_selectTab(this);
-            $("#ANDI508-viewList-table tbody tr").show();
-            //Remove All (glowing) Highlights
-            $("#ANDI508-testPage").removeClass("bANDI508-highlightInternal bANDI508-highlightExternal bANDI508-highlightAmbiguous");
-            //Turn Off Ambiguous Button
-            andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
-            andiResetter.resizeHeights();
-            return false;
-        });
-        $("#bANDI508-listLinks-tab-internal").click(function () {
-            bANDI.viewList_selectTab(this);
-            $("#ANDI508-viewList-table tbody tr").each(function () {
-                if ($(this).hasClass("bANDI508-listLinks-internal"))
-                    $(this).show();
-
-                $(this).hide();
-            });
-            //Add (glowing) Highlight for Internal Links
-            $("#ANDI508-testPage").removeClass("bANDI508-highlightExternal bANDI508-highlightAmbiguous").addClass("bANDI508-highlightInternal");
-            //Turn Off Ambiguous Button
-            andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
-            andiResetter.resizeHeights();
-            return false;
-        });
-        $("#bANDI508-listLinks-tab-external").click(function () {
-            bANDI.viewList_selectTab(this);
-            $("#ANDI508-viewList-table tbody tr").each(function () {
-                if ($(this).hasClass("bANDI508-listLinks-external")) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-            //Add (glowing) Highlight for External Links
-            $("#ANDI508-testPage").removeClass("bANDI508-highlightInternal bANDI508-highlightAmbiguous").addClass("bANDI508-highlightExternal");
-            //Turn Off Ambiguous Button
-            andiOverlay.overlayButton_off("find", $("#ANDI508-highlightAmbiguousLinks-button"));
-            andiResetter.resizeHeights();
-            return false;
-        });
-
-        //Define next tab button
-        $("#ANDI508-viewList-table button.bANDI508-nextTab").each(function () {
-            $(this).click(function () {
-                var allElementsInTestPage = $("#ANDI508-testPage *");
-                var idRef = $(this).attr("data-andi508-relatedid");
-                var anchorTargetElement = document.getElementById(idRef) || document.getElementsByName(idRef)[0];
-                var anchorTargetElementIndex = parseInt($(allElementsInTestPage).index($(anchorTargetElement)), 10);
-                for (var x = anchorTargetElementIndex; x < allElementsInTestPage.length; x++) {
-                    if ($(allElementsInTestPage).eq(x).is(":tabbable")) {
-                        $(allElementsInTestPage).eq(x).focus();
-                        break;
-                    }
-                }
-            });
         });
     };
 
