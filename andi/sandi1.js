@@ -26,7 +26,6 @@ function init_module() {
     var roleAttributesCount = 0;
 
     AndiModule.initActiveActionButtons({
-        headings: true, //default
         readingOrder: false,
         roleAttributes: false,
         langAttributes: false
@@ -43,30 +42,29 @@ function init_module() {
                 sANDI.headers.list.push($(this));
                 sANDI.headers.count += 1;
 
-                if (AndiModule.activeActionButtons.headings) {
-                    andiData = new AndiData(this);
+                andiData = new AndiData(this);
 
-                    if (andiData.role === "heading") {
-                        var ariaLevel = $(this).attr("aria-level");
-                        if (ariaLevel) {
-                            if ($(this).is("h1,h2,h3,h4,h5,h6")) {
-                                if (andiData.tagNameText.charAt(1) !== ariaLevel) {
-                                    //heading tag name level doesn't match aria-level
-                                    andiAlerter.throwAlert(alert_0191, [andiData.tagNameText, ariaLevel]);
-                                }
+                if (andiData.role === "heading") {
+                    var ariaLevel = $(this).attr("aria-level");
+                    if (ariaLevel) {
+                        if ($(this).is("h1,h2,h3,h4,h5,h6")) {
+                            if (andiData.tagNameText.charAt(1) !== ariaLevel) {
+                                //heading tag name level doesn't match aria-level
+                                andiAlerter.throwAlert(alert_0191, [andiData.tagNameText, ariaLevel]);
                             }
-                            if (parseInt(ariaLevel) < 0 || parseInt(ariaLevel) != ariaLevel) { //Not a positive integer
-                                andiAlerter.throwAlert(alert_0180);
-                            }
-                        } else { //role=heading without aria-level
-                            andiAlerter.throwAlert(alert_0192);
                         }
+                        if (parseInt(ariaLevel) < 0 || parseInt(ariaLevel) != ariaLevel) { //Not a positive integer
+                            andiAlerter.throwAlert(alert_0180);
+                        }
+                    } else { //role=heading without aria-level
+                        andiAlerter.throwAlert(alert_0192);
                     }
-
-                    andiCheck.commonNonFocusableElementChecks(andiData, $(this));
-                    AndiData.attachDataToElement(this);
                 }
-            } else if (AndiModule.activeActionButtons.headings && sANDI.headers.list.length === 0 && $(this).is("p,div,span,strong,em")) {
+
+                andiCheck.commonNonFocusableElementChecks(andiData, $(this));
+                AndiData.attachDataToElement(this);
+            }
+            if (sANDI.headers.list.length === 0 && $(this).is("p,div,span,strong,em")) {
                 //Since sANDI has not found a heading yet, check if this element is a fake headings
 
                 if (sANDI.isFakeHeading(this)) {
@@ -196,9 +194,7 @@ function init_module() {
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     sANDI.results = function () {
-
         var moduleActionButtons = "";
-        moduleActionButtons += "<button id='ANDI508-headings-button' class='sANDI508-mode' aria-label='" + sANDI.headers.list.length + " Headings'>" + sANDI.headers.list.length + " headings</button>";
         moduleActionButtons += "<button id='ANDI508-readingOrder-button' aria-pressed='false'>reading order" + overlayIcon + "</button>";
 
         var moreDetails = "<button id='ANDI508-pageTitle-button'>page title</button>" +
@@ -211,13 +207,6 @@ function init_module() {
         $("#ANDI508-module-actions").html(moduleActionButtons);
 
         andiBar.initializeModuleActionGroups();
-
-        //Define sANDI mode buttons (headings, lists, landmarks)
-        $("#ANDI508-headings-button").click(function () {
-            andiResetter.softReset($("#ANDI508-testPage"));
-            AndiModule.activeActionButtons.headings = true;
-            AndiModule.launchModule("s");
-        });
 
         //Define readingOrder button functionality
         $("#ANDI508-readingOrder-button").click(function () {
@@ -316,51 +305,49 @@ function init_module() {
         //Deselect all mode buttons
         $("#ANDI508-module-actions button.sANDI508-mode").attr("aria-selected", "false");
 
-        if (AndiModule.activeActionButtons.headings) { //HEADINGS
-            $("#ANDI508-headings-button")
-                .attr("aria-selected", "true")
-                .addClass("ANDI508-module-action-active");
+        $("#ANDI508-headings-button")
+            .attr("aria-selected", "true")
+            .addClass("ANDI508-module-action-active");
 
-            andiBar.updateResultsSummary("Headings: " + sANDI.headers.list.length);
+        andiBar.updateResultsSummary("Headings: " + sANDI.headers.list.length);
 
-            //Build Outline
-            for (var x = 0; x < sANDI.headers.list.length; x++) {
-                sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+        //Build Outline
+        for (var x = 0; x < sANDI.headers.list.length; x++) {
+            sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+        }
+        sANDI.outline += "</div>";
+
+        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
+        //Define outline button
+        $("#ANDI508-viewOutline-button").click(function () {
+            if ($(this).attr("aria-expanded") === "true") { //hide Outline, show alert list
+                $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
+                $("#ANDI508-alerts-list").show();
+
+                $(this)
+                    .addClass("ANDI508-viewOtherResults-button-expanded")
+                    .html(listIcon + "view headings list")
+                    .attr("aria-expanded", "false")
+                    .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
+            } else { //show Outline, hide alert list
+                $("#ANDI508-alerts-list").hide();
+
+                andiSettings.minimode(false);
+                $(this)
+                    .html(listIcon + "hide headings list")
+                    .attr("aria-expanded", "true")
+                    .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
+                    .find("img").attr("src", icons_url + "list-on.png");
+                $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
             }
-            sANDI.outline += "</div>";
+            andiResetter.resizeHeights();
+            return false;
+        });
 
-            $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
-
-            //Define outline button
-            $("#ANDI508-viewOutline-button").click(function () {
-                if ($(this).attr("aria-expanded") === "true") { //hide Outline, show alert list
-                    $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                    $("#ANDI508-alerts-list").show();
-
-                    $(this)
-                        .addClass("ANDI508-viewOtherResults-button-expanded")
-                        .html(listIcon + "view headings list")
-                        .attr("aria-expanded", "false")
-                        .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
-                } else { //show Outline, hide alert list
-                    $("#ANDI508-alerts-list").hide();
-
-                    andiSettings.minimode(false);
-                    $(this)
-                        .html(listIcon + "hide headings list")
-                        .attr("aria-expanded", "true")
-                        .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
-                        .find("img").attr("src", icons_url + "list-on.png");
-                    $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
-                }
-                andiResetter.resizeHeights();
-                return false;
-            });
-
-            if (!andiBar.focusIsOnInspectableElement()) {
-                andiBar.showElementControls();
-                andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.", true);
-            }
+        if (!andiBar.focusIsOnInspectableElement()) {
+            andiBar.showElementControls();
+            andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.", true);
         }
 
         $("#sANDI508-outline-container")

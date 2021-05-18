@@ -26,8 +26,6 @@ function init_module() {
     var roleAttributesCount = 0;
 
     AndiModule.initActiveActionButtons({
-        headings: true, //default
-        landmarks: false,
         readingOrder: false,
         roleAttributes: false,
         langAttributes: false
@@ -40,15 +38,13 @@ function init_module() {
         //Loop through every visible element
         $(TestPageData.allElements).each(function () {
             if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
-                if (AndiModule.activeActionButtons.landmarks) {
-                    sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
-                    sANDI.landmarks.count += 1;
-                    sANDI.index += 1;
-                    andiData = new AndiData(this);
+                sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
+                sANDI.landmarks.count += 1;
+                sANDI.index += 1;
+                andiData = new AndiData(this);
 
-                    andiCheck.commonNonFocusableElementChecks(andiData, $(this));
-                    AndiData.attachDataToElement(this);
-                }
+                andiCheck.commonNonFocusableElementChecks(andiData, $(this));
+                AndiData.attachDataToElement(this);
             }
 
             //For all elements on the page
@@ -110,7 +106,6 @@ function init_module() {
     sANDI.results = function () {
 
         var moduleActionButtons = "";
-        moduleActionButtons += "<button id='ANDI508-landmarks-button' class='sANDI508-mode' aria-label='" + sANDI.landmarks.list.length + " Landmarks'>" + sANDI.landmarks.list.length + " landmarks</button>";
         moduleActionButtons += "<button id='ANDI508-readingOrder-button' aria-pressed='false'>reading order" + overlayIcon + "</button>";
 
         var moreDetails = "<button id='ANDI508-pageTitle-button'>page title</button>" +
@@ -123,13 +118,6 @@ function init_module() {
         $("#ANDI508-module-actions").html(moduleActionButtons);
 
         andiBar.initializeModuleActionGroups();
-
-        //Define sANDI mode buttons (landmarks)
-        $("#ANDI508-landmarks-button").click(function () {
-            andiResetter.softReset($("#ANDI508-testPage"));
-            AndiModule.activeActionButtons.landmarks = true;
-            AndiModule.launchModule("s");
-        });
 
         //Define readingOrder button functionality
         $("#ANDI508-readingOrder-button").click(function () {
@@ -228,51 +216,49 @@ function init_module() {
         //Deselect all mode buttons
         $("#ANDI508-module-actions button.sANDI508-mode").attr("aria-selected", "false");
 
-        if (AndiModule.activeActionButtons.landmarks) { //LANDMARKS
-            $("#ANDI508-landmarks-button")
-                .attr("aria-selected", "true")
-                .addClass("ANDI508-module-action-active");
+        $("#ANDI508-landmarks-button")
+            .attr("aria-selected", "true")
+            .addClass("ANDI508-module-action-active");
 
-            //Build Outline
-            for (var x = 0; x < sANDI.landmarks.list.length; x++) {
-                sANDI.outline += sANDI.getOutlineItemModule(sANDI.landmarks.list[x]);
+        //Build Outline
+        for (var x = 0; x < sANDI.landmarks.list.length; x++) {
+            sANDI.outline += sANDI.getOutlineItemModule(sANDI.landmarks.list[x]);
+        }
+        sANDI.outline += "</div>";
+
+        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+
+        //Define outline button
+        $("#ANDI508-viewOutline-button").click(function () {
+            if ($(this).attr("aria-expanded") === "true") {
+                //hide Outline, show alert list
+                $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
+                $("#ANDI508-alerts-list").show();
+
+                $(this)
+                    .addClass("ANDI508-viewOtherResults-button-expanded")
+                    .html(listIcon + "hide landmarks list")
+                    .attr("aria-expanded", "false")
+                    .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
+            } else { //show Outline, hide alert list
+                $("#ANDI508-alerts-list").hide();
+
+                andiSettings.minimode(false);
+                $(this)
+                    .html(listIcon + "hide landmarks list")
+                    .attr("aria-expanded", "true")
+                    .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
+                    .find("img").attr("src", icons_url + "list-on.png");
+                $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
             }
-            sANDI.outline += "</div>";
+            andiResetter.resizeHeights();
+            return false;
+        });
 
-            $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
-
-            //Define outline button
-            $("#ANDI508-viewOutline-button").click(function () {
-                if ($(this).attr("aria-expanded") === "true") {
-                    //hide Outline, show alert list
-                    $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                    $("#ANDI508-alerts-list").show();
-                    
-                    $(this)
-                        .addClass("ANDI508-viewOtherResults-button-expanded")
-                        .html(listIcon + "hide landmarks list")
-                        .attr("aria-expanded", "false")
-                        .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
-                } else { //show Outline, hide alert list
-                    $("#ANDI508-alerts-list").hide();
-
-                    andiSettings.minimode(false);
-                    $(this)
-                        .html(listIcon + "hide landmarks list")
-                        .attr("aria-expanded", "true")
-                        .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
-                        .find("img").attr("src", icons_url + "list-on.png");
-                    $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
-                }
-                andiResetter.resizeHeights();
-                return false;
-            });
-
-            andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
-            if (!andiBar.focusIsOnInspectableElement()) {
-                andiBar.showElementControls();
-                andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.", true);
-            }
+        andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
+        if (!andiBar.focusIsOnInspectableElement()) {
+            andiBar.showElementControls();
+            andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.", true);
         }
 
         $("#sANDI508-outline-container")
