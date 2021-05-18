@@ -426,6 +426,9 @@
 		 itemprop="name">How do I host my own ANDI?</summary>
 	<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 		<p itemprop="text">
+			To host your own copy of ANDI, make a few simple changes in the andi.js file:
+		</p>
+		<div class="example">
 			<ol>
 				<li><a href="https://github.com/SSAgov/ANDI" target="_blank">Download ANDI's source code from GitHub</a>.</li>
 				<li>Determine if you are going to host ANDI on a server (<code>https://[ALTERNATE_HOST]/andi/</code>) or locally (<code>file://C:/WS/repos/[ALTERNATE_HOST]/andi/</code>).</li>
@@ -441,7 +444,7 @@
 					<textarea readonly aria-label="favelet launch script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','[ALTERNATE_HOST]/andi/andi.js');document.body.appendChild(andiScript)})());</textarea>
 				</li>
 			</ol>
-		</p>
+		</div>
 	</div>
 	</details>
 	</section>
