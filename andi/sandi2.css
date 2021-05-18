@@ -1,0 +1,80 @@
+/*==sANDI==*/
+	/*==ANDI Bar==*/
+	#ANDI508 #sANDI508-viewList-tabs
+		{margin-left:10px;}
+	#ANDI508 #sANDI508-viewList-tabs button
+		{border:1px solid black; border-right:1px solid gray; 
+		padding:3px 1em 3px 1em; position:relative; display:inline-block;}
+	#ANDI508 #sANDI508-viewList-tabs button:hover,
+	#ANDI508 #sANDI508-viewList-tabs button:focus
+		{border:1px solid lemonchiffon;}
+	#ANDI508 #sANDI508-viewList-tabs button.ANDI508-tab-active
+		{color:#a4e8ff !important; text-decoration:underline !important; top:1px}
+
+	#ANDI508 #ANDI508-viewList-table td i
+		{visibility:hidden}
+	#ANDI508 #ANDI508-viewList-table td.ANDI508-alert-column
+		{padding-left:1.3em}
+		
+	#ANDI508 #ANDI508-viewList-table td.ANDI508-code,
+	#ANDI508 #ANDI508-viewList-table td.ANDI508-code a
+		{font:9pt monospace;}
+	
+	/*slightly lighter than normal danger color to satisfy AAA color contrast*/
+	#ANDI508 #ANDI508-viewList-table tr.ANDI508-table-row-alert td a span.ANDI508-display-danger
+		{color:#ff6767 !important;}
+		
+	#ANDI508 #ANDI508-viewList-table button.sANDI508-nextTab
+		{font-size: 7pt; border:1px solid gray; border-radius:5px; padding:1px;}
+		
+	#ANDI508 #sANDI508-viewList-button-prev,
+	#ANDI508 #sANDI508-viewList-button-next
+		{border:1px solid black !important; margin:1px 1px 2px 0.6em !important; padding:0 !important; border-radius:3px !important;}
+	#ANDI508 #sANDI508-viewList-button-prev:hover,
+	#ANDI508 #sANDI508-viewList-button-next:hover
+		{border:1px solid lemonchiffon !important;}
+	#ANDI508 #sANDI508-viewList-button-prev img,
+	#ANDI508 #sANDI508-viewList-button-next img
+		{width:22px}
+
+	#ANDI508 #sANDI508-outline-container #sANDI508-outline-heading
+		{display:inline-block; margin-bottom:2px;}
+	#ANDI508 #sANDI508-outline-container
+		{display:none;}
+	#ANDI508 #sANDI508-outline-container .ANDI508-scrollable
+		{font-family:monospace; padding:5px 0px 1px 1em;}
+	#ANDI508 #sANDI508-outline-container .ANDI508-scrollable br
+		{font-size:11pt;}
+	#ANDI508 #sANDI508-outline-container .ANDI508-scrollable a:hover,
+	#ANDI508 #sANDI508-outline-container .ANDI508-scrollable a:focus
+		{text-decoration:underline !important; color:#f160b1 !important;}
+		
+	/*=Test Page=*/
+	#ANDI508-testPage.sANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-danger
+		{border:3px dashed #dd2f2f !important; outline:0 !important; animation:pulse_sANDI_danger 3s linear infinite !important;}
+		@keyframes pulse_sANDI_danger{
+			50% {border-color:#ef7200 !important;}
+		}
+	#ANDI508-testPage.sANDI508-testPage .ANDI508-element.ANDI508-highlight
+		{border:1.5px dashed #9b8acf !important; outline:0 !important; animation:pulse_sANDI 3s linear infinite !important;}
+		@keyframes pulse_sANDI{
+			50% {border-color:#604f94 !important;}
+		}
+	#ANDI508-testPage.sANDI508-testPage ul.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage ol.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage dl.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage [role=list].ANDI508-element.ANDI508-highlight
+		{border:2.5px dashed #e161e1 !important; outline:0 !important; animation:pulse_sANDI_list 3s linear infinite !important;}
+		@keyframes pulse_sANDI_list{
+			50% {border-color:#9b1b9b !important;}
+		}
+	#ANDI508-testPage.sANDI508-testPage li.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage dt.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage dd.ANDI508-element.ANDI508-highlight,
+	#ANDI508-testPage.sANDI508-testPage [role=listitem].ANDI508-element.ANDI508-highlight
+		{border:1px dashed #9786ec !important; outline:0 !important; animation:pulse_sANDI 3s linear infinite !important;}
+	#ANDI508-testPage.sANDI508-testPage .ANDI508-element.ANDI508-highlight.ANDI508-element-active
+		{outline:4px solid deeppink !important;}
+		
+	#ANDI508-testPage span.ANDI508-overlay.ANDI508-overlay-readingOrder
+		{background:#d89fec}
