@@ -98,7 +98,6 @@ function init_module() {
                 var nextElement = $(element).next().filter(":visible");
 
                 if ($.trim($(nextElement).text()) !== "") { //next element has text
-
                     var nextElement_fontWeight = $(nextElement).css("font-weight");
                     var nextElement_fontSize = parseInt($(nextElement).css("font-size"));
 
@@ -459,7 +458,6 @@ function init_module() {
         //It distinguishes between element nodes and text nodes
         //It will check for aria-hidden=true (with inheritance)
         function traverseReadingOrder(element, ariaHidden) {
-
             //Check for aria-hidden=true
             ariaHidden = (ariaHidden || $(element).attr("aria-hidden") === "true") ? true : false;
 
