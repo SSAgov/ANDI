@@ -37,8 +37,7 @@ function init_module() {
 
         //Loop through every visible element
         $(TestPageData.allElements).each(function () {
-            if ($(this).isSemantically("[role=heading]", "h1,h2,h3,h4,h5,h6")) {
-                //Add to the headings array
+            if ($(this).isSemantically("[role=heading]", "h1,h2,h3,h4,h5,h6")) { //Add to the headings array
                 sANDI.headers.list.push($(this));
                 sANDI.headers.count += 1;
 
