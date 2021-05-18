@@ -75,51 +75,6 @@ function init_module() {
         });
     };
 
-    //This function determine's if the element looks like a heading but is not semantically a heading
-    sANDI.isFakeHeading = function (element) {
-
-        var isFakeHeading = false;
-
-        var limit_textLength = 30; //text longer than this will not be considered a fake heading
-
-        var limit_fontSize = 22; //px  (an h2 starts around 24px)
-        var limit_boldFontSize = 15; //px
-
-        var text = $.trim($(element).text());
-        if (text.length > 0 && text.length < limit_textLength) {
-            //text is not empty, but less than char limit
-
-            var fakeHeading_fontSize = parseInt($(element).css("font-size"));
-            var fakeHeading_fontWeight = $(element).css("font-weight");
-
-            if (fakeHeading_fontSize > limit_fontSize ||
-                (isBold(fakeHeading_fontWeight) && fakeHeading_fontSize > limit_boldFontSize)
-            ) { //fakeHeading_fontSize is greater than size limit
-
-                var nextElement = $(element).next().filter(":visible");
-
-                if ($.trim($(nextElement).text()) !== "") { //next element has text
-
-                    var nextElement_fontWeight = $(nextElement).css("font-weight");
-                    var nextElement_fontSize = parseInt($(nextElement).css("font-size"));
-
-                    if (nextElement_fontSize < fakeHeading_fontSize) {
-                        //next element's font-size is smaller than fakeHeading font-size
-                        isFakeHeading = true;
-                    } else if (isBold(fakeHeading_fontWeight) && !isBold(nextElement_fontWeight)) {
-                        //next element's font-weight is lighter than fakeHeading font-weight
-                        isFakeHeading = true;
-                    }
-                }
-            }
-        }
-        return isFakeHeading;
-
-        function isBold(weight) {
-            return (weight === "bold" || weight === "bolder" || weight >= 700);
-        }
-    };
-
     //Initialize outline
     sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Live Regions List:</h3><div class='ANDI508-scrollable'>";
 
@@ -131,25 +86,7 @@ function init_module() {
         var role = $(element).attr("role");
         var ariaLevel = $(element).attr("aria-level");
 
-        //Indent the heading according to the level
-        //Results in h1 = 1% left margin, h2 = 2% left margin, etc.
-        var indentLevel;
-        if (ariaLevel) {
-            //Check if positive integer
-            if (parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel) {
-                indentLevel = parseInt(ariaLevel);
-            } else { //aria-level is not a positive integer, default to 2 (defined in ARIA spec, and screen readers are doing this)
-                indentLevel = 2;
-            }
-        } else {
-            if (role === "heading") {
-                indentLevel = 2; //no aria-level and role=heading, so default to 2 (defined in ARIA spec)
-            } else {
-                indentLevel = parseInt(tagName.slice(1)); //get second character from h tag
-            }
-        }
-
-        var outlineItem = "<a style='margin-left:" + indentLevel + "%' href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
+        var outlineItem = "<a href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
 
         //display relevant attributes
         if (role) {
