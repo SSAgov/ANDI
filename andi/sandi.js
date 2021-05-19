@@ -346,9 +346,7 @@ function init_module() {
         moduleActionButtons += "<button id='ANDI508-liveRegions-button' class='sANDI508-mode' aria-label='" + sANDI.liveRegions.list.length + " Live Regions'>" + sANDI.liveRegions.list.length + " live regions</button>";
         moduleActionButtons += "<button id='ANDI508-readingOrder-button' aria-pressed='false'>reading order" + overlayIcon + "</button>";
 
-        var moreDetails = "<button id='ANDI508-pageTitle-button'>page title</button>" +
-            "<button id='ANDI508-pageLanguage-button'>page language</button>" +
-            "<button id='ANDI508-roleAttributes-button' aria-pressed='false' aria-label='" + roleAttributesCount + " Role Attributes'>" + roleAttributesCount + " role attributes" + overlayIcon + "</button>" +
+        var moreDetails = "<button id='ANDI508-roleAttributes-button' aria-pressed='false' aria-label='" + roleAttributesCount + " Role Attributes'>" + roleAttributesCount + " role attributes" + overlayIcon + "</button>" +
             "<button id='ANDI508-langAttributes-button' aria-pressed='false' aria-label='" + langAttributesCount + " Lang Attributes'>" + langAttributesCount + " lang attributes" + overlayIcon + "</button>";
 
         moduleActionButtons += "<div class='ANDI508-moduleActionGroup'><button class='ANDI508-moduleActionGroup-toggler'>more details</button><div class='ANDI508-moduleActionGroup-options'>" + moreDetails + "</div></div>";
@@ -356,6 +354,19 @@ function init_module() {
         $("#ANDI508-module-actions").html(moduleActionButtons);
 
         andiBar.initializeModuleActionGroups();
+
+        if (document.title) {
+            startupSummaryText += "The page title is: " + document.title + ".<br>";
+        } else {
+            startupSummaryText += "There is no page title.<br>";
+        }
+        var htmlLangAttribute = $.trim($("html").first().prop("lang"));
+        //pop up the lang value of the HTML element
+        if (htmlLangAttribute) {
+            startupSummaryText += "The <html> element has a lang attribute value of: " + htmlLangAttribute + ".<br>";
+        } else {
+            startupSummaryText += "The <html> element does not have a lang attribute.<br>";
+        }
 
         //Define sANDI mode buttons (headings, lists, landmarks)
         $("#ANDI508-headings-button").click(function () {
@@ -460,31 +471,6 @@ function init_module() {
             return false;
         });
 
-        //Define the page title button
-        $("#ANDI508-pageTitle-button").click(function () {
-            andiOverlay.overlayButton_on("overlay", $(this));
-            if (document.title) {
-                alert("The page title is: " + document.title);
-            } else {
-                alert("There is no page title.");
-            }
-            andiOverlay.overlayButton_off("overlay", $(this));
-        });
-
-        //Define the page language button
-        $("#ANDI508-pageLanguage-button").click(function () {
-            andiOverlay.overlayButton_on("overlay", $(this));
-            //get the lang attribute from the HTML element
-            var htmlLangAttribute = $.trim($("html").first().prop("lang"));
-            //pop up the lang value of the HTML element
-            if (htmlLangAttribute) {
-                alert("The <html> element has a lang attribute value of: " + htmlLangAttribute + ".");
-            } else {
-                alert("The <html> element does not have a lang attribute.");
-            }
-            andiOverlay.overlayButton_off("overlay", $(this));
-        });
-
         //Deselect all mode buttons
         $("#ANDI508-module-actions button.sANDI508-mode").attr("aria-selected", "false");
 
@@ -529,18 +515,7 @@ function init_module() {
                 return false;
             });
 
-            if (document.title) {
-                startupSummaryText += "The page title is: " + document.title + ".<br>";
-            } else {
-                startupSummaryText += "There is no page title.<br>";
-            }
-            var htmlLangAttribute = $.trim($("html").first().prop("lang"));
-            //pop up the lang value of the HTML element
-            if (htmlLangAttribute) {
-                startupSummaryText += "The <html> element has a lang attribute value of: " + htmlLangAttribute + ".<br>";
-            } else {
-                startupSummaryText += "The <html> element does not have a lang attribute.<br>";
-            }
+            
             startupSummaryText += "Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.";
 
             if (!andiBar.focusIsOnInspectableElement()) {
