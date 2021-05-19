@@ -529,7 +529,6 @@ function init_module() {
                 return false;
             });
 
-            startupSummaryText = "Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.";
             if (document.title) {
                 startupSummaryText += "The page title is: " + document.title + ".<br>";
             } else {
