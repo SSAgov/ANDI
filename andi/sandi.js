@@ -338,7 +338,7 @@ function init_module() {
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     sANDI.results = function () {
-
+        var startupSummaryText = "";
         var moduleActionButtons = "";
         moduleActionButtons += "<button id='ANDI508-headings-button' class='sANDI508-mode' aria-label='" + sANDI.headers.list.length + " Headings'>" + sANDI.headers.list.length + " headings</button>";
         moduleActionButtons += "<button id='ANDI508-lists-button' class='sANDI508-mode' aria-label='" + sANDI.lists.count + " Lists'>" + sANDI.lists.count + " lists</button>";
@@ -529,9 +529,23 @@ function init_module() {
                 return false;
             });
 
+            startupSummaryText = "Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.";
+            if (document.title) {
+                startupSummaryText += "The page title is: " + document.title + ".";
+            } else {
+                startupSummaryText += "There is no page title.";
+            }
+            var htmlLangAttribute = $.trim($("html").first().prop("lang"));
+            //pop up the lang value of the HTML element
+            if (htmlLangAttribute) {
+                startupSummaryText += "The <html> element has a lang attribute value of: " + htmlLangAttribute + ".";
+            } else {
+                startupSummaryText += "The <html> element does not have a lang attribute.";
+            }
+
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
-                andiBar.showStartUpSummary("Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.", true);
+                andiBar.showStartUpSummary(startupSummaryText, true);
             }
         } else if (AndiModule.activeActionButtons.lists) { //LISTS
             $("#ANDI508-lists-button")
@@ -581,7 +595,7 @@ function init_module() {
                     //hide Outline, show alert list
                     $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
                     $("#ANDI508-alerts-list").show();
-                    
+
                     $(this)
                         .addClass("ANDI508-viewOtherResults-button-expanded")
                         .html(listIcon + "hide list of lists")
@@ -627,7 +641,7 @@ function init_module() {
                     //hide Outline, show alert list
                     $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
                     $("#ANDI508-alerts-list").show();
-                    
+
                     $(this)
                         .addClass("ANDI508-viewOtherResults-button-expanded")
                         .html(listIcon + "hide landmarks list")
