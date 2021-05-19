@@ -617,10 +617,10 @@ function init_module() {
             });
 
             //$("#ANDI508-additionalPageResults").html(listCounts);
-
+            startupSummaryText += "List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied. " + listCounts;
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
-                andiBar.showStartUpSummary("List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied. " + listCounts, true);
+                andiBar.showStartUpSummary(startupSummaryText, true);
             }
         } else if (AndiModule.activeActionButtons.landmarks) { //LANDMARKS
             $("#ANDI508-landmarks-button")
@@ -662,10 +662,11 @@ function init_module() {
                 return false;
             });
 
+            startupSummaryText += "Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.";
             andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
-                andiBar.showStartUpSummary("Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.", true);
+                andiBar.showStartUpSummary(startupSummaryText, true);
             }
         } else if (AndiModule.activeActionButtons.liveRegions) { //LIVE REGIONS
             $("#ANDI508-liveRegions-button")
@@ -707,10 +708,11 @@ function init_module() {
                 return false;
             });
 
+            startupSummaryText += "<span class='ANDI508-module-name-s'>Live regions</span> found.<br />Discover the Output of the <span class='ANDI508-module-name-s'>live regions</span> by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.";
             andiBar.updateResultsSummary("Live Regions: " + sANDI.liveRegions.list.length);
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
-                andiBar.showStartUpSummary("<span class='ANDI508-module-name-s'>Live regions</span> found.<br />Discover the Output of the <span class='ANDI508-module-name-s'>live regions</span> by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.", true);
+                andiBar.showStartUpSummary(, true);
             }
         }
 
