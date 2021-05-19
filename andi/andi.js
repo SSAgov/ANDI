@@ -1641,8 +1641,9 @@ function AndiLaser() {
     this.createLaserTrigger = function (triggerObject, targetObject) {
         if (browserSupports.svg) {
             $(triggerObject).hover(function () {
-                if ($(targetObject) !== undefined)
+                if ($(targetObject) !== undefined) {
                     andiLaser.drawLaser($(triggerObject).offset(), $(targetObject).offset(), $(targetObject));
+                }
             });
             $(triggerObject).on("mouseleave", andiLaser.eraseLaser);
         }
@@ -1693,13 +1694,15 @@ function AndiUtility() {
     //This ultility function takes a string and converts &, < and > into &amp;, &lt; and &gt; so that when the
     //string is displayed on screen, the browser doesn't try to parse the string into html tags.
     this.formatForHtml = function (string) {
-        if (string !== undefined)
+        if (string !== undefined) {
             return string.replace(this.ampersand_regex, "&amp;").replace(this.greaterthan_regex, "&gt;").replace(this.lessthanthan_regex, "&lt;");
+        }
     };
 
     this.condenseWhitespace = function (string) {
-        if (string !== undefined)
+        if (string !== undefined) {
             return string.replace(this.whitespace_regex, " ");
+        }
     };
 
     this.stripHTML = function (string) {
@@ -1718,11 +1721,12 @@ function AndiUtility() {
                 node = element.childNodes[z];
                 if (node.nodeType === 1) {//element node
                     if ($(node).is(":shown") && !$(node).is("[aria-hidden=true]")) {
-                        if (root != node && !isEmbeddedControl(node))
+                        if (root != node && !isEmbeddedControl(node)) {
                             innerText += this.getVisibleInnerText(node, root);
-
-                        if (andiUtility.isBlockElement(node))
+                        }
+                        if (andiUtility.isBlockElement(node)) {
                             innerText += " ";
+                        }
                     }
                 } else if (node.nodeType === 3) { //text node
                     innerText += andiUtility.condenseWhitespace(node.nodeValue);
@@ -1883,14 +1887,14 @@ function AndiOverlay() {
 
     //This function will create an overlay html element
     this.createOverlay = function (purposeClass, innerText, title, tabindex) {
-        if (!tabindex)
+        if (!tabindex) {
             tabindex = 0;
-
+        }
         var overlay = document.createElement("span");
 
-        if (title)
+        if (title) {
             $(overlay).attr("title", title);
-
+        }
         $(overlay)
             .attr("tabindex", tabindex)
             .addClass("ANDI508-overlay " + purposeClass)
