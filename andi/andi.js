@@ -2155,7 +2155,6 @@ AndiData.grab_semantics = function (element, data) {
 // Text Alternative Computation://
 //==============================//
 AndiData.textAlternativeComputation = function (root) {
-
     var isAriaHidden = traverseAriaHidden(root);
     var isNamed = false;
     var isDescribed = false;
@@ -2209,9 +2208,7 @@ AndiData.textAlternativeComputation = function (root) {
         }
     }
 
-    if (!isAriaHidden) {
-
-        //Calculate Accessible Name
+    if (!isAriaHidden) { //Calculate Accessible Name
         nodesTraversed = [];
         calcAccName(stepB(root, AndiData.data.components));
         calcAccName(stepC(root, AndiData.data.components));
@@ -2537,18 +2534,21 @@ AndiData.textAlternativeComputation = function (root) {
         return accumulatedText;
 
         function calcSubtreeName(result, checkForBlockLevelElement) {
-            if (result)
+            if (result) {
                 accumulatedText += result;
-            if (checkForBlockLevelElement && accumulatedText !== "" && andiUtility.isBlockElement(node))
+            }
+            if (checkForBlockLevelElement && accumulatedText !== "" && andiUtility.isBlockElement(node)) {
                 accumulatedText += " "; //add extra space after block elements
+            }
             return !!result;
         }
 
         function pushSubtreeData(data, subtreeData, node) {
             if (!$.isEmptyObject(subtreeData)) {
                 AndiData.grab_semantics(node, subtreeData);
-                if (!data.subtree)//create subtree
+                if (!data.subtree) { //create subtree
                     data.subtree = [];
+                }
                 data.subtree.push(subtreeData);
             }
         }
@@ -2595,8 +2595,9 @@ AndiData.textAlternativeComputation = function (root) {
         function accumulateText(text) {
             if (isCheckRolePresentation) {
                 var role = $(element).attr("role");
-                if (role === "presentation" || role === "none")
+                if (role === "presentation" || role === "none") {
                     return "";
+                }
             }
             accumulatedText += text;
         }
@@ -2680,16 +2681,16 @@ AndiData.textAlternativeComputation = function (root) {
             function addComp_grouping(data, component, groupingElement) {
                 var displayText = "";
 
-                if ($.trim(component) !== "")
+                if ($.trim(component) !== "") {
                     displayText = "<span class='ANDI508-display-grouping'>" + component + "</span>";
-
+                }
                 if (displayText) {
-                    if (!data.grouping) //create grouping object
+                    if (!data.grouping) {  //create grouping object
                         data.grouping = {};
-
-                    if (!data.grouping.role) //store grouping role
+                    }
+                    if (!data.grouping.role) {  //store grouping role
                         data.grouping.role = $(groupingElement).attr("role");
-
+                    }
                     data.grouping.text = displayText;
                 }
                 return displayText;
@@ -2701,16 +2702,18 @@ AndiData.textAlternativeComputation = function (root) {
 
     function isEmptyComponent(component, componentType, element) {
         if ($.trim(component) == "") {
-            if (element == root)//only record empty components for the root
+            if (element == root) {  //only record empty components for the root
                 addEmptyComponent(componentType, "\"\"");
+            }
             return true;
         }
         return false;
     }
 
     function addEmptyComponent(componentType, component) {
-        if (!AndiData.data.empty)
+        if (!AndiData.data.empty) {
             AndiData.data.empty = {};
+        }
         AndiData.data.empty[componentType] = component;
     }
 
@@ -2727,8 +2730,9 @@ AndiData.textAlternativeComputation = function (root) {
 
         //check if label is being used on page
         var accumulatedText = grab_labelNested(element);
-        if (accumulatedText === undefined)
+        if (accumulatedText === undefined) {
             accumulatedText = grab_labelFor(element);
+        }
 
         return (accumulatedText !== undefined) ? [accumulatedText, labelElement] : undefined;
 
@@ -2875,34 +2879,39 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         pushProp();
     }
     if (hasProp("aria-multiline")) {
-        if (prop.val === "true" && hasRole("textbox,searchbox"))
+        if (prop.val === "true" && hasRole("textbox,searchbox")) {
             prop.out = "multi-line";
+        }
         pushProp();
     }
     if (hasProp("aria-multiselectable")) {
-        if (prop.val === "true" && hasRole("grid,listbox,tablist,tree,treegrid"))
+        if (prop.val === "true" && hasRole("grid,listbox,tablist,tree,treegrid")) {
             prop.out = "multi-selectable";
+        }
         pushProp();
     }
     if (hasProp("aria-placeholder")) {
         pushProp();
     }
     if (hasProp("aria-pressed")) {
-        if (hasRole("button", "button,input[type=button],input[type=submit],input[type=image],input[type=reset]"))
+        if (hasRole("button", "button,input[type=button],input[type=submit],input[type=image],input[type=reset]")) {
             prop.out = (prop.val === "true") ? "pressed" : "not pressed";
+        }
         pushProp();
     }
     if (hasProp("aria-roledescription")) {
         pushProp();
     }
     if (hasProp("aria-selected")) {
-        if (hasRole("gridcell,option,row,tab,columnheader,rowheader,treeitem"))
+        if (hasRole("gridcell,option,row,tab,columnheader,rowheader,treeitem")) {
             prop.out = (prop.val === "true") ? "selected" : "";
+        }
         pushProp();
     }
     if (hasProp("contenteditable")) {
-        if (prop.val === "")//set to true
+        if (prop.val === "") { //set to true
             prop.val = "true";
+        }
         pushProp();
     }
 
@@ -3045,10 +3054,12 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
     }
 
     if (hasRole("range,scrollbar,separator,slider,spinbutton")) {
-        if (hasProp("aria-valuemax"))
+        if (hasProp("aria-valuemax")) {
             pushProp();
-        if (hasProp("aria-valuemin"))
+        }
+        if (hasProp("aria-valuemin")) {
             pushProp();
+        }
 
         var valuetextInOutput = false;
         if (hasRole("range,separator,slider")) {
@@ -3108,14 +3119,16 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
             name: attribute,
             val: $(element).attr(attribute)
         };
-        if (prop.val !== undefined)
+        if (prop.val !== undefined) {
             return true;
+        }
         return false;
     }
     //This function concatenates the output to addOnProps[0] and adds the property to the array
     function pushProp() {
-        if (prop.out)
+        if (prop.out) {
             addOnProps[0] += prop.out + ", ";
+        }
         addOnProps.push(prop);
     }
 
@@ -3123,9 +3136,9 @@ AndiData.getAddOnProps = function (element, elementData, extraProps) {
         prop.val = "<span class='ANDI508-display-id'>#" + prop.val.replace(andiUtility.whitespace_regex, " #") + "</span>";
     }
 
-    if (addOnProps[0] !== "")//Slice off last two characters: the comma and space: ", "
+    if (addOnProps[0] !== "") {  //Slice off last two characters: the comma and space: ", "
         addOnProps[0] = addOnProps[0].slice(0, -2);
-
+    }
     return addOnProps; //returns an array
 };
 AndiData.attachDataToElement = function (element) {
@@ -3138,12 +3151,12 @@ AndiData.attachDataToElement = function (element) {
 
     $(element).data("andi508", AndiData.data);
 
-    //Attach danger class
-    if (AndiData.data.dangers.length > 0)
+    if (AndiData.data.dangers.length > 0) { //Attach danger class
         $(element).addClass("ANDI508-element-danger");
-    //Highlight this element
-    if (AndiSettings.elementHighlightsOn)
+    }
+    if (AndiSettings.elementHighlightsOn) { //Highlight this element
         $(element).addClass("ANDI508-highlight");
+    }
 };
 
 AndiData.addComp = function (data, componentType, component, hasNodebeenTraversed) {
