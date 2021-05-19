@@ -182,8 +182,9 @@ function AndiModule(moduleVersionNumber, moduleLetter) {
     //Set Default Module function logic
     AndiModule.hoverability = function (event) {
         //check for holding shift key or if element is excluded from inspection for some reason
-        if (!event.shiftKey && !$(this).hasClass("ANDI508-exclude-from-inspection"))
+        if (!event.shiftKey && !$(this).hasClass("ANDI508-exclude-from-inspection")) {
             AndiModule.inspect(this);
+        }
     };
     AndiModule.focusability = function () {
         andiLaser.eraseLaser();
@@ -217,9 +218,9 @@ function AndiModule(moduleVersionNumber, moduleLetter) {
     $("#ANDI508-button-nextElement").off("click").click(function () {
         var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
 
-        if (index == testPageData.andiElementIndex || isNaN(index)) //if active is last or not established yet
+        if (index == testPageData.andiElementIndex || isNaN(index)) { //if active is last or not established yet
             index = 0; //begin at first element
-
+        }
         //Find the next element with data-andi508-index
         //Skips over elements that have become hidden, removed from DOM, or excluded from inspection for some reason
         for (var x = index, next; x < testPageData.andiElementIndex; x++) {
@@ -250,8 +251,9 @@ AndiModule.initActiveActionButtons = function (buttonsObject) {
 //This function will click any of the activeActionButtons in the buttonsArray that are set to true
 AndiModule.engageActiveActionButtons = function (buttonsArray) {
     for (var b = 0; b < buttonsArray.length; b++) {
-        if (AndiModule.activeActionButtons[buttonsArray[b]])
+        if (AndiModule.activeActionButtons[buttonsArray[b]]) {
             $("#ANDI508-" + buttonsArray[b] + "-button").click();
+        }
     }
 };
 
@@ -262,8 +264,9 @@ AndiModule.showMenu = function () {
 AndiModule.hideMenu = function () {
     //setTimeout and :focus check are needed to fix a timing issue in firefox and chrome
     setTimeout(function () {
-        if (!$(":focus").hasClass("ANDI508-moduleMenu-option"))
+        if (!$(":focus").hasClass("ANDI508-moduleMenu-option")) {
             $("#ANDI508-moduleMenu").removeClass("ANDI508-moduleMenu-expanded");
+        }
     }, 5);
 };
 
@@ -309,7 +312,12 @@ AndiModule.launchModule = function (module) {
         script.src = host_url + module + "andi.js";
         script.type = "text/javascript";
         script.id = "andiModuleScript";
-        script.onload = script.onreadystatechange = function () { if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) { done = true; init_module(); } };
+        script.onload = script.onreadystatechange = function () {
+            if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
+                done = true;
+                init_module();
+            }
+        };
 
         $("#andiModuleScript").remove(); //Remove previously added module script
         $("#andiModuleCss").remove();//remove previously added module css
@@ -572,8 +580,9 @@ function andiReady() {
             "</div>" +
             "</section>";
 
-        if (browserSupports.svg)
+        if (browserSupports.svg) {
             andiBar += "<svg id='ANDI508-laser-container'><title>ANDI Laser</title><line id='ANDI508-laser'></line></svg>";
+        }
 
         var body = $("body").first();
 
@@ -639,9 +648,9 @@ function andiReady() {
         $("#ANDI508-button-help")
             .click(function () {
                 var helpLocation = "howtouse.html";
-                if (AndiModule.module != "f") //jump directly to the module on the help page
+                if (AndiModule.module != "f") { //jump directly to the module on the help page
                     helpLocation = "modules.html#" + AndiModule.module + "ANDI";
-
+                }
                 window.open(help_url + helpLocation, "_ANDIhelp", 'width=810,height=620,scrollbars=yes,resizable=yes').focus();
             })
             .focus(andiHotkeyList.hideHotkeysList);
@@ -732,8 +741,11 @@ function andiReady() {
             var isTabIndexNotNaN = !isNaN(tabindex) && tabindex !== "";
             if (nodeName === "area") {
                 var map = element.parentNode; var mapName = map.name;
-                if (!element.href || !mapName || map.nodeName.toLowerCase() !== "map") return false;
-                var img = $("img[usemap=\\#" + mapName + "]")[0]; return !!img && visibleParents(img);
+                if (!element.href || !mapName || map.nodeName.toLowerCase() !== "map") {
+                    return false;
+                }
+                var img = $("img[usemap=\\#" + mapName + "]")[0];
+                return !!img && visibleParents(img);
             }
             return (
                 /^(input|select|textarea|button|iframe|summary)$/.test(nodeName) ?
@@ -778,7 +790,16 @@ function andiReady() {
         if (!Object.keys) { Object.keys = (function () { 'use strict'; var hasOwnProperty = Object.prototype.hasOwnProperty, hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'), dontEnums = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'], dontEnumsLength = dontEnums.length; return function (obj) { if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) { throw new TypeError('Object.keys called on non-object'); } var result = [], prop, i; for (prop in obj) { if (hasOwnProperty.call(obj, prop)) { result.push(prop); } } if (hasDontEnumBug) { for (i = 0; i < dontEnumsLength; i++) { if (hasOwnProperty.call(obj, dontEnums[i])) { result.push(dontEnums[i]); } } } return result; }; }()); }
 
         //Define Array.indexOf for old IE
-        if (!Array.prototype.indexOf) { Array.prototype.indexOf = function (obj, start) { for (var i = (start || 0), j = this.length; i < j; i++) { if (this[i] === obj) { return i; } } return -1; }; }
+        if (!Array.prototype.indexOf) {
+            Array.prototype.indexOf = function (obj, start) {
+                for (var i = (start || 0), j = this.length; i < j; i++) {
+                    if (this[i] === obj) {
+                        return i;
+                    }
+                }
+                return -1;
+            };
+        }
     }
 }
 
@@ -792,11 +813,13 @@ function AndiBar() {
         }
         //Display Element Name (tag/role)
         var tagNameDisplay = $(element).prop("tagName").toLowerCase();
-        if ($(element).is("input") && $(element).attr("type"))
+        if ($(element).is("input") && $(element).attr("type")) {
             tagNameDisplay += ' type="' + $(element).attr("type") + '"';
+        }
         var role = $.trim($(element).attr("role"));
-        if (role)
+        if (role) {
             tagNameDisplay += ' role="' + role + '"';
+        }
         $("#ANDI508-elementNameDisplay").html(tagNameDisplay);
         //Hide the startUpSummary and show the elementDetails/pageAnalysis
         if ($("#ANDI508-startUpSummary").html()) {
@@ -814,9 +837,7 @@ function AndiBar() {
         var outputText = ""; //reset - this will hold the output text to be displayed
 
         if (!checkAlerts("dangers")) { //No dangers found during load
-
             if (!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !$(element).is(":focusable"))) {
-
                 if (elementData.accGroup) {
                     outputText += elementData.accGroup + " ";
                 }
@@ -824,8 +845,9 @@ function AndiBar() {
                     outputText += elementData.accName;
 
                     //Matching: if accessible name matches accessible description, don't output the description
-                    if (elementData.accDesc && matchingTest(elementData.accName, elementData.accDesc))
+                    if (elementData.accDesc && matchingTest(elementData.accName, elementData.accDesc)) {
                         outputText += " " + elementData.accDesc;
+                    }
                 } else if (elementData.accDesc) { //no accessible name, provide accessible description
                     outputText += " " + elementData.accDesc;
                 }
@@ -871,14 +893,14 @@ function AndiBar() {
 
         var rows = "";
         buildTableBody();
-        if (rows)
+        if (rows) {
             $(accessibleComponentsTableBody).append(rows);
+        }
 
         andiCheck.wereComponentsFound(elementData.isTabbable, accessibleComponentsTableBody);
         andiLaser.createReferencedComponentLaserTriggers();
 
         function buildTableBody() {
-
             if (!elementData.isAriaHidden) {
                 displayGrouping(elementData.grouping);
                 displayEmptyComponents(elementData.empty);
@@ -898,8 +920,9 @@ function AndiBar() {
             }
 
             function displayGrouping(grouping) {
-                if (grouping)
+                if (grouping) {
                     rows += buildRow("grouping", grouping.role, grouping.text);
+                }
             }
 
             function displayEmptyComponents(emptyComponents) {
@@ -913,8 +936,9 @@ function AndiBar() {
             function displayConcatenatedInnerText() {
                 if (!$(element).is("table") || $(element).is("[role=presentation],[role=none]")) { //other exclusions are handled by the getVisibleInnerText
                     var innerText = andiUtility.formatForHtml($.trim(andiUtility.getVisibleInnerText(element, element)));
-                    if (innerText)
+                    if (innerText) {
                         rows += buildRow("innerText", "innerText", innerText);
+                    }
                 }
             }
 
@@ -938,12 +962,13 @@ function AndiBar() {
 
             function displayAddOnProps() {
                 for (var x = 1; x < addOnProps.length; x++) {
-                    if (addOnProps[x].val)//if this addOnProperty exists, add to row
+                    if (addOnProps[x].val) { //if this addOnProperty exists, add to row
                         rows += buildRow("addOnProperties", addOnProps[x].name, addOnProps[x].val);
+                    }
                 }
-
-                if (elementData.src)
+                if (elementData.src) {
                     rows += buildRow("addOnProperties", "src", elementData.src);
+                }
             }
 
             function displayAriaHiddenOnly() {
@@ -951,8 +976,9 @@ function AndiBar() {
             }
 
             function displaySubtreeComponents() {
-                if (elementData.components.subtree)
+                if (elementData.components.subtree) {
                     loopThroughSubtrees(elementData.components);
+                }
 
                 function loopThroughSubtrees(components) {
                     for (var x = 0; x < components.subtree.length; x++) {
@@ -990,8 +1016,9 @@ function AndiBar() {
             }
 
             function formatComponentName(componentName) {
-                if (componentName.substring(0, 4) === "aria")
+                if (componentName.substring(0, 4) === "aria") {
                     return "aria-" + componentName.charAt(4).toLowerCase() + componentName.substring(5, componentName.length);
+                }
                 return componentName;
             }
         }
@@ -1166,8 +1193,9 @@ function AndiResetter() {
             $(testPage).find(".ANDI508-element").each(function () {
 
                 //Module specific cleanup for this element
-                if (AndiModule.cleanup !== undefined)
+                if (AndiModule.cleanup !== undefined) {
                     AndiModule.cleanup(testPage, this);
+                }
 
                 //Global cleanup
                 $(this)
@@ -1179,8 +1207,9 @@ function AndiResetter() {
             });
 
             //Module specific cleanup for all elements
-            if (AndiModule.cleanup !== undefined)
+            if (AndiModule.cleanup !== undefined) {
                 AndiModule.cleanup(testPage);
+            }
 
             andiLaser.cleanupLaserTargets(testPage);
 
@@ -1225,16 +1254,18 @@ function AndiResetter() {
                     }
                 });
             andiHotkeyList.hideHotkeysList();
-            if (!hideSettingsList)
+            if (!hideSettingsList) {
                 andiSettings.hideSettingsList();
+            }
         }, AndiSettings.andiAnimationSpeed + 50);
     };
 
     //This function will adjust the top distance of all elements on the test page that have css fixed positions.
     //This allows ANDI to not overlap with test page if using fixed positions.
     this.storeTestPageFixedPositionDistances = function (element) {
-        if (($(element).css("position") === "fixed") && !$(element).attr("data-andi508-origfixedtopbot"))
+        if (($(element).css("position") === "fixed") && !$(element).attr("data-andi508-origfixedtopbot")) {
             $(element).attr("data-andi508-origfixedtopbot", $(element).css("top") + " " + $(element).css("bottom")); //store the value of the original top distance and bottom distance
+        }
     };
     //This function will restore the test page fixed position distances to their original values.
     //It is meant to be called when the close ANDI button is pressed.
@@ -1354,7 +1385,7 @@ function AndiSettings() {
                             andiSettings.minimode(true);
                         } else {
                             andiSettings.minimode(false);
-                        } 
+                        }
                     }
                     //Load the Linearize
                     if (!localStorage.getItem("ANDI508-linearize")) { //Default linearize to false
@@ -3272,7 +3303,7 @@ function AndiCheck() {
                     if (elementData.role) {
                         var roleCapitalized = elementData.role.charAt(0).toUpperCase() + elementData.role.slice(1);
                         message = roleCapitalized + " Element" + alert_0008.message;
-                    //Is this an input element, excluding input[image]?
+                        //Is this an input element, excluding input[image]?
                     } else if (tagNameText.includes("input") && tagNameText != "input[type=image]") {
                         switch (tagNameText) {
                             case "input[type=text]":
@@ -4046,7 +4077,7 @@ var oldIE = false; //used to determine if old version of IE is being used.
         //Which version is needed?
         if (!oldIE) {
             script.src = jqueryDownloadSource + jqueryPreferredVersion + "/jquery.min.js";
-        //IE 9 or later is being used, download preferred jquery version.
+            //IE 9 or later is being used, download preferred jquery version.
         } else {
             script.src = jqueryDownloadSource + jqueryMinimumVersion + "/jquery.min.js";
         } //Download minimum jquery version.
