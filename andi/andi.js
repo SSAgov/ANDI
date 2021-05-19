@@ -1376,8 +1376,7 @@ function AndiSettings() {
         //If this browser has HTML5 local storage capabilities
         if (typeof (Storage) !== "undefined") {
             try {
-                if (window.localStorage) {
-                    //Load the Minimode
+                if (window.localStorage) { //Load the Minimode
                     if (!localStorage.getItem("ANDI508-minimode")) { //Default minimode to false
                         andiSettings.minimode(false);
                     } else { //load from local storage
