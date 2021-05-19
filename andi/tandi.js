@@ -411,8 +411,7 @@ function init_module() {
                             }
                         }
 
-                        if (scope) {
-                            //th has scope
+                        if (scope) { //th has scope
                             if (isSameColgroup && scope === "col" && col_index_matches) {
                                 addHighlight(this);
                             } else if (scope === "row" && row_index_matches) {
