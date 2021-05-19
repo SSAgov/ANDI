@@ -531,17 +531,18 @@ function init_module() {
 
             startupSummaryText = "Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.";
             if (document.title) {
-                startupSummaryText += "The page title is: " + document.title + ".";
+                startupSummaryText += "The page title is: " + document.title + ".<br>";
             } else {
-                startupSummaryText += "There is no page title.";
+                startupSummaryText += "There is no page title.<br>";
             }
             var htmlLangAttribute = $.trim($("html").first().prop("lang"));
             //pop up the lang value of the HTML element
             if (htmlLangAttribute) {
-                startupSummaryText += "The <html> element has a lang attribute value of: " + htmlLangAttribute + ".";
+                startupSummaryText += "The <html> element has a lang attribute value of: " + htmlLangAttribute + ".<br>";
             } else {
-                startupSummaryText += "The <html> element does not have a lang attribute.";
+                startupSummaryText += "The <html> element does not have a lang attribute.<br>";
             }
+            startupSummaryText += "Heading structure found.<br />Determine if <span class='ANDI508-module-name-s'>headings</span> are appropriately applied.";
 
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
