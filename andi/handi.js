@@ -127,8 +127,7 @@ function init_module() {
                     $(this).addClass("ANDI508-forceReveal-visibility");
                     elementCss += "visibility:hidden; ";
                 }
-                if ($(this).css("position") == "absolute" && ($(this).offset().left < 0 || $(this).offset().top < 0)) {
-                    //element is positioned offscreen
+                if ($(this).css("position") == "absolute" && ($(this).offset().left < 0 || $(this).offset().top < 0)) { //element is positioned offscreen
                     hANDI.hiddenContents.count += 1;
                     isHidingContent = true;
                     hANDI.hiddenContents.hiddenPosition += 1;
@@ -162,8 +161,7 @@ function init_module() {
                     }
                 }
                 if ($(this).css("text-indent") != "0" || $(this).css("text-indent") != "0px") {
-                    if (parseInt($(this).css("text-indent")) < -998) {
-                        //element has a text-indent that makes it off screen
+                    if (parseInt($(this).css("text-indent")) < -998) { //element has a text-indent that makes it off screen
                         hANDI.hiddenContents.count += 1;
                         isHidingContent = true;
                         hANDI.hiddenContents.hiddenTextIndent += 1;
