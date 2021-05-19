@@ -687,7 +687,7 @@ function init_module() {
             andiBar.updateResultsSummary("Live Regions: " + sANDI.liveRegions.list.length);
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
-                andiBar.showStartUpSummary(, true);
+                andiBar.showStartUpSummary(startupSummaryText, true);
             }
         }
 
