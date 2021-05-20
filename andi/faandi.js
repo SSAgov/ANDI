@@ -1,12 +1,12 @@
 //=============================================//
-//fANDI: focusable elements ANDI (default mode)//
+//faANDI: focusable elements ANDI (default mode)//
 //Created By Social Security Administration    //
 //=============================================//
 function init_module() {
-    var fandiVersionNumber = "7.0.0", fANDI;
+    var faANDIVersionNumber = "7.0.0", faANDI;
 
-    //create fANDI instance
-    fANDI = new AndiModule(fandiVersionNumber, "fa");
+    //create faANDI instance
+    faANDI = new AndiModule(faANDIVersionNumber, "fa");
 
     AndiModule.initActiveActionButtons({
         tabOrder: false,
@@ -26,31 +26,31 @@ function init_module() {
         this.count = 0;
     }
 
-    fANDI.viewList_tableReady = false;
-    fANDI.index = 1;
+    faANDI.viewList_tableReady = false;
+    faANDI.index = 1;
 
     //This function will analyze the test page for focusable element related markup relating to accessibility
-    fANDI.analyze = function () {
-        fANDI.focusables = new Focusables();
+    faANDI.analyze = function () {
+        faANDI.focusables = new Focusables();
 
-        fANDI.accesskeys = new AndiAccesskeys();
+        faANDI.accesskeys = new AndiAccesskeys();
 
         //Loop through every visible element and run tests
         //NOTE: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
         //      $(TestPageData.allElements).not( ....).each(function ())
         $(TestPageData.allElements).each(function () {
-            fANDI.focusables.list.push(new Focusable(this, fANDI.index));
-            fANDI.focusables.count += 1;
+            faANDI.focusables.list.push(new Focusable(this, faANDI.index));
+            faANDI.focusables.count += 1;
             andiData = new AndiData(this);
 
             andiCheck.commonFocusableElementChecks(andiData, $(this));
             andiCheck.lookForCanvasFallback(this);
             if (andiData.accesskey) {
-                fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
+                faANDI.accesskeys.push(this, andiData.accesskey, faANDI.index);
             }
             testPageData.firstLaunchedModulePrep(this, andiData);
             AndiData.attachDataToElement(this);
-            fANDI.index += 1;
+            faANDI.index += 1;
         });
 
         andiCheck.areLabelForValid();
@@ -114,26 +114,26 @@ function init_module() {
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     //Inserts some counter totals, displays the accesskey list
-    fANDI.results = function () {
+    faANDI.results = function () {
         andiBar.updateResultsSummary("Focusable Elements Found: " + testPageData.andiElementIndex);
 
         $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewFocusablesList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view focusable items list</button>");
 
         //Focusable Elements List Button
         $("#ANDI508-viewFocusablesList-button").click(function () {
-            if (!fANDI.viewList_tableReady) {
-                fANDI.viewList_buildTable("focusable elements");
-                fANDI.viewList_attachEvents();
-                fANDI.viewList_tableReady = true;
+            if (!faANDI.viewList_tableReady) {
+                faANDI.viewList_buildTable("focusable elements");
+                faANDI.viewList_attachEvents();
+                faANDI.viewList_tableReady = true;
             }
-            fANDI.viewList_toggle("focusable elements", this);
+            faANDI.viewList_toggle("focusable elements", this);
             andiResetter.resizeHeights();
             return false;
         });
 
         //Accesskeys List:
-        if (fANDI.accesskeys.getListHtml()) {
-            $("#ANDI508-additionalPageResults").append("<p id='ANDI508-accesskeysFound'>AccessKeys: " + "{ " + fANDI.accesskeys.getListHtml() + "}</p>");
+        if (faANDI.accesskeys.getListHtml()) {
+            $("#ANDI508-additionalPageResults").append("<p id='ANDI508-accesskeysFound'>AccessKeys: " + "{ " + faANDI.accesskeys.getListHtml() + "}</p>");
             $("#ANDI508-accesskeysFound").find("a").each(function () {
                 andiFocuser.addFocusClick($(this));
                 $(this).on("mouseover", andiLaser.drawAlertLaser);
@@ -211,27 +211,27 @@ function init_module() {
     };
 
     //This function builds the table for the view list
-    fANDI.viewList_buildTable = function (mode) {
+    faANDI.viewList_buildTable = function (mode) {
         var tableHTML = "";
         var rowClasses, tabsHTML, prevNextButtons;
-        var appendHTML = "<div id='fANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='fANDI508-viewList-tabs'>";
-        var nextPrevHTML = "<button id='fANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
-            "<button id='fANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
+        var appendHTML = "<div id='faANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='faANDI508-viewList-tabs'>";
+        var nextPrevHTML = "<button id='faANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
+            "<button id='faANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
             "</div>" +
             "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
 
-        for (var x = 0; x < fANDI.focusables.list.length; x++) {
+        for (var x = 0; x < faANDI.focusables.list.length; x++) {
             //determine if there is an alert
             rowClasses = "";
             var nextTabButton = "";
-            // if (fANDI.focusables.list[x].alerts.includes("Alert"))
+            // if (faANDI.focusables.list[x].alerts.includes("Alert"))
             //     rowClasses += "ANDI508-table-row-alert ";
 
             tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                "<th scope='row'>" + fANDI.focusables.list[x].index + "</th>" +
+                "<th scope='row'>" + faANDI.focusables.list[x].index + "</th>" +
                 "<td class='ANDI508-alert-column'></td>" +
-                //"<td class='ANDI508-alert-column'>" + fANDI.focusables.list[x].alerts + "</td>" +
-                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + fANDI.focusables.list[x].index + "'>" + fANDI.focusables.list[x].element + "</a></td>" +
+                //"<td class='ANDI508-alert-column'>" + faANDI.focusables.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + faANDI.focusables.list[x].index + "'>" + faANDI.focusables.list[x].element + "</a></td>" +
                 "</tr>";
         }
 
@@ -244,7 +244,7 @@ function init_module() {
     };
 
     //This function hide/shows the view list
-    fANDI.viewList_toggle = function (mode, btn) {
+    faANDI.viewList_toggle = function (mode, btn) {
         if ($(btn).attr("aria-expanded") === "false") {  //show List, hide alert list
             $("#ANDI508-alerts-list").hide();
             andiSettings.minimode(false);
@@ -253,12 +253,12 @@ function init_module() {
                 .html(listIcon + "hide " + mode + " list")
                 .attr("aria-expanded", "true")
                 .find("img").attr("src", icons_url + "list-on.png");
-            $("#fANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+            $("#faANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
             if (mode === "focusable elements") {
                 AndiModule.activeActionButtons.viewLinksList = true;
             }
         } else { //hide List, show alert list
-            $("#fANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+            $("#faANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
             //$("#ANDI508-resultsSummary").show();
             $("#ANDI508-alerts-list").show();
 
@@ -275,7 +275,7 @@ function init_module() {
     };
 
     //This function attaches the click,hover,focus events to the items in the view list
-    fANDI.viewList_attachEvents = function () {
+    faANDI.viewList_attachEvents = function () {
         //Add focus click to each link (output) in the table
         $("#ANDI508-viewList-table td a[data-andi508-relatedindex]").each(function () {
             andiFocuser.addFocusClick($(this));
@@ -326,9 +326,9 @@ function init_module() {
         });
 
         //Define listLinks next button
-        $("#fANDI508-viewList-button-next").click(function () {
+        $("#faANDI508-viewList-button-next").click(function () {
             //Get class name based on selected tab
-            var selectedTabClass = $("#fANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
+            var selectedTabClass = $("#faANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
             var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
             var focusGoesOnThisIndex;
 
@@ -350,7 +350,7 @@ function init_module() {
             }
 
             //Highlight the row in the links list that associates with this element
-            fANDI.viewList_rowHighlight(focusGoesOnThisIndex);
+            faANDI.viewList_rowHighlight(focusGoesOnThisIndex);
             $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
                 this.scrollIntoView();
             });
@@ -359,9 +359,9 @@ function init_module() {
         });
 
         //Define listLinks prev button
-        $("#fANDI508-viewList-button-prev").click(function () {
+        $("#faANDI508-viewList-button-prev").click(function () {
             //Get class name based on selected tab
-            var selectedTabClass = $("#fANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
+            var selectedTabClass = $("#faANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
             var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
             var firstElementInListIndex = $("#ANDI508-testPage ." + selectedTabClass).first().attr("data-andi508-index");
             var focusGoesOnThisIndex;
@@ -388,7 +388,7 @@ function init_module() {
             }
 
             //Highlight the row in the links list that associates with this element
-            fANDI.viewList_rowHighlight(focusGoesOnThisIndex);
+            faANDI.viewList_rowHighlight(focusGoesOnThisIndex);
             $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
                 this.scrollIntoView();
             });
@@ -491,7 +491,7 @@ function init_module() {
         andiBar.displayTable(elementData, element, addOnProps);
     };
 
-    fANDI.analyze();
-    fANDI.results();
+    faANDI.analyze();
+    faANDI.results();
 
 }//end init
