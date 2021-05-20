@@ -19,7 +19,7 @@ function init_module() {
     };
 
     //This object class is used to store data about each link. Object instances will be placed into an array.
-    function Link(href, nameDescription, index, alerts, target, linkPurpose, ambiguousIndex, element) {
+    function Link(href, nameDescription, index, alerts, target, linkPurpose, ambiguousIndex, element, ariaHidden) {
         this.href = href;
         this.nameDescription = nameDescription;
         this.index = index;
@@ -28,6 +28,7 @@ function init_module() {
         this.linkPurpose = linkPurpose;
         this.ambiguousIndex = undefined;
         this.element = element;
+        this.ariaHidden = ariaHidden;
     }
 
     //This object class is used to keep track of the links on the page
@@ -116,6 +117,7 @@ function init_module() {
 
                     if (AndiModule.activeActionButtons.linksMode) {
                         andiData = new AndiData(this);
+                        var ariaHidden = $(this).attr("aria-hidden");
 
                         if ($(this).is("a,area") || andiData.role === "link") {
                             //set nameDescription
@@ -153,7 +155,8 @@ function init_module() {
                                             target,
                                             linkPurpose,
                                             ambiguousIndex,
-                                            this));
+                                            this,
+                                            ariaHidden));
                                 } else if (andiData.role === "link") { //create Link object and add to array
 
                                     lANDI.links.list.push(
@@ -164,7 +167,8 @@ function init_module() {
                                             target,
                                             linkPurpose,
                                             ambiguousIndex,
-                                            this));
+                                            this,
+                                            ariaHidden));
 
                                     isElementInTabOrder(this, "link");
                                 } else if (!andiData.role) { //link has no role and no href, suggest using role=link or href
@@ -651,12 +655,28 @@ function init_module() {
                     rowClasses += "lANDI508-listLinks-external ";
                 }
 
+                // this.ariaHidden = ariaHidden;
+
                 tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
-                    "<th scope='row'>" + lANDI.links.list[x].index + "</th>" +
-                    "<td class='ANDI508-alert-column'>" + lANDI.links.list[x].alerts + "</td>" +
-                    "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + lANDI.links.list[x].index + "'>" + lANDI.links.list[x].nameDescription + "</a></td>" +
-                    "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
-                    "</tr>";
+                "<th scope='row'>" + lANDI.links.list[x].index + "</th>" +
+                "<td class='ANDI508-alert-column'>" + lANDI.links.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + lANDI.links.list[x].index + "'>" +
+                ' "' + lANDI.links.list[x].alerts + '"' +
+                ' "' + lANDI.links.list[x].href + '"' + nextTabButton +
+                ' "' + lANDI.links.list[x].nameDescription + '"' +
+                ' "' + lANDI.links.list[x].target + '"' +
+                ' "' + lANDI.links.list[x].linkPurpose + '"' +
+                ' "' + lANDI.links.list[x].ambiguousIndex + '"' +
+                ' "' + lANDI.links.list[x].element + '"' +
+                ' "' + lANDI.links.list[x].ariaHidden + '"' +
+                "</tr>";
+
+                // tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                //     "<th scope='row'>" + lANDI.links.list[x].index + "</th>" +
+                //     "<td class='ANDI508-alert-column'>" + lANDI.links.list[x].alerts + "</td>" +
+                //     "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + lANDI.links.list[x].index + "'>" + lANDI.links.list[x].nameDescription + "</a></td>" +
+                //     "<td class='ANDI508-code'>" + displayHref + nextTabButton + "</td>" +
+                //     "</tr>";
             }
 
             tabsHTML = "<button id='lANDI508-listLinks-tab-all' aria-label='View All Links' aria-selected='true' class='ANDI508-tab-active' data-andi508-relatedclass='ANDI508-element'>all links (" + lANDI.links.list.length + ")</button>";
