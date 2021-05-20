@@ -41,20 +41,23 @@ function init_module() {
         //      $(TestPageData.allElements).not( ....).each(function ())
         $(TestPageData.allElements).each(function () {
             if (fANDI.testSeeingAllElements) {
-                fANDI.focusables.list.push(new Focusable(this, fANDI.index));
-                fANDI.focusables.count += 1;
-                andiData = new AndiData(this);
+                if ($(this).not("path, rect")) {
+                    fANDI.focusables.list.push(new Focusable(this, fANDI.index));
+                    fANDI.focusables.count += 1;
+                    andiData = new AndiData(this);
 
-                andiCheck.commonFocusableElementChecks(andiData, $(this));
-                andiCheck.lookForCanvasFallback(this);
-                if (andiData.accesskey) {
-                    fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
+                    andiCheck.commonFocusableElementChecks(andiData, $(this));
+                    andiCheck.lookForCanvasFallback(this);
+                    if (andiData.accesskey) {
+                        fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
+                    }
+                    testPageData.firstLaunchedModulePrep(this, andiData);
+                    // NOTE: may need this code:
+                    // andiCheck.isThisElementDisabled(this);
+                    AndiData.attachDataToElement(this);
+                    fANDI.index += 1;
                 }
-                testPageData.firstLaunchedModulePrep(this, andiData);
-                // NOTE: may need this code:
-                // andiCheck.isThisElementDisabled(this);
-                AndiData.attachDataToElement(this);
-                fANDI.index += 1;
+
             } else {
                 if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
                     fANDI.focusables.list.push(new Focusable(this, fANDI.index));
