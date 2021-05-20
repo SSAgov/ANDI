@@ -39,7 +39,7 @@ function init_module() {
         //Loop through every visible element and run tests
         //NOTE: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
         //      $(TestPageData.allElements).not( ....).each(function ())
-        $(TestPageData.allElements).not("path, rect").each(function () {
+        $(TestPageData.allElements).not("path, rect, circle, line, polygon").each(function () {
             if (fANDI.testSeeingAllElements) {
                 fANDI.focusables.list.push(new Focusable(this, fANDI.index));
                 fANDI.focusables.count += 1;
