@@ -684,7 +684,7 @@ function init_module() {
 
             appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +;
+                "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
         } else { //BUILD BUTTON LIST TABLE
             for (var b = 0; b < lANDI.buttons.list.length; b++) {
                 //determine if there is an alert
