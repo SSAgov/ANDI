@@ -39,25 +39,22 @@ function init_module() {
         //Loop through every visible element and run tests
         //NOTE: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
         //      $(TestPageData.allElements).not( ....).each(function ())
-        $(TestPageData.allElements).each(function () {
+        $(TestPageData.allElements).not("path, rect").each(function () {
             if (fANDI.testSeeingAllElements) {
-                if ($(this).not("path, rect")) {
-                    fANDI.focusables.list.push(new Focusable(this, fANDI.index));
-                    fANDI.focusables.count += 1;
-                    andiData = new AndiData(this);
+                fANDI.focusables.list.push(new Focusable(this, fANDI.index));
+                fANDI.focusables.count += 1;
+                andiData = new AndiData(this);
 
-                    andiCheck.commonFocusableElementChecks(andiData, $(this));
-                    andiCheck.lookForCanvasFallback(this);
-                    if (andiData.accesskey) {
-                        fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
-                    }
-                    testPageData.firstLaunchedModulePrep(this, andiData);
-                    // NOTE: may need this code:
-                    // andiCheck.isThisElementDisabled(this);
-                    AndiData.attachDataToElement(this);
-                    fANDI.index += 1;
+                andiCheck.commonFocusableElementChecks(andiData, $(this));
+                andiCheck.lookForCanvasFallback(this);
+                if (andiData.accesskey) {
+                    fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
                 }
-
+                testPageData.firstLaunchedModulePrep(this, andiData);
+                // NOTE: may need this code:
+                // andiCheck.isThisElementDisabled(this);
+                AndiData.attachDataToElement(this);
+                fANDI.index += 1;
             } else {
                 if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
                     fANDI.focusables.list.push(new Focusable(this, fANDI.index));
