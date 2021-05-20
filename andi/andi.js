@@ -515,8 +515,6 @@ function andiReady() {
         var moduleButtons = "<div id='ANDI508-moduleMenu' role='menu' aria-label='Select a Module'><div id='ANDI508-moduleMenu-prompt'>Select Module:</div>" +
             //Default (fANDI)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-f'>focusable elements</button>" +
-            //dANDI (All focusable elements)
-            "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-d'>All focusable elements</button>" +
             //gANDI
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-g' aria-label='graphics slash images'>graphics/images</button>" +
             //lANDI
