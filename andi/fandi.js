@@ -28,6 +28,7 @@ function init_module() {
 
     fANDI.viewList_tableReady = false;
     fANDI.index = 1;
+    fANDI.testSeeingAllElements = true;
 
     //This function will analyze the test page for focusable element related markup relating to accessibility
     fANDI.analyze = function () {
@@ -39,22 +40,42 @@ function init_module() {
         //NOTE: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
         //      $(TestPageData.allElements).not( ....).each(function ())
         $(TestPageData.allElements).each(function () {
-            if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
-                fANDI.focusables.list.push(new Focusable(this, fANDI.index));
-                fANDI.focusables.count += 1;
-                andiData = new AndiData(this);
+            if fANDI.testSeeingAllElements {
+                if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
+                    fANDI.focusables.list.push(new Focusable(this, fANDI.index));
+                    fANDI.focusables.count += 1;
+                    andiData = new AndiData(this);
 
-                andiCheck.commonFocusableElementChecks(andiData, $(this));
-                andiCheck.lookForCanvasFallback(this);
-                if (andiData.accesskey) {
-                    fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
+                    andiCheck.commonFocusableElementChecks(andiData, $(this));
+                    andiCheck.lookForCanvasFallback(this);
+                    if (andiData.accesskey) {
+                        fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
+                    }
+                    testPageData.firstLaunchedModulePrep(this, andiData);
+                    AndiData.attachDataToElement(this);
+                    fANDI.index += 1;
+                } else {
+                    testPageData.firstLaunchedModulePrep(this);
+                    andiCheck.isThisElementDisabled(this);
                 }
-                testPageData.firstLaunchedModulePrep(this, andiData);
-                AndiData.attachDataToElement(this);
-                fANDI.index += 1;
             } else {
-                testPageData.firstLaunchedModulePrep(this);
-                andiCheck.isThisElementDisabled(this);
+                if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
+                    fANDI.focusables.list.push(new Focusable(this, fANDI.index));
+                    fANDI.focusables.count += 1;
+                    andiData = new AndiData(this);
+
+                    andiCheck.commonFocusableElementChecks(andiData, $(this));
+                    andiCheck.lookForCanvasFallback(this);
+                    if (andiData.accesskey) {
+                        fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
+                    }
+                    testPageData.firstLaunchedModulePrep(this, andiData);
+                    AndiData.attachDataToElement(this);
+                    fANDI.index += 1;
+                } else {
+                    testPageData.firstLaunchedModulePrep(this);
+                    andiCheck.isThisElementDisabled(this);
+                }
             }
         });
 
