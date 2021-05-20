@@ -661,7 +661,6 @@ function init_module() {
                 "<th scope='row'>" + lANDI.links.list[x].index + "</th>" +
                 "<td class='ANDI508-alert-column'>" + lANDI.links.list[x].alerts + "</td>" +
                 "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + lANDI.links.list[x].index + "'>" +
-                ' "' + lANDI.links.list[x].alerts + '"' +
                 ' "' + lANDI.links.list[x].href + '"' + nextTabButton +
                 ' "' + lANDI.links.list[x].nameDescription + '"' +
                 ' "' + lANDI.links.list[x].target + '"' +
@@ -685,8 +684,7 @@ function init_module() {
 
             appendHTML += tabsHTML + nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
                 "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +
-                "<th scope='col' style='width:45%'><a href='javascript:void(0)'>href <i aria-hidden='true'></i></a></th>";
+                "<th scope='col' style='width:85%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>" +;
         } else { //BUILD BUTTON LIST TABLE
             for (var b = 0; b < lANDI.buttons.list.length; b++) {
                 //determine if there is an alert
