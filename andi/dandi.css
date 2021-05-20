@@ -1,14 +1,14 @@
-/**faANDI**/
+/**dANDI**/
 	/*==ANDI Bar==*/
-	#ANDI508 #faANDI508-viewList-tabs
+	#ANDI508 #dANDI508-viewList-tabs
 		{margin-left:10px;}
-	#ANDI508 #faANDI508-viewList-tabs button
+	#ANDI508 #dANDI508-viewList-tabs button
 		{border:1px solid black; border-right:1px solid gray; 
 		padding:3px 1em 3px 1em; position:relative; display:inline-block;}
-	#ANDI508 #faANDI508-viewList-tabs button:hover,
-	#ANDI508 #faANDI508-viewList-tabs button:focus
+	#ANDI508 #dANDI508-viewList-tabs button:hover,
+	#ANDI508 #dANDI508-viewList-tabs button:focus
 		{border:1px solid lemonchiffon;}
-	#ANDI508 #faANDI508-viewList-tabs button.ANDI508-tab-active
+	#ANDI508 #dANDI508-viewList-tabs button.ANDI508-tab-active
 		{color:#a4e8ff !important; text-decoration:underline !important; top:1px}
 
 	#ANDI508 #ANDI508-viewList-table td i
@@ -24,15 +24,15 @@
 	#ANDI508 #ANDI508-viewList-table tr.ANDI508-table-row-alert td a span.ANDI508-display-danger
 		{color:#ff6767 !important;}
 		
-	#ANDI508 #ANDI508-viewList-table button.faANDI508-nextTab
+	#ANDI508 #ANDI508-viewList-table button.dANDI508-nextTab
 		{font-size: 7pt; border:1px solid gray; border-radius:5px; padding:1px;}
 		
-	#ANDI508 #faANDI508-viewList-button-prev,
-	#ANDI508 #faANDI508-viewList-button-next
+	#ANDI508 #dANDI508-viewList-button-prev,
+	#ANDI508 #dANDI508-viewList-button-next
 		{border:1px solid black !important; margin:1px 1px 2px 0.6em !important; padding:0 !important; border-radius:3px !important;}
-	#ANDI508 #faANDI508-viewList-button-prev:hover,
-	#ANDI508 #faANDI508-viewList-button-next:hover
+	#ANDI508 #dANDI508-viewList-button-prev:hover,
+	#ANDI508 #dANDI508-viewList-button-next:hover
 		{border:1px solid lemonchiffon !important;}
-	#ANDI508 #faANDI508-viewList-button-prev img,
-	#ANDI508 #faANDI508-viewList-button-next img
+	#ANDI508 #dANDI508-viewList-button-prev img,
+	#ANDI508 #dANDI508-viewList-button-next img
 		{width:22px}
