@@ -638,7 +638,7 @@ function init_module() {
             });
 
             startupSummaryText += "Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.";
-            andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
+            andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.count);
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
                 andiBar.showStartUpSummary(startupSummaryText, true);
