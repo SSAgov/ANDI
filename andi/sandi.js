@@ -167,9 +167,9 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
+                sANDI.landmarks.count += 1;
                 if (AndiModule.activeActionButtons.landmarks) {
                     sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
-                    sANDI.landmarks.count += 1;
                     sANDI.index += 1;
                     andiData = new AndiData(this);
 
