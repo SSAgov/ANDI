@@ -167,9 +167,9 @@ function init_module() {
                     AndiData.attachDataToElement(this);
                 }
             } else if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
+                sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
                 sANDI.landmarks.count += 1;
                 if (AndiModule.activeActionButtons.landmarks) {
-                    sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
                     sANDI.index += 1;
                     andiData = new AndiData(this);
 
@@ -638,7 +638,7 @@ function init_module() {
             });
 
             startupSummaryText += "Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.";
-            andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.count);
+            andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
             if (!andiBar.focusIsOnInspectableElement()) {
                 andiBar.showElementControls();
                 andiBar.showStartUpSummary(startupSummaryText, true);
