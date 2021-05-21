@@ -1,23 +1,23 @@
 //==========================================//
-//sANDI3: landmarks ANDI                    //
+//mANDI: live regions ANDI                  //
 //Created By Social Security Administration //
 //==========================================//
 function init_module() {
 
-    var sANDIVersionNumber = "4.1.3";
+    var mANDIVersionNumber = "4.1.3";
 
-    //create sANDI instance
-    var sANDI = new AndiModule(sANDIVersionNumber, "s");
-    sANDI.index = 1;
+    //create mANDI instance
+    var mANDI = new AndiModule(mANDIVersionNumber, "m");
+    mANDI.index = 1;
 
-    //This object class is used to store data about each landmark. Object instances will be placed into an array.
-    function Landmark(element, index) {
+    //This object class is used to store data about each live region. Object instances will be placed into an array.
+    function LiveRegion(element, index) {
         this.element = element;
         this.index = index;
     }
 
-    //This object class is used to keep track of the landmarks on the page
-    function Landmarks() {
+    //This object class is used to keep track of the live regions on the page
+    function LiveRegions() {
         this.list = [];
         this.count = 0;
     }
@@ -32,35 +32,55 @@ function init_module() {
     });
 
     //This function will analyze the test page for graphics/image related markup relating to accessibility
-    sANDI.analyze = function () {
-        sANDI.landmarks = new Landmarks();
+    mANDI.analyze = function () {
+        mANDI.liveRegions = new LiveRegions();
 
         //Loop through every visible element
         $(TestPageData.allElements).each(function () {
-            if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
-                sANDI.landmarks.list.push(new Landmark(this, sANDI.index));
-                sANDI.landmarks.count += 1;
-                sANDI.index += 1;
+
+            if ($(this).is("[role=alert],[role=status],[role=log],[role=marquee],[role=timer],[aria-live=polite],[aria-live=assertive]")) {
                 andiData = new AndiData(this);
 
-                andiCheck.commonNonFocusableElementChecks(andiData, $(this));
+                if ($(this).isContainerElement()) {
+                    var innerText = andiUtility.getVisibleInnerText(this);
+                    if (innerText) {
+                        //For live regions, screen readers only use the innerText
+                        //override the accName to just the innerText
+                        andiData.accName = "<span class='ANDI508-display-innerText'>" + innerText + "</span>";
+                    } else { //no visible innerText
+                        andiAlerter.throwAlert(alert_0133);
+                        andiData.accName = "";
+                    }
+                    //accDesc should not appear in output
+                    delete andiData.accDesc;
+                } else { //not a container element
+                    andiAlerter.throwAlert(alert_0184);
+                }
+                if ($(this).find("textarea,input:not(:hidden,[type=submit],[type=button],[type=image],[type=reset]),select").length) {
+                    andiAlerter.throwAlert(alert_0182);
+                }
+                mANDI.liveRegions.list.push(new LiveRegion(this, mANDI.index));
+                mANDI.liveRegions.count += 1;
+                mANDI.index += 1;
                 AndiData.attachDataToElement(this);
             }
 
             //For all elements on the page
-            if ($.trim($(this).attr("role")))
+            if ($.trim($(this).attr("role"))) {
                 roleAttributesCount += 1;
-            if ($.trim($(this).prop("lang")))
+            }
+            if ($.trim($(this).prop("lang"))) {
                 langAttributesCount += 1;
+            }
         });
     };
 
     //Initialize outline
-    sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Landmarks List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
+    mANDI.outline = "<h3 tabindex='-1' id='mANDI508-outline-heading'>Live Regions List:</h3><div class='ANDI508-scrollable'>";
 
-    //This function will display the heading list (headings outline)
+    //This function will display the heading list (live regions outline)
     //It should only be called on heading elements
-    sANDI.getOutlineItem = function (element) {
+    mANDI.getOutlineItem = function (element) {
         var displayCharLength = 60; //for truncating innerText
         var tagName = $(element).prop("tagName").toLowerCase();
         var role = $(element).attr("role");
@@ -88,9 +108,9 @@ function init_module() {
         return outlineItem;
     };
 
-    //This function will display the heading list (headings outline)
+    //This function will display the heading list (live regions outline)
     //It should only be called on heading elements
-    sANDI.getOutlineItemModule = function (elementToUse) {
+    mANDI.getOutlineItemModule = function (elementToUse) {
         var outlineItem = '"' + elementToUse.index + '" ';
 
         outlineItem += "<span class='ANDI508-display-innerText'>";
@@ -103,7 +123,7 @@ function init_module() {
     };
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
-    sANDI.results = function () {
+    mANDI.results = function () {
         var startupSummaryText = "";
         var moduleActionButtons = "";
         moduleActionButtons += "<button id='ANDI508-readingOrder-button' aria-pressed='false'>reading order" + overlayIcon + "</button>";
@@ -200,30 +220,30 @@ function init_module() {
         });
 
         //Deselect all mode buttons
-        $("#ANDI508-module-actions button.sANDI508-mode").attr("aria-selected", "false");
+        $("#ANDI508-module-actions button.mANDI508-mode").attr("aria-selected", "false");
 
-        $("#ANDI508-landmarks-button")
+        $("#ANDI508-liveRegions-button")
             .attr("aria-selected", "true")
             .addClass("ANDI508-module-action-active");
 
         //Build Outline
-        for (var x = 0; x < sANDI.landmarks.list.length; x++) {
-            sANDI.outline += sANDI.getOutlineItemModule(sANDI.landmarks.list[x]);
+        for (var x = 0; x < mANDI.liveRegions.list.length; x++) {
+            mANDI.outline += mANDI.getOutlineItemModule(mANDI.liveRegions.list[x]);
         }
-        sANDI.outline += "</div>";
+        mANDI.outline += "</div>";
 
-        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view live regions list</button><div id='mANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
         //Define outline button
         $("#ANDI508-viewOutline-button").click(function () {
             if ($(this).attr("aria-expanded") === "true") {
                 //hide Outline, show alert list
-                $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
+                $("#mANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
                 $("#ANDI508-alerts-list").show();
 
                 $(this)
                     .addClass("ANDI508-viewOtherResults-button-expanded")
-                    .html(listIcon + "hide landmarks list")
+                    .html(listIcon + "hide live regions list")
                     .attr("aria-expanded", "false")
                     .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
             } else { //show Outline, hide alert list
@@ -231,24 +251,24 @@ function init_module() {
 
                 andiSettings.minimode(false);
                 $(this)
-                    .html(listIcon + "hide landmarks list")
+                    .html(listIcon + "hide live regions list")
                     .attr("aria-expanded", "true")
                     .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
                     .find("img").attr("src", icons_url + "list-on.png");
-                $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
+                $("#mANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
             }
             andiResetter.resizeHeights();
             return false;
         });
-        startupSummaryText += "Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.";
-        andiBar.updateResultsSummary("Landmarks: " + sANDI.landmarks.list.length);
+        startupSummaryText += "<span class='ANDI508-module-name-s'>Live regions</span> found.<br />Discover the Output of the <span class='ANDI508-module-name-s'>live regions</span> by hovering over the highlighted areas or using the next/previous buttons. For updated Output, refresh ANDI whenever the Live Region changes.";
+        andiBar.updateResultsSummary("Live Regions: " + mANDI.liveRegions.list.length);
         if (!andiBar.focusIsOnInspectableElement()) {
             andiBar.showElementControls();
             andiBar.showStartUpSummary(startupSummaryText, true);
         }
 
-        $("#sANDI508-outline-container")
-            .html(sANDI.outline)
+        $("#mANDI508-outline-container")
+            .html(mANDI.outline)
             .find("a[data-andi508-relatedindex]").each(function () {
                 andiFocuser.addFocusClick($(this));
                 var relatedIndex = $(this).attr("data-andi508-relatedindex");
@@ -264,8 +284,8 @@ function init_module() {
                     });
             });
 
-        $("#sANDI508-outline-container")
-            .html(sANDI.outline)
+        $("#mANDI508-outline-container")
+            .html(mANDI.outline)
             .find("a[data-andi508-relatedindex]").each(function () {
                 andiFocuser.addFocusClick($(this));
                 var relatedIndex = $(this).attr("data-andi508-relatedindex");
@@ -311,6 +331,13 @@ function init_module() {
                 ]);
 
             andiBar.displayTable(elementData, element, addOnProps);
+
+            //For Live Region mode, update the output live
+            //Copy from the AC table
+            var innerText = $("#ANDI508-accessibleComponentsTable td.ANDI508-display-innerText").first().html();
+            if (innerText) {
+                elementData.accName = "<span class='ANDI508-display-innerText'>" + innerText + "</span>";
+            }
 
             andiBar.displayOutput(elementData, element, addOnProps);
         }
@@ -400,7 +427,7 @@ function init_module() {
         }
     };
 
-    sANDI.analyze();
-    sANDI.results();
+    mANDI.analyze();
+    mANDI.results();
 
 }//end init

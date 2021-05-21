@@ -1,33 +1,25 @@
 //==========================================//
-//sANDI2: lists ANDI                        //
+//kANDI: landmarks ANDI                     //
 //Created By Social Security Administration //
 //==========================================//
 function init_module() {
 
-    var sANDIVersionNumber = "4.1.3";
+    var kANDIVersionNumber = "4.1.3";
 
-    //create sANDI instance
-    var sANDI = new AndiModule(sANDIVersionNumber, "s");
-    sANDI.index = 1;
+    //create kANDI instance
+    var kANDI = new AndiModule(kANDIVersionNumber, "k");
+    kANDI.index = 1;
 
-    //This object class is used to store data about each list. Object instances will be placed into an array.
-    function List(element, index) {
+    //This object class is used to store data about each landmark. Object instances will be placed into an array.
+    function Landmark(element, index) {
         this.element = element;
         this.index = index;
     }
 
-    //This object class is used to keep track of the lists on the page
-    function Lists() {
+    //This object class is used to keep track of the landmarks on the page
+    function Landmarks() {
         this.list = [];
         this.count = 0;
-        this.olCount = 0;
-        this.ulCount = 0;
-        this.liCount = 0;
-        this.dlCount = 0;
-        this.ddCount = 0;
-        this.dtCount = 0;
-        this.listRoleCount = 0;
-        this.listItemRoleCount = 0;
     }
 
     var langAttributesCount = 0;
@@ -40,56 +32,16 @@ function init_module() {
     });
 
     //This function will analyze the test page for graphics/image related markup relating to accessibility
-    sANDI.analyze = function () {
-        sANDI.lists = new Lists();
+    kANDI.analyze = function () {
+        kANDI.landmarks = new Landmarks();
 
         //Loop through every visible element
         $(TestPageData.allElements).each(function () {
-            if ($(this).isSemantically("[role=listitem],[role=list]", "ol,ul,li,dl,dd,dt")) {
-                //Add to the headings array
-                sANDI.lists.list.push(new List(this, sANDI.index));
-                sANDI.lists.count += 1;
-                sANDI.index += 1;
-
-                if ($(this).isSemantically("[role=list]", "ol,ul,dl")) {
-                    if ($(this).is("ul")) {
-                        sANDI.lists.ulCount += 1;
-                    } else if ($(this).is("ol")) {
-                        sANDI.lists.olCount += 1;
-                    } else if ($(this).is("dl")) {
-                        sANDI.lists.dlCount += 1;
-                    } else {
-                        sANDI.lists.listRoleCount += 1;
-                    }
-                    sANDI.lists.count += 1;
-                }
-
+            if ($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]", "main,header,footer,nav,form,aside")) {
+                kANDI.landmarks.list.push(new Landmark(this, kANDI.index));
+                kANDI.landmarks.count += 1;
+                kANDI.index += 1;
                 andiData = new AndiData(this);
-
-                //Is the listitem contained by an appropriate list container?
-                if ($(this).is("[role=listitem]")) {
-                    sANDI.lists.listItemRoleCount += 1;
-                    if (!$(this).closest("[role=list]").length) {
-                        andiAlerter.throwAlert(alert_0079, ["[role=listitem]", "[role=list]"]);
-                    }
-                } else if ($(this).is("li")) {
-                    sANDI.lists.liCount += 1;
-                    var listContainer = $(this).closest("ol,ul");
-                    if (!$(listContainer).length) {
-                        andiAlerter.throwAlert(alert_0079, ["&lt;li&gt;", "&lt;ol&gt; or &lt;ul&gt;"]);
-                    } else { //check if listContainer is still semantically a list
-                        var listContainer_role = $(listContainer).attr("role");
-                        if (listContainer_role && listContainer_role !== "list")
-                            andiAlerter.throwAlert(alert_0185, [listContainer_role]);
-                    }
-                } else if ($(this).is("dd,dt") && !$(this).closest("dl").length) { //Is the dl,dt contained by a dl?
-                    if ($(this).is("dd")) {
-                        sANDI.lists.ddCount += 1;
-                    } else if ($(this).is("dt")) {
-                        sANDI.lists.dtCount += 1;
-                    }
-                    andiAlerter.throwAlert(alert_007A);
-                }
 
                 andiCheck.commonNonFocusableElementChecks(andiData, $(this));
                 AndiData.attachDataToElement(this);
@@ -104,36 +56,17 @@ function init_module() {
     };
 
     //Initialize outline
-    sANDI.headerOutline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
-    sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
+    kANDI.outline = "<h3 tabindex='-1' id='kANDI508-outline-heading'>Landmarks List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
 
     //This function will display the heading list (headings outline)
     //It should only be called on heading elements
-    sANDI.getOutlineItem = function (element) {
+    kANDI.getOutlineItem = function (element) {
         var displayCharLength = 60; //for truncating innerText
         var tagName = $(element).prop("tagName").toLowerCase();
         var role = $(element).attr("role");
         var ariaLevel = $(element).attr("aria-level");
 
-        //Indent the heading according to the level
-        //Results in h1 = 1% left margin, h2 = 2% left margin, etc.
-        var indentLevel;
-        if (ariaLevel) {
-            //Check if positive integer
-            if (parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel) {
-                indentLevel = parseInt(ariaLevel);
-            } else { //aria-level is not a positive integer, default to 2 (defined in ARIA spec, and screen readers are doing this)
-                indentLevel = 2;
-            }
-        } else {
-            if (role === "heading") {
-                indentLevel = 2; //no aria-level and role=heading, so default to 2 (defined in ARIA spec)
-            } else {
-                indentLevel = parseInt(tagName.slice(1)); //get second character from h tag
-            }
-        }
-
-        var outlineItem = "<a style='margin-left:" + indentLevel + "%' href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
+        var outlineItem = "<a href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
 
         //display relevant attributes
         if (role) {
@@ -157,7 +90,7 @@ function init_module() {
 
     //This function will display the heading list (headings outline)
     //It should only be called on heading elements
-    sANDI.getOutlineItemModule = function (elementToUse) {
+    kANDI.getOutlineItemModule = function (elementToUse) {
         var outlineItem = '"' + elementToUse.index + '" ';
 
         outlineItem += "<span class='ANDI508-display-innerText'>";
@@ -170,7 +103,7 @@ function init_module() {
     };
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
-    sANDI.results = function () {
+    kANDI.results = function () {
         var startupSummaryText = "";
         var moduleActionButtons = "";
         moduleActionButtons += "<button id='ANDI508-readingOrder-button' aria-pressed='false'>reading order" + overlayIcon + "</button>";
@@ -267,58 +200,30 @@ function init_module() {
         });
 
         //Deselect all mode buttons
-        $("#ANDI508-module-actions button.sANDI508-mode").attr("aria-selected", "false");
-        $("#ANDI508-lists-button")
+        $("#ANDI508-module-actions button.kANDI508-mode").attr("aria-selected", "false");
+
+        $("#ANDI508-landmarks-button")
             .attr("aria-selected", "true")
             .addClass("ANDI508-module-action-active");
 
         //Build Outline
-        for (var x = 0; x < sANDI.lists.list.length; x++) {
-            sANDI.outline += sANDI.getOutlineItemModule(sANDI.lists.list[x]);
+        for (var x = 0; x < kANDI.landmarks.list.length; x++) {
+            kANDI.outline += kANDI.getOutlineItemModule(kANDI.landmarks.list[x]);
         }
-        sANDI.outline += "</div>";
+        kANDI.outline += "</div>";
 
-        andiBar.updateResultsSummary("List Elements: " + sANDI.lists.list.length);
-        var listCounts = "";
-        var delimiter = ", ";
-        var listTypesUsed = "";
-
-        listCounts += sANDI.lists.olCount + " ordered list (ol)";
-        listTypesUsed += "ol";
-
-        listCounts += delimiter + sANDI.lists.ulCount + " unordered list (ul)";
-        listTypesUsed += delimiter + "ul";
-
-        listCounts += delimiter + sANDI.lists.liCount + " list item (li)";
-        listTypesUsed += delimiter + "li";
-
-        listCounts += delimiter + sANDI.lists.dlCount + " description list (dl)";
-        listTypesUsed += delimiter + "dl";
-
-        listCounts += delimiter + sANDI.lists.ddCount + " description details (dd)";
-        listTypesUsed += delimiter + "dd";
-
-        listCounts += delimiter + sANDI.lists.dtCount + " description term (dt)";
-        listTypesUsed += delimiter + "dt";
-
-        listCounts += delimiter + sANDI.lists.listRoleCount + " role=list";
-        listTypesUsed += delimiter + "[role=list]";
-
-        listCounts += delimiter + sANDI.lists.listItemRoleCount + " role=listitem";
-        listTypesUsed += delimiter + "[role=listitem]";
-
-        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='kANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
         //Define outline button
         $("#ANDI508-viewOutline-button").click(function () {
             if ($(this).attr("aria-expanded") === "true") {
                 //hide Outline, show alert list
-                $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
+                $("#kANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
                 $("#ANDI508-alerts-list").show();
 
                 $(this)
                     .addClass("ANDI508-viewOtherResults-button-expanded")
-                    .html(listIcon + "hide list of lists")
+                    .html(listIcon + "hide landmarks list")
                     .attr("aria-expanded", "false")
                     .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
             } else { //show Outline, hide alert list
@@ -326,25 +231,24 @@ function init_module() {
 
                 andiSettings.minimode(false);
                 $(this)
-                    .html(listIcon + "hide list of lists")
+                    .html(listIcon + "hide landmarks list")
                     .attr("aria-expanded", "true")
                     .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
                     .find("img").attr("src", icons_url + "list-on.png");
-                $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
+                $("#kANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
             }
             andiResetter.resizeHeights();
             return false;
         });
-
-        //$("#ANDI508-additionalPageResults").html(listCounts);
-        startupSummaryText += "List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied. " + listCounts;
+        startupSummaryText += "Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.";
+        andiBar.updateResultsSummary("Landmarks: " + kANDI.landmarks.list.length);
         if (!andiBar.focusIsOnInspectableElement()) {
             andiBar.showElementControls();
             andiBar.showStartUpSummary(startupSummaryText, true);
         }
 
-        $("#sANDI508-outline-container")
-            .html(sANDI.outline)
+        $("#kANDI508-outline-container")
+            .html(kANDI.outline)
             .find("a[data-andi508-relatedindex]").each(function () {
                 andiFocuser.addFocusClick($(this));
                 var relatedIndex = $(this).attr("data-andi508-relatedindex");
@@ -360,8 +264,8 @@ function init_module() {
                     });
             });
 
-        $("#sANDI508-outline-container")
-            .html(sANDI.outline)
+        $("#kANDI508-outline-container")
+            .html(kANDI.outline)
             .find("a[data-andi508-relatedindex]").each(function () {
                 andiFocuser.addFocusClick($(this));
                 var relatedIndex = $(this).attr("data-andi508-relatedindex");
@@ -496,7 +400,7 @@ function init_module() {
         }
     };
 
-    sANDI.analyze();
-    sANDI.results();
+    kANDI.analyze();
+    kANDI.results();
 
 }//end init

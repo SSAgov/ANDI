@@ -1,14 +1,14 @@
 //==========================================//
-//sANDI1: headers ANDI                      //
+//eANDI: headers ANDI                       //
 //Created By Social Security Administration //
 //==========================================//
 function init_module() {
 
-    var sANDIVersionNumber = "4.1.3";
+    var eandiVersionNumber = "4.1.3";
 
-    //create sANDI instance
-    var sANDI = new AndiModule(sANDIVersionNumber, "s");
-    sANDI.index = 1;
+    //create eANDI instance
+    var eANDI = new AndiModule(eandiVersionNumber, "e");
+    eANDI.index = 1;
 
     //This object class is used to store data about each header. Object instances will be placed into an array.
     function Header(element, index) {
@@ -32,14 +32,14 @@ function init_module() {
     });
 
     //This function will analyze the test page for graphics/image related markup relating to accessibility
-    sANDI.analyze = function () {
-        sANDI.headers = new Headers();
+    eANDI.analyze = function () {
+        eANDI.headers = new Headers();
 
         //Loop through every visible element
         $(TestPageData.allElements).each(function () {
             if ($(this).isSemantically("[role=heading]", "h1,h2,h3,h4,h5,h6")) { //Add to the headings array
-                sANDI.headers.list.push($(this));
-                sANDI.headers.count += 1;
+                eANDI.headers.list.push($(this));
+                eANDI.headers.count += 1;
 
                 andiData = new AndiData(this);
 
@@ -63,10 +63,10 @@ function init_module() {
                 andiCheck.commonNonFocusableElementChecks(andiData, $(this));
                 AndiData.attachDataToElement(this);
             }
-            if (sANDI.headers.list.length === 0 && $(this).is("p,div,span,strong,em")) {
-                //Since sANDI has not found a heading yet, check if this element is a fake headings
+            if (eANDI.headers.list.length === 0 && $(this).is("p,div,span,strong,em")) {
+                //Since eANDI has not found a heading yet, check if this element is a fake headings
 
-                if (sANDI.isFakeHeading(this)) {
+                if (eANDI.isFakeHeading(this)) {
                     andiData = new AndiData(this);
 
                     andiAlerter.throwAlert(alert_0190);
@@ -83,7 +83,7 @@ function init_module() {
     };
 
     //This function determine's if the element looks like a heading but is not semantically a heading
-    sANDI.isFakeHeading = function (element) {
+    eANDI.isFakeHeading = function (element) {
         var isFakeHeading = false;
 
         var text = $.trim($(element).text());
@@ -119,11 +119,11 @@ function init_module() {
     };
 
     //Initialize outline
-    sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
+    eANDI.outline = "<h3 tabindex='-1' id='eANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
 
     //This function will display the heading list (headings outline)
     //It should only be called on heading elements
-    sANDI.getOutlineItem = function (element) {
+    eANDI.getOutlineItem = function (element) {
         var displayCharLength = 60; //for truncating innerText
         var tagName = $(element).prop("tagName").toLowerCase();
         var role = $(element).attr("role");
@@ -171,7 +171,7 @@ function init_module() {
 
     //This function will display the heading list (headings outline)
     //It should only be called on heading elements
-    sANDI.getOutlineItemModule = function (elementToUse) {
+    eANDI.getOutlineItemModule = function (elementToUse) {
         var outlineItem = '"' + elementToUse.index + '" ';
 
         outlineItem += "<span class='ANDI508-display-innerText'>";
@@ -184,7 +184,7 @@ function init_module() {
     };
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
-    sANDI.results = function () {
+    eANDI.results = function () {
         var startupSummaryText = "";
         var moduleActionButtons = "";
         moduleActionButtons += "<button id='ANDI508-readingOrder-button' aria-pressed='false'>reading order" + overlayIcon + "</button>";
@@ -281,26 +281,26 @@ function init_module() {
         });
 
         //Deselect all mode buttons
-        $("#ANDI508-module-actions button.sANDI508-mode").attr("aria-selected", "false");
+        $("#ANDI508-module-actions button.eANDI508-mode").attr("aria-selected", "false");
 
         $("#ANDI508-headings-button")
             .attr("aria-selected", "true")
             .addClass("ANDI508-module-action-active");
 
-        andiBar.updateResultsSummary("Headings: " + sANDI.headers.list.length);
+        andiBar.updateResultsSummary("Headings: " + eANDI.headers.list.length);
 
         //Build Outline
-        for (var x = 0; x < sANDI.headers.list.length; x++) {
-            sANDI.outline += sANDI.getOutlineItem(sANDI.headers.list[x]);
+        for (var x = 0; x < eANDI.headers.list.length; x++) {
+            eANDI.outline += eANDI.getOutlineItem(eANDI.headers.list[x]);
         }
-        sANDI.outline += "</div>";
+        eANDI.outline += "</div>";
 
-        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='sANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='eANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
         //Define outline button
         $("#ANDI508-viewOutline-button").click(function () {
             if ($(this).attr("aria-expanded") === "true") { //hide Outline, show alert list
-                $("#sANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
+                $("#eANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
                 $("#ANDI508-alerts-list").show();
 
                 $(this)
@@ -317,7 +317,7 @@ function init_module() {
                     .attr("aria-expanded", "true")
                     .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
                     .find("img").attr("src", icons_url + "list-on.png");
-                $("#sANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
+                $("#eANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
             }
             andiResetter.resizeHeights();
             return false;
@@ -330,8 +330,8 @@ function init_module() {
             andiBar.showStartUpSummary(startupSummaryText, true);
         }
 
-        $("#sANDI508-outline-container")
-            .html(sANDI.outline)
+        $("#eANDI508-outline-container")
+            .html(eANDI.outline)
             .find("a[data-andi508-relatedindex]").each(function () {
                 andiFocuser.addFocusClick($(this));
                 var relatedIndex = $(this).attr("data-andi508-relatedindex");
@@ -347,8 +347,8 @@ function init_module() {
                     });
             });
 
-        $("#sANDI508-outline-container")
-            .html(sANDI.outline)
+        $("#eANDI508-outline-container")
+            .html(eANDI.outline)
             .find("a[data-andi508-relatedindex]").each(function () {
                 andiFocuser.addFocusClick($(this));
                 var relatedIndex = $(this).attr("data-andi508-relatedindex");
@@ -482,7 +482,7 @@ function init_module() {
         }
     };
 
-    sANDI.analyze();
-    sANDI.results();
+    eANDI.analyze();
+    eANDI.results();
 
 }//end init

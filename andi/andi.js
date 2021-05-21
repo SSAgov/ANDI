@@ -515,21 +515,29 @@ function andiReady() {
         var moduleButtons = "<div id='ANDI508-moduleMenu' role='menu' aria-label='Select a Module'><div id='ANDI508-moduleMenu-prompt'>Select Module:</div>" +
             //Default (fANDI)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-f'>focusable elements</button>" +
-            //gANDI
+            //gANDI (graphics/images)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-g' aria-label='graphics slash images'>graphics/images</button>" +
-            //lANDI
+            //lANDI (links and buttons)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-l' aria-label='links'>links</button>" +
-            //bANDI
+            //bANDI (buttons)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-b' aria-label='buttons'>buttons</button>" +
-            //tANDI
+            //tANDI (tables)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-t'>tables</button>" +
-            //sANDI
+            //sANDI (headers, lists, landmarks, live regions)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-s'>structures</button>" +
-            //cANDI
+            //eANDI (headers)
+            "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-e'>headers</button>" +
+            //jANDI (lists)
+            "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-j'>lists</button>" +
+            //kANDI (landmarks)
+            "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-k'>landmarks</button>" +
+            //mANDI (live regions)
+            "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-k'>live regions</button>" +
+            //cANDI (color contrast)
             ((!oldIE) ? "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-c'>color contrast</button>" : "") +
-            //hANDI
+            //hANDI (hidden content)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-h'>hidden content</button>" +
-            //iANDI
+            //iANDI (iFrames)
             "<button role='menuitem' class='ANDI508-moduleMenu-option' id='ANDI508-moduleMenu-button-i'>iframes</button>" +
             "</div>";
 
