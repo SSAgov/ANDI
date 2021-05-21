@@ -48,10 +48,12 @@ function init_module() {
             }
 
             //For all elements on the page
-            if ($.trim($(this).attr("role")))
+            if ($.trim($(this).attr("role"))) {
                 roleAttributesCount += 1;
-            if ($.trim($(this).prop("lang")))
+            }
+            if ($.trim($(this).prop("lang"))) {
                 langAttributesCount += 1;
+            }
         });
     };
 
@@ -256,8 +258,9 @@ function init_module() {
                 andiLaser.createLaserTrigger($(this), $(relatedElement));
                 $(this)
                     .hover(function () {
-                        if (!event.shiftKey)
+                        if (!event.shiftKey) {
                             AndiModule.inspect(relatedElement[0]);
+                        }
                     })
                     .focus(function () {
                         AndiModule.inspect(relatedElement[0]);
@@ -273,8 +276,9 @@ function init_module() {
                 andiLaser.createLaserTrigger($(this), $(relatedElement));
                 $(this)
                     .hover(function () {
-                        if (!event.shiftKey)
+                        if (!event.shiftKey) {
                             AndiModule.inspect(relatedElement[0]);
+                        }
                     })
                     .focus(function () {
                         AndiModule.inspect(relatedElement[0]);
@@ -371,7 +375,7 @@ function init_module() {
             for (var z = 0; z < element.childNodes.length; z++) { //if child is an element object that is visible
                 if (element.childNodes[z].nodeType === 1) {
                     if (!$(element.childNodes[z]).is(exclusions) && $(element.childNodes[z]).is(":shown")) {
-                        if ($(element.childNodes[z]).is(inclusions)) {//no need to look at this element's childNodes
+                        if ($(element.childNodes[z]).is(inclusions)) { //no need to look at this element's childNodes
                             insertReadingOrder(ariaHidden, element.childNodes[z]);
                             z += 1;//because a new node was inserted, the indexes changed
                         } else { //recursion here:
