@@ -197,7 +197,7 @@ function init_module() {
 
     kANDI.viewList_buildTable = function (mode) {
         var tableHTML = "";
-        var rowClasses, tabsHTML, prevNextButtons;
+        var rowClasses, prevNextButtons;
         var appendHTML = "<div id='kANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='kANDI508-viewList-tabs'>";
         var nextPrevHTML = "<button id='kANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
             "<button id='kANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
