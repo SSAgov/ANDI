@@ -104,9 +104,6 @@ function init_module() {
         });
     };
 
-    //Initialize outline
-    jANDI.outline = "<h3 tabindex='-1' id='jANDI508-outline-heading'>List of Lists:</h3><div class='ANDI508-scrollable'>";
-
     //This function will display the list of lists (lists outline)
     //It should only be called on heading elements
     jANDI.getOutlineItem = function (element) {
@@ -114,24 +111,6 @@ function init_module() {
         var tagName = $(element).prop("tagName").toLowerCase();
         var role = $(element).attr("role");
         var ariaLevel = $(element).attr("aria-level");
-
-        //Indent the heading according to the level
-        //Results in h1 = 1% left margin, h2 = 2% left margin, etc.
-        var indentLevel;
-        if (ariaLevel) {
-            //Check if positive integer
-            if (parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel) {
-                indentLevel = parseInt(ariaLevel);
-            } else { //aria-level is not a positive integer, default to 2 (defined in ARIA spec, and screen readers are doing this)
-                indentLevel = 2;
-            }
-        } else {
-            if (role === "heading") {
-                indentLevel = 2; //no aria-level and role=heading, so default to 2 (defined in ARIA spec)
-            } else {
-                indentLevel = parseInt(tagName.slice(1)); //get second character from h tag
-            }
-        }
 
         var outlineItem = "<a style='margin-left:" + indentLevel + "%' href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
 
@@ -151,20 +130,6 @@ function init_module() {
         }
         outlineItem += "</span>";
         outlineItem += "&lt;/" + tagName + "&gt;</a>";
-        outlineItem += "<br />";
-        return outlineItem;
-    };
-
-    //This function will display the heading list (headings outline)
-    //It should only be called on heading elements
-    jANDI.getOutlineItemModule = function (elementToUse) {
-        var outlineItem = '"' + elementToUse.index + '" ';
-
-        outlineItem += "<span class='ANDI508-display-innerText'>";
-        outlineItem += elementToUse;
-
-        outlineItem += "</span>";
-        outlineItem += "</a>";
         outlineItem += "<br />";
         return outlineItem;
     };
@@ -272,12 +237,6 @@ function init_module() {
             .attr("aria-selected", "true")
             .addClass("ANDI508-module-action-active");
 
-        //Build Outline
-        for (var x = 0; x < jANDI.lists.list.length; x++) {
-            jANDI.outline += jANDI.getOutlineItemModule(jANDI.lists.list[x]);
-        }
-        jANDI.outline += "</div>";
-
         andiBar.updateResultsSummary("List Elements: " + jANDI.lists.list.length);
         var listCounts = "";
         var delimiter = ", ";
@@ -321,77 +280,12 @@ function init_module() {
             return false;
         });
 
-        //$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view list of lists</button><div id='jANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
-
-        //Define outline button
-        $("#ANDI508-viewOutline-button").click(function () {
-            if ($(this).attr("aria-expanded") === "true") {
-                //hide Outline, show alert list
-                $("#jANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                $("#ANDI508-alerts-list").show();
-
-                $(this)
-                    .addClass("ANDI508-viewOtherResults-button-expanded")
-                    .html(listIcon + "hide list of lists")
-                    .attr("aria-expanded", "false")
-                    .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
-            } else { //show Outline, hide alert list
-                $("#ANDI508-alerts-list").hide();
-
-                andiSettings.minimode(false);
-                $(this)
-                    .html(listIcon + "hide list of lists")
-                    .attr("aria-expanded", "true")
-                    .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
-                    .find("img").attr("src", icons_url + "list-on.png");
-                $("#jANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
-            }
-            andiResetter.resizeHeights();
-            return false;
-        });
-
         //$("#ANDI508-additionalPageResults").html(listCounts);
         startupSummaryText += "List structure found.<br />Determine if the <span class='ANDI508-module-name-s'>list</span> container types used (" + listTypesUsed + ") are appropriately applied. " + listCounts;
         if (!andiBar.focusIsOnInspectableElement()) {
             andiBar.showElementControls();
             andiBar.showStartUpSummary(startupSummaryText, true);
         }
-
-        $("#jANDI508-outline-container")
-            .html(jANDI.outline)
-            .find("a[data-andi508-relatedindex]").each(function () {
-                andiFocuser.addFocusClick($(this));
-                var relatedIndex = $(this).attr("data-andi508-relatedindex");
-                var relatedElement = $("#ANDI508-testPage [data-andi508-index=" + relatedIndex + "]").first();
-                andiLaser.createLaserTrigger($(this), $(relatedElement));
-                $(this)
-                    .hover(function () {
-                        if (!event.shiftKey) {
-                            AndiModule.inspect(relatedElement[0]);
-                        }
-                    })
-                    .focus(function () {
-                        AndiModule.inspect(relatedElement[0]);
-                    });
-            });
-
-        $("#jANDI508-outline-container")
-            .html(jANDI.outline)
-            .find("a[data-andi508-relatedindex]").each(function () {
-                andiFocuser.addFocusClick($(this));
-                var relatedIndex = $(this).attr("data-andi508-relatedindex");
-                var relatedElement = $("#ANDI508-testPage [data-andi508-index=" + relatedIndex + "]").first();
-                andiLaser.createLaserTrigger($(this), $(relatedElement));
-                $(this)
-                    .hover(function () {
-                        if (!event.shiftKey) {
-                            AndiModule.inspect(relatedElement[0]);
-                        }
-                    })
-                    .focus(function () {
-                        AndiModule.inspect(relatedElement[0]);
-                    });
-            });
 
         andiAlerter.updateAlertList();
 
@@ -402,7 +296,6 @@ function init_module() {
         ]);
 
         $("#ANDI508").focus();
-
     };
 
     //This function builds the table for the view list
