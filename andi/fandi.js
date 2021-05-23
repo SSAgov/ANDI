@@ -44,7 +44,7 @@ function init_module() {
         $(TestPageData.allElements).each(function () {
             if (fANDI.testSeeingAllElements) {
                 // The .is filter is a list of elements that are natively tabbable
-                if ($(this).is("a[href],button,input, div input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']")) {
+                if ($(this).is("a[href],button,input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']")) {
                     fANDI.focusables.list.push(new Focusable(this, fANDI.index));
                     fANDI.focusables.count += 1;
                     andiData = new AndiData(this);
