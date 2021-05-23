@@ -105,8 +105,7 @@ function init_module() {
     };
 
     //Initialize outline
-    jANDI.headerOutline = "<h3 tabindex='-1' id='jANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
-    jANDI.outline = "<h3 tabindex='-1' id='jANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
+    jANDI.outline = "<h3 tabindex='-1' id='jANDI508-outline-heading'>List of Lists:</h3><div class='ANDI508-scrollable'>";
 
     //This function will display the list of lists (lists outline)
     //It should only be called on heading elements
