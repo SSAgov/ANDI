@@ -104,36 +104,6 @@ function init_module() {
         });
     };
 
-    //This function will display the list of lists (lists outline)
-    //It should only be called on heading elements
-    jANDI.getOutlineItem = function (element) {
-        var displayCharLength = 60; //for truncating innerText
-        var tagName = $(element).prop("tagName").toLowerCase();
-        var role = $(element).attr("role");
-        var ariaLevel = $(element).attr("aria-level");
-
-        var outlineItem = "<a style='margin-left:" + indentLevel + "%' href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
-
-        //display relevant attributes
-        if (role) {
-            outlineItem += " role='" + role + "' ";
-        }
-        if (ariaLevel) {
-            outlineItem += " aria-level='" + ariaLevel + "' ";
-        }
-
-        outlineItem += "&gt;";
-        outlineItem += "<span class='ANDI508-display-innerText'>";
-        outlineItem += $.trim(andiUtility.formatForHtml($(element).text().substring(0, displayCharLength)));
-        if ($(element).html().length > displayCharLength) {
-            outlineItem += "...";
-        }
-        outlineItem += "</span>";
-        outlineItem += "&lt;/" + tagName + "&gt;</a>";
-        outlineItem += "<br />";
-        return outlineItem;
-    };
-
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
     jANDI.results = function () {
         var startupSummaryText = "";
@@ -495,7 +465,6 @@ function init_module() {
 
             var addOnProps = AndiData.getAddOnProps(element, elementData,
                 [
-                    "aria-level",
                     getDefault_ariaLive(element, elementData),
                     getDefault_ariaAtomic(element, elementData),
                     "aria-busy",

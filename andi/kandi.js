@@ -9,6 +9,7 @@ function init_module() {
     //create kANDI instance
     var kANDI = new AndiModule(kANDIVersionNumber, "k");
     kANDI.index = 1;
+    kANDI.viewList_tableReady = false;
 
     //This object class is used to store data about each landmark. Object instances will be placed into an array.
     function Landmark(element, index) {
@@ -55,53 +56,6 @@ function init_module() {
                 langAttributesCount += 1;
             }
         });
-    };
-
-    //Initialize outline
-    kANDI.outline = "<h3 tabindex='-1' id='kANDI508-outline-heading'>Landmarks List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
-
-    //This function will display the heading list (headings outline)
-    //It should only be called on heading elements
-    kANDI.getOutlineItem = function (element) {
-        var displayCharLength = 60; //for truncating innerText
-        var tagName = $(element).prop("tagName").toLowerCase();
-        var role = $(element).attr("role");
-        var ariaLevel = $(element).attr("aria-level");
-
-        var outlineItem = "<a href='#' data-andi508-relatedindex='" + $(element).attr('data-andi508-index') + "'>&lt;" + tagName;
-
-        //display relevant attributes
-        if (role) {
-            outlineItem += " role='" + role + "' ";
-        }
-        if (ariaLevel) {
-            outlineItem += " aria-level='" + ariaLevel + "' ";
-        }
-
-        outlineItem += "&gt;";
-        outlineItem += "<span class='ANDI508-display-innerText'>";
-        outlineItem += $.trim(andiUtility.formatForHtml($(element).text().substring(0, displayCharLength)));
-        if ($(element).html().length > displayCharLength) {
-            outlineItem += "...";
-        }
-        outlineItem += "</span>";
-        outlineItem += "&lt;/" + tagName + "&gt;</a>";
-        outlineItem += "<br />";
-        return outlineItem;
-    };
-
-    //This function will display the heading list (headings outline)
-    //It should only be called on heading elements
-    kANDI.getOutlineItemModule = function (elementToUse) {
-        var outlineItem = '"' + elementToUse.index + '" ';
-
-        outlineItem += "<span class='ANDI508-display-innerText'>";
-        outlineItem += elementToUse;
-
-        outlineItem += "</span>";
-        outlineItem += "</a>";
-        outlineItem += "<br />";
-        return outlineItem;
     };
 
     //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
@@ -208,82 +162,26 @@ function init_module() {
             .attr("aria-selected", "true")
             .addClass("ANDI508-module-action-active");
 
-        //Build Outline
-        for (var x = 0; x < kANDI.landmarks.list.length; x++) {
-            kANDI.outline += kANDI.getOutlineItemModule(kANDI.landmarks.list[x]);
-        }
-        kANDI.outline += "</div>";
+        $("#ANDI508-additionalPageResults").append("<button id='ANDI508-viewLandmarksList-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button>");
 
-        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view landmarks list</button><div id='kANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
-
-        //Define outline button
-        $("#ANDI508-viewOutline-button").click(function () {
-            if ($(this).attr("aria-expanded") === "true") {
-                //hide Outline, show alert list
-                $("#kANDI508-outline-container").slideUp(AndiSettings.andiAnimationSpeed);
-                $("#ANDI508-alerts-list").show();
-
-                $(this)
-                    .addClass("ANDI508-viewOtherResults-button-expanded")
-                    .html(listIcon + "hide landmarks list")
-                    .attr("aria-expanded", "false")
-                    .removeClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active");
-            } else { //show Outline, hide alert list
-                $("#ANDI508-alerts-list").hide();
-
-                andiSettings.minimode(false);
-                $(this)
-                    .html(listIcon + "hide landmarks list")
-                    .attr("aria-expanded", "true")
-                    .addClass("ANDI508-viewOtherResults-button-expanded ANDI508-module-action-active")
-                    .find("img").attr("src", icons_url + "list-on.png");
-                $("#kANDI508-outline-container").slideDown(AndiSettings.andiAnimationSpeed).focus();
+        //Landmarks List Button
+        $("#ANDI508-viewLandmarksList-button").click(function () {
+            if (!kANDI.viewList_tableReady) {
+                kANDI.viewList_buildTable("landmarks");
+                kANDI.viewList_attachEvents();
+                kANDI.viewList_tableReady = true;
             }
+            kANDI.viewList_toggle("landmarks", this);
             andiResetter.resizeHeights();
             return false;
         });
+
         startupSummaryText += "Landmark structure found.<br />Ensure that each <span class='ANDI508-module-name-s'>landmark</span> is applied appropriately to the corresponding section of the page.";
         andiBar.updateResultsSummary("Landmarks: " + kANDI.landmarks.list.length);
         if (!andiBar.focusIsOnInspectableElement()) {
             andiBar.showElementControls();
             andiBar.showStartUpSummary(startupSummaryText, true);
         }
-
-        $("#kANDI508-outline-container")
-            .html(kANDI.outline)
-            .find("a[data-andi508-relatedindex]").each(function () {
-                andiFocuser.addFocusClick($(this));
-                var relatedIndex = $(this).attr("data-andi508-relatedindex");
-                var relatedElement = $("#ANDI508-testPage [data-andi508-index=" + relatedIndex + "]").first();
-                andiLaser.createLaserTrigger($(this), $(relatedElement));
-                $(this)
-                    .hover(function () {
-                        if (!event.shiftKey) {
-                            AndiModule.inspect(relatedElement[0]);
-                        }
-                    })
-                    .focus(function () {
-                        AndiModule.inspect(relatedElement[0]);
-                    });
-            });
-
-        $("#kANDI508-outline-container")
-            .html(kANDI.outline)
-            .find("a[data-andi508-relatedindex]").each(function () {
-                andiFocuser.addFocusClick($(this));
-                var relatedIndex = $(this).attr("data-andi508-relatedindex");
-                var relatedElement = $("#ANDI508-testPage [data-andi508-index=" + relatedIndex + "]").first();
-                andiLaser.createLaserTrigger($(this), $(relatedElement));
-                $(this)
-                    .hover(function () {
-                        if (!event.shiftKey) {
-                            AndiModule.inspect(relatedElement[0]);
-                        }
-                    })
-                    .focus(function () {
-                        AndiModule.inspect(relatedElement[0]);
-                    });
-            });
 
         andiAlerter.updateAlertList();
 
@@ -295,6 +193,192 @@ function init_module() {
 
         $("#ANDI508").focus();
 
+    };
+
+    kANDI.viewList_buildTable = function (mode) {
+        var tableHTML = "";
+        var rowClasses, tabsHTML, prevNextButtons;
+        var appendHTML = "<div id='kANDI508-viewList' class='ANDI508-viewOtherResults-expanded' style='display:none;'><div id='kANDI508-viewList-tabs'>";
+        var nextPrevHTML = "<button id='kANDI508-viewList-button-prev' aria-label='Previous Item in the list' accesskey='" + andiHotkeyList.key_prev.key + "'><img src='" + icons_url + "prev.png' alt='' /></button>" +
+            "<button id='kANDI508-viewList-button-next' aria-label='Next Item in the list'  accesskey='" + andiHotkeyList.key_next.key + "'><img src='" + icons_url + "next.png' alt='' /></button>" +
+            "</div>" +
+            "<div class='ANDI508-scrollable'><table id='ANDI508-viewList-table' aria-label='" + mode + " List' tabindex='-1'><thead><tr>";
+
+        for (var x = 0; x < kANDI.landmarks.list.length; x++) {
+            //determine if there is an alert
+            rowClasses = "";
+            var nextTabButton = "";
+            // if (kANDI.landmarks.list[x].alerts.includes("Alert"))
+            //     rowClasses += "ANDI508-table-row-alert ";
+
+            tableHTML += "<tr class='" + $.trim(rowClasses) + "'>" +
+                "<th scope='row'>" + kANDI.landmarks.list[x].index + "</th>" +
+                "<td class='ANDI508-alert-column'></td>" +
+                //"<td class='ANDI508-alert-column'>" + kANDI.landmarks.list[x].alerts + "</td>" +
+                "<td><a href='javascript:void(0)' data-andi508-relatedindex='" + kANDI.landmarks.list[x].index + "'>" + kANDI.landmarks.list[x].element + "</a></td>"
+            "</tr>";
+        }
+
+        appendHTML += nextPrevHTML + "<th scope='col' style='width:5%'><a href='javascript:void(0)' aria-label='link number'>#<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:10%'><a href='javascript:void(0)'>Alerts&nbsp;<i aria-hidden='true'></i></a></th>" +
+            "<th scope='col' style='width:40%'><a href='javascript:void(0)'>Accessible&nbsp;Name&nbsp;&amp;&nbsp;Description&nbsp;<i aria-hidden='true'></i></a></th>";
+
+        $("#ANDI508-additionalPageResults").append(appendHTML + "</tr></thead><tbody>" + tableHTML + "</tbody></table></div></div>");
+    };
+
+    //This function hide/shows the view list
+    kANDI.viewList_toggle = function (mode, btn) {
+        if ($(btn).attr("aria-expanded") === "false") { //show List, hide alert list
+            $("#ANDI508-alerts-list").hide();
+            andiSettings.minimode(false);
+            $(btn)
+                .addClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "hide " + mode + " list")
+                .attr("aria-expanded", "true")
+                .find("img").attr("src", icons_url + "list-on.png");
+            $("#kANDI508-viewList").slideDown(AndiSettings.andiAnimationSpeed).focus();
+            if (mode === "landmarks") {
+                AndiModule.activeActionButtons.viewLinksList = true;
+            }
+        } else { //hide List, show alert list
+            $("#kANDI508-viewList").slideUp(AndiSettings.andiAnimationSpeed);
+            //$("#ANDI508-resultsSummary").show();
+
+            $("#ANDI508-alerts-list").show();
+            $(btn)
+                .removeClass("ANDI508-viewOtherResults-button-expanded")
+                .html(listIcon + "view " + mode + " list")
+                .attr("aria-expanded", "false");
+            if (mode === "landmarks") {
+                AndiModule.activeActionButtons.viewLinksList = false;
+            } else {
+                AndiModule.activeActionButtons.viewButtonsList = false;
+            }
+        }
+    };
+
+    //This function attaches the click,hover,focus events to the items in the view list
+    kANDI.viewList_attachEvents = function () {
+        //Add focus click to each link (output) in the table
+        $("#ANDI508-viewList-table td a[data-andi508-relatedindex]").each(function () {
+            andiFocuser.addFocusClick($(this));
+            var relatedElement = $("#ANDI508-testPage [data-andi508-index=" + $(this).attr("data-andi508-relatedindex") + "]").first();
+            andiLaser.createLaserTrigger($(this), $(relatedElement));
+            $(this)
+                .hover(function () {
+                    if (!event.shiftKey) {
+                        AndiModule.inspect(relatedElement[0]);
+                    }
+                })
+                .focus(function () {
+                    AndiModule.inspect(relatedElement[0]);
+                });
+        });
+
+        //This will define the click logic for the table sorting.
+        //Table sorting does not use aria-sort because .removeAttr("aria-sort") crashes in old IE
+        $("#ANDI508-viewList-table th a").click(function () {
+            var table = $(this).closest("table");
+            $(table).find("th").find("i").html("")
+                .end().find("a"); //remove all arrow
+
+            var rows = $(table).find("tr:gt(0)").toArray().sort(sortCompare($(this).parent().index()));
+            this.asc = !this.asc;
+            if (!this.asc) {
+                rows = rows.reverse();
+                $(this).attr("title", "descending")
+                    .parent().find("i").html("&#9650;"); //up arrow
+            } else {
+                $(this).attr("title", "ascending")
+                    .parent().find("i").html("&#9660;"); //down arrow
+            }
+            for (var i = 0; i < rows.length; i++) {
+                $(table).append(rows[i]);
+            }
+
+            //Table Sort Functionality
+            function sortCompare(index) {
+                return function (a, b) {
+                    var valA = getCellValue(a, index);
+                    var valB = getCellValue(b, index);
+                    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB);
+                };
+                function getCellValue(row, index) {
+                    return $(row).children("td,th").eq(index).text();
+                }
+            }
+        });
+
+        //Define listLandmarks next button
+        $("#kANDI508-viewList-button-next").click(function () {
+            //Get class name based on selected tab
+            var selectedTabClass = $("#kANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
+            var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
+            var focusGoesOnThisIndex;
+
+            if (index == testPageData.andiElementIndex || isNaN(index)) {
+                //No link being inspected yet, get first element according to selected tab
+                focusGoesOnThisIndex = $("#ANDI508-testPage ." + selectedTabClass).first().attr("data-andi508-index");
+                andiFocuser.focusByIndex(focusGoesOnThisIndex); //loop back to first
+            } else {
+                //Find the next element with class from selected tab and data-andi508-index
+                //This will skip over elements that may have been removed from the DOM
+                for (var x = index; x < testPageData.andiElementIndex; x++) {
+                    //Get next element within set of selected tab type
+                    if ($("#ANDI508-testPage ." + selectedTabClass + "[data-andi508-index='" + (x + 1) + "']").length) {
+                        focusGoesOnThisIndex = x + 1;
+                        andiFocuser.focusByIndex(focusGoesOnThisIndex);
+                        break;
+                    }
+                }
+            }
+
+            //Highlight the row in the links list that associates with this element
+            kANDI.viewList_rowHighlight(focusGoesOnThisIndex);
+            $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
+                this.scrollIntoView();
+            });
+
+            return false;
+        });
+
+        //Define listLandmarks prev button
+        $("#kANDI508-viewList-button-prev").click(function () {
+            //Get class name based on selected tab
+            var selectedTabClass = $("#kANDI508-viewList-tabs button[aria-selected='true']").attr("data-andi508-relatedclass");
+            var index = parseInt($("#ANDI508-testPage .ANDI508-element-active").attr("data-andi508-index"));
+            var firstElementInListIndex = $("#ANDI508-testPage ." + selectedTabClass).first().attr("data-andi508-index");
+            var focusGoesOnThisIndex;
+
+            if (isNaN(index)) { //no active element yet
+                //get first element according to selected tab
+                andiFocuser.focusByIndex(firstElementInListIndex); //loop back to first
+                focusGoesOnThisIndex = firstElementInListIndex;
+            } else if (index == firstElementInListIndex) {
+                //Loop to last element in list
+                focusGoesOnThisIndex = $("#ANDI508-testPage ." + selectedTabClass).last().attr("data-andi508-index");
+                andiFocuser.focusByIndex(focusGoesOnThisIndex); //loop back to last
+            } else {
+                //Find the previous element with class from selected tab and data-andi508-index
+                //This will skip over elements that may have been removed from the DOM
+                for (var x = index; x > 0; x--) {
+                    //Get next element within set of selected tab type
+                    if ($("#ANDI508-testPage ." + selectedTabClass + "[data-andi508-index='" + (x - 1) + "']").length) {
+                        focusGoesOnThisIndex = x - 1;
+                        andiFocuser.focusByIndex(focusGoesOnThisIndex);
+                        break;
+                    }
+                }
+            }
+
+            //Highlight the row in the links list that associates with this element
+            kANDI.viewList_rowHighlight(focusGoesOnThisIndex);
+            $("#ANDI508-viewList-table tbody tr.ANDI508-table-row-inspecting").first().each(function () {
+                this.scrollIntoView();
+            });
+
+            return false;
+        });
     };
 
     //This function will update the info in the Active Element Inspection.
