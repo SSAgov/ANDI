@@ -640,14 +640,15 @@ function init_module() {
                 //determine if there is an alert
                 rowClasses = "";
                 var nextTabButton = "";
-                if (lANDI.links.list[x].alerts.includes("Alert"))
+                if (lANDI.links.list[x].alerts.includes("Alert")) {
                     rowClasses += "ANDI508-table-row-alert ";
-
+                }
                 if (lANDI.links.list[x].linkPurpose == "i") {
                     rowClasses += "lANDI508-listLinks-internal ";
                     var id = lANDI.links.list[x].href;
-                    if (id.charAt(0) === "#")
+                    if (id.charAt(0) === "#") {
                         id = id.substring(1, id.length);
+                    }
                     nextTabButton = " <button class='lANDI508-nextTab' data-andi508-relatedid='" +
                         id + "' title='focus on the element after id=" +
                         id + "'>next tab</button>";
