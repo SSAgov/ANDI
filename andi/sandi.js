@@ -700,8 +700,9 @@ function init_module() {
                 andiLaser.createLaserTrigger($(this), $(relatedElement));
                 $(this)
                     .hover(function () {
-                        if (!event.shiftKey)
+                        if (!event.shiftKey) {
                             AndiModule.inspect(relatedElement[0]);
+                        }
                     })
                     .focus(function () {
                         AndiModule.inspect(relatedElement[0]);
@@ -717,8 +718,9 @@ function init_module() {
                 andiLaser.createLaserTrigger($(this), $(relatedElement));
                 $(this)
                     .hover(function () {
-                        if (!event.shiftKey)
+                        if (!event.shiftKey) {
                             AndiModule.inspect(relatedElement[0]);
+                        }
                     })
                     .focus(function () {
                         AndiModule.inspect(relatedElement[0]);

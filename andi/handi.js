@@ -38,8 +38,9 @@ function init_module() {
     //This function updates the Active Element Inspector when mouseover/hover is on a given to a highlighted element.
     //Holding the shift key will prevent inspection from changing.
     AndiModule.hoverability = function (event) {
-        if (!event.shiftKey && $(this).hasClass("ANDI508-forceReveal")) //check for holding shift key
+        if (!event.shiftKey && $(this).hasClass("ANDI508-forceReveal")) { //check for holding shift key
             AndiModule.inspect(this);
+        }
     };
 
     //This function removes markup in the test page that was added by this module
@@ -500,8 +501,9 @@ function init_module() {
             andiLaser.createLaserTrigger($(this), $(relatedElement));
             $(this)
                 .hover(function () {
-                    if (!event.shiftKey)
+                    if (!event.shiftKey) {
                         AndiModule.inspect(relatedElement[0]);
+                    }
                 })
                 .focus(function () {
                     AndiModule.inspect(relatedElement[0]);
