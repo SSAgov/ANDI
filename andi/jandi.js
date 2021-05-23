@@ -9,6 +9,7 @@ function init_module() {
     //create jANDI instance
     var jANDI = new AndiModule(jANDIVersionNumber, "j");
     jANDI.index = 1;
+    jANDI.viewList_tableReady = false;
 
     //This object class is used to store data about each list. Object instances will be placed into an array.
     function List(element, index) {
