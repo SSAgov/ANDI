@@ -28,7 +28,7 @@ function init_module() {
 
     fANDI.viewList_tableReady = false;
     fANDI.index = 1;
-    fANDI.testSeeingAllElements = true;
+    fANDI.testSeeingAllElements = false;
 
     //This function will analyze the test page for focusable element related markup relating to accessibility
     fANDI.analyze = function () {
@@ -41,11 +41,13 @@ function init_module() {
         //      $(TestPageData.allElements).not( ....).each(function ())
         // Initial not code: .not("path, rect, circle, line, polygon, polyline")
 
-        //$(TestPageData.allElements).each(function () {
+        $(TestPageData.allElements).each(function () {
         // The .is filter is a list of elements that are natively tabbable
         // NOTE: Only uncomment when the above $(TestPageData.allElements) is uncommented and
         // testSeeingAllElements is set to True
-        $(TestPageData.allElements).filter("a[href],button,input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']").each(function () {
+        // NOTE: Some strange difference does not allow the elements in the Contact Us form be discovereable
+        // even with the :focusable, canvas filter being removed
+        //$(TestPageData.allElements).filter("a[href],button,input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']").each(function () {
             if (fANDI.testSeeingAllElements) {
                 fANDI.focusables.list.push(new Focusable(this, fANDI.index));
                 fANDI.focusables.count += 1;
