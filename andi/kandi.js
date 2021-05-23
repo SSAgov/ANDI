@@ -391,7 +391,6 @@ function init_module() {
 
             var addOnProps = AndiData.getAddOnProps(element, elementData,
                 [
-                    "aria-level",
                     getDefault_ariaLive(element, elementData),
                     getDefault_ariaAtomic(element, elementData),
                     "aria-busy",
