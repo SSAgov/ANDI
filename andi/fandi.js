@@ -40,27 +40,28 @@ function init_module() {
         //NOTE: If getting rid of "if ($(this).is(":focusable,canvas"))", use:
         //      $(TestPageData.allElements).not( ....).each(function ())
         // Initial not code: .not("path, rect, circle, line, polygon, polyline")
-        
-        $(TestPageData.allElements).each(function () {
-            if (fANDI.testSeeingAllElements) {
-                // The .is filter is a list of elements that are natively tabbable
-                if ($(this).is("a[href],button,input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']")) {
-                    fANDI.focusables.list.push(new Focusable(this, fANDI.index));
-                    fANDI.focusables.count += 1;
-                    andiData = new AndiData(this);
 
-                    andiCheck.commonFocusableElementChecks(andiData, $(this));
-                    andiCheck.lookForCanvasFallback(this);
-                    if (andiData.accesskey) {
-                        fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
-                    }
-                    testPageData.firstLaunchedModulePrep(this, andiData);
-                    // NOTE: may need this code:
-                    // andiCheck.isThisElementDisabled(this);
-                    AndiData.attachDataToElement(this);
-                    fANDI.index += 1;
+        //$(TestPageData.allElements).each(function () {
+        // The .is filter is a list of elements that are natively tabbable
+        // NOTE: Only uncomment when the above $(TestPageData.allElements) is uncommented and
+        // testSeeingAllElements is set to True
+        $(TestPageData.allElements).filter("a[href],button,input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']").each(function () {
+            if (fANDI.testSeeingAllElements) {
+                fANDI.focusables.list.push(new Focusable(this, fANDI.index));
+                fANDI.focusables.count += 1;
+                andiData = new AndiData(this);
+
+                andiCheck.commonFocusableElementChecks(andiData, $(this));
+                andiCheck.lookForCanvasFallback(this);
+                if (andiData.accesskey) {
+                    fANDI.accesskeys.push(this, andiData.accesskey, fANDI.index);
                 }
-                
+                testPageData.firstLaunchedModulePrep(this, andiData);
+                // NOTE: may need this code:
+                // andiCheck.isThisElementDisabled(this);
+                AndiData.attachDataToElement(this);
+                fANDI.index += 1;
+
             } else {
                 if ($(this).is(":focusable,canvas")) {//If element is focusable, search for accessibility components.
                     fANDI.focusables.list.push(new Focusable(this, fANDI.index));
