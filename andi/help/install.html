@@ -33,8 +33,7 @@
 <meta name="keywords" content="web accessibility testing tool, section 508 compliance testing, accessibility checker" />
 <link href="help.css" rel="stylesheet" media="all" />
 <link href="print.css" rel="stylesheet" media="print" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
-<script src="help.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script><script src="help.js"></script>
 
 </head>
 <body>
@@ -231,7 +230,7 @@
 		<p>
 		For thorough documentation of all features, visit: <a href="howtouse.html">ANDI's User Guide</a>.
 		<br />
-		Looking for a site to demo ANDI? Visit our <a href="demo/index.html">demonstration page</a>.
+		Looking for a site to demo ANDI? Visit our <a href="demo/index.html" target="_blank">demonstration page</a>.
 		</p>
 	</div>
 	</section>
@@ -288,27 +287,8 @@
 
 		<p id='hostYourOwn' tabindex="-1">
 		If your organization wishes to host a local instance of 
-		<span class="brand">ANDI</span>, the accessibility testing tool, refer to this guide:
-		<button id="customConfig-button" class="expandButton" aria-expanded="false">View the Customization Instructions</button>
+		<span class="brand">ANDI</span>, the accessibility testing tool, <a href="faq.html#hostYourOwn">refer to this guide</a>.
 		</p>
-		<div id="customConfig" class="hideOnLoad">
-			<hr />
-			<h3>How to Host Your Own ANDI</h3>
-			<div class="example">
-			<ol>
-				<li><a href="https://github.com/SSAgov/ANDI" target="_blank">Download ANDI's source code from GitHub</a>.</li>
-				<li>In the andi.js file:
-					<ul style="margin-left:5%;">
-					<li>modify the <code>host_url</code> to point to your custom location.</li>
-					<li>(optional) modify the <code>jqueryDownloadSource</code> location to your custom jquery location.</li>
-					</ul>
-				</li>
-				<li>Modify the favelet's launch script to point to your host:
-					<textarea readonly aria-label="favelet launch script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiScript=document.createElement('script');andiScript.setAttribute('src','[ALTERNATE_HOST]/andi.js');document.body.appendChild(andiScript)})());</textarea>
-				</li>
-			</ol>
-			</div>
-		</div>
 	</div>
 	</section>
 </div>
