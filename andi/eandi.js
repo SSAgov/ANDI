@@ -311,7 +311,7 @@ function init_module() {
             return false;
         });
 
-        //$("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='eANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
+        $("#ANDI508-additionalPageResults").html("<button id='ANDI508-viewOutline-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>" + listIcon + "view headings list</button><div id='eANDI508-outline-container' class='ANDI508-viewOtherResults-expanded' tabindex='0'></div>");
 
         //Define outline button
         $("#ANDI508-viewOutline-button").click(function () {
