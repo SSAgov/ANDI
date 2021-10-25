@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "8.1.0";
+var landiVersionNumber = "8.1.1";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
@@ -59,7 +59,7 @@ function Buttons(){
 //Ignore the jslint warning about the "new" declaration. It is needed.
 var alertIcons = new function(){//new is intentional
 	this.danger_noAccessibleName = makeIcon("danger","No accessible name");
-	this.danger_anchorTargetNotFound = makeIcon("warning","In-page anchor target not found");
+	this.warning_anchorTargetNotFound = makeIcon("warning","In-page anchor target not found");
 	this.warning_ambiguous = makeIcon("warning","Ambiguous: same name, different href");
 	this.caution_ambiguous = makeIcon("caution","Ambiguous: same name, different href");
 	this.caution_vagueText = makeIcon("caution","Vague: does not identify link purpose.");
@@ -394,7 +394,7 @@ lANDI.analyze = function(){
 				if(!isAnchorTargetFound(idRef)){
 					if(element.onclick === null && $._data(element, 'events').click === undefined){//no click events
 						//Throw Alert, Anchor Target not found
-						alerts += alertIcons.danger_anchorTargetNotFound;
+						alerts += alertIcons.warning_anchorTargetNotFound;
 						andiAlerter.throwAlert(alert_0069, [idRef]);
 					}
 				}

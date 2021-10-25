@@ -5,7 +5,7 @@
 
 function init_module(){
 
-var tandiVersionNumber = "11.1.0";
+var tandiVersionNumber = "11.1.1";
 
 //create tANDI instance
 var tANDI = new AndiModule(tandiVersionNumber,"t");
@@ -967,8 +967,6 @@ function analyzeTable(table){
 				andiData = new AndiData(cell[0]);
 				
 				if(child.length){
-					//Also grab accessibility components from the child
-					//andiData.grabComponents($(child), true);//overwrite with components from the child, except for innerText
 					//Do alert checks for the child
 					andiCheck.commonFocusableElementChecks(andiData,$(child));
 				}
@@ -976,7 +974,6 @@ function analyzeTable(table){
 					andiCheck.commonNonFocusableElementChecks(andiData, $(cell));
 				
 				if(scope){
-					//andiData.grab_scope($(cell));
 					if(AndiModule.activeActionButtons.scopeMode){
 						//Only throw scope alerts if in "scope mode"
 						if(tooManyScopeRowLevels)
@@ -1132,8 +1129,6 @@ function analyzeTable(table){
 		//These variables keep track of the <tr>, <th>, <td> on each <table>
 		var headerCount = 0;
 		var nonHeaderCount = 0;
-		var hasHeaderRow = false;		//true when there are two or more th in a row
-		var hasHeaderCol = false;		//true when two or more rows contain a th
 		var headersMissingRoleCount = 0;//used for alert_004J
 		var cellsNotContainedByRow = 0;	//used for alert_004K
 		var cell_role = (role === "table") ? "[role=cell]" : "[role=gridcell]";
@@ -1177,10 +1172,6 @@ function analyzeTable(table){
 				cell = $(this);
 				if($(cell).is("th,[role=columnheader],[role=rowheader]")){
 					headerCount++;
-					if(headerCount > 1)
-						hasHeaderRow = true;
-					if(rowCount > 1)
-						hasHeaderCol = true;
 					
 					if($(cell).is("th") && !$(cell).is("[role=columnheader],[role=rowheader]")){
 						//table cell is missing role
@@ -1278,8 +1269,6 @@ function analyzeTable(table){
 				andiData = new AndiData(cell[0]);
 
 				if(child.length){
-					//Also grab accessibility components from the child
-					//andiData.grabComponents($(child), true);//overwrite with components from the child, except for innerText
 					//Do alert checks for the child
 					andiCheck.commonFocusableElementChecks(andiData,$(child));
 				}
@@ -1294,7 +1283,7 @@ function analyzeTable(table){
 				AndiData.attachDataToElement(cell);
 			}
 			else{
-				console.log("ALERT: table cell is not contained by role=row")
+				//TODO: add alert, table cell is not contained by role=row
 			}
 		});
 			
