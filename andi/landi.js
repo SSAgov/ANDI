@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "8.1.1";
+var landiVersionNumber = "8.2.0";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
@@ -100,7 +100,7 @@ lANDI.analyze = function(){
 	//Loop through every visible element and run tests
 	$(TestPageData.allVisibleElements).each(function(){
 		//ANALYZE LINKS
-		if($(this).isSemantically("[role=link]","a[href],a[tabindex],area")){
+		if($(this).isSemantically(["link"],"a[href],a[tabindex],area")){
 			if(!andiCheck.isThisElementDisabled(this)){
 
 				lANDI.links.count++;
@@ -167,7 +167,6 @@ lANDI.analyze = function(){
 								//link as no role and no href, suggest using role=link or href
 								andiAlerter.throwAlert(alert_0168);
 							}
-							
 							andiCheck.commonFocusableElementChecks(andiData,$(this));
 						}
 					}
@@ -185,7 +184,7 @@ lANDI.analyze = function(){
 			$(this).addClass("ANDI508-exclude-from-inspection").removeClass("ANDI508-highlight");
 		}
 		//ANALYZE BUTTONS
-		else if($(this).isSemantically("[role=button]","button,:button,:submit,:reset,:image")){
+		else if($(this).isSemantically(["button"],"button,:button,:submit,:reset,:image")){
 
 			if(!andiCheck.isThisElementDisabled(this)){
 				lANDI.buttons.count++;
@@ -209,7 +208,7 @@ lANDI.analyze = function(){
 						nonUniqueIndex = scanForNonUniqueness(this, nameDescription);
 
 						//role=button
-						if($(this).is("[role=button]")){
+						if(andiData.role==="button"){
 							isElementInTabOrder(this,"button");
 						}
 

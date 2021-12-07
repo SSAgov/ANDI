@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var gandiVersionNumber = "6.0.2";
+var gandiVersionNumber = "6.1.0";
 
 //TODO: add <video>
 
@@ -48,20 +48,20 @@ gANDI.analyze = function(){
 		var closestWidgetParent;
 		//Determine if the image is contained by an interactive widget (link, button)
 		isImageContainedByInteractiveWidget = false; //reset boolean
-		if($(this).not("[tabindex]").is("img,[role=img]")){
+		if($(this).not("[tabindex]").isSemantically(["img"],"img")){
 			//Is Image contained by a link or button?
 			closestWidgetParent = $(this).closest("a,button,[role=button],[role=link]");
 			if($(closestWidgetParent).length){
-				if($(closestWidgetParent).isSemantically("[role=link]","a"))
+				if($(closestWidgetParent).isSemantically(["link"],"a"))
 					totals.imageLink++;
-				else if($(closestWidgetParent).isSemantically("[role=button]","button"))
+				else if($(closestWidgetParent).isSemantically(["button"],"button"))
 					totals.imageButton++;
 				totals.inline++;
 				isImageContainedByInteractiveWidget = true;
 			}
 		}
 		
-		if(isImageContainedByInteractiveWidget || $(this).is("[role=img],[role=image],img,input[type=image],svg,canvas,area,marquee,blink")){
+		if(isImageContainedByInteractiveWidget || $(this).is("[role=image]") || $(this).isSemantically(["img"],"img,input[type=image],svg,canvas,area,marquee,blink")){
 			
 			if(isImageContainedByInteractiveWidget){
 				//Check if parent already has been evaluated (when more than one image is in a link)
@@ -104,7 +104,7 @@ gANDI.analyze = function(){
 				andiAlerter.throwAlert(alert_0173);
 				AndiData.attachDataToElement(this);
 			}
-			else if(!isImageContainedByInteractiveWidget && $(this).is("img,svg,[role=img]")){ //an image used by an image map is handled by the <area>
+			else if(!isImageContainedByInteractiveWidget && $(this).isSemantically(["img"],"img,svg")){ //an image used by an image map is handled by the <area>
 				totals.inline++;
 				if(isElementDecorative(this, andiData)){
 					totals.decorative++;
@@ -146,7 +146,7 @@ gANDI.analyze = function(){
 			}
 			else if($(this).is("[role=image]")){
 				//totals.inline++;
-				andiAlerter.throwAlert(alert_0183);
+				andiAlerter.throwAlert(alert_0134);
 				AndiData.attachDataToElement(this);
 			}
 		}
@@ -156,7 +156,7 @@ gANDI.analyze = function(){
 		}
 		
 		//Check for common font icon classes
-		if( !$(this).is("[role=img],img") &&
+		if( !$(this).isSemantically(["img"],"img") &&
 			(
 			$(this).hasClass("fa fab fas fal fad") || //font awesome
 			$(this).hasClass("glyphicon") || //glyphicon

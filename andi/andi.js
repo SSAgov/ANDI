@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "27.4.0";
+var andiVersionNumber = "28.0.1";
 
 //==============//
 // ANDI CONFIG: //
@@ -31,6 +31,9 @@ AndiCheck.emptyString = "\"\"";
 
 //This number is 2x breath interval of a screen reader (125 characters)
 AndiCheck.characterLimiter = 250;
+
+//List of valid aria roles from: https://www.w3.org/TR/core-aam-1.1/#mapping_role
+AndiCheck.validAriaRoles = ["alert","alertdialog","application","article","banner","button","cell","checkbox","columnheader","combobox","complementary","contentinfo","definition","dialog","directory","document","feed","figure","form","grid","gridcell","group","heading","img","link","list","listbox","listitem","log","main","marquee","math","menu","menubar","menuitem","menuitemcheckbox","menuitemradio","navigation","none","note","option","presentation","progressbar","radio","radiogroup","region","row","rowgroup","rowheader","scrollbar","search","searchbox","separator","slider","spinbutton","status","switch","tab","table","tablist","tabpanel","term","textbox","timer","toolbar","tooltip","tree","treegrid","treeitem"];
 
 //Set the global animation speed
 AndiSettings.andiAnimationSpeed = 50; //milliseconds
@@ -374,7 +377,9 @@ var alert_0021 = new Alert("warning","2","[aria-describedby] should be used in c
 var alert_0022 = new Alert("danger","2","&lt;legend&gt; should be used in combination with a component that provides an accessible name.","legend_alone");
 
 var alert_0031 = new Alert("danger","3","[aria-labeledby] is mispelled, use [aria-labelledby].","misspell");
-var alert_0032 = new Alert("danger","3","[aria-role] not a valid attribute, use [role] instead.","aria_role");
+var alert_0032 = new Alert("warning","3","'%%%' is an unsupported value for [role].","unsupported_role_value");
+var alert_0033 = new Alert("caution","3","Element has multiple roles. Determine if sequence is acceptable.","multiple_roles");
+var alert_0134 = new Alert("danger","3","[role=image] is invalid; Use [role=img].","role_image_invalid");
 
 var alert_0041 = new Alert("warning","4","Presentation table has data table markup (%%%); Is this a data table?","pres_table_not_have");
 var alert_0043 = new Alert("caution","4","Table has more than %%% levels of [scope=%%%].","too_many_scope_levels");
@@ -469,15 +474,14 @@ var alert_0178 = new Alert("danger","17","&lt;area&gt; not contained in &lt;map&
 var alert_0179 = new Alert("caution","17","Screen reader will not recognize this font icon as an image; Add an appropriate role such as [role=img].","");
 var alert_017A = new Alert("caution","17","Font Icon. Is this a meaningful image?","");
 
-var alert_0180 = new Alert("warning","18","[aria-level] is not a greater-than-zero integar; level 2 will be assumed.","arialevel_not_gt_zero_integar");
 var alert_0182 = new Alert("danger","18","Live Region contains a form element.","live_region_form_element");
-var alert_0183 = new Alert("danger","18","[role=image] is invalid; Use [role=img].","role_image_invalid");
 var alert_0184 = new Alert("danger","18","A live region can only be a container element.","live_region_not_container");
-var alert_0185 = new Alert("danger","18","List item's container is not recognized as a list because it has [role=%%%].","non_list_role");
 
 var alert_0190 = new Alert("warning","19","Element visually conveys heading meaning but not using semantic heading markup.","not_semantic_heading");
 var alert_0191 = new Alert("warning","19","Heading element level &lt;%%%&gt; conflicts with [aria-level=%%%].","conflicting_heading_level");
 var alert_0192 = new Alert("caution","19","[role=heading] used without [aria-level]; level 2 will be assumed.","role_heading_no_arialevel");
+var alert_0193 = new Alert("warning","19","[aria-level] is not a greater-than-zero integar; level 2 will be assumed.","arialevel_not_gt_zero_integar");
+var alert_0194 = new Alert("danger","3","List item's container is not recognized as a list because it has [role=%%%].","non_list_role");
 
 var alert_0200 = new Alert("warning","20","Non-unique button: same name/description as another button.","non_unique_button");
 
@@ -719,19 +723,41 @@ function andiReady(){
 		$.extend(jQuery.expr[':'], {
 			shown: function (elem){return $(elem).css("visibility") !== "hidden" && $(elem).is(":visible");}
 		});
-
-		//Define isSemantically, Based on jquery .is method
-		//Parameters: should be css selector strings
-		//	roles:	semantic roles to check against. Example: "[role=link]"
-		//	tags:	semantic tags to check against. Example: "a"
-		//If the role is a trimmed empty string, gets semantics from the tagName
+		
+		//Define getValidRole
+		//Because an element's role may contain a list of values, need to check walk the list and look for first valid role
+		$.fn.extend({
+			getValidRole:function(){
+				var role = $.trim($(this).attr("role")).toLowerCase();
+				if(role){
+					var roleList = role.split(" "); //check for a role sequence such as role="link presentation"
+					//loop through the element's roles list
+					for(var r=0; r<roleList.length; r++){
+						//check if value is in validAriaRoles list
+						if(AndiCheck.validAriaRoles.includes(roleList[r])){
+							return roleList[r];
+						}
+					}
+				}
+			}
+		});
+		
+		//Define isSemantically, Loosely based on jquery .is method
+		//	roles:	an array of role values to check against. Example: ["link","button"]
+		//	tags:	css selector strings: semantic tags to check against. Example: "a"
+		//If the role is a trimmed empty string or unsuppported, gets semantics from the tagName
 		$.fn.extend({
 			isSemantically:function(roles, tags){
-				//If this has one of the roles or (is one of the tags and doesn't have another role that isn't empty)
-				if($.trim($(this).attr("role")))
-					return $(this).is(roles);
-				else
+				var role = $(this).getValidRole();
+				
+				if(role){ //there is a valid role, so it must take precedence over the tagname
+					//check if the computed/valid role matches
+					return roles.includes(role);
+				}
+				else{ 
+					//check if the tagname matches
 					return $(this).is(tags);
+				}
 			}
 		});
 
@@ -764,7 +790,7 @@ function andiReady(){
 			}
 		}
 
-		//Define .includes() to make indexOf more readable.
+		//String.prototype.includes() polyfill
 		if (!String.prototype.includes){
 			String.prototype.includes = function(search, start){
 				'use strict';
@@ -772,6 +798,12 @@ function andiReady(){
 				if(start + search.length > this.length) return false;
 				else return this.indexOf(search, start) !== -1;
 			};
+		}
+		//Array.prototype.includes() polyfill
+		if(!Array.prototype.includes){
+		   Array.prototype.includes = function(search){
+			return !!~this.indexOf(search);
+		  }
 		}
 
 		//Define isContainerElement: This support function will return true if an element can contain text (is not a void element)
@@ -918,7 +950,7 @@ function AndiBar(){
 			}
 
 			function displayConcatenatedInnerText(){
-				if(!$(element).is("table") || $(element).is("[role=presentation],[role=none]") ){ //other exclusions are handled by the getVisibleInnerText
+				if(!$(element).is("table") || $(element).isSemantically(["presentation","none"]) ){ //other exclusions are handled by the getVisibleInnerText
 					var innerText = andiUtility.formatForHtml($.trim(andiUtility.getVisibleInnerText(element, element)));
 					if(innerText)
 						rows += buildRow("innerText", "innerText", innerText);
@@ -1721,7 +1753,7 @@ function AndiUtility(){
 				innerText += $(node).val();
 				return true;
 			}
-			else if($(node).is("[role=combobox],[role=listbox]")){ //get chosen option
+			else if($(node).isSemantically(["combobox","listbox"])){ //get chosen option
 				component = $(node).find("[role=option][aria-selected=true]").first().text();
 				if(component && $.trim(component) !== ""){
 					innerText += component;
@@ -1735,7 +1767,7 @@ function AndiUtility(){
 				}
 				return true;
 			}
-			else if($(node).is("[role=progressbar],[role=scrollbar],[role=slider],[role=spinbutton]")){
+			else if($(node).isSemantically(["progressbar","scrollbar","slider","spinbutton"])){
 				component = $(node).attr("aria-valuetext");
 				if(component && $.trim(component) !== ""){
 					innerText += component;
@@ -2135,9 +2167,42 @@ AndiData.grab_semantics = function(element, data){
 	}
 
 	function grab_role(){
+		//var role = $(element).getValidRole();
 		var role = $.trim($(element).attr("role")).toLowerCase();
-		if(role)
-			data.role = role;
+		
+		if(role){
+			
+			//Replace multiple spaces with a single space
+			role = role.replace(/  +/g, ' ');
+			//If there are multiple roles, store them. Throw alert elsewhere
+			data.roleList = role.split(" ");
+			
+			//valid role value found in role attribute
+			data.role = $(element).getValidRole();
+		}
+
+		/*
+		var role = $.trim($(element).attr("role")).toLowerCase();
+		if(role){
+			//Replace multiple spaces with a single space
+			role = role.replace(/  +/g, ' ');
+			//If there are multiple roles, store them. Throw alert elsewhere
+			data.roleList = role.split(" ");
+			
+			//loop through the list and look for first valid role
+			for(var r=0; r<data.roleList.length; r++){
+				if(AndiCheck.validAriaRoles.includes(data.roleList[r])){
+					data.role = data.roleList[r];
+					break; //stop searching for a valid role
+				}
+			}
+
+			if(!data.role && role) 
+				//a role exists, but couldn't find it in the validAriaRoles list
+				data.unsupportedRole = true;
+			
+		}
+		*/
 	}
 };
 
@@ -2336,19 +2401,19 @@ AndiData.textAlternativeComputation = function(root){
 	function stepD(element, data, isRecursion){
 		var accumulatedText = "";
 		var component;
-		var role = $(element).attr("role");
+		var role = $(element).getValidRole();
 
 		if(!isCalcAccDesc){
 			component = $(element).attr("alt");
 			if(component !== undefined){
 				//TODO: what about svg <image>
-				if( $(element).is("img,input[type=image],area") && ( !role || role === "img" ) ){
+				if( $(element).is("img,input[type=image],area") /*&& ( !role || role === "img" )*/ ){
 					if(!isEmptyComponent(component, "alt", element)){
 						accumulatedText += AndiData.addComp(data, "alt", component, hasNodeBeenTraversed(element));
 					}
 				}
 				else if($.trim(component) !== ""){//because alt="" is allowed for images only
-					if($(element).is("img[role=presentation],img[role=none]"))
+					if($(element).is("img") && $(element).isSemantically(["presentation","none"]) )
 						andiAlerter.throwAlert(alert_0142);
 					else
 						andiAlerter.throwAlert(alert_0081);
@@ -2409,7 +2474,7 @@ AndiData.textAlternativeComputation = function(root){
 			}
 		}
 		else if(!isCalcAccDesc){
-			if($(element).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]","input,select,textarea,[contenteditable=true],[contenteditable='']")){
+			if($(element).isSemantically(["textbox","combobox","listbox","checkbox","radio"],"input,select,textarea,[contenteditable=true],[contenteditable='']")){
 				component = grab_label(element);
 				if(component !== undefined){
 					if(!isEmptyComponent(component[0], "label", element)){
@@ -2460,7 +2525,7 @@ AndiData.textAlternativeComputation = function(root){
 			if(selectedOption)
 				accumulatedText += andiUtility.getVisibleInnerText(selectedOption[0], root);
 		}
-		else if($(element).is("[role=combobox],[role=listbox],[role=progressbar],[role=scrollbar],[role=slider],[role=spinbutton]")){
+		else if($(element).isSemantically(["combobox","listbox","progressbar","scrollbar","slider","spinbutton"])){
 			accumulatedText += andiUtility.getVisibleInnerText(element, root);
 		}
 		return accumulatedText;
@@ -2473,7 +2538,7 @@ AndiData.textAlternativeComputation = function(root){
 		var exclusions = ".ANDI508-overlay,script,noscript,iframe";
 
 		var node, beforePseudo, afterPseudo;
-		var nameFromContent_roles = "[role=button],[role=cell],[role=checkbox],[role=columnheader],[role=gridcell],[role=heading],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[role=radio],[role=row],[role=rowgroup],[role=rowheader],[role=switch],[role=tab],[role=tooltip],[role=tree],[role=treeitem]";
+		var nameFromContent_roles = ["button","cell","checkbox","columnheader","gridcell","heading","link","menuitem","menuitemcheckbox","menuitemradio","option","radio","row","rowgroup","rowheader","switch","tab","tooltip","tree","treeitem"];
 		var nameFromContent_tags = "label,button,a,th,td,h1,h2,h3,h4,h5,h6";
 
 		if(!data) //create data object if not passed
@@ -2595,8 +2660,7 @@ AndiData.textAlternativeComputation = function(root){
 		//This function will check for role=presentation|none which should only occur on stepD
 		function accumulateText(text){
 			if(isCheckRolePresentation){
-				var role = $(element).attr("role");
-				if(role === "presentation" || role === "none")
+				if(data.role && (data.role === "presentation" || data.role === "none") )
 					return "";
 			}
 			accumulatedText += text;
@@ -2624,12 +2688,12 @@ AndiData.textAlternativeComputation = function(root){
 		var groupingText = "";
 
 		//role=radiogroup
-		if(TestPageData.page_using_role_radiogroup && $(element).isSemantically("[role=radio]","input[type=radio]")){
+		if(TestPageData.page_using_role_radiogroup && $(element).isSemantically(["radio"],"input[type=radio]")){
 			getGroupingText($(element).closest("[role=radiogroup],[role=group]"));
 		}
 		//role=group
 		if(!groupingText && TestPageData.page_using_role_group){
-			if($(element).isSemantically("[role=button],[role=checkbox],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[role=radio],[role=slider],[role=textbox],[role=treeitem]","input,select,textarea,button")){ //is an interactive element
+			if($(element).isSemantically(["button","checkbox","link","menuitem","menuitemcheckbox","menuitemradio","option","radio","slider","textbox","treeitem"],"input,select,textarea,button")){ //is an interactive element
 				getGroupingText($(element).closest("[role=group]"));
 			}
 		}
@@ -2646,7 +2710,7 @@ AndiData.textAlternativeComputation = function(root){
 			getGroupingText($(element).closest("[role=menu],[role=menubar]"));
 		}
 		//legend
-		if(!groupingText && testPageData.page_using_fieldset && $(element).isSemantically("[role=checkbox],[role=radio],[role=textbox],[role=option]","input,select,textarea")){
+		if(!groupingText && testPageData.page_using_fieldset && $(element).isSemantically(["checkbox","radio","textbox","option"],"input,select,textarea")){
 			component = grab_legend(element);
 			if(component !== undefined){
 				groupingText += AndiData.addComp(data.components, "legend", component);
@@ -2746,6 +2810,7 @@ AndiData.textAlternativeComputation = function(root){
 				}
 				else{
 					labelElement = closestLabel;
+					//TODO: Need to call the full text alt comp here instead of getVisibleInnerText
 					labelText = andiUtility.getVisibleInnerText(closestLabel[0], element);
 				}
 			}
@@ -2768,6 +2833,7 @@ AndiData.textAlternativeComputation = function(root){
 
 				if(labelFor){//label with matching [for] was found
 					labelElement = labelFor;
+					//TODO: Need to call the full text alt comp here instead of getVisibleInnerText
 					labelText = andiUtility.getVisibleInnerText(labelFor[0], element);
 
 					//Check if this is referencing an element with a duplicate id
@@ -2822,7 +2888,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		pushProp();
 	}
 	if(hasProp("aria-activedescendant")){
-		if(hasRole("application,group,textbox,combobox,grid,listbox,menu,menubar,radiogroup,row,rowgroup,select,tablist,toolbar,tree,treegrid")){
+		if(hasRole(["application","group","textbox","combobox","grid","listbox","menu","menubar","radiogroup","row","rowgroup","select","tablist","toolbar","tree","treegrid"])){
 			if(prop.val){
 				var activedescendant = document.getElementById(prop.val);
 				if(activedescendant && $(activedescendant).is(":shown")){//active descendant is visible
@@ -2837,7 +2903,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		pushProp();
 	}
 	if(hasProp("aria-checked")){
-		if(hasRole("option,radio,switch,menuitemcheckbox,menuitemradio,treeitem"))
+		if(hasRole(["option","radio","switch","menuitemcheckbox","menuitemradio","treeitem"]))
 			prop.out = (prop.val === "true") ? "checked" : "not checked";
 		else if(hasRole("checkbox"))
 			prop.out = (prop.val === "true") ? "checked" : (prop.val === "mixed") ? "partially checked" : "unchecked";
@@ -2883,12 +2949,12 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		pushProp();
 	}
 	if(hasProp("aria-multiline")){
-		if(prop.val === "true" && hasRole("textbox,searchbox"))
+		if(prop.val === "true" && hasRole(["textbox","searchbox"]))
 			prop.out = "multi-line";
 		pushProp();
 	}
 	if(hasProp("aria-multiselectable")){
-		if(prop.val === "true" && hasRole("grid,listbox,tablist,tree,treegrid"))
+		if(prop.val === "true" && hasRole(["grid","listbox","tablist","tree","treegrid"]))
 			prop.out = "multi-selectable";
 		pushProp();
 	}
@@ -2896,7 +2962,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		pushProp();
 	}
 	if(hasProp("aria-pressed")){
-		if(hasRole("button","button,input[type=button],input[type=submit],input[type=image],input[type=reset]"))
+		if(hasRole(["button"],"button,input[type=button],input[type=submit],input[type=image],input[type=reset]"))
 			prop.out = (prop.val === "true") ? "pressed" : "not pressed";
 		pushProp();
 	}
@@ -2904,7 +2970,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		pushProp();
 	}
 	if(hasProp("aria-selected")){
-		if(hasRole("gridcell,option,row,tab,columnheader,rowheader,treeitem"))
+		if(hasRole(["gridcell","option","row","tab","columnheader","rowheader","treeitem"]))
 			prop.out = (prop.val === "true") ? "selected" : "";
 		pushProp();
 	}
@@ -2918,7 +2984,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 
 	if($(element).is("input")){
 		//checked
-		if(hasRole("","input[type=checkbox],input[type=radio]")){
+		if(hasRole([""],"input[type=checkbox],input[type=radio]")){
 			prop = {name:"", val:""};
 			if(element.checked)
 				prop.out = "checked";
@@ -2938,15 +3004,15 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		pushProp();
 	}
 	if(hasProp("aria-expanded")){
-		if(!expandedInOutput && hasRole("button,combobox,document,link,section,sectionhead,window","button,a,section"))
+		if(!expandedInOutput && hasRole(["button","combobox","document","link","section","sectionhead","window"],"button,a,section"))
 			prop.out = (prop.val === "true") ? "expanded" : "collapsed";
 		pushProp();
 	}
 
 	//heading level
-	if(hasRole("heading","h1,h2,h3,h4,h5,h6")){
+	if(hasRole(["heading"],"h1,h2,h3,h4,h5,h6")){
 		var headingLevel = "2"; //default to 2 (defined in spec)
-		if($(element).is("[role=heading]")){
+		if($(element).isSemantically(["heading"])){
 			var ariaLevel = $(element).attr("aria-level");
 
 			if(parseInt(ariaLevel) > 0 && parseInt(ariaLevel) == ariaLevel)
@@ -2977,7 +3043,7 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		}
 	}
 	if(hasProp("aria-readonly")){
-		if(!readonlyInOutput && prop.val === "true" && hasRole("checkbox,combobox,grid,gridcell,listbox,radio,radiogroup,slider,spinbutton,textbox,columnheader,menuitemcheckbox,menuitemradio,rowheader,searchbox,switch,treegrid","input:not([type=submit],[type=button],[type=image],[type=reset]),select,textarea")){
+		if(!readonlyInOutput && prop.val === "true" && hasRole(["checkbox","combobox","grid","gridcell","listbox","radio","radiogroup","slider","spinbutton","textbox","columnheader","menuitemcheckbox","menuitemradio","rowheader","searchbox","switch","treegrid"],"input:not([type=submit],[type=button],[type=image],[type=reset]),select,textarea")){
 			readonlyInOutput = true;
 			prop.out = "readonly";
 		}
@@ -2996,13 +3062,13 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		}
 	}
 	if(hasProp("aria-required")){
-		if(!readonlyInOutput && hasRole("checkbox,combobox,gridcell,listbox,radio,radiogroup,slider,spinbutton,textbox","input:not([type=submit],[type=button],[type=image],[type=reset]),select,textarea"))
+		if(!readonlyInOutput && hasRole(["checkbox","combobox","gridcell","listbox","radio","radiogroup","slider","spinbutton","textbox"],"input:not([type=submit],[type=button],[type=image],[type=reset]),select,textarea"))
 			prop.out = (!requiredInOutput && prop.val === "true") ? "required" : "";
 		pushProp();
 	}
 
 	//radio button index
-	if(hasRole("radio,menuitemradio","input[type=radio]")){
+	if(hasRole(["radio","menuitemradio"],"input[type=radio]")){
 		prop = {name:"", val:""};
 		var group, radioIndex, radioCount = 0;
 		if(elementData.role === "radio"){
@@ -3031,13 +3097,13 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 	}
 
 	//sort
-	if(hasRole("columnheader,rowheader","th")){
+	if(hasRole(["columnheader","rowheader"],"th")){
 		if(hasProp("aria-sort")){
 			prop.out = (prop.val === "ascending") ? "ascending" : (prop.val === "descending") ? "descending" : (prop.val === "other") ? "other" : "";
 			pushProp();
 		}
 	}
-	else if(hasRole("link","a") && TestPageData.page_using_table){
+	else if(hasRole(["link"],"a") && TestPageData.page_using_table){
 		var header = $(element).parent();//using .parent() instead of .closest() to help with performance
 		if($(header).is("th,[role=columnheader],[role=rowheader]")){
 			var ariaSort = $(header).attr("aria-sort");
@@ -3052,14 +3118,14 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 		}
 	}
 
-	if(hasRole("range,scrollbar,separator,slider,spinbutton")){
+	if(hasRole(["range","scrollbar","separator","slider","spinbutton"])){
 		if(hasProp("aria-valuemax"))
 			pushProp();
 		if(hasProp("aria-valuemin"))
 			pushProp();
 
 		var valuetextInOutput = false;
-		if(hasRole("range,separator,slider")){
+		if(hasRole(["range","separator","slider"])){
 			if(hasProp("aria-valuetext")){
 				valuetextInOutput = true;
 				prop.out = prop.val;
@@ -3104,8 +3170,6 @@ AndiData.getAddOnProps = function(element, elementData, extraProps){
 
 	//This function determines if the element has a role or tagname
 	function hasRole(roles, tagNames){
-		if(roles.length > 0)
-			roles = "[role=" + roles.replace(/,+/g, "],[role=") + "]";
 		return $(element).isSemantically(roles, tagNames);
 	}
 	//This function determines if the element has an attribute
@@ -3203,7 +3267,7 @@ function AndiCheck(){
 		this.hasThisElementBeenHiddenFromScreenReader(element, andiData, true);
 		this.wasAccessibleNameFound(andiData);
 		this.areThereComponentsThatShouldntBeCombined(andiData);
-		this.areThereAnyMisspelledAria(element);
+		this.areThereAriaIssues(element, andiData);
 		this.areThereAnyDuplicateFors(element, andiData);
 		this.areThereAnyTroublesomeJavascriptEvents(element);
 		this.clickableAreaCheck(element, andiData);
@@ -3215,7 +3279,7 @@ function AndiCheck(){
 		if(isElementMustHaveName)
 			this.wasAccessibleNameFound(andiData);
 		this.areThereComponentsThatShouldntBeCombined(andiData);
-		this.areThereAnyMisspelledAria(element);
+		this.areThereAriaIssues(element, andiData);
 	};
 
 	//==Test Page Checks==//
@@ -3420,7 +3484,7 @@ function AndiCheck(){
 			for(var f=0; f<testPageData.allFors.length; f++){
 				referencedElement = document.getElementById(testPageData.allFors[f].htmlFor);
 				if(referencedElement && $(referencedElement).hasClass("ANDI508-element")){
-					if(!$(referencedElement).isSemantically("[role=textbox],[role=combobox],[role=listbox],[role=checkbox],[role=radio]","input,select,textarea,button,[contenteditable=true],[contenteditable='']"))
+					if(!$(referencedElement).isSemantically(["textbox","combobox","listbox","checkbox","radio"],"input,select,textarea,button,[contenteditable=true],[contenteditable='']"))
 						//is not a form element
 						andiAlerter.throwAlertOnOtherElement($(referencedElement).attr("data-andi508-index"), alert_0091);
 				}
@@ -3458,13 +3522,21 @@ function AndiCheck(){
 		}
 	};
 
-	//This function will search for misspelled aria attributes and throw an alert if found.
-	this.areThereAnyMisspelledAria = function(element){
-		if($(element).is("[aria-role]"))
-			andiAlerter.throwAlert(alert_0032);
+	//This function will search for special aria issues and throw an alert if found.
+	this.areThereAriaIssues = function(element, data){
 
 		if($(element).is("[aria-labeledby]"))
 			andiAlerter.throwAlert(alert_0031);
+
+		if(data.roleList){
+			for(var r=0; r<data.roleList.length; r++){
+				if(!AndiCheck.validAriaRoles.includes(data.roleList[r])){
+					andiAlerter.throwAlert(alert_0032,[data.roleList[r]]); //unsupported/invalid role
+				}
+			}
+			if(data.roleList.length > 1)
+				andiAlerter.throwAlert(alert_0033); //multiple roles
+		}
 	};
 
 	//This function will throw alert_0260 or alert_0261
@@ -3514,7 +3586,7 @@ function AndiCheck(){
 		if(document.doctype !== null && document.doctype.name == "html" && !document.doctype.publicId && !document.doctype.systemId){
 			var message;
 			if($(element).is("table") && $(element).attr("summary")){
-				var role = $(element).attr("role");
+				var role = $(element).getValidRole();
 				if(role !== "presentation" && role !== "none")
 					message = ["attribute [summary] in &lt;table&gt;, use &lt;caption&gt; or [aria-label] instead"];
 			}
@@ -3881,7 +3953,7 @@ function AndiAlerter(){
 		new AlertGroup("Elements with No Accessible Name"),			//0
 		new AlertGroup("Duplicate Attributes Found"),
 		new AlertGroup("Components That Should Not Be Used Alone"),
-		new AlertGroup("Misspelled ARIA Attributes"),
+		new AlertGroup("ARIA Alerts"),
 		new AlertGroup("Table Alerts"),
 		new AlertGroup("AccessKey Alerts"),							//5
 		new AlertGroup("Reference Alerts"),
@@ -3896,7 +3968,7 @@ function AndiAlerter(){
 		new AlertGroup("Excessive Text"),							//15
 		new AlertGroup("Link Alerts"),
 		new AlertGroup("Graphics Alerts"),
-		new AlertGroup("Improper ARIA Usage"),
+		new AlertGroup("Live Region Alerts"),
 		new AlertGroup("Structure Alerts"),
 		new AlertGroup("Button Alerts"),							//20
 		new AlertGroup("Small Clickable Areas"),
@@ -4004,7 +4076,7 @@ function TestPageData(){
 		andiResetter.storeTestPageFixedPositionDistances(element);
 
 		//get role from elementData if possible
-		var role = (elementData) ? elementData.role : $(element).attr("role");
+		var role = (elementData) ? elementData.role : $(element).getValidRole();
 
 		//Determine if role=group is being used
 		if(!TestPageData.page_using_role_group && role === "group")

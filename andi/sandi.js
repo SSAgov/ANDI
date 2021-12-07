@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var sANDIVersionNumber = "4.1.4";
+var sANDIVersionNumber = "4.2.0";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -37,7 +37,8 @@ sANDI.analyze = function(){
 
 	//Loop through every visible element
 	$(TestPageData.allVisibleElements).each(function(){
-		if($(this).isSemantically("[role=heading]","h1,h2,h3,h4,h5,h6")){
+		if($(this).isSemantically(["heading"],"h1,h2,h3,h4,h5,h6")){
+			
 			//Add to the headings array
 			headingsArray.push($(this));
 			structureExists = true;
@@ -56,7 +57,7 @@ sANDI.analyze = function(){
 						}
 						if(parseInt(ariaLevel) < 0 || parseInt(ariaLevel) != ariaLevel)
 							//Not a positive integar
-							andiAlerter.throwAlert(alert_0180);
+							andiAlerter.throwAlert(alert_0193);
 					}
 					else{
 						//role=heading without aria-level
@@ -68,12 +69,12 @@ sANDI.analyze = function(){
 				AndiData.attachDataToElement(this);
 			}
 		}
-		else if($(this).isSemantically("[role=listitem],[role=list]","ol,ul,li,dl,dd,dt")){
+		else if($(this).isSemantically(["listitem","list"],"ol,ul,li,dl,dd,dt")){
 			//Add to the lists array
 			listsArray.push($(this));
 			structureExists = true;
 
-			if($(this).isSemantically("[role=list]","ol,ul,dl")){
+			if($(this).isSemantically(["list"],"ol,ul,dl")){
 				if($(this).is("ul"))
 					ulCount++;
 				else if($(this).is("ol"))
@@ -99,9 +100,9 @@ sANDI.analyze = function(){
 						andiAlerter.throwAlert(alert_0079, ["&lt;li&gt;","&lt;ol&gt; or &lt;ul&gt;"]);
 					}
 					else{ //check if listContainer is still semantically a list
-						var listContainer_role = $(listContainer).attr("role");
+						var listContainer_role = $(listContainer).getValidRole();
 						if(listContainer_role && listContainer_role !== "list")
-							andiAlerter.throwAlert(alert_0185, [listContainer_role]);
+							andiAlerter.throwAlert(alert_0194, [listContainer_role]);
 					}
 				}
 				else if($(this).is("dd,dt") && !$(this).closest("dl").length){//Is the dl,dt contained by a dl?
@@ -112,7 +113,7 @@ sANDI.analyze = function(){
 				AndiData.attachDataToElement(this);
 			}
 		}
-		else if($(this).isSemantically("[role=banner],[role=complementary],[role=contentinfo],[role=form],[role=main],[role=navigation],[role=search],[role=region]","main,header,footer,nav,form,aside")){
+		else if($(this).isSemantically(["banner","complementary","contentinfo","form","main","navigation","search","region"],"main,header,footer,nav,form,aside")){
 			//Add to the landmarks array
 			landmarksArray.push($(this));
 			structureExists = true;
@@ -137,7 +138,7 @@ sANDI.analyze = function(){
 			}
 		}
 
-		if($(this).is("[role=alert],[role=status],[role=log],[role=marquee],[role=timer],[aria-live=polite],[aria-live=assertive]")){
+		if($(this).isSemantically(["alert","status","log","marquee","timer"],"[aria-live=polite],[aria-live=assertive]")){
 			//Add to the live regions array
 			liveRegionsArray.push($(this));
 			if(AndiModule.activeActionButtons.liveRegions){
@@ -220,14 +221,14 @@ sANDI.isFakeHeading = function(element){
 };
 
 //Initialize outline
-sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurance):</h3><div class='ANDI508-scrollable'>";
+sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurence):</h3><div class='ANDI508-scrollable'>";
 
 //This function will display the heading list (headings outline)
 //It should only be called on heading elements
 sANDI.getOutlineItem = function(element){
 	var displayCharLength = 60; //for truncating innerText
 	var tagName = $(element).prop("tagName").toLowerCase();
-	var role = $(element).attr("role");
+	var role = $(element).getValidRole();
 	var ariaLevel = $(element).attr("aria-level");
 
 	//Indent the heading according to the level

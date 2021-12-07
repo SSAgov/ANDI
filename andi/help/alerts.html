@@ -59,10 +59,13 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='danger'><a href="?dby_alone">ARIA-describedBy Alone</a></li>
 		<li class='danger'><a href="?legend_alone">Legend Alone</a></li>
 	</ul>
-	<h3 tabindex="0">Misspelled ARIA Attributes</h3>
+	<h3 tabindex="0">ARIA Alerts</h3>
 	<ul>
 		<li class='danger'><a href="?misspell">Misspelled attribute</a></li>
 		<li class='danger'><a href="?aria_role">ARIA-Role not valid</a></li>
+		<li class='danger'><a href="?role_image_invalid">Role=image is Invalid</a></li>
+		<li class='warning'><a href="?unsupported_role_value">Unsupported Value for Role</a></li>
+		<li class='caution'><a href="?multiple_roles">Element has Multiple Roles</a></li>
 	</ul>
 	<h3 tabindex="0">Table Alerts</h3>
 	<ul>
@@ -176,13 +179,10 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='caution'><a href="?image_alt_redundant_phrase">Image Alt Redundant Phrase</a></li>
 		<li class='caution'><a href="?ensure_bg_images_decorative">Ensure Background Images Are Decorative</a></li>
 	</ul>
-	<h3 tabindex="0">Improper ARIA Usage</h3>
+	<h3 tabindex="0">Live Regions Alerts</h3>
 	<ul>
 		<li class='danger'><a href="?live_region_form_element">Form Element in Live Region</a></li>
 		<li class='danger'><a href="?live_region_not_container">Live Region not Container</a></li>
-		<li class='danger'><a href="?role_image_invalid">Role=image is Invalid</a></li>
-		<li class='danger'><a href="?non_list_role">List Container Has Non-List Role</a></li>
-		<li class='warning'><a href="?arialevel_not_gt_zero_integar">Aria-level not &gt;0 Integer</a></li>
 	</ul>
 	<h3 tabindex="0">Button Alerts</h3>
 	<ul>
@@ -193,6 +193,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 		<li class='warning'><a href="?not_semantic_heading">Not Using Semantic Heading Markup</a></li>
 		<li class='warning'><a href="?conflicting_heading_level">Conflicting Heading Level</a></li>
 		<li class='warning'><a href="?role_heading_no_arialevel">Heading Role No Aria-Level</a></li>
+		<li class='warning'><a href="?arialevel_not_gt_zero_integar">Aria-level not &gt;0 Integer</a></li>
+		<li class='danger'><a href="?non_list_role">List Container Has Non-List Role</a></li>
 	</ul>
 	<h3 tabindex="0">Small Clickable Areas</h3>
 	<ul>
@@ -492,7 +494,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<div class="example">
 		<ul>
 			<li>The <code>aria-labelledby</code> or <code>aria-label</code> attributes can be added to <code>&lt;iframe&gt;</code> to provide an accessible name.</li>
-			<li>The <code>title</code> attribute will name <code>&lt;figure&gt;</code> when no other naming techniques are used.</li>
+			<li>The <code>title</code> attribute will name <code>&lt;iframe&gt;</code> when no other naming techniques are used.</li>
 		</ul>
 	</div>
 	<p>
@@ -700,6 +702,80 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 
 	<h3>What should be done?</h3>
 	<p>Most likely, the attribute <code>role</code> was intended to be used on this element.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<section tabindex="-1" aria-labelledby="lby-role_image_invalid" id='role_image_invalid'>
+	<h2 id="lby-role_image_invalid">Alert: Role=Image is Invalid</h2>
+	<div class='details'>
+	<ul class='message danger'>
+	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [role=image] is invalid; Use [role=img].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element has a <code>role</code> attribute with a value of <code>"image"</code>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	<code>"image"</code> is not a valid value for <code>role</code>.
+	A screen reader will not recognize this element as an image.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Change the value to <code>"img"</code>, as in <code>role="img"</code>
+	so that the screen reader will recognize the element as an image.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<section tabindex="-1" aria-labelledby="lby-unsupported_role_value" id='unsupported_role_value'>
+	<h2 id="lby-unsupported_role_value">Alert: Unsupported Value for Role</h2>
+	<div class='details'>
+	<ul class='message warning'>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> '%%%' is an unsupported value for [role].</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element's <code>role</code> attribute contains a value that is not present in the 
+	<a href="https://www.w3.org/TR/core-aam-1.1/#mapping_role" target="_blank">Core Accessibility API Role Mapping Table</a>.
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Assistive Technology will not be able to communicate the semantics of the element because the <code>role</code> value is, essentially, not supported.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Change the <code>role</code> value to one in the <a href="https://www.w3.org/TR/core-aam-1.1/#mapping_role" target="_blank">Core Accessibility API Role Mapping Table</a>.
+	</p>
+	</div>
+	</section>
+</div>
+<div class="division">
+	<section tabindex="-1" aria-labelledby="lby-multiple_roles" id='multiple_roles'>
+	<h2 id="lby-multiple_roles">Alert: Element has Multiple Roles</h2>
+	<div class='details'>
+	<ul class='message caution'>
+	<li><img alt="caution icon" src="images/icon-caution.png" class="noshadow" /> Element has multiple roles. Determine if sequence is acceptable.</li>
+	</ul>
+	<br />
+	<h3>Why did ANDI alert this?</h3>
+	<p>
+	This element's <code>role</code> attribute contains more than one value. For example, <code>role="link presentation"</code>
+	</p>
+	<h3>Why is this an accessibility concern?</h3>
+	<p>
+	Assistive Technology will attempt to use the first value in the sequence.
+	If it doesn't recognize or support the first value, it will attempt to use the next value in the sequence. And so on.
+	</p>
+	<h3>What should be done?</h3>
+	<p>
+	Ensure that the values provided in the list of values are acceptible for the application, and that the sequence is intentional.
+	As a best practice, and for the broadest support, the <code>role</code> attribute should contain a single value, not a list.
 	</p>
 	</div>
 	</section>
@@ -3184,31 +3260,6 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Only container elements (such as a <code>&lt;div&gt;</code>)
 	can be designated as live regions. Changes to the contents (innerText) of the
 	live region will trigger the screen reader to speak the changed content.
-	</p>
-	</div>
-	</section>
-</div>
-<div class="division">
-	<section tabindex="-1" aria-labelledby="lby-role_image_invalid" id='role_image_invalid'>
-	<h2 id="lby-role_image_invalid">Alert: Role=Image is Invalid</h2>
-	<div class='details'>
-	<ul class='message danger'>
-	<li><img alt="danger icon" src="images/icon-danger.png" class="noshadow" /> [role=image] is invalid; Use [role=img].</li>
-	</ul>
-	<br />
-	<h3>Why did ANDI alert this?</h3>
-	<p>
-	This element has a <code>role</code> attribute with a value of <code>"image"</code>.
-	</p>
-	<h3>Why is this an accessibility concern?</h3>
-	<p>
-	<code>"image"</code> is not a valid value for <code>role</code>.
-	A screen reader will not recognize this element as an image.
-	</p>
-	<h3>What should be done?</h3>
-	<p>
-	Change the value to <code>"img"</code>, as in <code>role="img"</code>
-	so that the screen reader will recognize the element as an image.
 	</p>
 	</div>
 	</section>
