@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.1";
+var andiVersionNumber = "28.0.2";
 
 //==============//
 // ANDI CONFIG: //
@@ -723,7 +723,7 @@ function andiReady(){
 		$.extend(jQuery.expr[':'], {
 			shown: function (elem){return $(elem).css("visibility") !== "hidden" && $(elem).is(":visible");}
 		});
-		
+
 		//Define getValidRole
 		//Because an element's role may contain a list of values, need to check walk the list and look for first valid role
 		$.fn.extend({
@@ -741,7 +741,7 @@ function andiReady(){
 				}
 			}
 		});
-		
+
 		//Define isSemantically, Loosely based on jquery .is method
 		//	roles:	an array of role values to check against. Example: ["link","button"]
 		//	tags:	css selector strings: semantic tags to check against. Example: "a"
@@ -749,12 +749,12 @@ function andiReady(){
 		$.fn.extend({
 			isSemantically:function(roles, tags){
 				var role = $(this).getValidRole();
-				
+
 				if(role){ //there is a valid role, so it must take precedence over the tagname
 					//check if the computed/valid role matches
 					return roles.includes(role);
 				}
-				else{ 
+				else{
 					//check if the tagname matches
 					return $(this).is(tags);
 				}
@@ -2169,14 +2169,14 @@ AndiData.grab_semantics = function(element, data){
 	function grab_role(){
 		//var role = $(element).getValidRole();
 		var role = $.trim($(element).attr("role")).toLowerCase();
-		
+
 		if(role){
-			
+
 			//Replace multiple spaces with a single space
 			role = role.replace(/  +/g, ' ');
 			//If there are multiple roles, store them. Throw alert elsewhere
 			data.roleList = role.split(" ");
-			
+
 			//valid role value found in role attribute
 			data.role = $(element).getValidRole();
 		}
@@ -2188,7 +2188,7 @@ AndiData.grab_semantics = function(element, data){
 			role = role.replace(/  +/g, ' ');
 			//If there are multiple roles, store them. Throw alert elsewhere
 			data.roleList = role.split(" ");
-			
+
 			//loop through the list and look for first valid role
 			for(var r=0; r<data.roleList.length; r++){
 				if(AndiCheck.validAriaRoles.includes(data.roleList[r])){
@@ -2197,10 +2197,10 @@ AndiData.grab_semantics = function(element, data){
 				}
 			}
 
-			if(!data.role && role) 
+			if(!data.role && role)
 				//a role exists, but couldn't find it in the validAriaRoles list
 				data.unsupportedRole = true;
-			
+
 		}
 		*/
 	}
@@ -2535,7 +2535,7 @@ AndiData.textAlternativeComputation = function(root){
 	function stepF(element, data, isNameFromContent, isProcessRefTraversal){
 		var accumulatedText = "";
 
-		var exclusions = ".ANDI508-overlay,script,noscript,iframe";
+		var exclusions = ".ANDI508-overlay,script,noscript,iframe,text";
 
 		var node, beforePseudo, afterPseudo;
 		var nameFromContent_roles = ["button","cell","checkbox","columnheader","gridcell","heading","link","menuitem","menuitemcheckbox","menuitemradio","option","radio","row","rowgroup","rowheader","switch","tab","tooltip","tree","treeitem"];
