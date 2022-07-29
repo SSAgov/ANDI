@@ -1,5 +1,5 @@
 //==========================================//
-//gANDI: graphics ANDI 						//
+//gANDI: graphics/images ANDI 				//
 //Created By Social Security Administration //
 //==========================================//
 function init_module(){

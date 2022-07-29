@@ -1,5 +1,5 @@
 //=============================================//
-//fANDI: focusable elements ANDI (default mode)//
+//iANDI: iFrames ANDI                          //
 //Created By Social Security Administration	   //
 //=============================================//
 function init_module(){
@@ -9,7 +9,7 @@ var iandiVersionNumber = "3.0.1";
 //create iANDI instance
 var iANDI = new AndiModule(iandiVersionNumber,"i");
 
-//This function will analyze the test page for focusable element related markup relating to accessibility
+//This function will analyze the test page for iFrame related markup relating to accessibility
 iANDI.analyze = function(){
 	$(TestPageData.allVisibleElements).each(function(){
 		if($(this).is("iframe")){

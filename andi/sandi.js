@@ -371,7 +371,7 @@ sANDI.results = function(){
 		return false;
 	});
 
-	//Define the lang attributes button
+	//Define the role attributes button
 	$("#ANDI508-roleAttributes-button").click(function(){
 		if($(this).attr("aria-pressed") == "false"){
 			andiOverlay.overlayButton_on("overlay",$(this));
