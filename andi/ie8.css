@@ -8,7 +8,7 @@
 #ANDI508-testPage.gANDI508-testPage.gANDI508-fadeInline .ANDI508-element img
 	{filter: alpha(opacity=30) !important; /*no support for opacity*/}
 	
-#ANDI508-testPage.gANDI508-testPage.gANDI508-hideBackground .lANDI508-background
+#ANDI508-testPage.gANDI508-testPage.gANDI508-hideBackground .gANDI508-background
 	{filter: alpha(opacity=30) !important; /*no support for opacity*/}
 
 #ANDI508 #ANDI508-moduleMenu button:hover,
