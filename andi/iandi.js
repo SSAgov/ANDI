@@ -4,7 +4,7 @@
 //=============================================//
 function init_module(){
 
-var iandiVersionNumber = "3.0.1";
+var iandiVersionNumber = "3.0.2";
 
 //create iANDI instance
 var iANDI = new AndiModule(iandiVersionNumber,"i");

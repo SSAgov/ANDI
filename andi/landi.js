@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "8.2.0";
+var landiVersionNumber = "8.2.1";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
