@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var sANDIVersionNumber = "4.2.0";
+var sANDIVersionNumber = "4.2.1";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");

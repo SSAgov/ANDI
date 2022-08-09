@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var gandiVersionNumber = "6.1.0";
+var gandiVersionNumber = "6.1.1";
 
 //TODO: add <video>
 
