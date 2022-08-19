@@ -2,13 +2,14 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.3";
+var andiVersionNumber = "28.0.4";
 
 //==============//
 // ANDI CONFIG: //
 //==============//
 //URLs
 var host_url = "https://www.ssa.gov/accessibility/andi/";
+
 var help_url = host_url+"help/";
 var icons_url = host_url+"icons/";
 
@@ -3944,13 +3945,14 @@ function AndiAlerter(){
 
 		//This function will show the alert buttons that were added to the alertButtons array
 		function showAlertButtons(){
+
 			for(var x=0; x<alertButtons.length; x++){
 				$("#ANDI508-alertGroup_"+alertButtons[x].group).children("a").first().after(
 					"<button id='"+alertButtons[x].alertButton.id+
 					"' aria-pressed='false'>"+alertButtons[x].alertButton.label +
 					alertButtons[x].alertButton.overlayIcon+"</button>"
 					);
-				$("#"+alertButtons[x].alertButton.id).bind("click",alertButtons[x].alertButton.clickLogic);
+				$("#"+alertButtons[x].alertButton.id).on("click",alertButtons[x].alertButton.clickLogic);
 			}
 			alertButtons = [];//clear the alertButtons array
 		}
