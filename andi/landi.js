@@ -1,5 +1,5 @@
 //==========================================//
-//lANDI: links ANDI 						//
+//lANDI: links and buttons ANDI				//
 //Created By Social Security Administration //
 //==========================================//
 function init_module(){
