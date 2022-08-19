@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var landiVersionNumber = "8.2.0";
+var landiVersionNumber = "8.2.1";
 
 //create lANDI instance
 var lANDI = new AndiModule(landiVersionNumber,"l");
@@ -840,7 +840,7 @@ lANDI.viewList_attachEvents = function(){
 			return function(a, b){
 				var valA = getCellValue(a, index);
 				var valB = getCellValue(b, index);
-				return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB);
+				return !isNaN(valA) && !isNaN(valB) ? valA - valB : valA.localeCompare(valB);
 			};
 			function getCellValue(row, index){
 				return $(row).children("td,th").eq(index).text();
