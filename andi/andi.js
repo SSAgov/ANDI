@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.2";
+var andiVersionNumber = "28.0.3";
 
 //==============//
 // ANDI CONFIG: //
@@ -853,7 +853,7 @@ function AndiBar(){
 
 		if(!checkAlerts("dangers")){ //No dangers found during load
 
-			if(!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !$(element).is(":focusable"))){
+			if(!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !elementData.isFocusable )){
 
 				if(elementData.accGroup)
 					outputText += elementData.accGroup + " ";
@@ -2093,6 +2093,7 @@ AndiData.grab_coreProperties = function(element){
 
 	function grab_tabindex(){
 		AndiData.data.isTabbable = true; //assume true (prove to be false)
+		AndiData.data.isFocusable = true; //assume true (prove to be false)
 		var tabindex = $.trim($(element).attr("tabindex"));
 		var nativelyTabbableElements = "a[href],button,input,select,textarea,iframe,area,[contenteditable=true],[contenteditable='']";
 		if(tabindex){
@@ -2113,14 +2114,17 @@ AndiData.grab_coreProperties = function(element){
 			}
 			else if(isNaN(tabindex)){//tabindex is not a number
 				andiAlerter.throwAlert(alert_0077, [tabindex]);
-				if(!$(element).is(nativelyTabbableElements))
+				if(!$(element).is(nativelyTabbableElements)){
 					AndiData.data.isTabbable = false;
+					AndiData.data.isFocusable = false;
+				}
 			}
 			//else element is tabbable
 			AndiData.data.tabindex = tabindex;
 		}
 		else if(!$(element).is(nativelyTabbableElements)){
 			AndiData.data.isTabbable = false;
+			AndiData.data.isFocusable = false;
 		}
 	}
 
@@ -2745,8 +2749,12 @@ AndiData.textAlternativeComputation = function(root){
 			function addComp_grouping(data, component, groupingElement){
 				var displayText = "";
 
-				if($.trim(component) !== "")
+				if($.trim(component) !== ""){
 					displayText = "<span class='ANDI508-display-grouping'>" + component + "</span>";
+
+					if($(groupingElement).is("[aria-required=true]"))
+						displayText += "<span class='ANDI508-display-grouping'> required group</span>";
+				}
 
 				if(displayText){
 					if(!data.grouping) //create grouping object
@@ -3411,20 +3419,22 @@ function AndiCheck(){
 						}
 					}
 					else{//not tabbable
-						//Does this element have a role?
-						if(elementData.role === "img"){
-							andiAlerter.throwAlert(alert_0008, "[role=img] Element"+alert_0008.message);
+						if(tagNameText === "canvas"){
+							if(elementData.isFocusable || ( elementData.role != "presentation" && elementData.role != "none") ){
+								andiAlerter.throwAlert(alert_0008, "Canvas"+alert_0008.message);
+							}
 						}
 						else{
-							switch(tagNameText){
-							case "img":
-							case "input[type=image]":
-								if(!elementData.role) andiAlerter.throwAlert(alert_0003, "Image"+alert_0003.message); break;
-							case "canvas":
-								andiAlerter.throwAlert(alert_0008, "Canvas"+alert_0008.message); break;
+							if(elementData.role === "img"){
+								andiAlerter.throwAlert(alert_0008, "[role=img] Element"+alert_0008.message);
+							}
+							else if(!elementData.role){
+								if(tagNameText === "img" || tagNameText === "input[type=image]")
+									andiAlerter.throwAlert(alert_0003, "Image"+alert_0003.message);
 							}
 						}
 					}
+
 				}
 
 				if(elementData.components.legend)
