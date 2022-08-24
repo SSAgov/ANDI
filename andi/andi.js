@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.4";
+var andiVersionNumber = "28.0.5";
 
 //==============//
 // ANDI CONFIG: //
@@ -771,7 +771,7 @@ function andiReady(){
 			if(nodeName === "area"){
 				var map = element.parentNode; var mapName = map.name;
 				if(!element.href || !mapName || map.nodeName.toLowerCase() !== "map") return false;
-				var img = $("img[usemap=\\#" + mapName + "]")[0]; return !!img && visibleParents(img);
+				var img = $("img[usemap=\\#" + $.escapeSelector(mapName) + "]")[0]; return !!img && visibleParents(img);
 			}
 			return(
 				/^(input|select|textarea|button|iframe|summary)$/.test(nodeName) ?
@@ -2142,7 +2142,7 @@ AndiData.grab_coreProperties = function(element){
 		if($(element).is("area")){
 			var map = $(element).closest("map");
 			if(map)
-				imageSrc = $("#ANDI508-testPage img[usemap=\\#" + $(map).attr("name") + "]").first().attr("src");
+				imageSrc = $("#ANDI508-testPage img[usemap=\\#" + $.escapeSelector($(map).attr("name")) + "]").first().attr("src");
 		}
 		else if($(element).is("img,input[type=image]"))
 			imageSrc = $(element).attr("src");
