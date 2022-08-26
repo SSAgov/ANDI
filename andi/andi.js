@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.5";
+var andiVersionNumber = "28.0.6";
 
 //==============//
 // ANDI CONFIG: //
@@ -771,7 +771,12 @@ function andiReady(){
 			if(nodeName === "area"){
 				var map = element.parentNode; var mapName = map.name;
 				if(!element.href || !mapName || map.nodeName.toLowerCase() !== "map") return false;
-				var img = $("img[usemap=\\#" + $.escapeSelector(mapName) + "]")[0]; return !!img && visibleParents(img);
+				return function(){ //find matching img[usemap]
+					$("img[usemap]").each(function(){ //$("img[usemap=\\#" + $.escapeSelector(mapName) + "]")[0] would be better but not supported in jquery less than 3
+						if( $(this).attr("usemap") == ("#" + mapName) )
+							return visibleParents($(this));
+					});
+				}
 			}
 			return(
 				/^(input|select|textarea|button|iframe|summary)$/.test(nodeName) ?
@@ -2141,8 +2146,13 @@ AndiData.grab_coreProperties = function(element){
 		var imageSrc;
 		if($(element).is("area")){
 			var map = $(element).closest("map");
-			if(map)
-				imageSrc = $("#ANDI508-testPage img[usemap=\\#" + $.escapeSelector($(map).attr("name")) + "]").first().attr("src");
+			if(map){
+				var mapName = $(map).attr("name");
+				$("#ANDI508-testPage img[usemap]").each(function(){ //$.escapeSelector() would be better but not supported in jquery less than 3
+					if( $(this).attr("usemap") == ("#" + mapName) )
+						return $(this).attr("src");
+				});
+			}
 		}
 		else if($(element).is("img,input[type=image]"))
 			imageSrc = $(element).attr("src");
