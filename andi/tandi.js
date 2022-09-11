@@ -5,7 +5,7 @@
 
 function init_module(){
 
-var tandiVersionNumber = "11.1.0";
+var tandiVersionNumber = "11.2.0";
 
 //create tANDI instance
 var tANDI = new AndiModule(tandiVersionNumber,"t");
@@ -103,11 +103,11 @@ tANDI.analyze = function(){
 			tableArray.push($(this));
 			
 			//Is this a presentation table?
-			if($(this).is("[role=presentation],[role=none]")){
+			if($(this).isSemantically(["presentation","none"])){
 				//It's a presentation table
 				presentationTablesCount++;
 			}
-			else if($(this).isSemantically("[role=table],[role=grid],[role=treegrid]","table")){
+			else if($(this).isSemantically(["table","grid","treegrid"],"table")){
 				//It's a data table
 				dataTablesCount++;
 			}
@@ -493,8 +493,8 @@ AndiModule.inspect = function(element){
 				});
 			}
 			else if(
-				( $(element).is("[role=cell]") && $(table).attr("role") === "table" ) || 
-				( $(element).is("[role=gridcell]") && ($(table).attr("role") === "grid" || $(table).attr("role") === "treegrid") )
+				( $(element).getValidRole() === "cell" && $(table).getValidRole() === "table" ) || 
+				( $(element).getValidRole() === "gridcell" && ($(table).getValidRole() === "grid" || $(table).getValidRole() === "treegrid") )
 			){
 				$(table).find("[role=columnheader].ANDI508-element,[role=rowheader].ANDI508-element").filter(":visible").each(function(){
 					ci = $(this).attr("data-tandi508-colindex");
@@ -617,7 +617,7 @@ tANDI.showModeButtons = function(mode){
 //This function will a table. Only one table at a time
 function analyzeTable(table){
 	
-	var role = $.trim($(table).attr("role"));
+	var role = $(table).getValidRole();
 	
 	//temporarily hide any nested tables so they don't interfere with analysis
 	$(table).find("table,[role=table],[role=grid],[role=treegrid]").each(function(){
@@ -967,8 +967,6 @@ function analyzeTable(table){
 				andiData = new AndiData(cell[0]);
 				
 				if(child.length){
-					//Also grab accessibility components from the child
-					//andiData.grabComponents($(child), true);//overwrite with components from the child, except for innerText
 					//Do alert checks for the child
 					andiCheck.commonFocusableElementChecks(andiData,$(child));
 				}
@@ -976,7 +974,6 @@ function analyzeTable(table){
 					andiCheck.commonNonFocusableElementChecks(andiData, $(cell));
 				
 				if(scope){
-					//andiData.grab_scope($(cell));
 					if(AndiModule.activeActionButtons.scopeMode){
 						//Only throw scope alerts if in "scope mode"
 						if(tooManyScopeRowLevels)
@@ -1132,8 +1129,6 @@ function analyzeTable(table){
 		//These variables keep track of the <tr>, <th>, <td> on each <table>
 		var headerCount = 0;
 		var nonHeaderCount = 0;
-		var hasHeaderRow = false;		//true when there are two or more th in a row
-		var hasHeaderCol = false;		//true when two or more rows contain a th
 		var headersMissingRoleCount = 0;//used for alert_004J
 		var cellsNotContainedByRow = 0;	//used for alert_004K
 		var cell_role = (role === "table") ? "[role=cell]" : "[role=gridcell]";
@@ -1177,10 +1172,6 @@ function analyzeTable(table){
 				cell = $(this);
 				if($(cell).is("th,[role=columnheader],[role=rowheader]")){
 					headerCount++;
-					if(headerCount > 1)
-						hasHeaderRow = true;
-					if(rowCount > 1)
-						hasHeaderCol = true;
 					
 					if($(cell).is("th") && !$(cell).is("[role=columnheader],[role=rowheader]")){
 						//table cell is missing role
@@ -1278,8 +1269,6 @@ function analyzeTable(table){
 				andiData = new AndiData(cell[0]);
 
 				if(child.length){
-					//Also grab accessibility components from the child
-					//andiData.grabComponents($(child), true);//overwrite with components from the child, except for innerText
 					//Do alert checks for the child
 					andiCheck.commonFocusableElementChecks(andiData,$(child));
 				}
@@ -1294,7 +1283,7 @@ function analyzeTable(table){
 				AndiData.attachDataToElement(cell);
 			}
 			else{
-				console.log("ALERT: table cell is not contained by role=row")
+				//TODO: add alert, table cell is not contained by role=row
 			}
 		});
 			
@@ -1395,7 +1384,7 @@ tANDI.viewList_buildTable = function(){
 	//Returns an array with the tableName and the namingMethodUsed
 	function preCalculateTableName(table){
 		var tableName, namingMethod;
-		var role = $.trim($(table).attr("role"));
+		var role = $(table).getValidRole();
 		if(role === "presentation" || role === "none"){
 			tableName = "<span style='font-style:italic'>Presentation Table</span>";
 			namingMethod = "";

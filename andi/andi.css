@@ -1,5 +1,5 @@
 /*=====ANDI CSS=====*/
-/*Version 5.0.3 */
+/*Version 5.0.7 */
 /*This is the main CSS file for ANDI*/
 /*It is important to keep the specificity high to override any test page's own CSS*/
 
@@ -26,7 +26,7 @@ body.ANDI508-testPage
 	@keyframes pulse_danger{
 		50%{outline-color:#ef7200 !important;}
 	}
-#ANDI508-testPage .ANDI508-highlight.ANDI508-element-active.ANDI508-element
+#ANDI508-testPage .ANDI508-highlight.ANDI508-element-active.ANDI508-element, #ANDI508-testPage .ANDI508-exclude-from-inspection.ANDI508-element-active.ANDI508-element
 	{outline:4px solid deeppink !important; animation:pulse_active 3s linear infinite !important;}
 	/*animation for active highlight: pulses an outward pink glow*/
 	@keyframes pulse_active{
@@ -52,7 +52,7 @@ body.ANDI508-testPage
 #ANDI508-testPage span.ANDI508-overlay:hover,
 #ANDI508-testPage span.ANDI508-overlay:focus
 	{background-color:#C2FF64 !important; border:1px solid black !important; outline:0; cursor:default;}
-	
+
 /*===Laser===*/
 #ANDI508-laser-container
 	{position:absolute; top:0; z-index:9998; display:none; background:none; width:100%; height:100%;}
@@ -69,7 +69,7 @@ body.ANDI508-testPage
 /*===ANDI===*/
 #ANDI508
 	{background:black !important; color:white !important; box-shadow:0 0 20px 0 gray; padding:4px !important;
-	margin:0 !important; height:auto !important; position:fixed !important; top:0 !important; left:0 !important; 
+	margin:0 !important; height:auto !important; position:fixed !important; top:0 !important; left:0 !important;
 	z-index:999999999 !important; display:block !important; width:100% !important; border-radius:0 !important;
 	max-width:none !important; min-height:0 !important}
 /*General Overrides*/
@@ -96,17 +96,17 @@ body.ANDI508-testPage
 	 background:transparent !important; color:white !important; appearance:normal; text-transform:none; opacity:1 !important;
 	 margin:0; padding:0; border:none; border-radius:0; left:0; top:0; vertical-align:baseline; float:none; outline:0 !important;
 	 width:auto; height:auto; min-width:0; max-width:none; min-height:0; max-height:none; overflow:visible; transform:none;
-	 box-shadow:none; text-decoration:none !important; content:none; clear:none; box-sizing:content-box; text-shadow:none;}
+	 box-shadow:none; text-decoration:none !important; content:none; clear:none; box-sizing:content-box; text-shadow:none; position:static}
 #ANDI508 *::before,
 #ANDI508 *:before,
 #ANDI508 *::after,
 #ANDI508 *:after
 	{content:none !important;}
-	
+
 #ANDI508 .ANDI508-scrollable
 	{min-height:3.3em; max-height:7em; overflow-y:auto; overflow-x:hidden;
-	scrollbar-arrow-color:#cfcfcf !important; scrollbar-shadow-color:black !important; 
-	scrollbar-face-color:white !important; scrollbar-highlight-color:black !important; 
+	scrollbar-arrow-color:#cfcfcf !important; scrollbar-shadow-color:black !important;
+	scrollbar-face-color:white !important; scrollbar-highlight-color:black !important;
 	scrollbar-track-color:black !important;}
 #ANDI508 .ANDI508-scrollable::-webkit-scrollbar
 	{width:1em;}
@@ -114,7 +114,7 @@ body.ANDI508-testPage
 	{background-color:black; border:1px solid white}
 #ANDI508 .ANDI508-scrollable::-webkit-scrollbar-thumb
 	{background:white;}
-	
+
 /*	#ANDI508 #ANDI508-alerts-container-scrollable
 	{margin:3px 3px 0 0; padding-top:1px; }*/
 
@@ -122,7 +122,7 @@ body.ANDI508-testPage
 #ANDI508 #ANDI508-toolName-heading:focus,
 #ANDI508 h3[tabindex]:focus,
 #ANDI508 tbody[tabindex]:focus,
-#ANDI508 p[tabindex]:focus, 
+#ANDI508 p[tabindex]:focus,
 #ANDI508 div[tabindex]:focus,
 #ANDI508 a:focus,
 #ANDI508 button:focus
@@ -138,7 +138,7 @@ body.ANDI508-testPage
 
 #ANDI508 .ANDI508-screenReaderOnly
 	{height:0; width:0px; overflow:hidden; position:absolute;}
-	
+
 /*Accessibility Components*/
 #ANDI508 .ANDI508-display-legend,
 #ANDI508 .ANDI508-display-legend span,
@@ -165,6 +165,7 @@ body.ANDI508-testPage
 #ANDI508 .ANDI508-display-title,
 #ANDI508 .ANDI508-display-svgDesc
 	{color:#7cfbff !important;}
+#ANDI508 .ANDI508-display-placeholder,
 #ANDI508 .ANDI508-display-summary
 	{color:#53d2d6 !important;}
 #ANDI508 .ANDI508-display-innerText,
@@ -202,12 +203,12 @@ body.ANDI508-testPage
 /*==Header==*/
 #ANDI508 #ANDI508-header
 	{width:100% !important; display:inline-block; position:relative; margin-bottom:3px; min-height:1.9em;}
-	
+
 /*tool Name*/
 #ANDI508 #ANDI508-toolName-heading
 	{display:inline-block; margin:0; padding:0;}
 #ANDI508 #ANDI508-toolName-link
-	{font:bold 20pt Verdana !important; color:white !important; margin:0 4px 1px 3px; 
+	{font:bold 20pt Verdana !important; color:white !important; margin:0 4px 1px 3px;
 	cursor:pointer; text-shadow:1px 1px 3px #808080; padding-right:5px; display:inline-block;}
 #ANDI508 #ANDI508-toolName-link:hover
 	{text-decoration:none !important;}
@@ -221,14 +222,14 @@ body.ANDI508-testPage
 	animation: andiSpin 2s linear infinite;}
 @-webkit-keyframes andiSpin{/*safari*/ 0% {-webkit-transform: rotate(0deg);} 100% {-webkit-transform: rotate(360deg);}}
 @keyframes andiSpin{ 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}
-	
+
 /*module action buttons*/
 #ANDI508 #ANDI508-module-actions
 	{display:inline-block; padding-top:0.5em; margin-right:13.8em; position:absolute; left:22.5em; vertical-align:top;
 	/*overflow-y:auto;*/ height:2.6em; min-width:200px; background-color:black; z-index:3;
 	scrollbar-arrow-color:black; scrollbar-shadow-color:black;
 	scrollbar-face-color:black; scrollbar-highlight-color:black; scrollbar-track-color:black;}
-	
+
 #ANDI508 #ANDI508-module-actions span.ANDI508-module-actions-spacer
 	{color:gray !important; font-size:8pt;}
 #ANDI508 #ANDI508-module-actions button
@@ -252,7 +253,7 @@ body.ANDI508-testPage
 	#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup .ANDI508-moduleActionGroup-options button
 		{margin:2px 1px 2px 1px; width:93%; border-radius:5px;}
 	#ANDI508 #ANDI508-module-actions .ANDI508-moduleActionGroup.ANDI508-moduleActionGroup-visible .ANDI508-moduleActionGroup-options
-		{display:block !important; position:absolute; z-index:3; top:1.2em;}	
+		{display:block !important; position:absolute; z-index:3; top:1.2em;}
 
 /*module Menu*/
 #ANDI508 #ANDI508-moduleMenu-container
@@ -262,7 +263,7 @@ body.ANDI508-testPage
 #ANDI508 #ANDI508-moduleMenu
 	{position:absolute; display:block; background-color:black !important;}
 #ANDI508 #ANDI508-moduleMenu button
-	{display:none; font:normal 11.5pt verdana !important; border:1px solid black; border-radius:13px; 
+	{display:none; font:normal 11.5pt verdana !important; border:1px solid black; border-radius:13px; position:static;
 	height:26px; padding:0 4px; text-align:center; margin:4px 1px 1px 1px; width:11em; white-space:nowrap;}
 #ANDI508 #ANDI508-moduleMenu button img
 	{display:inline; margin:0 0 2px 2px;}
@@ -275,7 +276,7 @@ body.ANDI508-testPage
 
 #ANDI508 #ANDI508-moduleMenu button.ANDI508-moduleMenu-selected
 	{display:block; border:1px solid gray;}
-	
+
 #ANDI508 #ANDI508-moduleMenu.ANDI508-moduleMenu-expanded
 	{border:1px solid gray; border-radius:15px;}
 #ANDI508 #ANDI508-moduleMenu.ANDI508-moduleMenu-expanded button
@@ -286,10 +287,10 @@ body.ANDI508-testPage
 	{display:inline-block;}
 #ANDI508 #ANDI508-moduleMenu.ANDI508-moduleMenu-expanded button img
 	{display:none !important;}
-	
+
 #ANDI508 #ANDI508-moduleMenu .ANDI508-moduleMenu-unavailable
 	{display:none !important;}
-	
+
 /*fANDI*/
 #ANDI508.ANDI508-module-f #ANDI508-module-actions button.ANDI508-module-action-active
 	{color:lemonchiffon !important;}
@@ -335,7 +336,7 @@ body.ANDI508-testPage
 #ANDI508.ANDI508-module-i #ANDI508-module-name,
 #ANDI508.ANDI508-module-i #ANDI508-module-actions button.ANDI508-module-action-active
 	{color:#f3b4bf !important;} /*ffc0cb*/
-	
+
 #ANDI508 #ANDI508-module-name
 	{font:bold 20pt monospace !important; margin-right:1px; display:inline;}
 
@@ -345,7 +346,7 @@ body.ANDI508-testPage
 
 #ANDI508 #ANDI508-elementControls
 	{width:19%; display:inline-block; vertical-align:top; text-align:center;}
-		
+
 #ANDI508 #ANDI508-elementDetails,
 #ANDI508 #ANDI508-startUpSummary,
 #ANDI508 #ANDI508-additionalElementDetails
@@ -353,8 +354,8 @@ body.ANDI508-testPage
 
 /*startUpSummary*/
 #ANDI508 #ANDI508-startUpSummary p
-	{margin-bottom:0.7em;}
-	
+	{margin-bottom:0.7em; height: 10em;}
+
 /*elementName*/
 #ANDI508 #ANDI508-elementNameLink,
 #ANDI508 #ANDI508-elementNameLink:hover,
@@ -366,7 +367,7 @@ body.ANDI508-testPage
 #ANDI508 #ANDI508-accessibleComponentsTable
 	{width:97%; border-collapse:collapse; line-height:100%; margin-top:2px; margin-left:2%; table-layout:auto;}
 #ANDI508 #ANDI508-accessibleComponentsTable th
-	{font:9pt Verdana !important; width:1%; text-align:right; border:none !important; 
+	{font:9pt Verdana !important; width:1%; text-align:right; border:none !important;
 	vertical-align:top; padding:0; margin:0; white-space:nowrap;}
 #ANDI508 #ANDI508-accessibleComponentsTable td
 	{font:9pt Tahoma !important; white-space:nowrap; display:inline-block; max-width:418px;
@@ -381,7 +382,7 @@ body.ANDI508-testPage
 
 /*output*/
 #ANDI508 #ANDI508-outputText
-	{word-wrap:break-word; max-height:5em; line-height:normal; display:block; margin-top:1px; 
+	{word-wrap:break-word; max-height:5em; line-height:normal; display:block; margin-top:1px;
 	padding:0px 1px 1px 1.8em; margin-left:2%; background-image:url(icons/output.png) !important;
 	background-size:18px 18px !important; background-repeat:no-repeat !important;}
 #ANDI508 #ANDI508-outputText span
@@ -390,7 +391,7 @@ body.ANDI508-testPage
 	{width:14px; display:inline; margin-right:3px;}
 #ANDI508 #ANDI508-outputText .ANDI508-display-id
 	{display:none;}
-	
+
 #ANDI508 #ANDI508-outputText a
 	{font:9pt tahoma !important; display:inline;}
 #ANDI508 #ANDI508-outputText a:hover,
@@ -416,11 +417,11 @@ body.ANDI508-testPage
 	{border:1px solid gray; border-radius:5px; padding:1px 0px 0px 2px;}
 
 /*viewList*/
-	
+
 	#ANDI508 #ANDI508-additionalPageResults #ANDI508-viewList-table
 		{border-collapse:collapse; table-layout:auto; min-width:145px;
 		min-height:3.3em; max-height:16em; display:inline-block; display:table; width:100%;}
-	
+
 	#ANDI508 #ANDI508-viewList-table th,
 	#ANDI508 #ANDI508-viewList-table th a
 		{padding:2px; text-align:left;}
@@ -433,7 +434,7 @@ body.ANDI508-testPage
 		{text-decoration:underline !important;}
 	#ANDI508 #ANDI508-viewList-table td img
 		{width:16px;}
-		
+
 	/*red highlight*/
 	#ANDI508 #ANDI508-viewList-table tr.ANDI508-table-row-alert td,
 	#ANDI508 #ANDI508-viewList-table tr.ANDI508-table-row-alert td a,
@@ -476,7 +477,7 @@ body.ANDI508-testPage
 #ANDI508 #ANDI508-alerts-list .ANDI508-alertGroup-list
 	{margin-top:5px; margin-left:1.5em; display:none;}
 #ANDI508 #ANDI508-alerts-list a.ANDI508-alertGroup-toggler,
-#ANDI508 #ANDI508-alerts-list a.ANDI508-alertGroup-toggler:visited, 
+#ANDI508 #ANDI508-alerts-list a.ANDI508-alertGroup-toggler:visited,
 #ANDI508 #ANDI508-alerts-list a.ANDI508-alertGroup-toggler:active,
 #ANDI508 #ANDI508-alerts-list a.ANDI508-alertGroup-toggler:hover
 	{font-size:10pt; padding:1px 1px 0px 1px;}
@@ -497,12 +498,12 @@ body.ANDI508-testPage
 	{font:11pt monospace}
 #ANDI508 #ANDI508-hotkeyList li
 	{font-size:8.5pt; list-style:none !important;}
-	
+
 #ANDI508 #ANDI508-settingsList
 	{display:none; position:absolute; top:2.5em; left:0px; border:1px solid gray; padding: 2px 1em 2px 5px;
 	z-index:4; overflow:hidden; background:black !important}
 #ANDI508 #ANDI508-barControls #ANDI508-settingsList button
-	{display:block !important; width:96% !important; height:14px !important; font-size:8pt !important; 
+	{display:block !important; width:96% !important; height:14px !important; font-size:8pt !important;
 	border:none !important; box-shadow:none !important; padding-right:3px !important;}
 #ANDI508 #ANDI508-barControls #ANDI508-settingsList button[aria-checked=false]
 	{color:#989898 !important;}
@@ -511,7 +512,7 @@ body.ANDI508-testPage
 	{outline:0 !important; background-color:#313131 !important;}
 #ANDI508 #ANDI508-barControls #ANDI508-settingsList button img
 	{width:11px !important;}
-	
+
 /*bar controls buttons*/
 #ANDI508 #ANDI508-barControls
 	{padding-top:1px; margin-right:7px; position:absolute; top:0px; left:auto; right:1px; bottom:auto;
@@ -524,7 +525,7 @@ body.ANDI508-testPage
 #ANDI508 #ANDI508-barControls button:hover,
 #ANDI508 #ANDI508-elementControls button:hover
 	{border:1px solid lemonchiffon !important;}
-#ANDI508 #ANDI508-barControls button img, 
+#ANDI508 #ANDI508-barControls button img,
 #ANDI508 #ANDI508-elementControls button img
 	{width:22px}
 #ANDI508 #ANDI508-elementControls button
@@ -540,14 +541,14 @@ body.ANDI508-testPage
 #ANDI508-body.ANDI508-minimode #ANDI508-activeElementInspection
 	{width:100% !important; max-width:100%; margin-left:0;}
 #ANDI508-body.ANDI508-minimode #ANDI508-startUpSummary p
-	{margin-bottom:0;}
+	{margin-bottom:0; height:auto}
 #ANDI508-body.ANDI508-minimode #ANDI508-pageAnalysis,
 #ANDI508-body.ANDI508-minimode #ANDI508-elementControls br,
 #ANDI508-body.ANDI508-minimode .ANDI508-heading
 	{display:none !important;}
 #ANDI508-body.ANDI508-minimode #ANDI508-elementControls
 	{width:11% !important;}
-	
+
 /*linearize*/
 #ANDI508-testPage .ANDI508-linearized.ANDI508-linearized-position
 	{position:static !important; box-shadow:0 0 25px 1px #33fffd !important;}
@@ -585,17 +586,17 @@ body.ANDI508-testPage
 	#ANDI508 #ANDI508-barControls button
 		{margin-left:8px !important;}
 }
-			
+
 /*===ANDI MODULES===*/
 	/*==fANDI (default)==*/
 	#ANDI508 #ANDI508-accesskeysFound
 		{margin-top:1px;}
 	#ANDI508 #ANDI508-accesskeysFound a,
-	#ANDI508 #ANDI508-accesskeysFound a:visited, 
+	#ANDI508 #ANDI508-accesskeysFound a:visited,
 	#ANDI508 #ANDI508-accesskeysFound a:active
 		{color:white !important; padding:0px 3px 0px 3px !important;}
 	#ANDI508 #ANDI508-accesskeysFound a:hover
 		{color:white !important; outline:1px solid lemonchiffon !important;}
-		
+
 	#ANDI508-testPage .ANDI508-overlay-tabSequence-greaterThanZero
 		{background:#ffb03a !important;}
