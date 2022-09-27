@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var sANDIVersionNumber = "4.2.0";
+var sANDIVersionNumber = "4.2.1";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -38,7 +38,7 @@ sANDI.analyze = function(){
 	//Loop through every visible element
 	$(TestPageData.allVisibleElements).each(function(){
 		if($(this).isSemantically(["heading"],"h1,h2,h3,h4,h5,h6")){
-			
+
 			//Add to the headings array
 			headingsArray.push($(this));
 			structureExists = true;
@@ -221,7 +221,7 @@ sANDI.isFakeHeading = function(element){
 };
 
 //Initialize outline
-sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurence):</h3><div class='ANDI508-scrollable'>";
+sANDI.outline = "<h3 tabindex='-1' id='sANDI508-outline-heading'>Headings List (ordered by occurrence):</h3><div class='ANDI508-scrollable'>";
 
 //This function will display the heading list (headings outline)
 //It should only be called on heading elements
