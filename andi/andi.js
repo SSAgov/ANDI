@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.6";
+var andiVersionNumber = "28.0.7";
 
 //==============//
 // ANDI CONFIG: //
@@ -2602,6 +2602,9 @@ AndiData.textAlternativeComputation = function(root){
 								accumulatedText += " "; //add extra space after block elements
 							pushSubtreeData(data, subtreeData, node);
 						}
+					}
+					else if($(element).is("svg") && $(node).is("title,descr")){ //check if element is <svg> and has <title> or <descr>
+						accumulatedText += $(node).text();
 					}
 				}
 				else if(node.nodeType === 3){//text node
