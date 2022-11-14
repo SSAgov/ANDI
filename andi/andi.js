@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.7";
+var andiVersionNumber = "28.0.8";
 
 //==============//
 // ANDI CONFIG: //
@@ -482,7 +482,7 @@ var alert_0190 = new Alert("warning","19","Element visually conveys heading mean
 var alert_0191 = new Alert("warning","19","Heading element level &lt;%%%&gt; conflicts with [aria-level=%%%].","conflicting_heading_level");
 var alert_0192 = new Alert("caution","19","[role=heading] used without [aria-level]; level 2 will be assumed.","role_heading_no_arialevel");
 var alert_0193 = new Alert("warning","19","[aria-level] is not a greater-than-zero integar; level 2 will be assumed.","arialevel_not_gt_zero_integar");
-var alert_0194 = new Alert("danger","3","List item's container is not recognized as a list because it has [role=%%%].","non_list_role");
+var alert_0194 = new Alert("danger","19","List item's container is not recognized as a list because it has [role=%%%].","non_list_role");
 
 var alert_0200 = new Alert("warning","20","Non-unique button: same name/description as another button.","non_unique_button");
 
