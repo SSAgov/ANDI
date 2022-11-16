@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "4.1.3";
+var cANDIVersionNumber = "4.1.4";
 
 //TODO: select box, check for selected
 
@@ -31,7 +31,7 @@ cANDI.analyze = function(){
 
 	//Elements that are disabled or have aria-disabled="true" do not need to be tested
 	$(TestPageData.allVisibleElements).filter("*:not(option)").each(function(){
-		
+
 		if($(this).is("img[src],input:image[src],svg,canvas")){
 			imgCount++;
 		}
@@ -39,20 +39,20 @@ cANDI.analyze = function(){
 			if(hasTextExcludingChildren(this)){
 				if(!hasAdditionalHidingTechniques(this)){
 					//Element is not hidden and contains text.
-					
+
 					elementsContainingTextCount++;
-					
+
 					//Try to get the contrast ratio automatically
 					var cANDI_data = cANDI.getContrast($(this));
-					
+
 					if(!cANDI_data.disabled){
 						andiData = new AndiData(this, true);
-					
+
 						$(this).data("candi508",cANDI_data);
-						
+
 						//Throw alerts if necessary
 						cANDI.processResult($(this));
-						
+
 						AndiData.attachDataToElement(this);
 					}
 					else
@@ -61,12 +61,12 @@ cANDI.analyze = function(){
 			}
 		}
 	});
-	
+
 	//This function checks for additional hiding techniques and returns true if it has one
 	//Techniques such as font-size:0, large text-indent, overflow:hidden width small height and width
 	function hasAdditionalHidingTechniques(element){
 		if( //font-size:0
-			parseInt($(element).css("font-size")) === 0 || 
+			parseInt($(element).css("font-size")) === 0 ||
 			//text-indent is pushing the element off the page
 			(
 			$(element).css("text-indent") != "0" || $(element).css("text-indent") != "0px") && parseInt($(element).css("text-indent")) < -998 ||
@@ -78,7 +78,7 @@ cANDI.analyze = function(){
 		}
 		return false;
 	}
-	
+
 	//This function returns true if one of the immediate children has text
 	function hasTextExcludingChildren(element){
 		//Loop through the child nodes of this element looking for text
@@ -99,12 +99,12 @@ cANDI.analyze = function(){
 
 //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
 cANDI.results = function(){
-	
+
 	andiBar.updateResultsSummary("Elements Containing Text: "+elementsContainingTextCount);
 
 	if(imgCount > 0)
 		andiAlerter.throwAlert(alert_0231,alert_0231.message,0);
-		
+
 	//Contrast Playground HTML
 	$("#ANDI508-additionalPageResults").append(
 	"<button id='ANDI508-contrastPlayground-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"show contrast playground</button>"+
@@ -125,7 +125,7 @@ cANDI.results = function(){
 
 	enableColorWidget("fg");
 	enableColorWidget("bg");
-	
+
 	//Define contrastPlayground button
 	$("#ANDI508-contrastPlayground-button").click(function(){
 		if($(this).attr("aria-expanded")=="false"){
@@ -155,7 +155,7 @@ cANDI.results = function(){
 		andiResetter.resizeHeights();
 		return false;
 	});
-	
+
 	//This handles the javascript key event on the inputs.
 	//It handles validation of the fields.
 	//If passes validation, looks for up or down arrow key presses, calculates the contrast
@@ -175,7 +175,7 @@ cANDI.results = function(){
 			cANDI.playground_calc();
 		}
 	});
-	
+
 	$("#cANDI508-playground-suggest-small").click(function(){
 		cANDI.playground_suggest(wcagLevel.smallTextReqRatio);
 		$("#cANDI508-playground-result").focus();
@@ -184,16 +184,16 @@ cANDI.results = function(){
 		cANDI.playground_suggest(wcagLevel.largeTextReqRatio);
 		$("#cANDI508-playground-result").focus();
 	});
-	
+
 	//Add Module Mode Buttons
 	var moduleActionButtons = "";
-	
+
 	//Does the browser support CSS filter:grayscale?
 	if((function(){var el = document.createElement("a"); el.style.cssText = (document.body.style.webkitFilter !== undefined ? '-webkit-' : '') + 'filter:grayscale(100%)'; return !!el.style.length && !oldIE; }()))
 		moduleActionButtons += "<button id='ANDI508-grayscale-button' aria-pressed='false'>grayscale</button>";
-	
+
 	$("#ANDI508-module-actions").html(moduleActionButtons);
-	
+
 	//Grayscale Button
 	$("#ANDI508-grayscale-button").click(function(){
 		if($(this).attr("aria-pressed") === "false"){
@@ -209,7 +209,7 @@ cANDI.results = function(){
 		andiResetter.resizeHeights();
 		return false;
 	});
-	
+
 	if(elementsContainingTextCount > 0){
 		if(!andiBar.focusIsOnInspectableElement()){
 			andiBar.showElementControls();
@@ -225,14 +225,14 @@ cANDI.results = function(){
 	}
 
 	andiAlerter.updateAlertList();
-	
+
 	AndiModule.engageActiveActionButtons([
 		"contrastPlayground",
 		"grayscale"
 	]);
-	
+
 	$("#ANDI508").focus();
-	
+
 	//This function will allow the color selection widget to work
 	function enableColorWidget(fgbg){
 		$("#cANDI508-playground-colorSelector-"+fgbg)
@@ -256,12 +256,12 @@ cANDI.results = function(){
 //This function will update the info in the Active Element Inspection.
 //Should be called after the mouse hover or focus in event.
 AndiModule.inspect = function(element){
-	
+
 	andiBar.prepareActiveElementInspection(element);
 	var elementData = $(element).data("andi508");
-	
+
 	if($(element).hasClass("ANDI508-element")){
-		
+
 		$("#ANDI508-additionalElementDetails").html(
 			"<div tabindex='0' style='margin-bottom:1px' accesskey='"+andiHotkeyList.key_output.key+"'>"+
 				"<h3 class='ANDI508-heading'>Contrast Ratio<span aria-hidden='true'>:</span></h3> <span id='cANDI508-ratio'></span> <span id='cANDI508-result'></span> "+
@@ -274,16 +274,16 @@ AndiModule.inspect = function(element){
 				"<tr><th scope='row' class='cANDI508-label'>Font:</th><td><span id='cANDI508-fontweight'></span> <span id='cANDI508-fontsize'></span> <span id='cANDI508-fontfamily'></span></td></tr>"+
 			"</tbody></table>"
 		).show();
-		
+
 		cANDI.contrastDisplay(element);
-		
+
 		andiBar.displayOutput(elementData, element); //just to display any alerts
-		
+
 		//Grab the alert text from the outputText
 		var alertHtml = $("#ANDI508-outputText").html();
 		if(alertHtml)
 			$("#ANDI508-additionalElementDetails").append("<div id='cANDI508-alertContainer'><h3 class='ANDI508-heading'>Alerts:</h3> "+alertHtml+"</div>");
-		
+
 		$("#cANDI508-colorSelector-foreground").click(function(){
 			if($("#ANDI508-contrastPlayground-button").attr("aria-expanded") === "true"){
 				displayColorValue("#cANDI508-playground-fg", new Color($(this).css("background-color")));
@@ -304,8 +304,7 @@ AndiModule.inspect = function(element){
 cANDI.playground_adjustShade = function(inputElement, shade){
 	var colorSelectorBox = $(inputElement).prev();
 	var color = new Color($(colorSelectorBox).css("background-color"));
-	
-	var adjustedShade;
+
 	if(shade == "lighter"){
 		for(var l=0; l<3; l++){
 			if(color.rgba[l] < 255)
@@ -318,20 +317,20 @@ cANDI.playground_adjustShade = function(inputElement, shade){
 				color.rgba[d]--;
 		}
 	}
-	
+
 	//Update Color
 	displayColorValue("#"+inputElement.id, color);
 };
 
 //This function will grab the colors from the active element, if it is available.
 cANDI.playground_open = function(){
-	
+
 	//Try to get fg color from active element
 	if(!getColorFromActive("fg")){
 		//No color to get, default to black
 		displayColorValue("#cANDI508-playground-fg", Color.BLACK);
 	}
-	
+
 	//Try to get fg color from active element
 	if(!getColorFromActive("bg")){
 		//No color to get, default to white
@@ -340,7 +339,7 @@ cANDI.playground_open = function(){
 
 	//Calculate the contrast ratio in the playground
 	cANDI.playground_calc();
-	
+
 	//This function will get the colors from the active element
 	//If the color grab is successful, it returns true. Else (doesn't contain a color) returns false.
 	function getColorFromActive(fgBg){
@@ -360,17 +359,17 @@ cANDI.playground_calc = function(){
 	//get colors as rgb
 	var bgColor = new Color($("#cANDI508-playground-colorSelector-fg").css("background-color"));
 	var fgColor = new Color($("#cANDI508-playground-colorSelector-bg").css("background-color"));
-	
+
 	var ratio = fgColor.contrast(bgColor).ratio;
-	
+
 	$("#cANDI508-playground-ratio").removeClass("cANDI508-invalid").html(ratio);
-	
+
 	//Hide or Show Suggestion Buttons
 	if(ratio < wcagLevel.largeTextReqRatio)
 		$("#cANDI508-playground-suggest-large").css("visibility","visible");
 	else
 		$("#cANDI508-playground-suggest-large").css("visibility","hidden");
-	
+
 	if(ratio < wcagLevel.smallTextReqRatio)
 		$("#cANDI508-playground-suggest-small").css("visibility","visible");
 	else
@@ -379,14 +378,14 @@ cANDI.playground_calc = function(){
 
 //This function checks the colors entered into the playground and determines if they are valid
 cANDI.playground_validate = function(queryString){
-	
+
 	var valid = true;
 	var validHex = /^#([a-fA-F0-9]{6})$/;
-	
+
 	$(queryString).each(function(){
 		var value = $(this).val();
 		var colorSelectorBox = $(this).prev();
-		
+
 		//Is this a 6 digit hex value with #
 		if(value.length === 7 && validHex.test(value)){
 			//Set this element's color selector box
@@ -399,7 +398,7 @@ cANDI.playground_validate = function(queryString){
 			valid = false;
 		}
 	});
-	
+
 	if(valid){
 		return true;
 	}
@@ -415,17 +414,17 @@ cANDI.playground_validate = function(queryString){
 //This function suggests color values that meet the required ratio
 cANDI.playground_suggest = function(minReq){
 	if(cANDI.playground_validate("#cANDI508-playground-bg,#cANDI508-playground-fg")){
-		
+
 		//Get Suggested Color
 		var cANDI_data = {
 			bgColor: new Color($("#cANDI508-playground-colorSelector-bg").css("background-color")),
 			fgColor: new Color($("#cANDI508-playground-colorSelector-fg").css("background-color")),
 			minReq:  minReq
 		};
-		
+
 		var suggestedFgColor = cANDI.getSuggestedColor(cANDI_data,"fg");
 		var suggestedBgColor = cANDI.getSuggestedColor(cANDI_data,"bg");
-		
+
 		if(cANDI.suggestForegroundChange(cANDI_data, suggestedFgColor, suggestedBgColor)){
 			//Suggest Foreground Color
 			displayColorValue("#cANDI508-playground-fg",suggestedFgColor);
@@ -434,7 +433,7 @@ cANDI.playground_suggest = function(minReq){
 			//Suggest Background Color
 			displayColorValue("#cANDI508-playground-bg",suggestedBgColor);
 		}
-		
+
 		//Calculate the contrast ratio
 		cANDI.playground_calc();
 	}
@@ -449,14 +448,14 @@ cANDI.getContrast = function(fgElement){
 	//Get background color
 	var bgColor = new Color($(fgElement).css("background-color"));
 	var bgElement = getBgElement(fgElement);
-	
+
 	//Get foreground color
 	var fgColor = new Color($(fgElement).css("color"));
 	if(fgColor.alpha < 1){
 		semiTransparency = true;
 		fgColor = fgColor.overlayOn(bgColor);
 	}
-	
+
 	var contrast = fgColor.contrast(bgColor);
 	var ratio = contrast.ratio;
 
@@ -475,13 +474,13 @@ cANDI.getContrast = function(fgElement){
 		result:				undefined,
 		disabled:			disabled
 	};
-	
+
 	if(!disabled) //Run the contrast test
 		contrastTest(cANDI_data);
-	
+
 	//send cANDI_data back
 	return cANDI_data;
-	
+
 	//This function does the contrast test
 	function contrastTest(cANDI_data){
 
@@ -507,28 +506,28 @@ cANDI.getContrast = function(fgElement){
 			}
 		}
 	}
-	
+
 	//This function will recursively get the element that contains the background-color or background-image.
 	function getBgElement(element, recursion){
 		if(!disabled)
 			disabled = isThisDisabled(element);
-		
+
 		if(parseInt($(element).css("opacity")) < 1)
 			opacity = true;
-		
+
 		if($(element).css("background-image") !== "none"){
 			return element;
 		}
 		else{
 			//Store this background color
 			var thisBgColor = new Color($(element).css("background-color"));
-			
+
 			//Overlay the accumulated bgColor with the the previous background color that was semi-transparent
 			if(recursion)
 				bgColor = bgColor.overlayOn(thisBgColor);
 			else
 				bgColor = thisBgColor;
-			
+
 			if($(element).is("html")){
 				//transparent or semi-transparent
 				if(thisBgColor.alpha < 1){
@@ -544,9 +543,9 @@ cANDI.getContrast = function(fgElement){
 				return getBgElement($(element).parent(), true);
 			}
 			return element;
-		} 
+		}
 	}
-	
+
 	function isThisDisabled(element){
 		return !!($(element).prop("disabled") || $(element).attr("aria-disabled") === "true");
 	}
@@ -569,17 +568,17 @@ cANDI.processResult = function(element){
 		//Opacity Less Than 1
 		if($(element).data("candi508").opacity)
 			andiAlerter.throwAlert(alert_0232);
-			
+
 		//Has Background Image
 		if($(element).data("candi508").bgImage !== "none")
 			andiAlerter.throwAlert(alert_0230);
-	}	
+	}
 };
 
 //This function will return the suggested color HTML
 //if cANDI_data not passed in, returns a message about suggested color not being possible
 cANDI.getSuggestedColorHTML = function(cANDI_data){
-	
+
 	var suggestedColorHtml = "<tr><th class='cANDI508-label' scope='row'>Suggested&nbsp;";
 	if(cANDI_data){
 		//Get Suggested Color
@@ -587,7 +586,7 @@ cANDI.getSuggestedColorHTML = function(cANDI_data){
 		var suggestedBgColor = cANDI.getSuggestedColor(cANDI_data,"bg");
 
 		var suggestedColor;
-		
+
 		if(cANDI.suggestForegroundChange(cANDI_data, suggestedFgColor, suggestedBgColor)){
 			//Suggest Foreground Color
 			suggestedColor = suggestedFgColor;
@@ -598,9 +597,9 @@ cANDI.getSuggestedColorHTML = function(cANDI_data){
 			suggestedColor = suggestedBgColor;
 			suggestedColorHtml += "Background";
 		}
-		
+
 		suggestedColor = rgbToHex(suggestedColor);
-		
+
 		suggestedColorHtml += ":</th><td><div class='cANDI508-colorSelector' style='background-color:"+suggestedColor+" !important;'></div>";
 		suggestedColorHtml += "<span id='cANDI508-suggested'>"+suggestedColor+"</span></td></tr>";
 	}
@@ -627,15 +626,15 @@ cANDI.getSuggestedColor = function(cANDI_data, fgbg){
 		contrastingColor = cANDI_data.fgColor;
 		suggestedColor = cANDI_data.bgColor.clone();
 	}
-	
+
 	var contrastOnBlack = Color.BLACK.contrast(contrastingColor).ratio;
 	var contrastOnWhite = Color.WHITE.contrast(contrastingColor).ratio;
-	
+
 	if(contrastOnBlack > contrastOnWhite){
 		//Original Color is closer to black
 		//Suggest lighter foreground color
 		for(var x=0; x<256; x++){
-			
+
 			for(var i=0; i<3; i++){
 				if(suggestedColor.rgba[i] > 0)
 					suggestedColor.rgba[i]--;
@@ -650,7 +649,7 @@ cANDI.getSuggestedColor = function(cANDI_data, fgbg){
 		//Original Color is closer to white
 		//Suggest darker foreground color
 		for(var y=0; y<256; y++){
-			
+
 			for(var j=0; j<3; j++){
 				if(suggestedColor.rgba[j] < 255)
 					suggestedColor.rgba[j]++;
@@ -661,18 +660,18 @@ cANDI.getSuggestedColor = function(cANDI_data, fgbg){
 			}
 		}
 	}
-	
+
 	return suggestedColor;
 };
 
 //This function returns true if the suggested foreground color is closer to the actual foreground color.
-//Returns false if the suggested background color is closer to the actual background color 
+//Returns false if the suggested background color is closer to the actual background color
 cANDI.suggestForegroundChange = function(cANDI_data, suggestedFgColor, suggestedBgColor){
 	if(getColorDifferenceValue(cANDI_data.fgColor, suggestedFgColor) <= getColorDifferenceValue(cANDI_data.bgColor, suggestedBgColor))
 		return true;
 	else
 		return false;
-	
+
 	//This function compares two colors and returns a "color difference value" that can be used in comparisons.
 	//Formula: The Color Difference Value = abs(r1 - r2) + abs(g1 - g2) + abs(b1 - b2)
 	function getColorDifferenceValue(color1, color2){
@@ -700,13 +699,13 @@ cANDI.contrastDisplay = function(element){
 
 	//Display Font-family
 	//$("#cANDI508-fontfamily").html(cANDI_data.family);
-	
+
 	//Display Text Color
 	displayColorValue("#cANDI508-fg", cANDI_data.fgColor);
-	
+
 	//Display Minimum Required Ratio
 	$("#cANDI508-minReqRatio").html(cANDI_data.minReq+"<span class='cANDI508-ratio-darker'>:1</span>");
-	
+
 	//Display text-shadow color if it exists
 	//TODO: display the color in a color box, however, browsers order this property's value differently
 	if($(element).css("text-shadow") != "none")
@@ -717,17 +716,17 @@ cANDI.contrastDisplay = function(element){
 
 		//Display Background Color
 		displayColorValue("#cANDI508-bg", cANDI_data.bgColor);
-		
+
 		//Display Contrast Ratio
 		$("#cANDI508-ratio").html(cANDI_data.ratio+"<span class='cANDI508-ratio-darker'>:1</span>");
 
 		//Display Resylt
 		if(cANDI_data.result === "PASS"){
 			$("#cANDI508-result").html("PASS").addClass("cANDI508-pass");
-		} 
+		}
 		else{ //FAIL
 			$("#cANDI508-result").html("FAIL").addClass("cANDI508-fail");
-			
+
 			if(!cANDI_data.semiTransparency){
 				//There is no transparency involved, therefore, a suggestion can be made.
 				//Suggest a color that meets the contrast ratio minimum:
@@ -741,10 +740,10 @@ cANDI.contrastDisplay = function(element){
 	}
 	else{
 		//MANUAL TEST NEEDED - Cannot determine pass or fail status
-		
+
 		//Remove Background Color Selector Box
 		$("#cANDI508-colorSelector-background").remove();
-		
+
 		//Insert the reason:
 		if(cANDI_data.bgImage != "none")
 			$("#cANDI508-bg").html("<span class='cANDI508-attention'>has background image</span>");
@@ -755,7 +754,7 @@ cANDI.contrastDisplay = function(element){
 
 		$("#cANDI508-result").html("MANUAL TEST NEEDED").addClass("cANDI508-manual");
 	}
-	
+
 	//This function converts px units to pt
 	function convertPxToPt(px){
 		var pt;
@@ -771,7 +770,7 @@ cANDI.contrastDisplay = function(element){
 	}
 };
 
-//This function will diplay the color 
+//This function will diplay the color
 function displayColorValue(id, rgbaColor){
 	var hexColor = rgbToHex(rgbaColor);
 	//Change color display value of this element
@@ -887,7 +886,7 @@ _.prototype = {
 	clone: function(){
 		return new _(this.rgba);
 	},
-	
+
 	//Overlay a color over another
 	overlayOn: function (color){
 		var overlaid = this.clone();
@@ -897,7 +896,7 @@ _.prototype = {
 		if(alpha >= 1){
 			return overlaid;
 		}
-		
+
 		//Modified code (Mod 1): (moved this line before the for loop)
 		overlaid.rgba[3] = alpha + (color.rgba[3] * (1 - alpha));
 
@@ -909,7 +908,7 @@ _.prototype = {
 			//Modified code (Mod 2) End
 				overlaid.rgba[i] = overlaid.rgba[i] * alpha + color.rgba[i] * color.rgba[3] * (1 - alpha);
 		}
-		
+
 		//Original code (Mod 1):
 		//overlaid.rgba[3] = alpha + (color.rgba[3] * (1 - alpha));
 
@@ -919,7 +918,7 @@ _.prototype = {
 	contrast: function (color){
 		// Formula: http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
 		var alpha = this.alpha;
-		
+
 		if(alpha >= 1){
 			if(color.alpha < 1){
 				color = color.overlayOn(this);
@@ -932,7 +931,7 @@ _.prototype = {
 			if(l2 > l1){
 				ratio = 1 / ratio;
 			}
-			
+
 			//Original Code (Mod 3):
 			//ratio = Math.round(ratio, 1);
 			//Modified code (Mod 3): increased the contrast rounding precision to two decimals

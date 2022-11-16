@@ -4,7 +4,7 @@
 //=============================================//
 function init_module(){
 
-var iandiVersionNumber = "3.0.1";
+var iandiVersionNumber = "3.0.2";
 
 //create iANDI instance
 var iANDI = new AndiModule(iandiVersionNumber,"i");
@@ -131,7 +131,7 @@ AndiModule.inspect = function(element){
 };
 
 //This function will open an iframe in a new window
-iANDI.openIframeInNewWindow = function(iframe, src){
+iANDI.openIframeInNewWindow = function(iframe){
 	var iframeWindow;
 	var url = $(iframe).attr("src");
 
