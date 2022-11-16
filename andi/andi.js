@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.8";
+var andiVersionNumber = "28.0.9";
 
 //==============//
 // ANDI CONFIG: //
@@ -2196,28 +2196,6 @@ AndiData.grab_semantics = function(element, data){
 			data.role = $(element).getValidRole();
 		}
 
-		/*
-		var role = $.trim($(element).attr("role")).toLowerCase();
-		if(role){
-			//Replace multiple spaces with a single space
-			role = role.replace(/  +/g, ' ');
-			//If there are multiple roles, store them. Throw alert elsewhere
-			data.roleList = role.split(" ");
-
-			//loop through the list and look for first valid role
-			for(var r=0; r<data.roleList.length; r++){
-				if(AndiCheck.validAriaRoles.includes(data.roleList[r])){
-					data.role = data.roleList[r];
-					break; //stop searching for a valid role
-				}
-			}
-
-			if(!data.role && role)
-				//a role exists, but couldn't find it in the validAriaRoles list
-				data.unsupportedRole = true;
-
-		}
-		*/
 	}
 };
 
@@ -2422,7 +2400,7 @@ AndiData.textAlternativeComputation = function(root){
 			component = $(element).attr("alt");
 			if(component !== undefined){
 				//TODO: what about svg <image>
-				if( $(element).is("img,input[type=image],area") /*&& ( !role || role === "img" )*/ ){
+				if( $(element).is("img,input[type=image],area") ){
 					if(!isEmptyComponent(component, "alt", element)){
 						accumulatedText += AndiData.addComp(data, "alt", component, hasNodeBeenTraversed(element));
 					}
