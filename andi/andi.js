@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.9";
+var andiVersionNumber = "28.0.10";
 
 //==============//
 // ANDI CONFIG: //
