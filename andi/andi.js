@@ -2217,14 +2217,13 @@ AndiData.textAlternativeComputation = function(root){
 
 	//This function recursively travels up the anscestor tree looking for aria-hidden=true.
 	//Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
-	//TODO: This is expensive
 	function traverseAriaHidden(element){
-		if($(element).is("#ANDI508-testPage"))
+		if(element.id === "ANDI508-testPage")
 			return false;
-		else if($(element).attr("aria-hidden") === "true")
+		if(element.getAttribute("aria-hidden") === "true")
 			return true;
 		else
-			return traverseAriaHidden($(element).parent());
+			return traverseAriaHidden(element.parentElement);
 	}
 
 	function calcAccName(result){
