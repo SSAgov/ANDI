@@ -4,13 +4,14 @@
 //==========================================//
 function init_module(){
 
-var sANDIVersionNumber = "4.2.1";
+var sANDIVersionNumber = "4.3.0";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
 
 var structureExists = false;
 var headingsArray = [];
+var headingsCount = 0;
 var listsArray = [];
 var landmarksArray = [];
 var liveRegionsArray = [];
@@ -39,14 +40,19 @@ sANDI.analyze = function(){
 	$(TestPageData.allVisibleElements).each(function(){
 		if($(this).isSemantically(["heading"],"h1,h2,h3,h4,h5,h6")){
 
-			//Add to the headings array
-			headingsArray.push($(this));
+			headingsCount++;
 			structureExists = true;
 
 			if(AndiModule.activeActionButtons.headings){
 				andiData = new AndiData(this);
 
+				//Add to the headings array
+
+				if(andiData.isAriaHidden != true)
+					headingsArray.push($(this));
+
 				if(andiData.role === "heading"){
+
 					var ariaLevel = $(this).attr("aria-level");
 					if(ariaLevel){
 						if($(this).is("h1,h2,h3,h4,h5,h6")){
@@ -125,8 +131,8 @@ sANDI.analyze = function(){
 				AndiData.attachDataToElement(this);
 			}
 		}
-		else if(AndiModule.activeActionButtons.headings && headingsArray.length === 0 && $(this).is("p,div,span,strong,em")){
-			//Since sANDI has not found a heading yet, check if this element is a fake headings
+		else if(AndiModule.activeActionButtons.headings && headingsCount == 0 && $(this).is("p,div,span,strong,em")){
+			//Since sANDI has not found a heading yet, check if this element is a fake heading
 
 			if(sANDI.isFakeHeading(this)){
 				structureExists = true;
@@ -186,12 +192,13 @@ sANDI.isFakeHeading = function(element){
 
 	var text = $.trim($(element).text());
 	if(text.length > 0 && text.length < limit_textLength){
+
 		//text is not empty, but less than char limit
 
 		var fakeHeading_fontSize = parseInt($(element).css("font-size"));
 		var fakeHeading_fontWeight = $(element).css("font-weight");
 
-		if(	fakeHeading_fontSize > limit_fontSize ||
+		if(fakeHeading_fontSize > limit_fontSize ||
 			(isBold(fakeHeading_fontWeight) && fakeHeading_fontSize > limit_boldFontSize)
 		){ //fakeHeading_fontSize is greater than size limit
 
@@ -272,7 +279,7 @@ sANDI.getOutlineItem = function(element){
 sANDI.results = function(){
 
 	var moduleActionButtons = "";
-	moduleActionButtons += "<button id='ANDI508-headings-button' class='sANDI508-mode' aria-label='"+headingsArray.length+" Headings'>"+headingsArray.length+" headings</button>";
+	moduleActionButtons += "<button id='ANDI508-headings-button' class='sANDI508-mode' aria-label='"+headingsCount+" Headings'>"+headingsCount+" headings</button>";
 	moduleActionButtons += "<button id='ANDI508-lists-button' class='sANDI508-mode' aria-label='"+listsCount+" Lists'>"+listsCount+" lists</button>";
 	moduleActionButtons += "<button id='ANDI508-landmarks-button' class='sANDI508-mode' aria-label='"+landmarksArray.length+" Landmarks'>"+landmarksArray.length+" landmarks</button>";
 	moduleActionButtons += "<button id='ANDI508-liveRegions-button' class='sANDI508-mode' aria-label='"+liveRegionsArray.length+" Live Regions'>"+liveRegionsArray.length+" live regions</button>";
@@ -436,7 +443,7 @@ sANDI.results = function(){
 			if(headingsArray.length > 0){
 				//Build Outline
 				for(var x=0; x<headingsArray.length; x++){
-					sANDI.outline  += sANDI.getOutlineItem(headingsArray[x]);
+					sANDI.outline += sANDI.getOutlineItem(headingsArray[x]);
 				}
 				sANDI.outline += "</div>";
 
@@ -622,8 +629,6 @@ AndiModule.inspect = function(element){
 		andiBar.prepareActiveElementInspection(element);
 
 		var elementData = $(element).data("andi508");
-
-
 
 		var addOnProps = AndiData.getAddOnProps(element, elementData,
 			[

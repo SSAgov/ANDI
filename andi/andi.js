@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "28.0.10";
+var andiVersionNumber = "29.0.0";
 
 //==============//
 // ANDI CONFIG: //
@@ -502,8 +502,8 @@ var alert_0250 = new Alert("warning","25","Page has %%% disabled %%%; Disabled e
 var alert_0251 = new Alert("caution","25","Page has %%% disabled elements; Disabled elements do not require sufficient contrast.","disabled_contrast",
 	new AlertButton("show disabled", "ANDI508-alertButton-disabledElementsOverlay", function(){andiOverlay.overlay_disabledElements(true);}, overlayIcon));
 
-var alert_0260 = new Alert("danger","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","ariahidden");
-var alert_0261 = new Alert("warning","26","Element is hidden from screen reader using [aria-hidden=true] resulting in no output.","ariahidden");
+var alert_0260 = new Alert("warning","26","Element is focusable but has or is contained by [aria-hidden=true].","ariahidden");
+var alert_0261 = new Alert("caution","26","Element is hidden from screen reader using [aria-hidden=true].","ariahidden");
 
 //==================//
 // DISPLAY HANDLING //
@@ -859,7 +859,7 @@ function AndiBar(){
 
 		if(!checkAlerts("dangers")){ //No dangers found during load
 
-			if(!elementData.isAriaHidden && !(((elementData.role === "presentation" || elementData.role === "none")) && !elementData.isFocusable )){
+			if(elementData.isFocusable || ( !elementData.isAriaHidden && !( elementData.role === "presentation" || elementData.role === "none") ) ){
 
 				if(elementData.accGroup)
 					outputText += elementData.accGroup + " ";
@@ -923,18 +923,12 @@ function AndiBar(){
 
 		function buildTableBody(){
 
-			if(!elementData.isAriaHidden){
-				displayGrouping(elementData.grouping);
-				displayEmptyComponents(elementData.empty);
-				displayConcatenatedInnerText();
-				displayComponents(elementData.components);
-				displayAddOnProps();
-				displaySubtreeComponents();
-			}
-			else{
-				//Don't display any other components because the aria-hidden=true makes them not matter
-				displayAriaHiddenOnly();
-			}
+			displayGrouping(elementData.grouping);
+			displayEmptyComponents(elementData.empty);
+			displayConcatenatedInnerText();
+			displayComponents(elementData.components);
+			displayAddOnProps();
+			displaySubtreeComponents();
 
 			function buildRow(displayClass, headerText, cellText){
 				return "<tr><th class='ANDI508-display-"+displayClass+"' scope='row'>"+
@@ -990,10 +984,6 @@ function AndiBar(){
 
 				if(elementData.src)
 					rows += buildRow("addOnProperties", "src", elementData.src);
-			}
-
-			function displayAriaHiddenOnly(){
-				rows += buildRow("addOnProperties", "aria-hidden", "true");
 			}
 
 			function displaySubtreeComponents(){
@@ -2255,33 +2245,30 @@ AndiData.textAlternativeComputation = function(root){
 		}
 	}
 
-	if(!isAriaHidden){
-
-		//Calculate Accessible Name
-		nodesTraversed = [];
-		calcAccName(stepB(root, AndiData.data.components));
-		calcAccName(stepC(root, AndiData.data.components));
-		calcAccName(stepD(root, AndiData.data.components));
-		if(!$(root).is(stepF_exclusions))
-			calcAccName(stepF(root, AndiData.data.components));
-		calcAccName(stepI(root, AndiData.data.components));
-		calcAccName(stepJ(root, AndiData.data.components));
-
-		//Calculate Accessible Description
-		isCalcAccDesc = true;
-		nodesTraversed = [];
-		calcAccDesc(stepB(root, AndiData.data.components));
-		calcAccDesc(stepD(root, AndiData.data.components));
-		calcAccDesc(stepI(root, AndiData.data.components));
-
-		//Calculate Element Grouping
-		nodesTraversed = [];
-		checkIfGroupFound(stepZ(root, AndiData.data));
-
-	}
-	else{
+	if(isAriaHidden){
 		AndiData.data.isAriaHidden = true;
 	}
+
+	//Calculate Accessible Name
+	nodesTraversed = [];
+	calcAccName(stepB(root, AndiData.data.components));
+	calcAccName(stepC(root, AndiData.data.components));
+	calcAccName(stepD(root, AndiData.data.components));
+	if(!$(root).is(stepF_exclusions))
+		calcAccName(stepF(root, AndiData.data.components));
+	calcAccName(stepI(root, AndiData.data.components));
+	calcAccName(stepJ(root, AndiData.data.components));
+
+	//Calculate Accessible Description
+	isCalcAccDesc = true;
+	nodesTraversed = [];
+	calcAccDesc(stepB(root, AndiData.data.components));
+	calcAccDesc(stepD(root, AndiData.data.components));
+	calcAccDesc(stepI(root, AndiData.data.components));
+
+	//Calculate Element Grouping
+	nodesTraversed = [];
+	checkIfGroupFound(stepZ(root, AndiData.data));
 
 	//stepB: aria-labelledby or aria-describedby
 	//Params:	isProcessRefTraversal - keeps track of whether the calculation is already doing a reference traversal to prevent infinite looping
@@ -2545,7 +2532,7 @@ AndiData.textAlternativeComputation = function(root){
 		//Loop through this element's child nodes
 		for(var z=0; z<element.childNodes.length; z++){
 			node = element.childNodes[z];
-			if($(node).attr("aria-hidden") !== "true"){//this node is not hidden
+			if($(node).is(":focusable") || $(node).attr("aria-hidden") !== "true"){
 				//TODO: the following line prevents a node from being traversed more than once
 				//if(node.nodeType === 1 && (!isProcessRefTraversal || !hasNodeBeenTraversed(node))){//element node
 				if(node.nodeType === 1){//element node
@@ -3545,11 +3532,11 @@ function AndiCheck(){
 	//NOTE: role=presentation/none are not factored in here
 	//      because browsers automatically ignore them if the element is focusable
 	this.hasThisElementBeenHiddenFromScreenReader = function(element, elementData, isDangerous){
-		if(elementData.isAriaHidden){
+		if(elementData.isAriaHidden){ //don't check for focusable here, just throw alert
 			if(isDangerous) //this type of element should not be hidden from screen reader
-				andiAlerter.throwAlert(alert_0260); //danger level alert
+				andiAlerter.throwAlert(alert_0260);
 			else //this type of element could be hidden by a screen reader, but tester should investigate
-				andiAlerter.throwAlert(alert_0261); //warning level alert
+				andiAlerter.throwAlert(alert_0261);
 		}
 	};
 
