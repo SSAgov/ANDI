@@ -304,6 +304,8 @@ hANDI.results = function(){
 			//Title Attributes Button
 			moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span>&nbsp;<button id='ANDI508-titleAttributes-button' aria-label='Title Attributes' aria-pressed='false'>title attributes"+overlayIcon+"</button>";
 
+		moduleActionButtons += "<button id='ANDI508-ariaHiddenScan-button' aria-label='aria-hidden scan' aria-pressed='false'>aria-hidden scan</button>";
+
 		$("#ANDI508-module-actions").html(moduleActionButtons);
 
 		andiBar.initializeModuleActionGroups();
@@ -392,6 +394,22 @@ hANDI.results = function(){
 				andiOverlay.overlayButton_off("overlay",$(this));
 				andiOverlay.removeOverlay("ANDI508-overlay-titleAttributes");
 				AndiModule.activeActionButtons.titleAttributes = false;
+			}
+			andiResetter.resizeHeights();
+			return false;
+		});
+
+		$("#ANDI508-ariaHiddenScan-button").click(function(){
+			if($(this).attr("aria-pressed") === "false"){
+				alert('aria-hidden="true" was found on ' + $("#ANDI508-testPage [aria-hidden]").length + ' elements');
+				andiOverlay.overlayButton_on("overlay",$(this));
+				$("#ANDI508-testPage").addClass("hANDI508-highlightAriaHidden");
+				AndiModule.activeActionButtons.highlightAriaHidden = true;
+			}
+			else{
+				$("#ANDI508-testPage").removeClass("hANDI508-highlightAriaHidden");
+				andiOverlay.overlayButton_off("find",$(this));
+				AndiModule.activeActionButtons.highlightAriaHidden = false;
 			}
 			andiResetter.resizeHeights();
 			return false;
