@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var sANDIVersionNumber = "4.3.0";
+var sANDIVersionNumber = "4.3.1";
 
 //create sANDI instance
 var sANDI = new AndiModule(sANDIVersionNumber,"s");
@@ -587,22 +587,6 @@ sANDI.results = function(){
 			});
 		});
 
-		$("#sANDI508-outline-container")
-		.html(sANDI.outline)
-		.find("a[data-andi508-relatedindex]").each(function(){
-			andiFocuser.addFocusClick($(this));
-			var relatedIndex = $(this).attr("data-andi508-relatedindex");
-			var relatedElement = $("#ANDI508-testPage [data-andi508-index="+relatedIndex+"]").first();
-			andiLaser.createLaserTrigger($(this),$(relatedElement));
-			$(this)
-			.hover(function(){
-				if(!event.shiftKey)
-					AndiModule.inspect(relatedElement[0]);
-			})
-			.focus(function(){
-				AndiModule.inspect(relatedElement[0]);
-			});
-		});
 	}
 	else{
 		andiBar.hideElementControls();
