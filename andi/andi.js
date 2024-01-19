@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.0.0";
+var andiVersionNumber = "29.0.1";
 
 //==============//
 // ANDI CONFIG: //
@@ -1795,7 +1795,7 @@ function AndiUtility(){
 			//pseudo element is not display:none
 			var contentLiteral = window.getComputedStyle(element, ":"+pseudo).content;
 
-			if(contentLiteral !== "none" && contentLiteral !== "normal" && contentLiteral !== "counter" && contentLiteral !== "\"\""){//content is not none or empty string
+			if(contentLiteral !== "none" && contentLiteral !== "normal" && contentLiteral !== "counter" && contentLiteral !== "\"\"" && contentLiteral !== "-moz-alt-content"){//content is not none or empty string. -moz-alt-content fixes a firefox bug
 				var displayText = "";
 				if(!!hasReadableCharacters(contentLiteral));
 					return [displayText, contentLiteral];
