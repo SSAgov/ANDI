@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.0.1";
+var andiVersionNumber = "29.1.0";
 
 //==============//
 // ANDI CONFIG: //
@@ -4094,7 +4094,7 @@ TestPageData.page_using_caption = false;
 //This function will check to see if the page being tested already has jquery installed.
 //If not, it downloads the appropriate version from the jquery download source.
 //It will also determine if an old IE version is being used
-var jqueryPreferredVersion = "3.6.0"; //The preferred (latest) version of jQuery we want
+var jqueryPreferredVersion = "3.7.1"; //The preferred (latest) version of jQuery we want
 var jqueryMinimumVersion = "1.9.1"; //The minimum version of jQuery we allow ANDI to use
 var jqueryDownloadSource = "https://ajax.googleapis.com/ajax/libs/jquery/"; //where we are downloading jquery from
 var oldIE = false; //used to determine if old version of IE is being used.
