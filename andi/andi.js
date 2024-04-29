@@ -2,14 +2,13 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.1.1";
+var andiVersionNumber = "29.1.2";
 
 //==============//
 // ANDI CONFIG: //
 //==============//
 //URLs
 var host_url = "https://www.ssa.gov/accessibility/andi/";
-
 var help_url = host_url+"help/";
 var icons_url = host_url+"icons/";
 
@@ -720,9 +719,10 @@ function andiReady(){
 		}});
 
 		//Define :shown
-		//Similar to :visible but doesn't include elements with visibility:hidden,
+		//Similar to :visible but doesn't include elements with visibility:hidden
+		//Fixes issue with jquery :visible which doesn't treat display:contents as visible
 		$.extend(jQuery.expr[':'], {
-			shown: function (elem){return $(elem).css("visibility") !== "hidden" && $(elem).is(":visible");}
+			shown: function (elem){return $(elem).css("visibility") !== "hidden" && ($(elem).css("display") === "contents" || $(elem).is(":visible"));}
 		});
 
 		//Define getValidRole
