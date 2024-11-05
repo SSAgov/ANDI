@@ -1,6 +1,9 @@
  # ANDI - Accessible Name and Description Inspector
 
+ # ANDI - Accessible Name and Description Inspector
+
  ANDI is a web accessibility inspection tool.
+
 
 ## What does ANDI do?
 1.	Automatically detects accessibility issues
@@ -11,16 +14,18 @@
 
 For many web developers, accessibility is an unfamiliar and complex territory and therefore often neglected. ANDI bridges the gap between developers and end users by revealing
 where accessibility issues occur on the page. To accomplish this, it analyzes the HTML of the web page being tested and extracts accessibility related markup.
+For many web developers, accessibility is an unfamiliar and complex territory and therefore often neglected. ANDI bridges the gap between developers and end users by revealing
+where accessibility issues occur on the page. To accomplish this, it analyzes the HTML of the web page being tested and extracts accessibility related markup.
 
-> #### Developers like ANDI because:
+#### Developers like ANDI because:
 
-> * It's easy to install, quick to run, and helps satisfy accessibility requirements.
->
-> #### Testers like ANDI because:
-> * It saves them time by automatically finding potential defects and offering solutions.
->
-> #### End Users Ultimately Benefit:
-> * When web pages are accessible, everyone can efficiently perceive, understand, navigate, and interact with the Web.
+* It's easy to install, quick to run, and helps satisfy accessibility requirements.
+
+#### Testers like ANDI because:
+* It saves them time by automatically finding potential defects and offering solutions.
+
+#### End Users Ultimately Benefit:
+* When web pages are accessible, everyone can efficiently perceive, understand, navigate, and interact with the Web.
 
 ## Sounds handy! How do I install ANDI?
 
