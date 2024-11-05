@@ -1,9 +1,6 @@
- # ANDI - Accessible Name and Description Inspector
+# ANDI - Accessible Name and Description Inspector
 
- # ANDI - Accessible Name and Description Inspector
-
- ANDI is a web accessibility inspection tool.
-
+ANDI is a web accessibility testing tool.
 
 ## What does ANDI do?
 1.	Automatically detects accessibility issues
