@@ -24,6 +24,12 @@ header{
 background-color:lightblue;
 }
 
+footer header{
+background-color:transparent;
+font-size: 20pt;
+font-weight: bold;
+}
+
 main{
 display:block
 }
@@ -50,7 +56,7 @@ font-weight:bold;
 }
 
 .page{
-border:1px solid black; border-radius: 10px; 
+border:1px solid black; border-radius: 10px;
 padding-left:1em; margin-left:2em; margin-top:1em; width:auto; display:block;
 padding-right:1em; padding-bottom:1em; margin-right:4em;
 }

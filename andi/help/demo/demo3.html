@@ -24,14 +24,41 @@
 <main>
 <div id='main'>
 	<h2 style='display:inline;'>We Will Save You.</h2>
-<div id='page3' class='page'>
-<h3>Done.</h3>
-	<p style='color: rgb(0, 135, 115);'>Hang Tight, a Super Hero is on the way!</p>
-	<img src='accessibilityman.jpg' style='height:330px;' alt="superhero" />
-	<br /><br />
-	<button id='another' class='btn' onclick='window.location.href="index.html"'>I Need Another</button>
+	<div id='page3' class='page'>
+		<h3>Done.</h3>
+		<p style='color: rgb(0, 135, 115);'>Hang Tight, a Super Hero is on the way!</p>
+		<img src='accessibilityman.jpg' style='height:330px;' alt="superhero" />
+		<br /><br />
+		<button id='another' class='btn' onclick='window.location.href="index.html"'>I Need Another</button>
+	</div>
+
+	<div class='page' aria-live="polite" aria-atomic="true">
+		<h3 style="display:inline-block">Status:</h3> <span id="live"></span>
+	</div>
+
+	<script>
+
+		function randomExcuse(){
+			let excuses = [
+				"Super hero is stuck in traffic",
+				"Super hero got lost",
+				"Super hero battling arch enemy",
+				"Super hero not answering phone",
+				"Super hero finishing dinner",
+				"Super hero prioritizing kittens"
+			];
+			return excuses[Math.floor(Math.random() * (excuses.length))];
+		}
+
+		setInterval(function() {
+			document.querySelector("#live").innerText = randomExcuse();
+		}, 3000);
+	</script>
+
 </div>
-</div>
+
+
+
 </main>
 <footer>
 <h2>Super Links:</h2>
