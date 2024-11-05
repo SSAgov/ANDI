@@ -48,6 +48,7 @@
 	<ul>
 		<li><a href="#disabledFavoritesBar">Show favorites/bookmarks bar</a></li>
 		<li><a href="#wontLaunch">ANDI Not Working</a></li>
+		<li><a href="#csp">Content Security Policy (CSP) blocks ANDI</a></li>
 		<li><a href="#iframeFix">Iframe Workaround</a></li>
 		<li><a href="#cantInspect">ANDI Won't Find Something</a></li>
 		<li><a href="#differentOutput">ANDI's Output is different</a></li>
@@ -154,57 +155,8 @@
 			then this is the issue.
 			</p>
 			<p>
-			If CSP is preventing <span class="brand">ANDI</span> from working, you can try:
+			If CSP is preventing <span class="brand">ANDI</span> from working, <a href="#csp">try the CSP workarounds</a> below.
 			</p>
-			<div class="example">
-				<ul>
-					<li>Ask the page owner to add the <span class="brand">ANDI</span> scripts to the "whitelist" of allowed scripts.</li>
-					<li>Install a Chrome extension called Disable Content-Security-Policy.</li>
-					<li>Note: It is the user's decision to disable CSP and the user's responsibility to re-enable CSP when testing with <span class="brand">ANDI</span> has concluded.</li>
-				</ul>
-			</div>
-
-			<div class="example">
-				<button class="expandButton disableCSP">How to disable CSP in Chrome</button>
-
-				<ol style="font-size:13pt; display:none;">
-					<li>Install the Disable Content-Security-Policy extension</li>
-					<li>Navigate to the test page</li>
-					<li>Open the extensions menu (puzzle icon) and activate/enable the Disable Content-Security-Policy extension</li>
-					<li>Refresh the test page</li>
-					<li>Launch <span class="brand">ANDI</span></li>
-					<li>When done testing, turn off the Disable CSP extension</li>
-				</ol>
-			</div>
-			<div class="example">
-				<button class="expandButton disableCSP">How to disable CSP in Edge</button>
-				<ol style="font-size:13pt; display:none;">
-					<li>Open Microsoft Edge and go to the Chrome Web Store.</li>
-					<li>Press the button to "Allow extensions from other stores"</li>
-					<li>Find and Install the Disable Content-Security-Policy extension from the Chrome Web Store</li>
-					<li>Navigate to the test page</li>
-					<li>Open the extensions menu (puzzle icon) and activate/enable the Disable Content-Security-Policy extension</li>
-					<li>Refresh the test page</li>
-					<li>Launch <span class="brand">ANDI</span></li>
-					<li>When done testing, turn off the Disable CSP extension</li>
-				</ol>
-			</div>
-			<div class="example">
-				<button class="expandButton disableCSP">How to disable CSP in Firefox</button>
-				<ol style="font-size:13pt; display:none;">
-					<li>In the address bar, enter "about:config"</li>
-					<li>Under Preference Name, select "security.csp.enable" to disable it</li>
-					<li>Navigate to the test page, launch <span class="brand">ANDI</span></li>
-					<li>When done testing with <span class="brand">ANDI</span>, re-enable the "security.csp.enable"</li>
-				</ol>
-			</div>
-			<div class="example">
-				<button class="expandButton disableCSP">Use Internet Explorer 11</button>
-				<ol style="font-size:13pt; display:none;">
-					<li>Navigate to the test page in Internet Explorer 11, launch ANDI</li>
-					<li>Internet Explorer does not enforce CSP</li>
-				</ol>
-			</div>
 		</details>
 		<details>
 			<summary>Check for JavaScript error</summary>
@@ -243,6 +195,72 @@
 	</section>
 	<hr />
 	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-csp" id='csp'
+	itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+<details>
+<summary id="lby-csp"
+	itemprop="name">Content Security Policy (CSP) blocks ANDI</summary>
+<div class='details' itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+	<p itemprop="text">
+	A "Content Security Policy (CSP) directive" prevents outside scripts, like <span class="brand">ANDI</span>, from executing.
+	When you launch ANDI, if you get a warning about Content Security Policy, and ANDI doesn't load, here's some help.
+	</p>
+	<p>
+	Try these one of these workarounds:
+	</p>
+	<div class="example">
+		<ol>
+			<li><strong>Long-term Workaround:</strong> Ask the page owner to add the <span class="brand">ANDI</span> scripts to the "whitelist" of allowed scripts. When ANDI's scripts are "whitelisted", the scripts won't be blocked by the CSP.</li>
+			<li><strong>Immediate Workaround:</strong> Install a browser extension called Disable Content-Security-Policy or change a browser setting. (Instructions below). Note: It is the user's decision to disable CSP and the user's responsibility to re-enable CSP when testing with <span class="brand">ANDI</span> has concluded.</li>
+			</li>
+		</ol>
+	</div>
+
+	<div class="example">
+		<button class="expandButton disableCSP">How to disable CSP in Chrome</button>
+
+		<ol style="font-size:13pt; display:none;">
+			<li>Install the Disable Content-Security-Policy extension</li>
+			<li>Navigate to the test page</li>
+			<li>Open the extensions menu (puzzle icon) and activate/enable the Disable Content-Security-Policy extension</li>
+			<li>Refresh the test page</li>
+			<li>Launch <span class="brand">ANDI</span></li>
+			<li>When done testing, turn off the Disable CSP extension</li>
+		</ol>
+	</div>
+	<div class="example">
+		<button class="expandButton disableCSP">How to disable CSP in Edge</button>
+		<ol style="font-size:13pt; display:none;">
+			<li>Open Microsoft Edge and go to the Chrome Web Store.</li>
+			<li>Press the button to "Allow extensions from other stores"</li>
+			<li>Find and Install the Disable Content-Security-Policy extension from the Chrome Web Store</li>
+			<li>Navigate to the test page</li>
+			<li>Open the extensions menu (puzzle icon) and activate/enable the Disable Content-Security-Policy extension</li>
+			<li>Refresh the test page</li>
+			<li>Launch <span class="brand">ANDI</span></li>
+			<li>When done testing, turn off the Disable CSP extension</li>
+		</ol>
+	</div>
+	<div class="example">
+		<button class="expandButton disableCSP">How to disable CSP in Firefox</button>
+		<ol style="font-size:13pt; display:none;">
+			<li>In the address bar, enter "about:config"</li>
+			<li>Under Preference Name, select "security.csp.enable" to disable it</li>
+			<li>Navigate to the test page, launch <span class="brand">ANDI</span></li>
+			<li>When done testing with <span class="brand">ANDI</span>, re-enable the "security.csp.enable"</li>
+		</ol>
+	</div>
+	<div class="example">
+		<button class="expandButton disableCSP">Internet Explorer</button>
+		<ol style="font-size:13pt; display:none;">
+			<li>Internet Explorer does not enforce CSP</li>
+		</ol>
+	</div>
+</div>
+</details>
+</section>
+<hr />
+<!--==========================-->
 	<section tabindex="-1" aria-labelledby="lby-iframeFix" id='iframeFix'
 		itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 	<details>
