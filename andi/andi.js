@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.1.2";
+var andiVersionNumber = "29.1.3";
 
 //==============//
 // ANDI CONFIG: //
@@ -697,9 +697,16 @@ function andiReady(){
 		});
 		//Module Launchers
 		$("#ANDI508-moduleMenu").children("button").each(function(){
-			$(this).click(function(){
+			$(this).mousedown(function(){ /*using mousedown instead of click solves issue with MUI dialogs*/
 				andiResetter.softReset($("#ANDI508-testPage"));
 				AndiModule.launchModule(this.id.slice(-1)); //pass the letter of the module (last character of id)
+			});
+			$(this).keyup(function(e){
+				var keyCode = e.keyCode || e.which;
+				if((keyCode === 32) || (keyCode === 13)){
+					andiResetter.softReset($("#ANDI508-testPage"));
+					AndiModule.launchModule(this.id.slice(-1)); //pass the letter of the module (last character of id)
+				}
 			});
 		});
 		//ANDI Version Popup
