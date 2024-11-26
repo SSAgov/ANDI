@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var cANDIVersionNumber = "4.1.4";
+var cANDIVersionNumber = "4.1.5";
 
 //TODO: select box, check for selected
 
@@ -110,10 +110,10 @@ cANDI.results = function(){
 	"<button id='ANDI508-contrastPlayground-button' class='ANDI508-viewOtherResults-button' aria-expanded='false'>"+listIcon+"show contrast playground</button>"+
 	"<div id='cANDI508-contrastPlayground' tabindex='0' class='ANDI508-viewOtherResults-expanded'><h3 class='ANDI508-heading'>Contrast Playground:</h3><div id='cANDI508-contrastPlayground-area'>"+
 	"<div id='cANDI508-playground-instructions'>Enter two hex color values to get the contrast ratio.</div>"+
-	"<input type='color' id='cANDI508-colorSelectorWidget-fg' value='#000000' style='width:1px; opacity:0;' />"+
+	"<input type='color' id='cANDI508-colorSelectorWidget-fg' value='#000000' style='width:1px; opacity:0;' tabindex='-1' />"+
 	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-fg' style='background-color:#000000 !important' aria-label='visual color picker, select text color'></button>"+
 	"<input type='text' id='cANDI508-playground-fg' maxlength='7' title='Text Color Hex' value='#000000' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />/&nbsp;"+
-	"<input type='color' id='cANDI508-colorSelectorWidget-bg' value='#ffffff' style='width:1px; opacity:0;' />"+
+	"<input type='color' id='cANDI508-colorSelectorWidget-bg' value='#ffffff' style='width:1px; opacity:0;' tabindex='-1' />"+
 	"<button class='cANDI508-colorSelector' id='cANDI508-playground-colorSelector-bg' style='background-color:#ffffff !important' aria-label='visual color picker, select background color'></button>"+
 	"<input type='text' id='cANDI508-playground-bg' maxlength='7' title='Background Color Hex' value='#ffffff' aria-describedby='cANDI508-playground-instructions-controls' spellcheck='false' />= "+
 	"<div tabindex='0' id='cANDI508-playground-result' aria-describedby='cANDI508-playground-instructions'><span id='cANDI508-playground-ratio'>21</span>:1</div><br />"+

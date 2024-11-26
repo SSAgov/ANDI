@@ -4,26 +4,26 @@
 	#ANDI508 #ANDI508-outputContainer,
 	#ANDI508 #ANDI508-button-viewCode
 		{display:none !important;}
-		
+
 	#ANDI508 #ANDI508-additionalElementDetails  span.cANDI508-label
 		{width:8em !important; display:inline-block; text-align:right; font-size:10pt;}
-		
+
 	#ANDI508 button.cANDI508-colorSelector,
 	#ANDI508 div.cANDI508-colorSelector
 		{height:1.2em; width:3em; display:inline-block; margin-right:0.5em; border:1px solid #cdc3b9; vertical-align:middle;}
-		
+
 	#ANDI508 #cANDI508-table-style
 		{display:inline-block;}
-		
+
 	#ANDI508 #cANDI508-table-style th
 		{text-align:right; font-size:9pt;}
-	
+
 	#ANDI508 #cANDI508-table-style td
 		{padding:1px 0px 0px 0.5em;}
-		
+
 	#ANDI508 #cANDI508-heading-style
 		{vertical-align:top;}
-		
+
 	#ANDI508 #cANDI508-result
 		{font-size:12pt; font-weight:bold;}
 	#ANDI508 #cANDI508-result.cANDI508-pass
@@ -35,25 +35,25 @@
 		{color:#ffb03a !important}
 	#ANDI508 #cANDI508-result.cANDI508-manual
 		{font-size:11pt;}
-	
+
 	#ANDI508 #cANDI508-minReq,
 	#ANDI508 #cANDI508-minReqRatio,
 	#ANDI508 #cANDI508-minReqRatio span
 		{font-size:8pt;}
-		
+
 	#ANDI508 #cANDI508-ratio,
 	#ANDI508 #cANDI508-ratio span
 		{font-size:12pt;}
-		
+
 	#ANDI508 .cANDI508-ratio-darker
 		{color:#a0a0a0 !important}
-		
+
 	#ANDI508 #cANDI508-fg,
 	#ANDI508 #cANDI508-bg,
 	#ANDI508 #cANDI508-suggested,
 	#ANDI508 #cANDI508-textshadow
 		{margin-right:1em; font-family:monospace;}
-		
+
 	#ANDI508 #cANDI508-alertContainer img
 		{width:16px; display:inline; margin-right:3px;}
 	#ANDI508 #cANDI508-alertContainer a
@@ -63,36 +63,38 @@
 	#ANDI508 #cANDI508-alertContainer a:hover,
 	#ANDI508 #cANDI508-table-style a.cANDI508-suggestionNotPossible:hover
 		{text-decoration:underline !important;}
-		
+
 	/*contrastPlayground*/
 	#ANDI508 #cANDI508-contrastPlayground
 		{display:none;}
-		
+
 	#ANDI508 #cANDI508-contrastPlayground-area
 		{margin:4px 0px 2px 2%; font-size:11pt;}
-		
+
 	#ANDI508 #cANDI508-contrastPlayground input[type=text]
-		{color:black !important; width:4.6em !important; font:bold 12pt monospace !important; 
-		margin-right:4px !important; border:1px solid gray !important; border-radius:3px !important;}
+		{background-color: white !important; color:black !important; width:4.6em !important; font:bold 12pt monospace !important;
+		margin: 0 4px 0 0 !important; border:1px solid gray !important; border-radius:3px !important; height: auto; padding: 1px 2px;}
 	#ANDI508 #cANDI508-contrastPlayground input[type=text]:focus
 		{border:1px solid lemonchiffon !important; color:black !important;}
-		
+	#ANDI508 #cANDI508-contrastPlayground input[type=color]
+		{width: 1px !important; margin: 0 !important; height: auto !important;}
+
 	#ANDI508 #cANDI508-playground-buttons
 		{margin-top:5px;}
-		
+
 	#ANDI508 #cANDI508-playground-instructions
 		{margin-bottom:3px;}
-		
+
 	#ANDI508 #cANDI508-playground-instructions-controls
 		{font-size:8pt; color:#959595 !important; margin-top:3px;}
-		
+
 	#ANDI508 #cANDI508-playground-result,
 	#ANDI508 #cANDI508-playground-ratio
 		{display:inline; font-size:13pt;}
-		
+
 	#ANDI508 #cANDI508-playground-ratio.cANDI508-invalid
 		{color:#ef0000 !important;}
-		
+
 	#ANDI508 #cANDI508-playground-suggest-large,
 	#ANDI508 #cANDI508-playground-suggest-small
 		{visibility:hidden;}
@@ -114,6 +116,6 @@
 		@keyframes pulse_cANDI{
 			50% {outline-color:#595959 !important;}
 		}
-		
+
 	#ANDI508-testPage.cANDI508-testPage.cANDI508-grayscale *
 		{-webkit-filter:grayscale(100%); -webkit-filter:grayscale(1); filter:grayscale(1); filter:gray;}
