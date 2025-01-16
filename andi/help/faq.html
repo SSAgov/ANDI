@@ -274,14 +274,12 @@
 		<div class="example">
 			<ol>
 				<li>Refresh the test page or close ANDI</li>
-				<li>Copy the ANDI script here:
-					<textarea readonly="" aria-label="ANDI script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiHost='https://www.ssa.gov/accessibility/';andiScript=document.createElement('script');andiScript.src=andiHost+'andi/andi.js';document.body.appendChild(andiScript);function andiCSPcheck(){if (typeof andiVersionNumber === 'undefined')alert('This page has a Content Security Policy that blocks scripts like ANDI. For help, visit the ANDI Help FAQ page.');window.open(andiHost+'andi/help/faq.html#csp');};document.addEventListener('securitypolicyviolation', andiCSPcheck);setTimeout(function(){ document.removeEventListener('securitypolicyviolation', andiCSPcheck), 100});})());</textarea>
-				</li>
+				<li>Right click on your ANDI bookmark and select "Copy"</li>
 				<li>Find an element within the iframe that ANDI was not able to detect</li>
 				<li>Right click on that element and select "Inspect"</li>
 				<li>This opens Dev Tools and highlights the element you right-clicked on.</li>
 				<li>In Dev Tools, at the top, notice the "Elements" tab is selected. Change to the "Console" tab.</li>
-				<li>Now paste the ANDI script that you copied above and hit enter. NOTE: If this is your first time pasting in the console, the browser may ask you to type "allow pasting".</li>
+				<li>Now paste the ANDI script that you copied in step 2 and press Enter. NOTE: If this is your first time pasting in the console, the browser may ask you to type "allow pasting".</li>
 				<li>This will allow ANDI to detect the content within the iframe.</li>
 			</ol>
 		</div>
@@ -452,7 +450,7 @@
 				<li>If you are hosting on a server, upload the modified ANDI source code to the server that you decided in step 2. If you are running locally, skip this step.</li>
 				<li>Create a new bookmark called "my ANDI" or whatever you choose to name it.</li>
 				<li>Modify the bookmark's launch script to point to your instance of ANDI:
-					<textarea readonly aria-label="favelet launch script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiHost='https://[ALTERNATE_HOST]';andiScript=document.createElement('script');andiScript.src=andiHost+'andi/andi.js';document.body.appendChild(andiScript);function andiCSPcheck(){if (typeof andiVersionNumber === 'undefined')alert('This page has a Content Security Policy that blocks scripts like ANDI. For help, visit the ANDI Help FAQ page.');window.open(andiHost+'andi/help/faq.html#csp');};document.addEventListener('securitypolicyviolation', andiCSPcheck);setTimeout(function(){ document.removeEventListener('securitypolicyviolation', andiCSPcheck), 100});})());</textarea>
+					<textarea readonly aria-label="favelet launch script" style="width:90%" onfocus="this.select();">javascript:void((function(){andiHost='https://[ALTERNATE_HOST]';andiScript=document.createElement('script');andiScript.src=andiHost+'andi/andi.js';document.body.appendChild(andiScript);function andiCSPcheck(){if (typeof andiVersionNumber === 'undefined')alert('This page has a Content Security Policy that blocks scripts like ANDI. For help, visit the ANDI Help FAQ page.');window.open(andiHost+'andi/help/faq.html#csp');};document.addEventListener('securitypolicyviolation',andiCSPcheck);setTimeout(function(){document.removeEventListener('securitypolicyviolation',andiCSPcheck),100});})());</textarea>
 				</li>
 			</ol>
 		</div>
