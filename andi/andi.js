@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.1.4";
+var andiVersionNumber = "29.1.5";
 
 //==============//
 // ANDI CONFIG: //
@@ -720,7 +720,8 @@ function andiReady(){
 	function dependencies(){
 
 		//Define :focusable and :tabbable pseudo classes. Code from jQuery UI
-		$.extend($.expr[ ':' ], {data: $.expr.createPseudo ? $.expr.createPseudo(function(dataName){return function(elem){return !!$.data(elem, dataName);};}) : function(elem, i, match){return !!$.data(elem, match[ 3 ]);},
+		$.extend( $.expr.pseudos, {
+			data: $.expr.createPseudo ? $.expr.createPseudo(function(dataName){return function(elem){return !!$.data(elem, dataName);};}) : function(elem, i, match){return !!$.data(elem, match[ 3 ]);},
 			focusable: function(element){return focusable(element, !isNaN($.attr(element, 'tabindex')));},
 			tabbable: function(element){var tabIndex = $.attr(element, 'tabindex'),isTabIndexNaN = isNaN(tabIndex); return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
 		}});
@@ -728,7 +729,7 @@ function andiReady(){
 		//Define :shown
 		//Similar to :visible but doesn't include elements with visibility:hidden
 		//Fixes issue with jquery :visible which doesn't treat display:contents as visible
-		$.extend(jQuery.expr[':'], {
+		$.extend( $.expr.pseudos, {
 			shown: function (elem){return $(elem).css("visibility") !== "hidden" && ($(elem).css("display") === "contents" || $(elem).is(":visible"));}
 		});
 
@@ -768,6 +769,13 @@ function andiReady(){
 				}
 			}
 		});
+
+		//Polyfill for jquery .trim
+		if(typeof $.trim != "function"){
+			$.trim = function(text) {
+				return text == null ? "" : text.trim();
+			};
+		}
 
 		//Define focusable function: Determines if something is focusable and its ancestors are visible.
 		//Code based on jQuery UI, modifications: disabled links, svg[focusable=true], tabindex=""
