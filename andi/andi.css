@@ -154,6 +154,8 @@ body.ANDI508-testPage
 #ANDI508 .ANDI508-display-ariaDescribedby,
 #ANDI508 .ANDI508-display-ariaDescribedby span
 	{color:#12c8f1 !important;} /*00dae2*/
+#ANDI508 .ANDI508-display-ariaDescription
+	{color:#57F9FF !important;}
 #ANDI508 .ANDI508-display-label,
 #ANDI508 .ANDI508-display-alt,
 #ANDI508 .ANDI508-display-label span,

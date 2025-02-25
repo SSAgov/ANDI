@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.1.6";
+var andiVersionNumber = "29.2.0";
 
 //==============//
 // ANDI CONFIG: //
@@ -2295,6 +2295,7 @@ AndiData.textAlternativeComputation = function(root){
 	isCalcAccDesc = true;
 	nodesTraversed = [];
 	calcAccDesc(stepB(root, AndiData.data.components));
+	calcAccDesc(stepC2(root, AndiData.data.components));
 	calcAccDesc(stepD(root, AndiData.data.components));
 	calcAccDesc(stepI(root, AndiData.data.components));
 
@@ -2402,6 +2403,18 @@ AndiData.textAlternativeComputation = function(root){
 		if(component !== undefined){
 			if(!isEmptyComponent(component, "ariaLabel", element)){
 				accumulatedText += AndiData.addComp(data, "ariaLabel", component) + " ";
+			}
+		}
+		return accumulatedText;
+	}
+
+	//stepC2: aria-description
+	function stepC2(element, data){
+		var accumulatedText = "";
+		component = $(element).attr("aria-description");
+		if(component !== undefined){
+			if(!isEmptyComponent(component, "ariaDescription", element)){
+				accumulatedText += AndiData.addComp(data, "ariaDescription", component) + " ";
 			}
 		}
 		return accumulatedText;

@@ -57,7 +57,7 @@
 	<h3>Describers</h3>
 	<ul>
 		<li><a href="#aria-describedby">[aria-describedby]</a></li>
-		<li><a href="#legend">&lt;legend&gt;</a></li>
+		<li><a href="#aria-description">[aria-description]</a></li>
 		<li><a href="#title">[title]</a></li>
 	</ul>
 	<h3>States and Properties</h3>
@@ -137,6 +137,7 @@
 		<div class="example">
 		<ul>
 		<li><code>aria-describedby</code></li>
+		<li><code>aria-description</code></li>
 		<li><code>title</code></li>
 		</ul>
 		</div>
@@ -499,6 +500,27 @@
 	<h4>Improper Use</h4>
 	<p>
 	This attribute cannot take literal text; it expects an id or a space delimited list of ids only.
+	</p>
+	</div>
+	</details>
+	</section>
+</div>
+<div class="division">
+	<!--==========================-->
+	<section tabindex="-1" aria-labelledby="lby-aria-description" id='aria-description' class="sub" >
+	<details>
+	<summary id="lby-aria-description">[aria-description]</summary>
+	<div class='details'>
+	<p>The global attribute <code>aria-description</code> uses literal text to provide an accessible description.</p>
+	<h4>How To Use</h4>
+	<p>The value given to the <code>aria-description</code> attribute should contain the literal text that will
+		explicitly describe an element. The text will not appear on the screen.</p>
+	<h4>Screen Reader Usage</h4>
+	<p>
+	Screen readers will speak the <code>aria-description</code> at the end of its spoken phrase.
+	However, when multiple Describers are used on the same element (such as <code>aria-describedby</code> or <code>title</code>),
+	only one will be spoken and information could be lost.
+	Therefore, it is advisable to use only one Describer for an element.
 	</p>
 	</div>
 	</details>
