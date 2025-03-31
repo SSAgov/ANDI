@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.2.0";
+var andiVersionNumber = "29.2.1";
 
 //==============//
 // ANDI CONFIG: //
@@ -646,7 +646,6 @@ function andiReady(){
 				if(!$(hotkeyList).html()){
 					//build the hotkeyList after first click
 					andiHotkeyList.buildHotkeyList();
-					//andiHotkeyList.addArrowNavigation();
 					andiHotkeyList.showHotkeysList();
 				}
 				else if($(hotkeyList).css("display") === "none")
@@ -684,9 +683,9 @@ function andiReady(){
 			.on("mouseleave", andiLaser.eraseLaser);
 		//Active Element Jump and Section Jump Hotkeys
 		$(document).keydown(function(e){
-			if(e.which === andiHotkeyList.key_active.code && e.altKey )
+			if((e.which === andiHotkeyList.key_active.code) && ((andiHotkeyList.isMac && e.ctrlKey) || (!andiHotkeyList.isMac && e.altKey )))
 				$("#ANDI508-testPage .ANDI508-element-active").first().focus();
-			else if(e.which === andiHotkeyList.key_jump.code && e.altKey){
+			else if((e.which === andiHotkeyList.key_jump.code) && ((andiHotkeyList.isMac && e.ctrlKey) || (!andiHotkeyList.isMac && e.altKey ))){
 				//get next element with ANDI508-sectionJump class
 				var nextSectionJump = $(".ANDI508-sectionJump").eq( $(".ANDI508-sectionJump").index( $(":focus") ) + 1 );
 				if(!nextSectionJump.length)
@@ -1340,6 +1339,9 @@ function AndiHotkeyList(){
 	this.key_relaunch = new AndiHotkey("=","equals");
 	this.key_active = new AndiHotkey("/","slash",191);
 
+	this.isMac = navigator.platform.toLowerCase().indexOf('mac') >= 0;
+	this.isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
+
 	//These functions Show or Hide the ANDI508-hotkeyList
 	this.showHotkeysList = function(){
 		$("#ANDI508-hotkeyList").slideDown(AndiSettings.andiAnimationSpeed).find("a").first().focus();
@@ -1353,14 +1355,12 @@ function AndiHotkeyList(){
 	//This function builds ANDI's hotkey list html
 	this.buildHotkeyList = function(){
 
-		var isMac = navigator.platform.toLowerCase().indexOf('mac') >= 0;
-		var isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
-
-		var hotkeyTrigger = (isMac) ? "ctrl+alt+" : (isFirefox) ? "shift+alt+" : "alt+";
+		var hotkeyTriggerDisplay = (this.isMac) ? "ctrl+opt+" : (this.isFirefox) ? "shift+alt+" : "alt+";
+		var hotkeyTriggerScreenReader = (this.isMac) ? "ctrl+" : (this.isFirefox) ? "shift+alt+" : "alt+";
 
 		var hotkeyList = "<div id='ANDI508-hotkeyList'>"+
 			"<h3><a rel='help' href='"+ help_url + "howtouse.html#Hotkeys' target='_blank'>Hotkeys:</a></h3>"+
-			"<span class='ANDI508-code' aria-hidden='true'>&nbsp;"+hotkeyTrigger+"</span>"+
+			"<span class='ANDI508-code' aria-hidden='true'>&nbsp;"+hotkeyTriggerDisplay+"</span>"+
 			"<ul id='ANDI508-hotkeyList-items' aria-label='These hotkeys will help you navigate ANDI.'>"+
 			insertHotkeyListItem("Relaunch", andiHotkeyList.key_relaunch.key, andiHotkeyList.key_relaunch.sp)+
 			insertHotkeyListItem("Next Element", andiHotkeyList.key_next.key, andiHotkeyList.key_next.sp)+
@@ -1382,7 +1382,7 @@ function AndiHotkeyList(){
 
 		//This function will insert a hotkey list item.
 		function insertHotkeyListItem(purpose,key,key_sp){
-			return "<li><span class='ANDI508-screenReaderOnly'>"+hotkeyTrigger+key_sp+" </span><span class='ANDI508-code' aria-hidden='true'>"+key+"</span>&nbsp;"+purpose+"</li>";
+			return "<li><span class='ANDI508-screenReaderOnly'>"+hotkeyTriggerScreenReader+key_sp+" </span><span class='ANDI508-code' aria-hidden='true'>"+key+"</span>&nbsp;"+purpose+"</li>";
 		}
 	};
 }
