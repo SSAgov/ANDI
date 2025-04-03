@@ -2,7 +2,7 @@
 //ANDI: Accessible Name & Description Inspector//
 //Created By Social Security Administration    //
 //=============================================//
-var andiVersionNumber = "29.2.1";
+var andiVersionNumber = "29.2.2";
 
 //==============//
 // ANDI CONFIG: //
@@ -1340,7 +1340,7 @@ function AndiHotkeyList(){
 	this.key_active = new AndiHotkey("/","slash",191);
 
 	this.isMac = navigator.platform.toLowerCase().indexOf('mac') >= 0;
-	this.isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
+	this.isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") >= 0;
 
 	//These functions Show or Hide the ANDI508-hotkeyList
 	this.showHotkeysList = function(){
