@@ -4,7 +4,7 @@
 //==========================================//
 function init_module(){
 
-var gandiVersionNumber = "6.0.2";
+var gandiVersionNumber = "6.1.1";
 
 //TODO: add <video>
 
@@ -14,9 +14,11 @@ var gANDI = new AndiModule(gandiVersionNumber,"g");
 //This function removes markup in the test page that was added by this module
 AndiModule.cleanup = function(testPage, element){
 	if(element)
-		$(element).removeClass("gANDI508-background gANDI508-fontIcon");
-	else
+		$(element).removeClass("gANDI508-fontIcon");
+	else{
 		$(testPage).find(".gANDI508-decorative").removeClass("gANDI508-decorative");
+	}
+	$(testPage).find(".gANDI508-background").removeClass("gANDI508-background");
 };
 
 //Stores the total number of image types found
@@ -39,30 +41,30 @@ AndiModule.initActiveActionButtons({
 
 //This function will analyze the test page for graphics/image related markup relating to accessibility
 gANDI.analyze = function(){
-	
+
 	var isImageContainedByInteractiveWidget; //boolean if image is contained by link or button
-	
+
 	//Loop through every visible element
 	$(TestPageData.allVisibleElements).each(function(){
-		
+
 		var closestWidgetParent;
 		//Determine if the image is contained by an interactive widget (link, button)
 		isImageContainedByInteractiveWidget = false; //reset boolean
-		if($(this).not("[tabindex]").is("img,[role=img]")){
+		if($(this).not("[tabindex]").isSemantically(["img"],"img")){
 			//Is Image contained by a link or button?
 			closestWidgetParent = $(this).closest("a,button,[role=button],[role=link]");
 			if($(closestWidgetParent).length){
-				if($(closestWidgetParent).isSemantically("[role=link]","a"))
+				if($(closestWidgetParent).isSemantically(["link"],"a"))
 					totals.imageLink++;
-				else if($(closestWidgetParent).isSemantically("[role=button]","button"))
+				else if($(closestWidgetParent).isSemantically(["button"],"button"))
 					totals.imageButton++;
 				totals.inline++;
 				isImageContainedByInteractiveWidget = true;
 			}
 		}
-		
-		if(isImageContainedByInteractiveWidget || $(this).is("[role=img],[role=image],img,input[type=image],svg,canvas,area,marquee,blink")){
-			
+
+		if(isImageContainedByInteractiveWidget || $(this).is("[role=image]") || $(this).isSemantically(["img"],"img,input[type=image],svg,canvas,area,marquee,blink")){
+
 			if(isImageContainedByInteractiveWidget){
 				//Check if parent already has been evaluated (when more than one image is in a link)
 				if(!$(closestWidgetParent).hasClass("ANDI508-element")){
@@ -75,7 +77,7 @@ gANDI.analyze = function(){
 			else{//not contained by interactive widget
 				andiData = new AndiData(this);
 			}
-			
+
 			//Check for conditions based on semantics
 			if($(this).is("marquee")){
 				totals.inline++;
@@ -104,7 +106,7 @@ gANDI.analyze = function(){
 				andiAlerter.throwAlert(alert_0173);
 				AndiData.attachDataToElement(this);
 			}
-			else if(!isImageContainedByInteractiveWidget && $(this).is("img,svg,[role=img]")){ //an image used by an image map is handled by the <area>
+			else if(!isImageContainedByInteractiveWidget && $(this).isSemantically(["img"],"img,svg")){ //an image used by an image map is handled by the <area>
 				totals.inline++;
 				if(isElementDecorative(this, andiData)){
 					totals.decorative++;
@@ -121,7 +123,7 @@ gANDI.analyze = function(){
 						andiCheck.commonNonFocusableElementChecks(andiData, $(this), true);
 					altTextAnalysis($.trim($(this).attr("alt")));
 				}
-				
+
 				AndiData.attachDataToElement(this);
 			}
 			else if($(this).is("area")){
@@ -146,7 +148,7 @@ gANDI.analyze = function(){
 			}
 			else if($(this).is("[role=image]")){
 				//totals.inline++;
-				andiAlerter.throwAlert(alert_0183);
+				andiAlerter.throwAlert(alert_0134);
 				AndiData.attachDataToElement(this);
 			}
 		}
@@ -154,11 +156,11 @@ gANDI.analyze = function(){
 			totals.background++;
 			$(this).addClass("gANDI508-background");
 		}
-		
+
 		//Check for common font icon classes
-		if( !$(this).is("[role=img],img") &&
+		if( !$(this).isSemantically(["img"],"img") &&
 			(
-			$(this).hasClass("fa") || //font awesome
+			$(this).hasClass("fa fab fas fal fad") || //font awesome
 			$(this).hasClass("glyphicon") || //glyphicon
 			$(this).hasClass("material-icons") || //google material icons
 			$(this).is("[data-icon]") ||//common usage of the data-* attribute for icons
@@ -172,12 +174,21 @@ gANDI.analyze = function(){
 			}
 			totals.fontIcon++;
 			$(this).addClass("gANDI508-fontIcon");
+			//Throw alert
+			if(andiData.accName && !andiData.isTabbable){
+				//has accessible name. Needs role=img if meaningful image.
+				andiAlerter.throwAlert(alert_0179);
+			}
+			else{
+				//no accessible name. Is it meaningful?
+				//andiAlerter.throwAlert(alert_017A);
+			}
 		}
 	});
-	
+
 	if(totals.background > 0) //Page has background images
 		andiAlerter.throwAlert(alert_0177,alert_0177.message,0);
-		
+
 	//This returns true if the image is decorative.
 	function isElementDecorative(element, elementData){
 		if($(element).attr("aria-hidden") === "true"){
@@ -195,11 +206,11 @@ gANDI.analyze = function(){
 		}
 		return false;
 	}
-	
+
 	//This function looks at the CSS content psuedo elements looking for unicode in the private use range which usually means font icon
 	function lookForPrivateUseUnicode(element){
 		return ( hasPrivateUseUnicode("before") || hasPrivateUseUnicode("after") );
-		
+
 		function hasPrivateUseUnicode(psuedo){
 			var content = (oldIE) ? "" : window.getComputedStyle(element, ":"+psuedo).content;
 			if(content !== "none" && content !== "normal" && content !== "counter" && content !== "\"\""){//content is not none or empty string
@@ -220,15 +231,15 @@ gANDI.analyze = function(){
 
 //This function adds the finishing touches and functionality to ANDI's display once it's done scanning the page.
 gANDI.results = function(){
-	
+
 	var imagesCount = totals.inline + totals.background + totals.fontIcon;
-	
+
 	andiBar.updateResultsSummary("Images Found: "+imagesCount);
 
 	//Are There Images?
 	if(imagesCount > 0){
 		//Yes, images were found
-		
+
 		//Create Image contained by html (number of image links and image buttons)
 		var resultsDetails = "";
 		if(totals.inline > 0)
@@ -243,9 +254,9 @@ gANDI.results = function(){
 			resultsDetails += totals.background+ " background-images, ";
 		if(resultsDetails)
 			resultsDetails = resultsDetails.slice(0, -2);//Slice off last two characters: the comma and space: ", "
-		
+
 		$("#ANDI508-additionalPageResults").append("<p tabindex='0'>"+resultsDetails+"</p>");
-		
+
 		//Add Module Mode Buttons
 		var moduleActionButtons = "";
 		if(totals.inline > 0){
@@ -264,9 +275,9 @@ gANDI.results = function(){
 				moduleActionButtons += "<span class='ANDI508-module-actions-spacer'>|</span> ";
 			moduleActionButtons += "<button id='ANDI508-highlightFontIcons-button' aria-label='Find "+totals.fontIcon+" Font Icons' aria-pressed='false'>"+totals.fontIcon+" font icons</button>";
 		}
-		
+
 		$("#ANDI508-module-actions").html(moduleActionButtons);
-	
+
 		//Define fadeInlineImages button
 		$("#ANDI508-fadeInlineImages-button").click(function(){
 			//This button will change the image's opacity to almost zero
@@ -283,7 +294,7 @@ gANDI.results = function(){
 			andiResetter.resizeHeights();
 			return false;
 		});
-		
+
 		//Define Remove removeBackgroundImages button
 		$("#ANDI508-removeBackgroundImages-button").click(function(){
 			if($(this).attr("aria-pressed")=="false"){
@@ -299,7 +310,7 @@ gANDI.results = function(){
 			andiResetter.resizeHeights();
 			return false;
 		});
-		
+
 		//Define highlightBackgroundImages button
 		$("#ANDI508-highlightBackgroundImages-button").click(function(){
 			if($(this).attr("aria-pressed")=="false"){
@@ -315,7 +326,7 @@ gANDI.results = function(){
 			andiResetter.resizeHeights();
 			return false;
 		});
-		
+
 		//Define highlightDecorativeImages button
 		$("#ANDI508-highlightDecorativeImages-button").click(function(){
 			if($(this).attr("aria-pressed")=="false"){
@@ -331,7 +342,7 @@ gANDI.results = function(){
 			andiResetter.resizeHeights();
 			return false;
 		});
-		
+
 		//Define highlightFontIcons button
 		$("#ANDI508-highlightFontIcons-button").click(function(){
 			if($(this).attr("aria-pressed")=="false"){
@@ -347,7 +358,7 @@ gANDI.results = function(){
 			andiResetter.resizeHeights();
 			return false;
 		});
-		
+
 		var startupSummaryText = "";
 		if((totals.inline + totals.fontIcon) > 0){
 			andiBar.showElementControls();
@@ -359,7 +370,7 @@ gANDI.results = function(){
 		}
 		startupSummaryText += "Ensure that every meaningful/non-decorative image has a text equivalent.";
 		andiBar.showStartUpSummary(startupSummaryText, true);
-		
+
 		AndiModule.engageActiveActionButtons([
 			"fadeInlineImages",
 			"removeBackgroundImages",
@@ -373,9 +384,9 @@ gANDI.results = function(){
 		andiBar.hideElementControls();
 		andiBar.showStartUpSummary("No <span class='ANDI508-module-name-g'>graphics/images</span> were found on this page.");
 	}
-	
+
 	andiAlerter.updateAlertList();
-	
+
 	$("#ANDI508").focus();
 };
 
@@ -384,14 +395,14 @@ gANDI.results = function(){
 AndiModule.inspect = function(element){
 	if($(element).hasClass("ANDI508-element")){
 		andiBar.prepareActiveElementInspection(element);
-		
+
 		//format background-image
 		var bgImgUrl = $(element).css("background-image");
 		if(bgImgUrl.slice(0, 4) === "url(")
 			bgImgUrl = bgImgUrl.slice(5, -2); //remove 'url("' and '")'
 		else
 			bgImgUrl = "";
-		
+
 		var elementData = $(element).data("andi508");
 		var addOnProps = AndiData.getAddOnProps(element, elementData,
 			[
@@ -411,7 +422,7 @@ function altTextAnalysis(altText){
 	var regEx_redundantPhrase = /(image of|photo of|picture of|graphic of|photograph of)/g;
 	var regEx_fileTypeExt = /\.(png|jpg|jpeg|gif|pdf|doc|docx|svg)$/g;
 	var regEx_nonDescAlt = /^(photo|photograph|picture|graphic|logo|icon|graph|image)$/g;
-	
+
 	if(altText !== ""){
 		altText = altText.toLowerCase();
 		//check for redundant phrase in alt text

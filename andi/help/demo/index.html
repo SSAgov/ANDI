@@ -21,7 +21,7 @@
 <h1 style='display:inline; margin-left:1em'>RESCUE.ME</h1>
 <p style='display:inline; margin-left:2em'>The Super Hero Request System</p>
 </header>
-<main>
+<main aria-label="form">
 <div id='main'>
 	<h2 style='display:inline;'>We Will Save You.</h2>
 	<p style='margin-left:5px;display:inline;' id='instruct'>Just fill out this simple form and a Super Hero will be on the way.</p>
@@ -30,22 +30,23 @@
 <h3>Page 1 of 2</h3>
 
 	<strong><label for='who'>Who Needs Rescuing?</label> <i>*</i></strong><br />
-	<input type='text' required id='who' size='33' /> 
+	<input type='text' required id='who' size='33' />
 	<br />
 	<br />
-	
-	<strong>Rescue Address <i>*</i></strong> 
-	<div class='address'>
-	<label>Street:</label><input type='text' id='sh-st' /><br />
-	<label>State:</label><select><option>MD</option><option>VA</option><option>DE</option></select><br />
-	<label>Zip:</label><input type='text' /><br />
+
+	<strong>Rescue Address <i>*</i></strong>
+	<div class='address' role="group" aria-label="Rescue Address">
+	<label>Street:</label><input type='text' required id='ra-street' /><br />
+	<label for="ra-state">State:</label><select required id="ra-state"><option>MD</option><option>VA</option><option>DE</option></select><br />
+	<label for="ra-zip">Zip:</label><input required type='text' id="ra-zip" /><br />
 	</div>
 	<br /><br />
+
 	<strong>Billing Address <i>*</i></strong>
 	<div class='address'>
-	<label for='ba1'>Street:</label><input type='text' id='ba1' required /></label><br />
-	<label for='ba2'>State:</label><select id='ba2' required onchange='return false'><option>MD</option><option>VA</option><option>DE</option></select></label><br />
-	<label for='ba3'>Zip:</label><input type='text' id='ba3' required /></label><br />
+	<label for='ba-street'>Street:</label><input type='text' required id='ba-street' /></label><br />
+	<label for='ba-state'>State:</label><select required id='ba-state' onchange='return false'><option>MD</option><option>VA</option><option>DE</option></select></label><br />
+	<label for='ba-zip'>Zip:</label><input type='text' required id='ba-zip' /></label><br />
 	</div>
 	<br /><br />
 	<button id='next1' class='btn' accesskey='n' onclick='window.location.href="demo2.html"'>Next</button>
@@ -54,7 +55,7 @@
 </div>
 </main>
 <footer>
-<h2>Super Links:</h2>
+<header>Super Links:</header>
 <ul>
 <li><a href="#">United Nations</a></li>
 <li><a href="#">Supervillain Database</a></li>

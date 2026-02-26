@@ -59,7 +59,7 @@ header, nav{
 	background-color: #c12adc;
 }
 main.faq hr{
-	border-color:#c12adc;
+	border-color: #c12adc;
 }
 #navHeader a.howtouse:hover,
 #pageTitle.howtouse{
@@ -94,7 +94,7 @@ main.modules hr{
 	background-color: #dd3535;
 }
 main.alerts hr{
-	border-color:1px solid #ff6767;
+	border-color: #ff6767;
 }
 	
 main{
@@ -106,7 +106,6 @@ h1.toolName{
 	color:white;
 	/*text-shadow:1px 1px 3px #808080;*/
 }
-
 
 #pageTitle{
 	text-align:left;
@@ -124,11 +123,10 @@ h2{
 	font-size:1.5em;
 }
 
-
 #tableOfContentsControl,
 .expandButton
 {
-	font-size:0.7em;
+	font-size:1rem;
 	border:1px solid black;
 	border-radius:8px;
 	padding:7px;
@@ -150,22 +148,6 @@ h2{
 	-moz-column-count: 3;
 	-webkit-column-count: 3;
 	column-count: 3;
-	}
-	
-
-@media screen and (max-width: 800px){
-    #tableOfContents{
-		-moz-column-count: 2;
-		-webkit-column-count: 2;
-		column-count: 2;
-    }
-}
-@media screen and (max-width: 480px){
-    #tableOfContents{
-		-moz-column-count: 1;
-		-webkit-column-count: 1;
-		column-count: 1;
-    }
 }
 	
 #tableOfContents ul li{
@@ -200,7 +182,6 @@ h2{
 
 div.division{
 	border:2px solid black;
-	padding-left:3%;
 	margin-top:1em;
 	margin-left:3%;
 	margin-right:3%;
@@ -208,36 +189,40 @@ div.division{
 }
 
 section{
-	margin-top:1em;
+	padding-top:4px;
+	padding-left:6px;
+}
+section[tabindex]:focus{
+	outline: none;
 }
 
-main.alerts div.division{
-	border:none;
+div.moreinfo{
+	margin-left: 2%;
+	margin-bottom: 1em;
 }
-main.alerts section{
-	border:2px solid black;
-	border-radius:20px 20px 0px 0px;
-	margin-bottom:3em;
-}
-main.alerts h2{
-	margin-left:0.5em;
-}
-main.alerts section p{
-	margin-left:3%;
+div.moreinfo a{
+	font-size:1em;
 }
 
 details{
-	width:98%;
+	width:96%;
+	margin-left:3%;
 }
 summary{
-	font-size:2.0em;
+	font-size:1.6em;
 	font-weight:bold;
 	margin-bottom:0.5em;
 	cursor:default;
 }
+summary::-webkit-details-marker {
+  color: #505050;
+}
 
 div.division h2{
 	font-size:2.0em;
+	padding-left:10px;
+	padding-top:6px;
+	padding-bottom:4px;
 }
 div.division h3{
 	display:inline-block;
@@ -403,7 +388,7 @@ div.division a:hover{
 
 main hr{
 	border-style:solid;
-	border-width:1.5px;
+	border-top:1px;
 	margin-left:0;
 	margin-right:0.5em;
 }
@@ -504,4 +489,68 @@ main.modules .hANDIcolor{
 }
 main.modules .iANDIcolor{
 	color:pink !important;
+}
+
+div.division a#installLink{
+	background-color:#e6007a;
+	color:white;
+	border-radius:8px; 
+	padding:8px 12px;
+	cursor: grab;
+}
+div.division a#installLink:hover{
+	text-decoration:none !important;
+}
+div.division a#installLink:active {
+	cursor: grabbing;
+}
+
+.animation-point-left{
+	position: relative;
+	-webkit-animation:  point-left 1s infinite;
+	animation:  point-left 1s infinite;
+	margin-right: 12px;
+}
+@-webkit-keyframes point-left{
+	0%   {left: 0px;}
+	50%  {left: 9px;}
+	100% {left: 0px;}
+}
+@keyframes point-left{
+	0%   {left: 0px;}
+	50%  {left: 9px;}
+	100% {left: 0px;}
+}
+
+@media screen and (min-width: 1280px){
+    div.division{
+		margin-right: 12%;
+		margin-bottom:2em;
+		margin-left: 12%;
+		padding-top:1em;
+		padding-bottom: 1em;
+		padding-left: 3%;
+	}
+	section p{
+		margin-left: 5%;
+		margin-right: 12%;
+	}
+	#pageTitle{
+		padding-left: 12%;
+		padding-right: 12%;
+	}
+}
+@media screen and (max-width: 800px){
+    #tableOfContents{
+		-moz-column-count: 2;
+		-webkit-column-count: 2;
+		column-count: 2;
+    }
+}
+@media screen and (max-width: 480px){
+    #tableOfContents{
+		-moz-column-count: 1;
+		-webkit-column-count: 1;
+		column-count: 1;
+    }
 }
