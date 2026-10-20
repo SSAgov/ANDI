@@ -8,7 +8,7 @@ var andiVersionNumber = "29.2.2";
 // ANDI CONFIG: //
 //==============//
 //URLs
-var host_url = "https://www.ssa.gov/accessibility/andi/";
+var host_url = "https://work.jasonbyday.com/ANDI/";
 var help_url = host_url+"help/";
 var icons_url = host_url+"icons/";
 
@@ -1960,23 +1960,23 @@ function AndiOverlay(){
 			$(btn).attr("aria-pressed","true").html("hide ids"+overlayIcon);
 			andiOverlay.overlayButton_on("overlay",$(btn));
 			var overlayClass, idMatchesFound, overlayTitle;
-			$("#ANDI508-testPage [id]").each(function(){
-				overlayClass = "ANDI508-overlay-duplicateId";
-				overlayTitle = "";
-				idMatchesFound = 0;
-				//loop through allIds and compare
-				for (x=0; x<testPageData.allIds.length; x++){
-					if(this.id === testPageData.allIds[x].id){
-						idMatchesFound++;
-						if(idMatchesFound==2) break; //duplicate found so stop searching, for performance
+			for (const [root, idsInScope] of testPageData.allIds.entries()) {
+				if (idsInScope.length > 1) {
+					const idCounts = new Map();
+					for (const element of idsInScope) {
+						idCounts.set(element.id, (idCounts.get(element.id) || 0) + 1);
+					}
+					for (const element of idsInScope) {
+						overlayClass = "ANDI508-overlay-duplicateId";
+						overlayTitle = "";
+						if (idCounts.get(element.id) > 1) { //Duplicate Found
+							overlayClass += " ANDI508-overlay-alert";
+							overlayTitle = "duplicate id";
+						}
+						andiOverlay.insertAssociatedOverlay(element, andiOverlay.createOverlay(overlayClass, "id="+element.id, overlayTitle, $(element).attr("tabindex")));
 					}
 				}
-				if(idMatchesFound > 1){ //Duplicate Found
-					overlayClass += " ANDI508-overlay-alert";
-					overlayTitle = "duplicate id";
-				}
-				andiOverlay.insertAssociatedOverlay(this, andiOverlay.createOverlay(overlayClass, "id="+this.id, overlayTitle, $(this).attr("tabindex")));
-			});
+			}
 		}
 		else{
 			//Hide Overlay Duplicate Ids
@@ -2240,12 +2240,23 @@ AndiData.textAlternativeComputation = function(root){
 	//This function recursively travels up the anscestor tree looking for aria-hidden=true.
 	//Stops at #ANDI508-testPage because another check will stop ANDI if aria-hidden=true is on body or html
 	function traverseAriaHidden(element){
-		if(element.id === "ANDI508-testPage")
+		if(!element || element.id === "ANDI508-testPage")
 			return false;
 		if(element.getAttribute("aria-hidden") === "true")
 			return true;
 		else
-			return traverseAriaHidden(element.parentElement);
+			return traverseAriaHidden(getParent(element));
+	}
+
+	function getParent(element) {
+		if (element.parentElement) {
+			return element.parentElement;
+		}
+		const root = element.getRootNode();
+		if (root instanceof ShadowRoot) {
+			return root.host;
+		}
+		return null;
 	}
 
 	function calcAccName(result){
@@ -2853,22 +2864,26 @@ AndiData.textAlternativeComputation = function(root){
 			var labelText;
 			//Does it contain an id, and therefore, possibly an associated label with 'for' attribute value that matches value of this elemtent's id?
 			if(element.id !== ""){
-				//Loop through the labels that have [for] attributes and search for a match with this id
-				var labelFor;
-				for(var x=0; x<testPageData.allFors.length; x++){
-					if($(testPageData.allFors[x]).attr("for") == element.id){
-						labelFor = $(testPageData.allFors[x]);
-						break;
+				const root = element.getRootNode();
+				if (testPageData.allFors.has(root)) {
+					const forsInScope = testPageData.allFors.get(root);
+					//Loop through the labels that have [for] attributes and search for a match with this id
+					var labelFor;
+					for(var x=0; x<forsInScope.length; x++){
+						if($(forsInScope[x]).attr("for") == element.id){
+							labelFor = $(forsInScope[x]);
+							break;
+						}
 					}
-				}
 
-				if(labelFor){//label with matching [for] was found
-					labelElement = labelFor;
-					//TODO: Need to call the full text alt comp here instead of getVisibleInnerText
-					labelText = andiUtility.getVisibleInnerText(labelFor[0], element);
+					if(labelFor){//label with matching [for] was found
+						labelElement = labelFor;
+						//TODO: Need to call the full text alt comp here instead of getVisibleInnerText
+						labelText = andiUtility.getVisibleInnerText(labelFor[0], element);
 
-					//Check if this is referencing an element with a duplicate id
-					andiCheck.areThereAnyDuplicateIds("label[for]", element.id);
+						//Check if this is referencing an element with a duplicate id
+						andiCheck.areThereAnyDuplicateIds("label[for]", element.id, element);
+					}
 				}
 			}
 			return labelText;
@@ -3467,15 +3482,17 @@ function AndiCheck(){
 		}
 	};
 
-	//This function will search the test page for elements with duplicate ids.
+	//This function will search the test page for elements with duplicate ids within the same scope.
 	//If found, it will generate an alert
 	//TODO: add this check when these components are detected: aria-activedescendant,aria-colcount,aria-colindex,aria-colspan,aria-controls,aria-details,aria-errormessage,aria-flowto,aria-owns,aria-posinset,aria-rowcount,aria-rowindex,aria-rowspan,aria-setsize
-	this.areThereAnyDuplicateIds = function(component, id){
-		if(id && testPageData.allIds.length > 1){
+	this.areThereAnyDuplicateIds = function(component, id, element){
+		const root = element.getRootNode();
+		if(id && testPageData.allIds.has(root) && testPageData.allIds.get(root).length > 1){
 			var idMatchesFound = 0;
-			//loop through allIds and compare
-			for (var x=0; x<testPageData.allIds.length; x++){
-				if(id === testPageData.allIds[x].id){
+			const idsInScope = testPageData.allIds.get(root);
+			//loop through allIds in the same scope and compare
+			for (var x=0; x<idsInScope.length; x++){
+				if(id === idsInScope[x].id){
 					idMatchesFound++;
 					if(idMatchesFound === 2) break; //duplicate found so stop searching, for performance
 				}
@@ -3496,16 +3513,22 @@ function AndiCheck(){
 	this.areThereAnyDuplicateFors = function(element, data){
 		if(testPageData.page_using_label && data.components.label){
 			var id = $.trim($(element).prop("id"));
-			if(id && testPageData.allFors.length > 1){
-				var forMatchesFound = 0;
-				for(var x=0; x<testPageData.allFors.length; x++){
-					if(id === $.trim($(testPageData.allFors[x]).attr("for"))){
-						forMatchesFound++;
-						if(forMatchesFound == 2) break; //duplicate found so stop searching, for performance
+			if(id && element.getRootNode){
+				const root = element.getRootNode();
+				if (testPageData.allFors.has(root)) {
+					const forsInScope = testPageData.allFors.get(root);
+					if (forsInScope.length > 1) {
+						var forMatchesFound = 0;
+						for(var x=0; x<forsInScope.length; x++){
+							if(id === $.trim($(forsInScope[x]).attr("for"))){
+								forMatchesFound++;
+								if(forMatchesFound == 2) break; //duplicate found so stop searching, for performance
+							}
+						}
+						if(forMatchesFound > 1) //Duplicate Found
+							andiAlerter.throwAlert(alert_0012,[id,id]);
 					}
 				}
-				if(forMatchesFound > 1) //Duplicate Found
-					andiAlerter.throwAlert(alert_0012,[id,id]);
 			}
 		}
 	};
@@ -4048,21 +4071,56 @@ function AlertButton(label, id, clickLogic, overlayIcon){
 
 TestPageData.allVisibleElements = undefined;
 TestPageData.allElements = undefined;
+//This function recursively traverses the DOM and shadow DOMs to find all elements.
+function findAllElementsWithShadows(root) {
+    if (!root) {
+        return [];
+    }
+    const allElements = [];
+
+    function getElements(element) {
+        // Add the current element to the list
+        allElements.push(element);
+
+        // If the element has a shadow root, traverse it
+        if (element.shadowRoot) {
+            Array.from(element.shadowRoot.children).forEach(getElements);
+        }
+
+        // Traverse the light DOM children
+        Array.from(element.children).forEach(getElements);
+    }
+
+    // Start traversal from the root element itself
+    getElements(root);
+
+    return allElements;
+}
 //This class is used to store temporary variables for the test page
 function TestPageData(){
 	//Creates the alert groups
 	AndiAlerter.alertGroups = andiAlerter.createAlertGroups();
 
-	TestPageData.allElements = $("#ANDI508-testPage *");
+	TestPageData.allElements = $(findAllElementsWithShadows(document.getElementById("ANDI508-testPage")));
 
 	//all the visible elements or elements within a canvas on the test page
 	TestPageData.allVisibleElements = $(TestPageData.allElements).filter(":shown,canvas *");
 
-	//all the ids of elements on the page for duplicate comparisons
-	this.allIds = $(TestPageData.allElements).filter("[id]");
+	//all the ids of elements on the page for duplicate comparisons, grouped by root node
+	this.allIds = new Map();
+	var that = this;
+	$(TestPageData.allElements).filter("[id]").each(function() {
+		if (this.getRootNode) {
+			const root = this.getRootNode();
+			if (!that.allIds.has(root)) {
+				that.allIds.set(root, []);
+			}
+			that.allIds.get(root).push(this);
+		}
+	});
 
-	//all the fors of visible elements on the page for duplicate comparisons
-	this.allFors = "";
+	//all the fors of visible elements on the page for duplicate comparisons, grouped by root node
+	this.allFors = new Map();
 
 	//Keeps track of the number of focusable elements ANDI has found, used to assign unique indexes.
 	//the first element's index will start at 1.
@@ -4092,10 +4150,19 @@ function TestPageData(){
 	//Get all fors on the page and store for later comparison
 	//Determine if labels are being used on the page
 	this.page_using_label = false;
-	if($(TestPageData.allVisibleElements).filter("label").length*1 > 0){
+	const labels = $(TestPageData.allVisibleElements).filter("label");
+	if(labels.length > 0){
 		this.page_using_label = true;
 		//get all 'for's on the page and store for later comparison
-		this.allFors = $(TestPageData.allVisibleElements).filter("label[for]");
+		labels.filter("[for]").each(function() {
+			if (this.getRootNode) {
+				const root = this.getRootNode();
+				if (!that.allFors.has(root)) {
+					that.allFors.set(root, []);
+				}
+				that.allFors.get(root).push(this);
+			}
+		});
 	}
 
 	if($(TestPageData.allVisibleElements).filter("table").first().length)
