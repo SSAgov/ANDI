@@ -549,7 +549,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Often, this is the result of a developer copying and pasting
 	an element and forgetting to change the <code>id</code>.
 	It's possible that a developer may not know that <code>id</code>s
-	<a href="http://www.w3.org/TR/2011/WD-html5-20110525/elements.html#the-id-attribute" target="w3c">must be unique according to W3C standards</a>.
+	<a href="https://html.spec.whatwg.org/multipage/dom.html#the-id-attribute" target="_blank">must be unique according to the HTML Standard</a>.
 	</p>
 
 	<h3>What should be done?</h3>
@@ -1004,8 +1004,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>What should be done?</h3>
 	<p>
 	Correct the structure to abide by the standards for an
-	<a href="http://www.w3.org/TR/wai-aria-practices-1.1/#table" target="_blank">ARIA table</a>, or
-	<a href="http://www.w3.org/TR/wai-aria-practices-1.1/#grid" target="_blank">ARIA grid</a>.
+	<a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/" target="_blank">ARIA table</a>, or
+	<a href="https://www.w3.org/WAI/ARIA/apg/patterns/grid/" target="_blank">ARIA grid</a>.
 	</p>
 	</div>
 	</section>
@@ -3299,7 +3299,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-arialevel_not_gt_zero_integar">Alert: Aria-Level not Greater Than Zero Integer</h2>
 	<div class='details'>
 	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [aria-level] is not a greater-than-zero integer; level 2 will be assumed.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [aria-level] is not a greater-than-zero integer; heading level may not be conveyed as intended.</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -3309,7 +3309,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
 	When the <code>aria-level</code> on a <code>role="heading"</code> element is not a greater than zero integer,
-	a screen reader will default the heading level to level 2.
+	the heading hierarchy may not be conveyed consistently by assistive technologies.
 	</p>
 	<h3>What should be done?</h3>
 	<p>
@@ -3445,7 +3445,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h2 id="lby-role_heading_no_arialevel">Alert: Heading Role No Aria-Level</h2>
 	<div class='details'>
 	<ul class='message warning'>
-	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [role=heading] used without [aria-level]; level 2 will be assumed.</li>
+	<li><img alt="warning icon" src="images/icon-warning.png" class="noshadow" /> [role=heading] used without [aria-level].</li>
 	</ul>
 	<br />
 	<h3>Why did ANDI alert this?</h3>
@@ -3455,7 +3455,8 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	</p>
 	<h3>Why is this an accessibility concern?</h3>
 	<p>
-	A screen reader will assume the heading level to be level 2 since 2 is the <a href="http://www.w3.org/TR/core-aam-1.1/#document-handling_author-errors" target="_blank">default aria-level</a>.
+	<a href="https://www.w3.org/TR/wai-aria-1.2/#heading" target="_blank">ARIA 1.2 does not define a default heading level</a> for <code>role="heading"</code>,
+	so omitting <code>aria-level</code> can lead to inconsistent heading output.
 	</p>
 	<h3>What should be done?</h3>
 	<p>
@@ -3554,7 +3555,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	and the primary foreground color of the text using a color selector tool (<a href="https://github.com/ThePacielloGroup/CCAe" target="_blank">Colour Contrast Analyser Installation</a>).
 	</p>
 	<p>
-	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
+	The <a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
 	</p>
 	<div class="example">
 		<ul>
@@ -3591,7 +3592,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	and the primary foreground color of the text using a color selector tool (<a href="https://github.com/ThePacielloGroup/CCAe" target="_blank">Colour Contrast Analyser Installation</a>).
 	</p>
 	<p>
-	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
+	The <a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
 	</p>
 	<div class="example">
 		<ul>
@@ -3636,7 +3637,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	and the primary foreground color of the text using a color selector tool (<a href="https://github.com/ThePacielloGroup/CCAe" target="_blank">Colour Contrast Analyser Installation</a>).
 	</p>
 	<p>
-	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
+	The <a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
 	</p>
 	<div class="example">
 		<ul>
@@ -3671,7 +3672,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	<h3>What should be done?</h3>
 	<p>
 	Developers should follow
-	<a href="https://www.w3.org/TR/wai-aria-practices/#grid" target="_blank">W3C WAI-ARIA Authoring Practices for Grids</a>.
+	<a href="https://www.w3.org/WAI/ARIA/apg/patterns/grid/" target="_blank">W3C WAI-ARIA Authoring Practices for Grids</a>.
 	</p>
 
 	<p>
@@ -3703,7 +3704,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	requirements and must implement the grid to the specifications of
 	the WAI ARIA Authoring Practices.
 	In many instances, native HTML data table markup using <code>&lt;table&gt;</code> structure
-	or <a href="https://www.w3.org/TR/wai-aria-practices/#table" target="_blank">ARIA role="table"</a>
+	or <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/" target="_blank">ARIA role="table"</a>
 	structure should sufficiently meet the needs of the user.
 	</p>
 
@@ -3736,7 +3737,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Adjust the text color and/or the background color of this element so that the contrast ratio is at or above the minimum required contrast ratio.
 	</p>
 	<p>
-	The <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
+	The <a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a> is as follows:
 	</p>
 		<div class="example">
 			<ul>
@@ -3819,7 +3820,7 @@ This page provides detailed information about ANDI's Accessibility Alerts.
 	Disabled elements (<code>disabled="disabled"</code>) were found on the page.
 	Disabled elements are inactive user interface components
 	and do not have color contrast requirements according to the
-	<a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a>.
+	<a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html" target="_blank">WCAG AA Contrast Ratio requirement</a>.
 	</p>
 	</div>
 	</section>
