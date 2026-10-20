@@ -41,3 +41,7 @@ ANDI offers the ability to inspect focusable elements, images, data tables, page
 ## Who maintains ANDI?
 
 ANDI is maintained by the Accessible Solutions Branch at SSA.
+
+## Security note
+
+ANDI runs within the browser context of the page being inspected. When testing untrusted, public, externally supplied, or user-authored content, use a separate browser profile and do not use that profile for privileged or sensitive authenticated work. A separate tab is not sufficient.
