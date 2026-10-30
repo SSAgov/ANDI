@@ -119,7 +119,7 @@ sANDI.analyze = function(){
 				AndiData.attachDataToElement(this);
 			}
 		}
-		else if($(this).isSemantically(["banner","complementary","contentinfo","form","main","navigation","search","region"],"main,header,footer,nav,form,aside")){
+		else if($(this).isSemantically(["banner","complementary","contentinfo","form","main","navigation","search","region"],"main,header,footer,nav,form,aside,search")){
 			//Add to the landmarks array
 			landmarksArray.push($(this));
 			structureExists = true;
